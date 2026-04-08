@@ -11,6 +11,7 @@ namespace Refactoring
         FinishAttack,
         Dash,
         LockOn,
+        Interaction,
         Menu
     }
 }

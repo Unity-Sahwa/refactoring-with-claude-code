@@ -1,6 +1,6 @@
 {
     "version": 1,
-    "name": "InputActions",
+    "name": "PlayerInputActions",
     "maps": [
         {
             "name": "Player",
@@ -61,6 +61,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Interaction",
+                    "type": "Button",
+                    "id": "18efa263-67ac-4f75-8cab-8c7a48a1dca7",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Menu",
                     "type": "Button",
                     "id": "91e57dc5-f747-4d06-8359-2f7e105cebf1",
@@ -106,7 +115,7 @@
                 },
                 {
                     "name": "Left",
-                    "id": "939c2592-fa06-4a55-816a-64d00fcc105e",
+                    "id": "4ad1ff16-7a82-43ca-af40-98577a260be9",
                     "path": "<Keyboard>/a",
                     "interactions": "",
                     "processors": "",
@@ -117,7 +126,7 @@
                 },
                 {
                     "name": "Right",
-                    "id": "36f0c1cd-7deb-4791-84ad-8f5de6eb02c1",
+                    "id": "46e2e240-13b7-4ec4-a57c-e8548f5df4f9",
                     "path": "<Keyboard>/d",
                     "interactions": "",
                     "processors": "",
@@ -200,6 +209,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Menu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "03e1e2c4-1877-483d-8308-cfce577eb22e",
+                    "path": "<Keyboard>/x",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Interaction",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

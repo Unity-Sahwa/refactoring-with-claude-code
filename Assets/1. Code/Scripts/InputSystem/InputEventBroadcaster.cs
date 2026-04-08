@@ -1,92 +1,111 @@
-// IInputReader를 매 프레임 폴링해 OnInputPressed / OnInputReleased / OnMoveInput 이벤트를 발행.
-// DI로 Reader·Blocker를 주입받으며, SetPlatform()으로 활성 플랫폼 전환 가능.
+// InputAction 콜백(PC·조이스틱)과 IMobileButton 이벤트(모바일 버튼)를 구독해
+// OnInputPressed / OnInputReleased / OnMoveInput 이벤트를 발행.
+// 폴링 없이 이벤트 기반으로 동작 — 입력 경로(키보드·UI 버튼)에 무관하게 액션 단위로 브로드캐스트.
 using System;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using System.Collections.Generic;
 
 namespace Refactoring
 {
     public class InputEventBroadcaster : MonoBehaviour, IInjectRequester
     {
+        [SerializeField] private InputActionAsset _actionAsset;
+
         public event Action<InputActionType> OnInputPressed;
         public event Action<InputActionType> OnInputReleased;
         public event Action<Vector2> OnMoveInput;
 
-        public List<Type> TargetTypes => new List<Type> { typeof(IInputReader), typeof(IInputBlocker) };
+        public List<Type> TargetTypes => new List<Type> { typeof(IInputBlocker), typeof(IMobileButton) };
 
-        private static readonly HashSet<InputActionType> MoveActions = new HashSet<InputActionType>
-        {
-            InputActionType.Movement
-        };
-
-        private static readonly InputActionType[] AllActions =
-            (InputActionType[])Enum.GetValues(typeof(InputActionType));
-
-        private List<IInputReader> _readers = new();
         private IInputBlocker _inputBlocker;
-        private IInputReader _activeReader;
+
+        private static readonly InputActionType[] AllActions = (InputActionType[])Enum.GetValues(typeof(InputActionType));
+
+        private static InputEventBroadcaster _instance;
+
+        private void Awake()
+        {
+            if (_instance != null)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
+            _instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        private void OnEnable() => _actionAsset?.Enable();
+        private void OnDisable() => _actionAsset?.Disable();
 
         public void Inject(Dictionary<Type, List<object>> targets)
         {
-            if (targets.TryGetValue(typeof(IInputReader), out var readers))
-            {
-                foreach (var obj in readers)
-                {
-                    if (obj is IInputReader reader)
-                    {
-                        _readers.Add(reader);
-                    }
-                }
-            }
-
-            if (targets.TryGetValue(typeof(IInputBlocker), out var blockers) && blockers.Count > 0)
-            {
+            if (targets.TryGetValue(typeof(IInputBlocker), out var blockers))
                 _inputBlocker = blockers[0] as IInputBlocker;
-            }
 
-            SetPlatform(InputPlatformType.PC);
-        }
-
-        public void SetPlatform(InputPlatformType platform)
-        {
-            _activeReader = _readers.Find(r => r.Platform == platform);
-        }
-
-        private void Update()
-        {
-            if (_activeReader == null) return;
-            if (_inputBlocker != null && _inputBlocker.IsInputBlocked) return;
-            if (!_activeReader.HasInput()) return;
-
-            BroadcastMoveInput();
-            BroadcastActionInput();
-        }
-
-        private void BroadcastMoveInput()
-        {
-            Vector2 moveInput = _activeReader.GetMoveInput();
-            OnMoveInput?.Invoke(moveInput);
-        }
-
-        private void BroadcastActionInput()
-        {
-            foreach (InputActionType action in AllActions)
+            if (targets.TryGetValue(typeof(IMobileButton), out var buttons))
             {
-                if (MoveActions.Contains(action))
+                foreach (var obj in buttons)
                 {
-                    continue;
-                }
-
-                if (_activeReader.IsPressed(action))
-                {
-                    OnInputPressed?.Invoke(action);
-                }
-
-                if (_activeReader.IsReleased(action))
-                {
-                    OnInputReleased?.Invoke(action);
+                    if (obj is IMobileButton btn)
+                        SubscribeMobileButton(btn);
                 }
             }
+
+            SubscribeActions();
+        }
+
+        private void SubscribeActions()
+        {
+            foreach (InputActionType actionType in AllActions)
+            {
+                InputAction action = _actionAsset?.FindAction(actionType.ToString());
+                if (action == null) continue;
+
+                Action<InputAction.CallbackContext> performed;
+                Action<InputAction.CallbackContext> canceled;
+
+                if (actionType == InputActionType.Movement)
+                {
+                    performed = ctx => BroadcastMove(ctx.ReadValue<Vector2>());
+                    canceled = _ => BroadcastMove(Vector2.zero);
+                }
+                else
+                {
+                    var captured = actionType;
+                    performed = _ => HandlePressed(captured);
+                    canceled = _ => HandleReleased(captured);
+                }
+
+                action.performed += performed;
+                action.canceled += canceled;
+            }
+        }
+
+        private void SubscribeMobileButton(IMobileButton btn)
+        {
+            Action down = () => HandlePressed(btn.ActionType);
+            Action up = () => HandleReleased(btn.ActionType);
+            btn.OnButtonDown += down;
+            btn.OnButtonUp += up;
+        }
+
+        private void HandlePressed(InputActionType actionType)
+        {
+            if (_inputBlocker != null && _inputBlocker.IsInputBlocked) return;
+            OnInputPressed?.Invoke(actionType);
+        }
+
+        private void HandleReleased(InputActionType actionType)
+        {
+            if (_inputBlocker != null && _inputBlocker.IsInputBlocked) return;
+            OnInputReleased?.Invoke(actionType);
+        }
+
+        private void BroadcastMove(Vector2 value)
+        {
+            if (_inputBlocker != null && _inputBlocker.IsInputBlocked) return;
+            OnMoveInput?.Invoke(value);
         }
     }
 }
