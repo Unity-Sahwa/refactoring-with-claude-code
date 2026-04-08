@@ -8,7 +8,8 @@
       "Bash(mv designer.md 3-designer.md)",
       "Bash(mv implementer.md 4-implementer.md)",
       "Bash(mv tester.md 5-tester.md)",
-      "WebFetch(domain:gameprogrammingpatterns.com)"
+      "WebFetch(domain:gameprogrammingpatterns.com)",
+      "Bash(rm:*)"
     ]
   }
 }
