@@ -43,6 +43,7 @@
         "**/*.meta": true,
         "**/*.prefab": true,
         "**/*.unity": true,
+        "**/*.csproj": true,
         "build/": true,
         "Build/": true,
         "Library/": true,
@@ -60,12 +61,12 @@
         "*.asset": "yaml",
         "*.meta": "yaml",
         "*.prefab": "yaml",
-        "*.unity": "yaml",
+        "*.unity": "yaml"
     },
     "explorer.fileNesting.enabled": true,
     "explorer.fileNesting.patterns": {
         "*.sln": "*.csproj",
         "*.slnx": "*.csproj"
     },
-    "dotnet.defaultSolution": "unityengine-refactoring.slnx"
+    "dotnet.defaultSolution": "Unitysahwa-refactoring.slnx"
 }
