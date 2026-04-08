@@ -24,5 +24,5 @@
 
 ## 문서 저장
 - 문서 이름: Analysis_`분석 파일 이름`.md
-- 문서 저장 위치: `claudecode-refactoring\1-analyzer\origin`
-- 주의사항: `claudecode-refactoring\1-analyzer\origin` 위치에 같은 이름이 있다면 사용자에게 덮어쓸껀지 요청
+- 문서 저장 위치: `Assets\1. Code\Docs\1. Analyse`
+- 주의사항: `Assets\1. Code\Docs\1. Analyse` 위치에 같은 이름이 있다면 사용자에게 덮어쓸껀지 요청
