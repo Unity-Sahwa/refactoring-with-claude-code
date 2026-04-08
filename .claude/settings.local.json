@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep \"\\\\.md$\")",
+      "Bash(grep -v \"\\\\.meta$\"2)",
+      "Bash(mv manager.md 1-manager.md)",
+      "Bash(mv analyzer.md 2-analyzer.md)",
+      "Bash(mv designer.md 3-designer.md)",
+      "Bash(mv implementer.md 4-implementer.md)",
+      "Bash(mv tester.md 5-tester.md)",
+      "WebFetch(domain:gameprogrammingpatterns.com)"
+    ]
+  }
+}
