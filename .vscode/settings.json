@@ -54,8 +54,7 @@
         "ProjectSettings/": true,
         "UserSettings/": true,
         "temp/": true,
-        "Temp/": true,
-        "**/*.csproj": true
+        "Temp/": true
     },
     "files.associations": {
         "*.asset": "yaml",

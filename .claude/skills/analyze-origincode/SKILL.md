@@ -1,7 +1,6 @@
 ---
 name: analyze-origincode
-description: 프로젝트 원본 코드 분석을 시작할 때 사용.
-  ANALYSIS_GUIDE.md 업무 지침에 따라 분석 준비를 한다.
+description: 프로젝트 원본 코드 분석을 시작할 때 사용. 업무 지침에 따라 분석 준비를 한다.
 ---
 
 - 분석담당(analyzer)는 업무 지침을 읽고 다음 명령에 대기하라

@@ -1,5 +1,5 @@
 ---
-name: design-game
+name: design-code
 description: 게임 시스템 및 코드 설계시 사용.
   DESIGN_GUIDE.md 업무 지침에 따라 설계 준비를 한다.
 ---

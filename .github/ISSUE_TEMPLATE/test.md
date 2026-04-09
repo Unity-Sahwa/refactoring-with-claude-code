@@ -1,7 +1,7 @@
 ---
 name: Test
 about: 기능 테스트 및 검증 작업
-title: 'XX 테스트 : YYY 활동'
+title: '[TEST]'
 labels: ''
 assignees: Eoodyd
 type: Test
@@ -13,6 +13,7 @@ type: Test
 
 ## 테스트 대상
 | 클래스/기능:
+| 관련 파일:
 
 ## 테스트 조건
 | 사전 조건:
@@ -29,3 +30,4 @@ type: Test
 | 참고 링크:
 
 ## 메모
+| 주의사항, 엣지 케이스
