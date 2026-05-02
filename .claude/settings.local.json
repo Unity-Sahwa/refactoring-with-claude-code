@@ -1,15 +1,30 @@
 {
-  "permissions": {
-    "allow": [
-      "Bash(grep \"\\\\.md$\")",
-      "Bash(grep -v \"\\\\.meta$\"2)",
-      "Bash(mv manager.md 1-manager.md)",
-      "Bash(mv analyzer.md 2-analyzer.md)",
-      "Bash(mv designer.md 3-designer.md)",
-      "Bash(mv implementer.md 4-implementer.md)",
-      "Bash(mv tester.md 5-tester.md)",
-      "WebFetch(domain:gameprogrammingpatterns.com)",
-      "Bash(rm:*)"
+  "statusLine": {
+      "type": "command",
+      "command": "bash ~/.claude/statusline-command.sh"
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -c \"Add-Type -AssemblyName presentationCore; \\$mp = New-Object System.Windows.Media.MediaPlayer; \\$mp.Open([uri]'C:\\Windows\\Media\\notification_dogsound_claude.mp3'); \\$mp.Play(); Start-Sleep 2\""
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python -c \"import sys,json; d=json.loads(sys.stdin.read()); fp=d.get('input',{}).get('file_path',''); print('[자동검증 HOOK] 결과물 감지: '+fp+'\\n→ output-validator 에이전트를 즉시 실행하세요.') if any(x in fp for x in ['Docs/1. Analyse','Docs/2. Design']) else None\""
+          }
+        ]
+      }
     ]
   }
 }

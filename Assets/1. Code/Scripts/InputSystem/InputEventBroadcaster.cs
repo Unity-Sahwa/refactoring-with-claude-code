@@ -8,7 +8,8 @@ using System.Collections.Generic;
 
 namespace Refactoring
 {
-    public class InputEventBroadcaster : MonoBehaviour, IInjectRequester
+    public class InputEventBroadcaster : MonoBehaviour, IInjectRequester, IInjectTarget
+
     {
         [SerializeField] private InputActionAsset _actionAsset;
 
@@ -17,6 +18,9 @@ namespace Refactoring
         public event Action<Vector2> OnMoveInput;
 
         public List<Type> TargetTypes => new List<Type> { typeof(IInputBlocker), typeof(IMobileButton) };
+
+        public Type[] InterfaceTypes => new Type[] { typeof(InputEventBroadcaster) };
+
 
         private IInputBlocker _inputBlocker;
 
