@@ -1,7 +1,15 @@
 {
-  "statusLine": {
-      "type": "command",
-      "command": "bash ~/.claude/statusline-command.sh"
+  "permissions": {
+    "allow": [
+      "Bash(git add *)",
+      "Bash(git commit *)"
+    ],
+    "read": "ask",
+    "write": "ask",
+    "edit": "ask",
+    "glob": "ask",
+    "grep": "ask",
+    "bash": "ask"
   },
   "hooks": {
     "Stop": [
@@ -26,5 +34,9 @@
         ]
       }
     ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "bash ~/.claude/statusline-command.sh"
   }
 }
