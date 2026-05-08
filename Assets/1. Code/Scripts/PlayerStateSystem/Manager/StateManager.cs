@@ -24,6 +24,7 @@ namespace Refactoring
 
         private void Update()
         {
+            if(CurrentState == null) return; 
             if (!IsTransitioningState && (nextStateKey != null && !nextStateKey.Equals(CurrentState.StateKey)))
             {
                 TransitionToState(nextStateKey);

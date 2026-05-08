@@ -21,17 +21,6 @@ namespace Refactoring
         public PlayerStateEventChannel EventChannel => eventChannel;
         [SerializeField] PlayerStateEventChannel eventChannel;
 
-        public void Inject(Dictionary<Type, List<object>> targets)
-        {
-            if (targets.TryGetValue(typeof(IStateDataProvider), out var list))
-            {
-                StateDataManager = list[0] as IStateDataProvider;
-            }
-
-            if (targets.TryGetValue(typeof(InputEventBroadcaster), out var broadcasters))
-                _inputBroadcaster = broadcasters[0] as InputEventBroadcaster;
-        }
-
         private void Awake()
         {
             foreach (PlayerStateType key in Enum.GetValues(typeof(PlayerStateType)))
@@ -42,15 +31,26 @@ namespace Refactoring
 
         protected override void Start()
         {
-            CreateStatesFromReflection();
+            BaseState<PlayerStateType>.BindContext(this);
 
-            // Idle을 초기 상태로 설정
-            CurrentState = states[PlayerStateType.HIdle];
-            nextStateKey = PlayerStateType.HIdle;
+            CreateStatesFromReflection();
             
-            _inputBroadcaster.OnInputPressed += OnInputPressed;
+            //테스트
+            _inputBroadcaster.OnInputPressed += Test_OnInputPressed;
+            if(states[PlayerStateType.HIdle] != null) CurrentState = states[PlayerStateType.HIdle];
 
             base.Start();
+        }
+
+        public void Inject(Dictionary<Type, List<object>> targets)
+        {
+            if (targets.TryGetValue(typeof(IStateDataProvider), out var list))
+            {
+                StateDataManager = list[0] as IStateDataProvider;
+            }
+
+            if (targets.TryGetValue(typeof(InputEventBroadcaster), out var broadcasters))
+                _inputBroadcaster = broadcasters[0] as InputEventBroadcaster;
         }
         
         private void CreateStatesFromReflection()
@@ -65,17 +65,39 @@ namespace Refactoring
                     !type.IsGenericTypeDefinition && //타입인자가 확정된 제네릭인가
                     baseType.IsAssignableFrom(type)) //type이 baseType을 상속/구현했는가?
                 {
-                    var instance = (BaseState<PlayerStateType>)Activator.CreateInstance(type, (IStateContext)this);
+                    var instance = (BaseState<PlayerStateType>)Activator.CreateInstance(type);
                     states[instance.StateKey] = instance;
                 }
             }
         }
 
-        //Test
-        private void OnInputPressed(InputActionType actionType)
+        private void Test_OnInputPressed(InputActionType actionType)
         {
-            nextStateKey = PlayerStateType.HNormalAttack1;
+            if(actionType == InputActionType.NormalAttack)
+            {
+                if(CurrentState == states[PlayerStateType.HNormalAttack1])
+                {
+                    nextStateKey = PlayerStateType.HNormalAttack2;
+                }
+                else if(CurrentState == states[PlayerStateType.HNormalAttack2])
+                {
+                    nextStateKey = PlayerStateType.HNormalAttack3;
+                }
+                else
+                {
+                    nextStateKey = PlayerStateType.HNormalAttack1;
+                }
+            }
+            else if (actionType == InputActionType.SpecialAttack)
+            {
+                CurrentState = states[ PlayerStateType.HSpecialAttack];
+                nextStateKey = PlayerStateType.HSpecialAttack;
+            }
+            else if (actionType == InputActionType.FinishAttack)
+            {
+                CurrentState = states[ PlayerStateType.HFinishAttack];
+                nextStateKey = PlayerStateType.HFinishAttack;
+            }
         }
-
     }
 }

@@ -20,20 +20,23 @@ namespace Refactoring
 
         public void Raise(StateDataCategoryType categoryType, object data)
         {
+            IHasTimingData test = (IHasTimingData)data;
+            //Debug.Log($"Raise categoryType: {categoryType}");
+            //Debug.Log($"Raise StartProgress: {test.StartProgress}");
+
             events[categoryType]?.Invoke(data);
-            Debug.Log($"Raise: {categoryType}");
         }
              
         public void Subscribe(StateDataCategoryType categoryType, Action<object> listener) 
         { 
+            Debug.Log($"Subscribe categoryType: {categoryType}");
             events[categoryType] += listener;
-            Debug.Log($"Subscribe: {categoryType}");
         }
 
         public void Unsubscribe(StateDataCategoryType categoryType, Action<object> listener) 
         {
+            Debug.Log($"Unsubscribe categoryType: {categoryType}");
             events[categoryType] -= listener;
-            Debug.Log($"Unsubscribe: {categoryType}");
         }
 
 
