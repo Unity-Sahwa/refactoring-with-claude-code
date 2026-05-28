@@ -18,21 +18,7 @@
           }
         ]
       }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python -c \"import sys,json; d=json.loads(sys.stdin.read()); fp=d.get('input',{}).get('file_path',''); print('[자동검증 HOOK] 결과물 감지: '+fp+'\\n→ output-validator 에이전트를 즉시 실행하세요.') if any(x in fp for x in ['Docs/1. Analyse','Docs/2. Design']) else None\""
-          }
-        ]
-      }
     ]
   },
-  "statusLine": {
-    "type": "command",
-    "command": "bash ~/.claude/statusline-command.sh"
-  }
+  "spinnerTipsEnabled": false
 }

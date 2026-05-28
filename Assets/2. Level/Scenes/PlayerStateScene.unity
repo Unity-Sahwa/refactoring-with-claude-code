@@ -172,6 +172,16 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &679422829 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6393974813386716368, guid: 3a49ca279bfc4934b88eb80e0418c04f, type: 3}
+  m_PrefabInstance: {fileID: 2047701878}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &753408474 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6393974813386716368, guid: afb97a2525fabe948b98592304961c3c, type: 3}
+  m_PrefabInstance: {fileID: 978027524}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &799985069
 GameObject:
   m_ObjectHideFlags: 0
@@ -715,6 +725,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1854086719}
   - component: {fileID: 1854086720}
+  - component: {fileID: 1854086721}
   m_Layer: 0
   m_Name: PlayerCharacter
   m_TagString: Untagged
@@ -754,6 +765,20 @@ MonoBehaviour:
   hAnimator: {fileID: 2047701880}
   aAnimator: {fileID: 978027527}
   eventChannel: {fileID: 11400000, guid: 4355d4dd003584147b64e3d897983d15, type: 2}
+--- !u!114 &1854086721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1854086718}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc07e46fe31cc224d882f661244ea11d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.PlayerCharacterSwitch
+  humanCharacter: {fileID: 679422829}
+  animalCharacter: {fileID: 753408474}
 --- !u!1001 &2047701878
 PrefabInstance:
   m_ObjectHideFlags: 0

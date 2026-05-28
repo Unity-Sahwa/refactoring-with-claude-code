@@ -8,46 +8,36 @@ using System.Collections.Generic;
 
 namespace Refactoring
 {
-    public class InputEventBroadcaster : MonoBehaviour, IInjectRequester, IInjectTarget
-
+    public class InputEventBroadcaster : MonoBehaviour, IInterfaceInjectable, IInputEventProvider
     {
-        [SerializeField] private InputActionAsset _actionAsset;
-
-        public event Action<InputActionType> OnInputPressed;
-        public event Action<InputActionType> OnInputReleased;
-        public event Action<Vector2> OnMoveInput;
-
-        public List<Type> TargetTypes => new List<Type> { typeof(IInputBlocker), typeof(IMobileButton) };
-
-        public Type[] InterfaceTypes => new Type[] { typeof(InputEventBroadcaster) };
-
-
-        private IInputBlocker _inputBlocker;
-
-        private static readonly InputActionType[] AllActions = (InputActionType[])Enum.GetValues(typeof(InputActionType));
+        public Dictionary<Type, List<object>> injectedImplements {get;} = new Dictionary<Type, List<object>>()
+        {
+            { typeof(IInputBlocker), new List<object>() },
+            { typeof(IMobileButton), new List<object>() }
+        };
 
         private static InputEventBroadcaster _instance;
+        [SerializeField] private InputActionAsset _actionAsset;
+        private IInputBlocker _inputBlocker;
+        private InputActionType[] _allActions = (InputActionType[])Enum.GetValues(typeof(InputActionType));
+
+        public event Action<InputActionType> OnInputPressed; //입력시 OnInputPressed?.Invoke(actionType)로 호출됨.
+        public event Action<InputActionType> OnInputReleased; //입력 해제시 OnInputReleased?.Invoke(actionType)로 호출됨.
+        public event Action<Vector2> OnMoveInput;
 
         private void Awake()
         {
-            if (_instance != null)
+            if (_instance != null && _instance != this)
             {
                 Destroy(gameObject);
                 return;
             }
-
             _instance = this;
             DontDestroyOnLoad(gameObject);
         }
-        private void OnEnable() => _actionAsset?.Enable();
-        private void OnDisable() => _actionAsset?.Disable();
-
-        public void Inject(Dictionary<Type, List<object>> targets)
+        void Start()
         {
-            if (targets.TryGetValue(typeof(IInputBlocker), out var blockers))
-                _inputBlocker = blockers[0] as IInputBlocker;
-
-            if (targets.TryGetValue(typeof(IMobileButton), out var buttons))
+            if(injectedImplements.TryGetValue(typeof(IMobileButton), out var buttons))
             {
                 foreach (var obj in buttons)
                 {
@@ -55,13 +45,13 @@ namespace Refactoring
                         SubscribeMobileButton(btn);
                 }
             }
-
             SubscribeActions();
         }
-
+        private void OnEnable() => _actionAsset?.Enable();
+        private void OnDisable() => _actionAsset?.Disable();
         private void SubscribeActions()
         {
-            foreach (InputActionType actionType in AllActions)
+            foreach (InputActionType actionType in _allActions)
             {
                 InputAction action = _actionAsset?.FindAction(actionType.ToString());
                 if (action == null) continue;
@@ -69,6 +59,7 @@ namespace Refactoring
                 Action<InputAction.CallbackContext> performed;
                 Action<InputAction.CallbackContext> canceled;
 
+                //performed, canceled 이벤트에 추가 콜백 등록
                 if (actionType == InputActionType.Movement)
                 {
                     performed = ctx => BroadcastMove(ctx.ReadValue<Vector2>());
@@ -81,11 +72,16 @@ namespace Refactoring
                     canceled = _ => HandleReleased(captured);
                 }
 
+                //InputSystem에 만들어둔 키에셋이 눌리면 performed, canceled 이벤트 실행됨.
                 action.performed += performed;
                 action.canceled += canceled;
             }
         }
-
+        private void BroadcastMove(Vector2 value)
+        {
+            if (_inputBlocker != null && _inputBlocker.IsInputBlocked) return;
+            OnMoveInput?.Invoke(value);
+        }
         private void SubscribeMobileButton(IMobileButton btn)
         {
             Action down = () => HandlePressed(btn.ActionType);
@@ -93,23 +89,15 @@ namespace Refactoring
             btn.OnButtonDown += down;
             btn.OnButtonUp += up;
         }
-
         private void HandlePressed(InputActionType actionType)
         {
             if (_inputBlocker != null && _inputBlocker.IsInputBlocked) return;
             OnInputPressed?.Invoke(actionType);
         }
-
         private void HandleReleased(InputActionType actionType)
         {
             if (_inputBlocker != null && _inputBlocker.IsInputBlocked) return;
             OnInputReleased?.Invoke(actionType);
-        }
-
-        private void BroadcastMove(Vector2 value)
-        {
-            if (_inputBlocker != null && _inputBlocker.IsInputBlocked) return;
-            OnMoveInput?.Invoke(value);
         }
     }
 }
