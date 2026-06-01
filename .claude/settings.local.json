@@ -1,24 +1,9 @@
 {
   "permissions": {
-    "read": "ask",
-    "write": "ask",
-    "edit": "ask",
-    "glob": "ask",
-    "grep": "ask",
-    "bash": "ask"
-  },
-  "hooks": {
-    "Stop": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "powershell -c \"Add-Type -AssemblyName presentationCore; \\$mp = New-Object System.Windows.Media.MediaPlayer; \\$mp.Open([uri]'C:\\Windows\\Media\\notification_dogsound_claude.mp3'); \\$mp.Play(); Start-Sleep 2\""
-          }
-        ]
-      }
+    "allow": [
+      "Bash(dir /b /s \".claude\")",
+      "Bash(git show *)",
+      "Read(//tmp/**)"
     ]
-  },
-  "spinnerTipsEnabled": false
+  }
 }
