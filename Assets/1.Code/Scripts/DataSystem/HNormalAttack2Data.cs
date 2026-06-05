@@ -11,7 +11,7 @@ namespace Refactoring
         [SerializeField] private SkillEffectDataEntry[] effect;
         [SerializeField] private AudioDataEntry[] audio;
 
-        public PlayerStateType StateType => PlayerStateType.ANormalAttack2;
+        public PlayerStateType StateType => PlayerStateType.HNormalAttack2;
 
         //외부에 타이밍 데이터를 
         public Dictionary<StateEventCategory, List<IHasTimingData>> GetAllTimingData()
