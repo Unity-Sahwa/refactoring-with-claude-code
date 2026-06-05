@@ -49,7 +49,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Awake()
     {
-        #region ½Ì±ÛÅæ
+        #region ï¿½Ì±ï¿½ï¿½ï¿½
         if (instance == null) instance = this;
         else if (instance != this) Destroy(this.gameObject);
         #endregion
@@ -65,7 +65,7 @@ public class PlayerMovement : MonoBehaviour
 
     public float InputMovementValue(float moveValue, bool isHorizontal)
     {
-        //¹®Á¦: negative ¹öÆ°À» °è¼Ó´©¸£°í ÀÖÀ» ¶§, positive ¹öÆ°À» ´©¸£¸é ¹Ù·Î ÀüÈ¯ °¡´É. ÇÏÁö¸¸ positive ´©¸¥ »óÅÂ¿¡¼­ negative ´©¸£¸é X (if¹® ¼ø¼­Â÷ÀÌ)
+        //ï¿½ï¿½ï¿½ï¿½: negative ï¿½ï¿½Æ°ï¿½ï¿½ ï¿½ï¿½Ó´ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½, positive ï¿½ï¿½Æ°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù·ï¿½ ï¿½ï¿½È¯ ï¿½ï¿½ï¿½ï¿½. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ positive ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â¿ï¿½ï¿½ï¿½ negative ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ X (ifï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
 
         float value = moveValue;
         KeyAction positiveValue;
@@ -88,7 +88,7 @@ public class PlayerMovement : MonoBehaviour
         #region change SignType
         if (Input.GetKey(saveManager.InputKeys[positiveValue]))
         {
-            //SignType.POSITIVE°¡ ÀúÀåµÇ¾î ÀÖÁö ¾ÊÀº °æ¿ì¿¡¸¸ SignType.NONE¿¡ ÀúÀå
+            //SignType.POSITIVEï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ì¿¡ï¿½ï¿½ SignType.NONEï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             bool hasValue = false;
             for (int i = 0; i < array.Length; i++)
             {
@@ -111,7 +111,7 @@ public class PlayerMovement : MonoBehaviour
             }
         }
         else
-        {//SignType.POSITIVE°¡ ÀÖ´Ù¸é Áö¿ì°í SignType.POSITIVE, SignType.NEGATIVE ¸ðµÎ ¾ÕÀ¸·Î ´ç±è
+        {//SignType.POSITIVEï¿½ï¿½ ï¿½Ö´Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ SignType.POSITIVE, SignType.NEGATIVE ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
             for (int i = 0; i < array.Length; i++)
             {
                 if (array[i] == SignType.POSITIVE)
@@ -125,7 +125,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 if (array[i] == SignType.NONE)
                 {
-                    if (i + 1 < array.Length)//ºÒ¾È¿ä¼Ò
+                    if (i + 1 < array.Length)//ï¿½Ò¾È¿ï¿½ï¿½
                     {
                         array[i] = array[i + 1];
                         array[i + 1] = SignType.NONE;
@@ -136,7 +136,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetKey(saveManager.InputKeys[negativeValue]))
         {
-            //SignType.NEGATIVE ÀúÀåµÇ¾î ÀÖÁö ¾ÊÀº °æ¿ì¿¡¸¸ SignType.NONE¿¡ ÀúÀå
+            //SignType.NEGATIVE ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ì¿¡ï¿½ï¿½ SignType.NONEï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             bool hasValue = false;
             for (int i = 0; i < array.Length; i++)
             {
@@ -159,7 +159,7 @@ public class PlayerMovement : MonoBehaviour
             }
         }
         else
-        {//SignType.NEGATIVE ÀÖ´Ù¸é Áö¿ì°í SignType.POSITIVE, SignType.NEGATIVE ¸ðµÎ ¾ÕÀ¸·Î ´ç±è
+        {//SignType.NEGATIVE ï¿½Ö´Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ SignType.POSITIVE, SignType.NEGATIVE ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
             for (int i = 0; i < array.Length; i++)
             {
                 if (array[i] == SignType.NEGATIVE)
@@ -251,8 +251,8 @@ public class PlayerMovement : MonoBehaviour
 
     public void InputMovement() 
     {
-        //¹æÇâÅ° ÀÔ·Â
-        if (PlatformSwitcher.instance.IsPCPlatform == false) //¸ð¹ÙÀÏ
+        //ï¿½ï¿½ï¿½ï¿½Å° ï¿½Ô·ï¿½
+        if (PlatformSwitcher.instance.IsPCPlatform == false) //ï¿½ï¿½ï¿½ï¿½ï¿½
         {
             horizontalMove = joystick.Horizontal;
             verticalMove = joystick.Vertical;
@@ -281,19 +281,6 @@ public class PlayerMovement : MonoBehaviour
 
         movement = new Vector3(horizontalMove, 0, verticalMove);
         movement.Normalize();
-
-        //¹Ý´ë¹æÇâÀÌµ¿½Ã ÀÔ·Â°ªÀº 0ÀÎµ¥ ¹æÇâÅ°°¡ ¿òÁ÷ÀÌ´Â °æ¿ì
-        //if (horizontalMove == 0 && verticalMove == 0)
-        //{
-        //    if (Input.GetKey(saveManager.InputKeys[KeyAction.UP]) || 
-        //        Input.GetKey(saveManager.InputKeys[KeyAction.DOWN]) ||
-        //        Input.GetKey(saveManager.InputKeys[KeyAction.LEFT]) || 
-        //        Input.GetKey(saveManager.InputKeys[KeyAction.RIGHT]))
-        //    {
-        //        moveAmount = .2f;
-        //    }
-        //}
-
         maskChange.CurrentAnimator.SetFloat("horizontal", horizontalMove);
         maskChange.CurrentAnimator.SetFloat("vertical", verticalMove);
 
@@ -306,19 +293,19 @@ public class PlayerMovement : MonoBehaviour
             maskChange.CurrentAnimator.SetFloat("moveAmount", moveAmount);
         }
 
-        //targetRotation, movement °ªÀ» ÇÑ¹ø¿¡ Ã³¸®ÇÑ ´ÙÀ½ ¹°¸® Àû¿ë
-        if (moveAmount > 0f) //¿òÁ÷ÀÏ ¶§ Ä«¸Þ¶ó ±âÁØÀ¸·Î ¹æÇâ ÀÔ·ÂµÊ.
+        //targetRotation, movement ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ¹ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        if (moveAmount > 0f) //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ Ä«ï¿½Þ¶ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ô·Âµï¿½.
         {
             Vector3 cam = CameraController.instance.MainCamera.gameObject.transform.forward;
             movement = Quaternion.LookRotation(new Vector3(cam.x, 0, cam.z)) * movement;
-            //movement¸¦ Quaternion.LookRotation(new Vector3(cam.x, 0, cam.z)) ¸¸Å­ È¸ÀüÇÑ º¤ÅÍ °ª
+            //movementï¿½ï¿½ Quaternion.LookRotation(new Vector3(cam.x, 0, cam.z)) ï¿½ï¿½Å­ È¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
 
-            //°¡²û Look rotation viewing vector is zero ¹®±¸ ³¯¸®¸é¼­ Ä«¸Þ¶ó ¹Ù¶óº½
-            //TODO: Look rotation viewing vector is zero ÇØ°áÇÏ±â
+            //ï¿½ï¿½ï¿½ï¿½ Look rotation viewing vector is zero ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½é¼­ Ä«ï¿½Þ¶ï¿½ ï¿½Ù¶ï¿½
+            //TODO: Look rotation viewing vector is zero ï¿½Ø°ï¿½ï¿½Ï±ï¿½
             targetRotation = Quaternion.LookRotation(movement);
         }
 
-        //Å¸°Ù¶ô¿Â½Ã È¸Àü°ª
+        //Å¸ï¿½Ù¶ï¿½ï¿½Â½ï¿½ È¸ï¿½ï¿½ï¿½ï¿½
         if (CameraController.instance.CurrentTarget)
         {
             Vector3 turnToTargetDirection = CameraController.instance.CurrentTarget.transform.position - maskChange.CurrentMask.transform.position;
@@ -326,7 +313,7 @@ public class PlayerMovement : MonoBehaviour
             targetRotation = Quaternion.LookRotation(turnToTargetDirection);
         }
 
-        //»ç¶÷Å», µ¿¹°Å» ¼Óµµ º¯°æ
+        //ï¿½ï¿½ï¿½Å», ï¿½ï¿½ï¿½ï¿½Å» ï¿½Óµï¿½ ï¿½ï¿½ï¿½ï¿½
         if (maskChange.CurrentMask == maskChange.HumanMask)
         {
             moveSpeed = PlayerHumanMaskData.Instance.moveSpeed;
@@ -337,7 +324,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    //Âü°í: https://www.youtube.com/watch?v=4HpC--2iowE
+    //ï¿½ï¿½ï¿½ï¿½: https://www.youtube.com/watch?v=4HpC--2iowE
     public void CharacterRotate() 
     {
         if (CameraController.instance.CurrentTarget)
@@ -347,8 +334,8 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            //¸ñÇ¥(Á¤¸é)¸¦ ÇâÇØ ¹Ù¶óº½
-            //¹®Á¦°¡ ÀÖ´Ù¸é Æ¯Á¤ÀÌº¥Æ®·Î ´Ù¸¥ ¹æÇâÀ» ¹Ù¶óº¸°í ÀÖ´Ù°¡µµ ÀÌº¥Æ®°¡ ³¡³ª¸é targetRotation ¹æÇâÀ¸·Î º¼ ¼ö ÀÖ´Ù´Â °Í. ÀÌº¥Æ®¶§ targetRotationÀ» Á÷Á¢ º¯°æÇÏ´Â ¹æ½ÄÀÌ ÇÊ¿äÇÒµí
+            //ï¿½ï¿½Ç¥(ï¿½ï¿½ï¿½ï¿½)ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ù¶ï¿½
+            //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Ù¸ï¿½ Æ¯ï¿½ï¿½ï¿½Ìºï¿½Æ®ï¿½ï¿½ ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù¶óº¸°ï¿½ ï¿½Ö´Ù°ï¿½ï¿½ï¿½ ï¿½Ìºï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ targetRotation ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´Ù´ï¿½ ï¿½ï¿½. ï¿½Ìºï¿½Æ®ï¿½ï¿½ targetRotationï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½ï¿½Òµï¿½
             maskChange.CurrentMask.transform.rotation
                 = Quaternion.RotateTowards(maskChange.CurrentMask.transform.rotation, targetRotation, commonData.playerRotateSpeed);
         }
@@ -389,9 +376,9 @@ public class PlayerMovement : MonoBehaviour
             flySpeed = Vector3.up * CheatData.Instance.flySpeed * Time.deltaTime;
         }
 
-        //¹°¸®½Ã½ºÅÛ Ãæµ¹ºÎºÐ. ±âÁ¸ ¿òÁ÷ÀÓ°ú ½ºÅ³ ¿òÁ÷ÀÓ Ãæµ¹ -> ¾î¶»°Ô ¿òÁ÷ÀÏÁö ¸ð¸£´Â »óÈ²
-        //¹ß»ýÇÏ´Â ÀÌµ¿·®À» ÀüºÎ ´õÇÏ´Â °ø°£À» ¸¸µé¾îÁØ´Ù¸é Ãæµ¹ÀÌ ÀÏ¾î³ªÁø ¾ÊÀ»µí
-        //¿òÁ÷ÀÓ ¾Ö´Ï¿¡¼­¸¸ ÀÛµ¿ÇÏµµ·Ï
+        //ï¿½ï¿½ï¿½ï¿½ï¿½Ã½ï¿½ï¿½ï¿½ ï¿½æµ¹ï¿½Îºï¿½. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ó°ï¿½ ï¿½ï¿½Å³ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½æµ¹ -> ï¿½î¶»ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ð¸£´ï¿½ ï¿½ï¿½È²
+        //ï¿½ß»ï¿½ï¿½Ï´ï¿½ ï¿½Ìµï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø´Ù¸ï¿½ ï¿½æµ¹ï¿½ï¿½ ï¿½Ï¾î³ªï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Ï¿ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ûµï¿½ï¿½Ïµï¿½ï¿½ï¿½
 
         maskChange.CurrentRigidbody.MovePosition(maskChange.CurrentMask.transform.position + movement * moveSpeed * Time.deltaTime + flySpeed);
     }
