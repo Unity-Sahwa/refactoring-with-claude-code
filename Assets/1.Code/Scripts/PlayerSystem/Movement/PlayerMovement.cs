@@ -30,7 +30,10 @@ namespace Refactoring
         void Awake()
         {
             _inputEventProvider = (IInputEventProvider)injectedImplements[typeof(IInputEventProvider)][0];
+            _inputEventProvider.OnMoveInput += OnMove;
+            
             _playerCharacterSwitcher = (ICharacterSwapNotifier)injectedImplements[typeof(ICharacterSwapNotifier)][0];
+            _playerCharacterSwitcher.OnCharacterSwapped += OnCharacterSwapped;
 
             foreach (var obj in injectedImplements[typeof(BaseCharacter<PlayerCharacterType>)])
             {
@@ -41,8 +44,6 @@ namespace Refactoring
 
         void Start()
         {
-            _inputEventProvider.OnMoveInput += OnMove;
-            _playerCharacterSwitcher.OnCharacterSwapped += OnCharacterSwapped;
             _currentCharacterType = _playerCharacterSwitcher.CurrentCharacter;
 
             _camera = Camera.main.transform;

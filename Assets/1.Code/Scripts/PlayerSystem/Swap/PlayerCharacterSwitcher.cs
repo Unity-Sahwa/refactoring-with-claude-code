@@ -12,7 +12,6 @@ namespace Refactoring
             {typeof(BaseCharacter<PlayerCharacterType>), new List<object>()}
         };
         public PlayerCharacterType CurrentCharacter {get; private set;}
-        public GameObject currentCharacterObject;
         public event Action<PlayerCharacterType> OnCharacterSwapped;
         private Dictionary<PlayerCharacterType, BaseCharacter<PlayerCharacterType>> characterMap = new Dictionary<PlayerCharacterType, BaseCharacter<PlayerCharacterType>>();
 
@@ -53,7 +52,7 @@ namespace Refactoring
                 }
             }
 
-            OnCharacterSwapped.Invoke(type);
+            OnCharacterSwapped?.Invoke(type);
         }
     }
 }

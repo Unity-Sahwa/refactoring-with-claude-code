@@ -1,7 +1,18 @@
 {
     "files.exclude": {
         "**/*.meta": true,
-        "**/*.slnx": true
+        "**/*.slnx": true,
+        "**/*.lscache": true,
+        ".utmp": true,
+        ".vs": true,
+        ".github": true,
+        "Library": true,
+        "Logs": true,
+        "obj": true,
+        "Packages": true,
+        "ProfilerCaptures": true,
+        "Temp": true,
+        "UserSettings": true
     },
     "dotnet.defaultSolution": "Unitysahwa-refactoring.slnx"
 }

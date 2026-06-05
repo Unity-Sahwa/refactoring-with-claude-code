@@ -3,7 +3,9 @@
     "allow": [
       "Bash(dir /b /s \".claude\")",
       "Bash(git show *)",
-      "Read(//tmp/**)"
+      "Read(//tmp/**)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
     ]
   }
 }

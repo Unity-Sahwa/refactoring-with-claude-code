@@ -2,18 +2,22 @@
 // OnButtonDown / OnButtonUp은 UI 시각 피드백(애니메이션 등) 전용.
 // 게임플레이 입력은 Unity OnScreenButton 컴포넌트가 Input System 파이프라인으로 자동 처리.
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace Refactoring
 {
-    public class MobileButtonBinder : MonoBehaviour, IMobileButton, IInjectTarget, IPointerDownHandler, IPointerUpHandler
+    public class MobileButtonBinder : MonoBehaviour, IMobileButton, IInterfaceInjectable, IPointerDownHandler, IPointerUpHandler
     {
         [SerializeField]
         private InputActionType _actionType;
 
         public InputActionType ActionType => _actionType;
-        public Type[] InterfaceTypes => new[] { typeof(IMobileButton) };
+        public Dictionary<Type, List<object>> injectedImplements {get;} = new Dictionary<Type, List<object>>
+        {
+             { typeof(IMobileButton), new List<object>() }
+        };
 
         public event Action OnButtonDown;
         public event Action OnButtonUp;
