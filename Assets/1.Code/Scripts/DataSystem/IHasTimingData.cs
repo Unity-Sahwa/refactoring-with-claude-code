@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Refactoring
 {
-    public interface IHasTimingData
+    public interface IStartData
     {
         public float StartProgress {get;}
     }

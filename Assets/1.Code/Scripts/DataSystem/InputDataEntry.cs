@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Refactoring
 {
     [Serializable]
-    public class InputDataEntry : IHasTimingData
+    public class InputDataEntry : IStartData
     {
         [SerializeField] private string name;
         [SerializeField] [Range(0,1)] private float startProgress;

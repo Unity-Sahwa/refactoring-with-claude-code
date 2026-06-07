@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Refactoring
 {
     [Serializable]
-    public class SkillEffectDataEntry : IHasTimingData
+    public class SkillEffectDataEntry : IStartData
     {
         [SerializeField] private string name;
         [SerializeField] private bool untilFinish;
