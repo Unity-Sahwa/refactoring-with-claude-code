@@ -10,7 +10,6 @@ namespace Refactoring
     public class DependencyInjector : MonoBehaviour
     {
         private static DependencyInjector _instance;
-        //리플렉션에서 어떤 클래스 타입이 어떤 인터페이스 타입을 가졌는지 저장. Dictionary<인터페이스, 클래스 리스트>
         private static Dictionary<Type, List<Type>> interfaceTypeMap = new(); 
         private static Dictionary<Type, List<Type>> classTypeMap = new(); 
         private static Dictionary<Type, List<Type>> abstractTypeMap = new(); 
@@ -19,12 +18,12 @@ namespace Refactoring
         private Dictionary<Type, List<object>> interfaceMap = new(); 
         private Dictionary<Type, List<object>> abstractMap = new(); 
         private List<ScriptableObject> dataList = new();
-        private Dictionary<Type, List<ScriptableObject>> dataMapByInterface = new();
+        private Dictionary<Type, List<ScriptableObject>> dataMap = new();
         
-
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
         public static void CollectType()
         {
+            
             //기존 구현: [InjectAttribute]를 가진 클래스를 순회해서 interfaceTypeMap 채우기 -> 클래스마다 [Inject] 작성이 번거로워 namespace 기준으로 리플렉션 실시
             //기존 구현 장점: 내가 타겟한 class(일반, SO, abstract, interface)나 변수들에 정보를 메모하고, 리플렉션으로 가져올 수 있다.
             //기존 구현 단점: 번거롭다. namespace 적는것도 가끔 깜빡하는데 [Inject]는 강제성이 없어서 그냥 지나갈때가 많다. 
@@ -60,21 +59,21 @@ namespace Refactoring
                 }
             }
         }
-
-
         void Awake()
         {
-            if(_instance != null && _instance != this)
+            if(_instance == null)
             {
-                Destroy(gameObject); 
-                return;
+                _instance = this;
             }
-            _instance = this;
-            DontDestroyOnLoad(gameObject);
+            else
+            {
+                if (_instance != this)
+                {
+                    Destroy(gameObject);
+                }
+            }
 
             InitializeMaps();
- 
-            UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoaded;
         }
         private void InitializeMaps()
         {
@@ -90,7 +89,6 @@ namespace Refactoring
         {
             injectableObjects = FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include, FindObjectsSortMode.None);
         }
-
         //씬에 있는 인스턴스의 타입과 classTypeMap을 매치시켜 interfaceMap, abstractMap에 인스턴스 채우기
         private void RegisterImplementations()
         {
@@ -129,12 +127,13 @@ namespace Refactoring
                 }
             }
         }
-
         //SO 제공자(IDataProvider)를 통해 데이터 등록
         private void RegisterSO()
         {
             //SO데이터 제공자(interfaceMap[IDataProvider]) 로부터 데이터 받아서 dataMap에 넣기
             if (!interfaceMap.TryGetValue(typeof(IDataProvider), out var targets)) return;
+
+            Debug.Log(1);
 
             foreach (var target in targets)
             {
@@ -146,18 +145,17 @@ namespace Refactoring
             foreach (var data in dataList)
             {
                 var dataType = data.GetType();
-                foreach (var iface in classTypeMap[dataType])
+                Debug.Log("dataType: " + dataType);
+                foreach (var element in classTypeMap[dataType])
                 {
-                    if(!iface.IsInterface) continue;
-                    if(!dataMapByInterface.ContainsKey(iface))
+                    if(!dataMap.ContainsKey(element))
                     {
-                        dataMapByInterface[iface] = new List<ScriptableObject>();
+                        dataMap[element] = new List<ScriptableObject>();
                     }
-                    dataMapByInterface[iface].Add(data);
+                    dataMap[element].Add(data);
                 }
             }
         }
-        
         private void InjectImplementations()
         {            
             if (!interfaceMap.TryGetValue(typeof(IInterfaceInjectable), out var targets)) return;
@@ -192,9 +190,8 @@ namespace Refactoring
 
                 foreach (var key in dataInjected.RequiredData.Keys)
                 {
-
                     //key = 원하는 SO 인터페이스 타입
-                    if (!dataMapByInterface.TryGetValue(key, out var value)) continue;
+                    if (!dataMap.TryGetValue(key, out var value)) continue;
                     dataInjected.RequiredData[key].AddRange(value);
                 }
             }
@@ -213,20 +210,12 @@ namespace Refactoring
                 }
             }
         }
-
-        private void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode mode)
-        {
-            // 인스턴스 맵 초기화 후 재등록
-            interfaceMap.Clear();
-            abstractMap.Clear();
-            dataList.Clear();
-            dataMapByInterface.Clear();
-
-            InitializeMaps();
-        }
         void OnDestroy()
         {
-            UnityEngine.SceneManagement.SceneManager.sceneLoaded -= OnSceneLoaded;
+            if(_instance == this)
+            {
+                _instance = null;
+            }
         }
     }
 }
