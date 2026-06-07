@@ -3,6 +3,7 @@
         "**/*.meta": true,
         "**/*.slnx": true,
         "**/*.lscache": true,
+
         ".utmp": true,
         ".vs": true,
         ".github": true,
@@ -12,6 +13,8 @@
         "Packages": true,
         "ProfilerCaptures": true,
         "Temp": true,
+        "ProjectSettings": true,
+        ".gitignore" : true,
         "UserSettings": true
     },
     "dotnet.defaultSolution": "Unitysahwa-refactoring.slnx"
