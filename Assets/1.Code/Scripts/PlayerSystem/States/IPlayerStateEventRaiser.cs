@@ -2,10 +2,9 @@ using System;
 
 namespace Refactoring
 {
-    public interface IStateEventRaiser
+    public interface IPlayerStateEventRaiser
     {
-        public void Raise(StateEventCategory categoryType, int index);
+        public void Raise(StateEventCategory categoryType, IStartData data);
         public void RaiseReset();
     }
 }
-

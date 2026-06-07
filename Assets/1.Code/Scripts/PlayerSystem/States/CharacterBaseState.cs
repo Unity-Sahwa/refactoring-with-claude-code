@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Refactoring
@@ -7,36 +8,31 @@ namespace Refactoring
     //애니메이션을 보유하는 캐릭터의 상태를 추적하는 부모클래스
     public abstract class CharacterBaseState<EState,ECharacter> where EState : Enum where ECharacter : Enum
     {
-        
         public abstract bool CanReenter {get;}
         public abstract EState StateKey {get;}
         public abstract ECharacter CharacterType {get;}
         protected abstract string AnimationName {get;}
-        private int _currentIndex = 0;
+        
+        private int _readIndex = 0;
         private int _animationHash;
         protected Animator CharaterAnim {get; private set;}
-        public IStateEventRaiser EventRaiser {get; private set;}
-        public ITimingData<EState> TimingData {get; private set;}
-        private List<(float, StateEventCategory, int)> sortedList = new List<(float, StateEventCategory, int)>();
-
-        public CharacterBaseState()
-        {
-            _animationHash = Animator.StringToHash(AnimationName);
-            SortTimingData();
-        }
-
-        public void Initialize(Animator animator, IStateEventRaiser eventRaiser, ITimingData<EState> timingData)
+        public IPlayerStateEventRaiser EventRaiser {get; private set;}
+        public BaseStateData StateData {get; private set;}
+        private readonly List<(StateEventCategory Category, IStartData Data)> _sortedEvents = new();
+        public void Initialize(Animator animator, IPlayerStateEventRaiser eventRaiser, BaseStateData stateData)
         {
             CharaterAnim = animator;
             EventRaiser = eventRaiser;
-            TimingData = timingData;
+            StateData = stateData;
+
+            _animationHash = Animator.StringToHash(AnimationName);
+            SortEvents();
         }        
         
-
         public virtual void EnterState()
         {
 #if UNITY_EDITOR
-            SortTimingData();
+            SortEvents();
 #endif
             CharaterAnim.CrossFade(AnimationName, 0.1f, 0,0f);
         }
@@ -58,31 +54,32 @@ namespace Refactoring
             }
             
             //STUDY: if문으로 진행할 경우 프레임마다 실행하기 때문에 의도된 결과가 나오지 않음.
-            while(_currentIndex < sortedList.Count
-                    && progress >= sortedList[_currentIndex].Item1)
+            while (_readIndex < _sortedEvents.Count
+                    && progress >= _sortedEvents[_readIndex].Data.StartProgress)
             {
-                var entry = sortedList[_currentIndex];
-                EventRaiser.Raise(entry.Item2, entry.Item3);
-                _currentIndex++;
+                var (category, data) = _sortedEvents[_readIndex];
+                EventRaiser.Raise(category, data);
+                _readIndex++;
             }
         }
         public virtual void ExitState()
         {
-            _currentIndex = 0;
+            _readIndex = 0;
             EventRaiser.RaiseReset();
         }
 
         //모든 startProgress를 한 곳에 모아 진행률 오름차순으로 정렬
-        private void SortTimingData()
+        private void SortEvents()
         {
-            Dictionary<StateEventCategory, List<IHasTimingData>> progressMap = TimingData.GetAllTimingData(); 
-            sortedList.Clear();
+            Dictionary<StateEventCategory,IStartData[]> progressMap = StateData.GetData<IStartData>();
+
+            _sortedEvents.Clear();
             
-            foreach (var (category, dataList) in progressMap)
+            foreach (var (category, dataArray) in progressMap)
             {
-                for (int i = 0; i < dataList.Count; i++)
+                foreach (IStartData data in dataArray)
                 {
-                    sortedList.Add((dataList[i].StartProgress,category, i));
+                    _sortedEvents.Add((category, data));
                 }
             }
 
@@ -99,7 +96,7 @@ namespace Refactoring
             //  반환값이 0 -> 순서유지
             //  반환값이 양수 -> b가 a보다 앞에 위치
             #endregion            
-            sortedList.Sort((a,b) => a.Item1.CompareTo(b.Item1));
+            _sortedEvents.Sort((a, b) => a.Data.StartProgress.CompareTo(b.Data.StartProgress));
         }
     }
 }

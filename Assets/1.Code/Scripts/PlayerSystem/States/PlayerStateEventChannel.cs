@@ -6,9 +6,10 @@ using UnityEngine;
 namespace Refactoring
 {
     [CreateAssetMenu(menuName = "EventChannel/PlayerStateEventChennal")]
-    public class StateEventChannel: ScriptableObject, IStateEventRaiser, IStateEventSubscriber
+    public class PlayerStateEventChannel: ScriptableObject, IPlayerStateEventRaiser, IPlayerStateEventSubscriber
     {
-        private Dictionary<StateEventCategory, Action<int>> events = new();
+        private Dictionary<StateEventCategory, Action<IStartData>> events = new();
+        private Action _onResetEvent;
 
         void OnEnable()
         {
@@ -18,22 +19,21 @@ namespace Refactoring
             }
         }
 
-        public void Raise(StateEventCategory categoryType, int index)
+        public void Raise(StateEventCategory categoryType, IStartData data)
         {
-            events[categoryType]?.Invoke(index);
+            events[categoryType]?.Invoke(data);
         }
              
-        public void Subscribe(StateEventCategory categoryType, Action<int> listener) 
+        public void Subscribe(StateEventCategory categoryType, Action<IStartData> listener) 
         { 
             events[categoryType] += listener;
         }
 
-        public void Unsubscribe(StateEventCategory categoryType, Action<int> listener) 
+        public void Unsubscribe(StateEventCategory categoryType, Action<IStartData> listener) 
         {
             events[categoryType] -= listener;
         }
 
-        private Action _onResetEvent;
         public void RaiseReset() => _onResetEvent?.Invoke();
         public void SubscribeReset(Action listener) => _onResetEvent += listener;
         public void UnsubscribeReset(Action listener) => _onResetEvent -= listener;

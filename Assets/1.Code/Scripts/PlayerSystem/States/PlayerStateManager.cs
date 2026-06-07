@@ -19,13 +19,13 @@ namespace Refactoring
         public Dictionary<Type, List<ScriptableObject>> RequiredData {get;} = new Dictionary<Type, List<ScriptableObject>> ()
         {
             //이벤트채널
-            {typeof(ITimingData<PlayerStateType>), new List<ScriptableObject>()},
-            {typeof(IStateEventRaiser), new List<ScriptableObject>()} 
+            {typeof(BaseStateData), new List<ScriptableObject>()},
+            {typeof(IPlayerStateEventRaiser), new List<ScriptableObject>()} 
         };
 
-        private Dictionary<PlayerCharacterType, Animator> _playerAnimMap;
-        private Dictionary<PlayerStateType, ITimingData<PlayerStateType>> _timingDataMap = new Dictionary<PlayerStateType, ITimingData<PlayerStateType>>();
-        private StateEventChannel _eventRaiser;
+        private Dictionary<PlayerCharacterType, Animator> _playerAnimMap = new Dictionary<PlayerCharacterType, Animator>();
+        private Dictionary<PlayerStateType, BaseStateData> _stateDataMap = new Dictionary<PlayerStateType, BaseStateData>();
+        private PlayerStateEventChannel _eventRaiser;
         private IInputEventProvider _inputBroadcaster;
 
         private void Awake()
@@ -37,14 +37,14 @@ namespace Refactoring
                 _playerAnimMap[playerCharacter.Type] = playerCharacter.GetCharacterComponent<Animator>();
             }
             
-            var timingDataList = RequiredData[typeof(ITimingData<PlayerStateType>)];
-            foreach (var data in timingDataList)
+            var dataList = RequiredData[typeof(BaseStateData)];
+            foreach (var data in dataList)
             {
-                var timingData = (ITimingData<PlayerStateType>)data;
-                _timingDataMap[timingData.StateType] = timingData;
+                var stateData = (BaseStateData)data;
+                _stateDataMap[stateData.StateType] = stateData;
             }
 
-            _eventRaiser = (StateEventChannel)RequiredData[typeof(IStateEventRaiser)][0];
+            _eventRaiser = (PlayerStateEventChannel)RequiredData[typeof(IPlayerStateEventRaiser)][0];
             _inputBroadcaster = (IInputEventProvider)injectedImplements[typeof(IInputEventProvider)][0];
 
             CreateStates();
@@ -58,15 +58,13 @@ namespace Refactoring
 
             base.Start();
         }
-        
         private void CreateStates()
         {
             foreach (var classType in AbstractTypeMap[typeof(CharacterBaseState<PlayerStateType,PlayerCharacterType>)])
             {   
                 //STUDY Activator.CreateInstance로 타입으로 인스턴스 생성.
                 var instance = (CharacterBaseState<PlayerStateType,PlayerCharacterType>)Activator.CreateInstance(classType);
-                Debug.Log("Initialize");
-                instance.Initialize(_playerAnimMap[instance.CharacterType], _eventRaiser, _timingDataMap[instance.StateKey]);
+                instance.Initialize(_playerAnimMap[instance.CharacterType], _eventRaiser, _stateDataMap[instance.StateKey]);
                 states[instance.StateKey] = instance;
             }
         }
