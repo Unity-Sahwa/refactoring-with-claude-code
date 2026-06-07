@@ -12,6 +12,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e25974c71bb82704496a8efa12f5759a, type: 3}
   m_Name: HNormalAttack3Data
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.HNormalAttack3Data
-  input: []
-  effect: []
-  audio: []
+  input:
+  - name: 
+    startProgress: 0
+    duration: 0
+  effect:
+  - name: 
+    untilFinish: 0
+    position: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 0, y: 0, z: 0}
+    startProgress: 0
+    duration: 0
+  audio:
+  - name: 
+    clip: {fileID: 0}
+    loop: 0
+    volume: 0
+    pitch: 0
+    spatialBlend: 0
+    minDistance: 0
+    maxDistance: 0
+    startProgress: 0
+    duration: 0

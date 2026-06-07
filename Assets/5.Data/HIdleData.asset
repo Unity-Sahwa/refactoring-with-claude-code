@@ -12,6 +12,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f176c397ac08ca144b17932ff26db3b4, type: 3}
   m_Name: HIdleData
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.HIdleData
-  input: []
-  effect: []
-  audio: []
+  input:
+  - name: 
+    startProgress: 1
+    duration: 0
+  effect:
+  - name: 
+    untilFinish: 0
+    position: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 0, y: 0, z: 0}
+    startProgress: 0
+    duration: 0
+  audio:
+  - name: 
+    clip: {fileID: 0}
+    loop: 0
+    volume: 0
+    pitch: 0
+    spatialBlend: 0
+    minDistance: 0
+    maxDistance: 0
+    startProgress: 0
+    duration: 0
