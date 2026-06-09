@@ -133,8 +133,6 @@ namespace Refactoring
             //SO데이터 제공자(interfaceMap[IDataProvider]) 로부터 데이터 받아서 dataMap에 넣기
             if (!interfaceMap.TryGetValue(typeof(IDataProvider), out var targets)) return;
 
-            Debug.Log(1);
-
             foreach (var target in targets)
             {
                 IDataProvider provider = (IDataProvider)target;
@@ -144,8 +142,12 @@ namespace Refactoring
             //dataList와 classTypeMap를 매칭하여 dataMapByInterface에 저장
             foreach (var data in dataList)
             {
+                if(data ==null)
+                {
+                    Debug.LogWarning("SOContainer에서 Missing을 확인하세요");
+                    return;
+                }
                 var dataType = data.GetType();
-                Debug.Log("dataType: " + dataType);
                 foreach (var element in classTypeMap[dataType])
                 {
                     if(!dataMap.ContainsKey(element))
