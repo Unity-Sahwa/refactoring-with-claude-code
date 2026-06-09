@@ -9,11 +9,11 @@ namespace Refactoring
                     IInterfaceInjectable, IAbstractTypeInjected, IDataInjectable
     {
         private static PlayerStateManager _instance;
-
         public Dictionary<Type, List<object>> injectedImplements { get; } = new Dictionary<Type, List<object>>()
         {
             { typeof(BaseCharacter<PlayerCharacterType>), new List<object>() },
-            { typeof(IInputEventProvider), new List<object>() }
+            { typeof(IInputEventProvider), new List<object>() },
+            { typeof(ICharacterSwapNotifier), new List<object>() }
         };
         public Dictionary<Type, List<Type>> AbstractTypeMap {get;} = new Dictionary<Type, List<Type>>() 
         {
@@ -25,11 +25,16 @@ namespace Refactoring
             {typeof(BaseStateData), new List<ScriptableObject>()},
             {typeof(IPlayerStateEventRaiser), new List<ScriptableObject>()} 
         };
-
         private Dictionary<PlayerCharacterType, Animator> _playerAnimMap = new Dictionary<PlayerCharacterType, Animator>();
         private Dictionary<PlayerStateType, BaseStateData> _stateDataMap = new Dictionary<PlayerStateType, BaseStateData>();
         private PlayerStateEventChannel _eventRaiser;
         private IInputEventProvider _inputBroadcaster;
+        private ICharacterSwapNotifier _characterSwapNotifier;
+        private readonly Dictionary<PlayerCharacterType, PlayerStateType> _characterSwapMap = new()
+        {
+            {PlayerCharacterType.HumanCharacter, PlayerStateType.HIdle},
+            {PlayerCharacterType.AnimalCharacter, PlayerStateType.AIdle}
+        };
 
         private void Awake()
         {
@@ -41,6 +46,7 @@ namespace Refactoring
             {
                 Destroy(gameObject);
             }
+
 
             var characterList = injectedImplements[typeof(BaseCharacter<PlayerCharacterType>)];
             foreach (var character in characterList)
@@ -58,18 +64,19 @@ namespace Refactoring
 
             _eventRaiser = (PlayerStateEventChannel)RequiredData[typeof(IPlayerStateEventRaiser)][0];
             _inputBroadcaster = (IInputEventProvider)injectedImplements[typeof(IInputEventProvider)][0];
+            
+            _characterSwapNotifier = (ICharacterSwapNotifier)injectedImplements[typeof(ICharacterSwapNotifier)][0];
+            _characterSwapNotifier.OnCharacterSwapped += OnCharacterSwapped;
 
             CreateStates();
+
+            CurrentState = states.First().Value;
+            nextStateKey = CurrentState.StateKey;
         }
 
         protected override void Start()
         {
-            //테스트
-            _inputBroadcaster.OnInputPressed += Test_OnInputPressed;
-
-            //대원_TODO: Assets/1.Code/Scripts/PlayerSystem/States/StateManager.cs:32 CurrentState랑 nextStateKey 같으면 안되는데 해결하기
-            CurrentState = states.First().Value;
-            nextStateKey = CurrentState.StateKey;
+            _inputBroadcaster.OnInputPressed += Test_OnInputPressed; //테스트
 
             base.Start();
         }
@@ -87,6 +94,19 @@ namespace Refactoring
                 states[instance.StateKey] = instance;
             }
         }
+        
+        private void OnCharacterSwapped(PlayerCharacterType type)
+        {
+            var characterIdle = _characterSwapMap[type];
+            if (!states.ContainsKey(characterIdle))
+            {
+                Debug.LogError($"{type}의 {characterIdle}이 생성되지 않았습니다.");
+                return;
+            }
+
+            nextStateKey = characterIdle;
+        }
+        
         private void Test_OnInputPressed(InputActionType actionType)
         {
             //states에 포함되어 있는 상태 키만 진행해야함. 
@@ -110,6 +130,14 @@ namespace Refactoring
                 {
                     nextStateKey = PlayerStateType.HNormalAttack1;
                 }
+            }
+        }
+    
+        void OnDestroy()
+        {
+            if(_characterSwapNotifier != null)
+            {
+                _characterSwapNotifier.OnCharacterSwapped -= OnCharacterSwapped;
             }
         }
     }
