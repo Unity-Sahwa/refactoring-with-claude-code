@@ -31,9 +31,8 @@ namespace Refactoring
             }
 
             CurrentState?.UpdateState();
+            CheckAutoTransition();
         }
-
-
         private void TransitionToState(EState stateKey)
         {
             if (IsTransitioningState) return;
@@ -52,5 +51,6 @@ namespace Refactoring
 
             IsTransitioningState = false;
         }
+        protected virtual void CheckAutoTransition() { }
     }
 }

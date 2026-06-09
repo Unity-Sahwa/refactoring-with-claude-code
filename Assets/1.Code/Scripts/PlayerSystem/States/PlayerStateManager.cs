@@ -94,7 +94,6 @@ namespace Refactoring
                 states[instance.StateKey] = instance;
             }
         }
-        
         private void OnCharacterSwapped(PlayerCharacterType type)
         {
             var characterIdle = _characterSwapMap[type];
@@ -106,14 +105,17 @@ namespace Refactoring
 
             nextStateKey = characterIdle;
         }
-        
+        protected override void CheckAutoTransition()
+        {
+            if(CurrentState.IsFinished
+            && _characterSwapMap.TryGetValue(CurrentState.CharacterType, out var idle)
+            && !CurrentState.StateKey.Equals(idle))
+            {
+                nextStateKey = idle;
+            }
+        }
         private void Test_OnInputPressed(InputActionType actionType)
         {
-            //states에 포함되어 있는 상태 키만 진행해야함. 
-            //attack1 상태인데 진입 -> attack2로
-            //attack2 상태인데 진입 -> attack3로
-            //attack3 상태인데 진입 -> attack1로
-            
             if(actionType == InputActionType.NormalAttack)
             {
                 if(states.TryGetValue(PlayerStateType.HNormalAttack1, out var attack1) && CurrentState == attack1

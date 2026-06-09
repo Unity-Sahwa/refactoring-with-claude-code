@@ -72,7 +72,6 @@ namespace Refactoring
             var active = new ActiveEffect { instance = instance, untilFinish = effect.UntilFinish };
             active.routine = StartCoroutine(CoRunEffect(active, effect));
             _actives.Add(active);
-            Debug.Log($"HandleEffect,_actives.Count: {_actives.Count} ");
         }
 
         private IEnumerator CoRunEffect(ActiveEffect active, IPlayerEffect effect)

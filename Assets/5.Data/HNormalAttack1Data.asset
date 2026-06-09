@@ -15,7 +15,7 @@ MonoBehaviour:
   input: []
   effect:
   - name: 1
-    untilFinish: 1
+    untilFinish: 0
     position: {x: 0, y: 0, z: 0}
     rotation: {x: 0, y: 0, z: 0}
     scale: {x: 0, y: 0, z: 0}
@@ -28,6 +28,6 @@ MonoBehaviour:
       m_SubObjectGUID: 
       m_EditorAssetChanged: 0
     attachKey: 0
-    stopInPlace: 0
-    stopTime: 0
+    stopInPlace: 1
+    stopTime: 1
   audio: []
