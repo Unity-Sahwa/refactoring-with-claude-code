@@ -12,26 +12,102 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf64e77dc4e64ff4e9281fc0cfadaeb6, type: 3}
   m_Name: HNormalAttack1Data
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.HNormalAttack1Data
-  input:
-  - name: 
-    startProgress: 0
-    duration: 0
+  input: []
   effect:
-  - name: 
-    untilFinish: 0
+  - name: 1
+    untilFinish: 1
     position: {x: 0, y: 0, z: 0}
     rotation: {x: 0, y: 0, z: 0}
     scale: {x: 0, y: 0, z: 0}
     startProgress: 0
-    duration: 0
-  audio:
-  - name: 
-    clip: {fileID: 0}
-    loop: 0
-    volume: 0
-    pitch: 0
-    spatialBlend: 0
-    minDistance: 0
-    maxDistance: 0
-    startProgress: 0
-    duration: 0
+    duration: 3
+    effectObject:
+      m_AssetGUID: cd2a6771c578ec3478980c2e5a5f41ea
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
+    attachKey: 0
+    stopInPlace: 0
+    stopTime: 0
+  - name: 1
+    untilFinish: 1
+    position: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 0, y: 0, z: 0}
+    startProgress: 0.2
+    duration: 3
+    effectObject:
+      m_AssetGUID: cd2a6771c578ec3478980c2e5a5f41ea
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
+    attachKey: 0
+    stopInPlace: 0
+    stopTime: 0
+  - name: 1
+    untilFinish: 1
+    position: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 0, y: 0, z: 0}
+    startProgress: 0.4
+    duration: 3
+    effectObject:
+      m_AssetGUID: cd2a6771c578ec3478980c2e5a5f41ea
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
+    attachKey: 0
+    stopInPlace: 0
+    stopTime: 0
+  - name: 1
+    untilFinish: 1
+    position: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 0, y: 0, z: 0}
+    startProgress: 0.6
+    duration: 3
+    effectObject:
+      m_AssetGUID: 8cdb78173d9190e4382cf533192096e2
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
+    attachKey: 0
+    stopInPlace: 0
+    stopTime: 0
+  - name: 1
+    untilFinish: 1
+    position: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 0, y: 0, z: 0}
+    startProgress: 0.8
+    duration: 3
+    effectObject:
+      m_AssetGUID: 8cdb78173d9190e4382cf533192096e2
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 1
+    attachKey: 0
+    stopInPlace: 0
+    stopTime: 0
+  - name: 1
+    untilFinish: 1
+    position: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 0, y: 0, z: 0}
+    startProgress: 1
+    duration: 3
+    effectObject:
+      m_AssetGUID: a2ccf81a1d5b163448ebdf66b5e746d6
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 1
+    attachKey: 0
+    stopInPlace: 0
+    stopTime: 0
+  audio: []
