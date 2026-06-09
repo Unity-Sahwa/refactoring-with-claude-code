@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Refactoring
@@ -7,6 +8,8 @@ namespace Refactoring
     public class PlayerStateManager : StateManager<PlayerStateType,PlayerCharacterType>, 
                     IInterfaceInjectable, IAbstractTypeInjected, IDataInjectable
     {
+        private static PlayerStateManager _instance;
+
         public Dictionary<Type, List<object>> injectedImplements { get; } = new Dictionary<Type, List<object>>()
         {
             { typeof(BaseCharacter<PlayerCharacterType>), new List<object>() },
@@ -30,6 +33,15 @@ namespace Refactoring
 
         private void Awake()
         {
+            if(_instance == null)
+            {
+                _instance = this;
+            }
+            else if(_instance != this)
+            {
+                Destroy(gameObject);
+            }
+
             var characterList = injectedImplements[typeof(BaseCharacter<PlayerCharacterType>)];
             foreach (var character in characterList)
             {
@@ -54,7 +66,10 @@ namespace Refactoring
         {
             //테스트
             _inputBroadcaster.OnInputPressed += Test_OnInputPressed;
-            if(states[PlayerStateType.HIdle] != null) CurrentState = states[PlayerStateType.HIdle];
+
+            //대원_TODO: Assets/1.Code/Scripts/PlayerSystem/States/StateManager.cs:32 CurrentState랑 nextStateKey 같으면 안되는데 해결하기
+            CurrentState = states.First().Value;
+            nextStateKey = CurrentState.StateKey;
 
             base.Start();
         }
@@ -64,19 +79,30 @@ namespace Refactoring
             {   
                 //STUDY Activator.CreateInstance로 타입으로 인스턴스 생성.
                 var instance = (CharacterBaseState<PlayerStateType,PlayerCharacterType>)Activator.CreateInstance(classType);
+
+                if(!_playerAnimMap.ContainsKey(instance.CharacterType)) continue;
+                if(!_stateDataMap.ContainsKey(instance.StateKey)) continue;
+
                 instance.Initialize(_playerAnimMap[instance.CharacterType], _eventRaiser, _stateDataMap[instance.StateKey]);
                 states[instance.StateKey] = instance;
             }
         }
         private void Test_OnInputPressed(InputActionType actionType)
         {
+            //states에 포함되어 있는 상태 키만 진행해야함. 
+            //attack1 상태인데 진입 -> attack2로
+            //attack2 상태인데 진입 -> attack3로
+            //attack3 상태인데 진입 -> attack1로
+            
             if(actionType == InputActionType.NormalAttack)
             {
-                if(CurrentState == states[PlayerStateType.HNormalAttack1])
+                if(states.TryGetValue(PlayerStateType.HNormalAttack1, out var attack1) && CurrentState == attack1
+                   && states.TryGetValue(PlayerStateType.HNormalAttack2, out var next1))
                 {
                     nextStateKey = PlayerStateType.HNormalAttack2;
                 }
-                else if(CurrentState == states[PlayerStateType.HNormalAttack2])
+                else if(states.TryGetValue(PlayerStateType.HNormalAttack2, out var attack2) && CurrentState == attack2
+                   && states.TryGetValue(PlayerStateType.HNormalAttack3, out var next2))
                 {
                     nextStateKey = PlayerStateType.HNormalAttack3;
                 }
@@ -84,16 +110,6 @@ namespace Refactoring
                 {
                     nextStateKey = PlayerStateType.HNormalAttack1;
                 }
-            }
-            else if (actionType == InputActionType.SpecialAttack)
-            {
-                CurrentState = states[ PlayerStateType.HSpecialAttack];
-                nextStateKey = PlayerStateType.HSpecialAttack;
-            }
-            else if (actionType == InputActionType.FinishAttack)
-            {
-                CurrentState = states[ PlayerStateType.HFinishAttack];
-                nextStateKey = PlayerStateType.HFinishAttack;
             }
         }
     }
