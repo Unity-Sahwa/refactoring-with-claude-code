@@ -72,10 +72,13 @@ namespace Refactoring
             var active = new ActiveEffect { instance = instance, untilFinish = effect.UntilFinish };
             active.routine = StartCoroutine(CoRunEffect(active, effect));
             _actives.Add(active);
+            Debug.Log($"HandleEffect,_actives.Count: {_actives.Count} ");
         }
 
         private IEnumerator CoRunEffect(ActiveEffect active, IPlayerEffect effect)
         {   
+            //대원_TODO: UntilFinish가 적용된 상태에서 캐릭터 스왑하면 이펙트가 캐릭터 자식으로 존재해 함께 비활성화되는 문제
+            
             if (effect.StopInPlace)
             {
                 float stopTime = Mathf.Clamp(effect.StopTime, 0f, effect.Duration);
@@ -99,6 +102,7 @@ namespace Refactoring
                 if (active.untilFinish) continue;
 
                 if (active.routine != null) StopCoroutine(active.routine);
+                active.instance.SetActive(false);
                 FinishEffect(active);
             }
         }
