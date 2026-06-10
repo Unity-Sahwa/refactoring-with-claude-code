@@ -11,6 +11,7 @@ namespace Refactoring
         {
             { typeof(IEffectProvider), new List<object>() },
             { typeof(IEffectAttachPoint), new List<object>() },
+            { typeof(ICharacterSwapNotifier), new List<object>()}
         };
 
         public Dictionary<Type, List<ScriptableObject>> RequiredData {get;} = new ()
@@ -20,6 +21,7 @@ namespace Refactoring
 
 
         private IPlayerStateEventSubscriber _eventSubscriber;
+        private ICharacterSwapNotifier _characterSwapNotifier;
         private IEffectProvider _provider;
         private readonly Dictionary<EffectAttachPointType, Transform> _attachPoints = new();
         private readonly List<ActiveEffect> _actives = new();
@@ -38,6 +40,9 @@ namespace Refactoring
             _eventSubscriber.SubscribeReset(HandleReset);
 
             _provider = (IEffectProvider)injectedImplements[typeof(IEffectProvider)][0];
+
+            _characterSwapNotifier = (ICharacterSwapNotifier)injectedImplements[typeof(ICharacterSwapNotifier)][0];
+            _characterSwapNotifier.OnCharacterSwapped += OnCharacterSwapped;
 
             foreach (var obj in injectedImplements[typeof(IEffectAttachPoint)])
             {
@@ -63,7 +68,6 @@ namespace Refactoring
             t.SetParent(parent, false);
             t.localPosition = effect.Position;
             t.localRotation = Quaternion.Euler(effect.Rotation);
-            t.localScale = effect.Scale;
             if (effect.Scale == Vector3.zero) t.localScale = Vector3.one;
             else t.localScale = effect.Scale;
             
@@ -77,6 +81,7 @@ namespace Refactoring
         private IEnumerator CoRunEffect(ActiveEffect active, IPlayerEffect effect)
         {   
             //대원_TODO: UntilFinish가 적용된 상태에서 캐릭터 스왑하면 이펙트가 캐릭터 자식으로 존재해 함께 비활성화되는 문제
+            //UtilFinish가 적용되면 reset되는 순간 밖으로 꺼낼까?
             
             if (effect.StopInPlace)
             {
@@ -98,7 +103,10 @@ namespace Refactoring
             for (int i = _actives.Count - 1; i >= 0; i--)
             {
                 var active = _actives[i];
-                if (active.untilFinish) continue;
+                if (active.untilFinish) 
+                {
+                    continue;
+                }
 
                 if (active.routine != null) StopCoroutine(active.routine);
                 active.instance.SetActive(false);
@@ -111,13 +119,29 @@ namespace Refactoring
             _actives.Remove(active);
             _provider.Return(active.instance);
         }
-    
+
+        private void OnCharacterSwapped(PlayerCharacterType type)
+        {
+            foreach (var active in _actives)
+            {
+                if(active.untilFinish)
+                {
+                    active.instance.transform.SetParent(null,true);
+                }
+            }
+        }
+
         private void OnDestroy()
         {
             if (_eventSubscriber != null)
             {
                 _eventSubscriber.Unsubscribe(StateEventCategory.Effect, HandleEffect);
                 _eventSubscriber.UnsubscribeReset(HandleReset);
+            }
+
+            if(_characterSwapNotifier != null)
+            {
+                _characterSwapNotifier.OnCharacterSwapped -= OnCharacterSwapped;
             }
 
             foreach (var active in _actives)

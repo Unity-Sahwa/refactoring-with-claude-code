@@ -58,7 +58,7 @@ namespace Refactoring
                 }
 
                 var queue = new Queue<GameObject>();
-                for (int i = 0; i < 3; i++) //이펙트 반복될 경우를 위해, 여유분 생성
+                for (int i = 0; i < 3; i++) //3개 이상이 필요해지면 이펙트 별로 여유분 수량 변수를 따로 만들기
                 {
                     var instance = Instantiate(op.Result, transform); 
                     instance.SetActive(false);
