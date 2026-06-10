@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Refactoring
 {
     [Serializable]
-    public class AudioDataEntry : IHasTimingData
+    public class AudioDataEntry : IStartData
     {
         [SerializeField] private string name;
         [SerializeField] private AudioClip clip;

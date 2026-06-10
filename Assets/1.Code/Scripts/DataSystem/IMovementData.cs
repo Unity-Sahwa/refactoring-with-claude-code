@@ -1,6 +1,3 @@
-using System.Collections;
-using UnityEngine;
-
 namespace Refactoring
 {
     public interface IMovementData

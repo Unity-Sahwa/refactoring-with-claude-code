@@ -460,7 +460,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4962c5314808c0842832f3041cb23438, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.SOContainer
-  SOAssets: []
+  SOAssets:
+  - name: Player State Event Channel
+    so:
+    - {fileID: 11400000, guid: cf2ea3a9486770942be3b87b01e3010c, type: 2}
+  - name: Player State Data
+    so:
+    - {fileID: 11400000, guid: f44b2990a1ec79b4f885ac7ddbf6c937, type: 2}
+    - {fileID: 11400000, guid: eff0d470a6c2dd64ab4eec1c6755b79b, type: 2}
+    - {fileID: 11400000, guid: c2719ed6d129aaf4e91c1db9e9345fb5, type: 2}
+    - {fileID: 11400000, guid: 2d7b8fac85224d540b59314538f1421c, type: 2}
 --- !u!4 &1456539929
 Transform:
   m_ObjectHideFlags: 0
@@ -772,6 +781,7 @@ GameObject:
   - component: {fileID: 1854086719}
   - component: {fileID: 1854086722}
   - component: {fileID: 1854086723}
+  - component: {fileID: 1854086724}
   m_Layer: 0
   m_Name: PlayerCharacter
   m_TagString: Untagged
@@ -820,6 +830,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 311cf4ed2f629c24db6c773c099c5938, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.PlayerCharacterSwitcher
+--- !u!114 &1854086724
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1854086718}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30a6c53f95b8c184bb993645b05f2534, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.PlayerStateManager
 --- !u!1001 &2047701878
 PrefabInstance:
   m_ObjectHideFlags: 0

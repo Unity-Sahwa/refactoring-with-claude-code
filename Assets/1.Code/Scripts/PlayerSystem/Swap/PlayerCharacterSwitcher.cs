@@ -36,23 +36,21 @@ namespace Refactoring
             Vector3 currentPosition = characterMap[CurrentCharacter].transform.position;
             Quaternion currentRotation = characterMap[CurrentCharacter].transform.rotation;
 
+            var next = characterMap[type];
+            next.gameObject.SetActive(true);
+            CurrentCharacter = type;
+            next.transform.position = currentPosition;
+            next.transform.rotation = currentRotation;
+
+            OnCharacterSwapped?.Invoke(type);
+
             foreach (var (key,value) in characterMap)
             {
-                if (key == type)
-                {
-                    value.gameObject.SetActive(true);
-
-                    CurrentCharacter = type;
-                    characterMap[type].transform.position = currentPosition;
-                    characterMap[type].transform.rotation = currentRotation;
-                }
-                else
+                if (key != type)
                 {
                     value.gameObject.SetActive(false);
                 }
             }
-
-            OnCharacterSwapped?.Invoke(type);
         }
     }
 }

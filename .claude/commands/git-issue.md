@@ -3,7 +3,8 @@ description: GitHub Issue를 템플릿 기반으로 생성한다.
 ---
 
 ## 사용자에게 질문
-- 무슨 작업을 할건지
+- 무슨 작업을 할건지 질문한다.
+- 어떤 Issue type을 작성할건지 질문한다.
 
 ## Issue 문서 만들기
 1. `.claude\git\issue`에 파일 생성 `issue_{time}.md ` 
