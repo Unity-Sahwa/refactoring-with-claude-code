@@ -10,15 +10,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Default Local Group
+  m_Name: PlayerHitbox
   m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
-  m_GroupName: Default Local Group
-  m_GUID: b1339d32e98ef1548b7a6c6e4fcbe21d
-  m_SerializeEntries: []
+  m_GroupName: PlayerHitbox
+  m_GUID: bd3bfd11337f65b43a2923224c3de1f6
+  m_SerializeEntries:
+  - m_GUID: 2aa8b3e450f07784bac9160df87d7a19
+    m_Address: hitbox2
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c37dcd22866e94148bcc634d606d03b4
+    m_Address: hitbox
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 57a17706e87945c4c8128d64ad62479c, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: 581a436379f9c204ba550057574d89e1, type: 2}
-    - {fileID: 11400000, guid: d04be5d556f201444949253faae1c230, type: 2}
-    - {fileID: 11400000, guid: 304f187eccaf07e4f8bde3c719a925e0, type: 2}
+    - {fileID: 11400000, guid: 73467c933c4e03e43a5b1a5c7da43319, type: 2}
+    - {fileID: 11400000, guid: f0255186a0b2f1742a2ad86aa5f4ec0e, type: 2}
