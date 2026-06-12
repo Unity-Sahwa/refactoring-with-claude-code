@@ -12,6 +12,8 @@ namespace Refactoring
             {typeof(BaseCharacter<PlayerCharacterType>), new List<object>()}
         };
         public PlayerCharacterType CurrentCharacter {get; private set;}
+        public GameObject CurrentCharacterObject =>
+            characterMap.TryGetValue(CurrentCharacter, out var c) ? c.gameObject : null;
         public event Action<PlayerCharacterType> OnCharacterSwapped;
         private Dictionary<PlayerCharacterType, BaseCharacter<PlayerCharacterType>> characterMap = new Dictionary<PlayerCharacterType, BaseCharacter<PlayerCharacterType>>();
 
