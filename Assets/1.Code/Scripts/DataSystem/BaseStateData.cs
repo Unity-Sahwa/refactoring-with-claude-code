@@ -8,6 +8,7 @@ namespace Refactoring
     {
         [SerializeField] private InputDataEntry[] input;
         [SerializeField] private SkillEffectDataEntry[] effect;
+        [SerializeField] private HitboxDataEntry[] hitbox;
         [SerializeField] private AudioDataEntry[] audio;
 
         public abstract PlayerStateType StateType {get;}
@@ -21,6 +22,7 @@ namespace Refactoring
             {
                 [StateEventCategory.Input] = input,
                 [StateEventCategory.Effect] = effect,
+                [StateEventCategory.Hitbox] = hitbox,
                 [StateEventCategory.Audio] = audio,
             };
         }

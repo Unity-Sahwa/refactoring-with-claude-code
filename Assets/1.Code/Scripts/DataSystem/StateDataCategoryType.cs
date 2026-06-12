@@ -6,6 +6,7 @@ namespace Refactoring
         SkillMove,
         Restrict,
         Effect,
+        Hitbox,
         Audio
     }
 }
