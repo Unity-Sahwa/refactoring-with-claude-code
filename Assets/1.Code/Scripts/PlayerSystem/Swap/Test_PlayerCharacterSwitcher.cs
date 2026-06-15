@@ -17,7 +17,7 @@ namespace Refactoring
         void Awake()
         {
             QualitySettings.vSyncCount = 0;
-            Application.targetFrameRate = 20;
+            Application.targetFrameRate = -1;
             _inputEvent = (IInputEventProvider)injectedImplements[typeof(IInputEventProvider)][0];
             _inputEvent.OnInputPressed += OnTest;
 
