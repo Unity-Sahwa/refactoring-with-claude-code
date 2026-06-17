@@ -6,8 +6,6 @@ namespace Refactoring
 {
     public class PlayerCharacterSwitcher : MonoBehaviour, ICharacterSwappable, ICharacterSwapNotifier
     {
-          //  {typeof(BaseCharacter<PlayerCharacterType>), new List<object>()}
-        
         [Inject] private List<BaseCharacter<PlayerCharacterType>> characters;
         public PlayerCharacterType CurrentCharacter {get; private set;}
         public GameObject CurrentCharacterObject =>
