@@ -4,12 +4,14 @@ using UnityEngine;
 
 namespace Refactoring
 {
-    public class PlayerMovement : MonoBehaviour, IInterfaceInjectable
+    public class PlayerMovement : MonoBehaviour
     {
-        private IInputEventProvider _inputEventProvider;
+        [Inject] private IInputEventProvider _inputEventProvider;
+        [Inject] private ICharacterSwapNotifier _playerCharacterSwitcher;
+        [Inject] private List<BaseCharacter<PlayerCharacterType>> _characters;
         private Dictionary<PlayerCharacterType, Rigidbody> _characterRB = new Dictionary<PlayerCharacterType, Rigidbody>();
         private PlayerCharacterType _currentCharacterType;
-        private ICharacterSwapNotifier _playerCharacterSwitcher;
+        
         private Transform _camera;
         private Vector3 _cameraForward;
         private Vector3 _cameraRight;
@@ -20,24 +22,13 @@ namespace Refactoring
         private float _moveRate = 10;
         private float _rotateRate = 10;
 
-        public Dictionary<Type,List<object>> injectedImplements {get;} = new Dictionary<Type, List<object>>()
-        {
-            {typeof(BaseCharacter<PlayerCharacterType>), new List<object>()},
-            {typeof(ICharacterSwapNotifier), new List<object>()},
-            {typeof(IInputEventProvider), new List<object>()}
-        };
-        
         void Awake()
         {
-            _inputEventProvider = (IInputEventProvider)injectedImplements[typeof(IInputEventProvider)][0];
             _inputEventProvider.OnMoveInput += OnMove;
-            
-            _playerCharacterSwitcher = (ICharacterSwapNotifier)injectedImplements[typeof(ICharacterSwapNotifier)][0];
             _playerCharacterSwitcher.OnCharacterSwapped += OnCharacterSwapped;
 
-            foreach (var obj in injectedImplements[typeof(BaseCharacter<PlayerCharacterType>)])
+            foreach (var characterObj in _characters)
             {
-                BaseCharacter<PlayerCharacterType> characterObj = (BaseCharacter<PlayerCharacterType>)obj;
                 _characterRB[characterObj.Type] = characterObj.GetCharacterComponent<Rigidbody>();
             }
         }

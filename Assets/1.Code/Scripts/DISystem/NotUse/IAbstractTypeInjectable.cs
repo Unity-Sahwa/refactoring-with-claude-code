@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Refactoring
 {
-    public interface IAbstractTypeInjected
+    public interface IAbstractTypeInjected_old
     {
         Dictionary<Type,List<Type>> AbstractTypeMap { get;}
     }

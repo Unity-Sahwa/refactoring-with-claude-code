@@ -7,6 +7,7 @@ namespace Refactoring
     public abstract class BaseStateData : ScriptableObject
     {
         [SerializeField] private InputDataEntry[] input;
+        [SerializeField] private SkillMoveDataEntry[] skillMove;
         [SerializeField] private SkillEffectDataEntry[] effect;
         [SerializeField] private HitboxDataEntry[] hitbox;
         [SerializeField] private AudioDataEntry[] audio;
@@ -21,6 +22,7 @@ namespace Refactoring
             _dataMap = new()
             {
                 [StateEventCategory.Input] = input,
+                [StateEventCategory.SkillMove] = skillMove,
                 [StateEventCategory.Effect] = effect,
                 [StateEventCategory.Hitbox] = hitbox,
                 [StateEventCategory.Audio] = audio,

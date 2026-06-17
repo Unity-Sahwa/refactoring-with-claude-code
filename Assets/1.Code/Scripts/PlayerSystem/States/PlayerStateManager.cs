@@ -5,31 +5,17 @@ using UnityEngine;
 
 namespace Refactoring
 {
-    public class PlayerStateManager : StateManager<PlayerStateType,PlayerCharacterType>, 
-                    IInterfaceInjectable, IAbstractTypeInjected, IDataInjectable
+    public class PlayerStateManager : StateManager<PlayerStateType,PlayerCharacterType>
     {
         private static PlayerStateManager _instance;
-        public Dictionary<Type, List<object>> injectedImplements { get; } = new Dictionary<Type, List<object>>()
-        {
-            { typeof(BaseCharacter<PlayerCharacterType>), new List<object>() },
-            { typeof(IInputEventProvider), new List<object>() },
-            { typeof(ICharacterSwapNotifier), new List<object>() }
-        };
-        public Dictionary<Type, List<Type>> AbstractTypeMap {get;} = new Dictionary<Type, List<Type>>() 
-        {
-            { typeof(CharacterBaseState<PlayerStateType,PlayerCharacterType>), new List<Type>() }
-        };
-        public Dictionary<Type, List<ScriptableObject>> RequiredData {get;} = new Dictionary<Type, List<ScriptableObject>> ()
-        {
-            //이벤트채널
-            {typeof(BaseStateData), new List<ScriptableObject>()},
-            {typeof(IPlayerStateEventRaiser), new List<ScriptableObject>()} 
-        };
-        private Dictionary<PlayerCharacterType, Animator> _playerAnimMap = new Dictionary<PlayerCharacterType, Animator>();
+        [Inject] private List<BaseStateData> _stateDataList;
+        [Inject] private PlayerStateEventChannel _eventRaiser;
+        [Inject] private IInputEventProvider _inputBroadcaster;
+        [Inject] private ICharacterSwapNotifier _characterSwapNotifier;
+        [Inject] private List<BaseCharacter<PlayerCharacterType>> _characters;
+        [InjectSubTypes(typeof(CharacterBaseState<PlayerStateType,PlayerCharacterType>))] private List<Type> _stateTypes;
         private Dictionary<PlayerStateType, BaseStateData> _stateDataMap = new Dictionary<PlayerStateType, BaseStateData>();
-        private PlayerStateEventChannel _eventRaiser;
-        private IInputEventProvider _inputBroadcaster;
-        private ICharacterSwapNotifier _characterSwapNotifier;
+        private Dictionary<PlayerCharacterType, Animator> _playerAnimMap = new Dictionary<PlayerCharacterType, Animator>();
         private readonly Dictionary<PlayerCharacterType, PlayerStateType> _characterSwapMap = new()
         {
             {PlayerCharacterType.HumanCharacter, PlayerStateType.HIdle},
@@ -47,25 +33,16 @@ namespace Refactoring
                 Destroy(gameObject);
             }
 
-
-            var characterList = injectedImplements[typeof(BaseCharacter<PlayerCharacterType>)];
-            foreach (var character in characterList)
+            foreach (var character in _characters)
             {
-                var playerCharacter = (BaseCharacter<PlayerCharacterType>)character;
-                _playerAnimMap[playerCharacter.Type] = playerCharacter.GetCharacterComponent<Animator>();
+                _playerAnimMap[character.Type] = character.GetCharacterComponent<Animator>();
             }
             
-            var dataList = RequiredData[typeof(BaseStateData)];
-            foreach (var data in dataList)
+            foreach (var data in _stateDataList)
             {
-                var stateData = (BaseStateData)data;
-                _stateDataMap[stateData.StateType] = stateData;
+                _stateDataMap[data.StateType] = data;
             }
 
-            _eventRaiser = (PlayerStateEventChannel)RequiredData[typeof(IPlayerStateEventRaiser)][0];
-            _inputBroadcaster = (IInputEventProvider)injectedImplements[typeof(IInputEventProvider)][0];
-            
-            _characterSwapNotifier = (ICharacterSwapNotifier)injectedImplements[typeof(ICharacterSwapNotifier)][0];
             _characterSwapNotifier.OnCharacterSwapped += OnCharacterSwapped;
 
             CreateStates();
@@ -82,7 +59,7 @@ namespace Refactoring
         }
         private void CreateStates()
         {
-            foreach (var classType in AbstractTypeMap[typeof(CharacterBaseState<PlayerStateType,PlayerCharacterType>)])
+            foreach (var classType in _stateTypes)
             {   
                 //STUDY Activator.CreateInstance로 타입으로 인스턴스 생성.
                 var instance = (CharacterBaseState<PlayerStateType,PlayerCharacterType>)Activator.CreateInstance(classType);

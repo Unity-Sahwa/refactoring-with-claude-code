@@ -4,13 +4,11 @@ using UnityEngine;
 
 namespace Refactoring
 {
-    public class PlayerCharacterSwitcher : MonoBehaviour, 
-                    IInterfaceInjectable, ICharacterSwappable, ICharacterSwapNotifier
+    public class PlayerCharacterSwitcher : MonoBehaviour, ICharacterSwappable, ICharacterSwapNotifier
     {
-        public Dictionary<Type, List<object>> injectedImplements {get;} = new Dictionary<Type, List<object>>()
-        {
-            {typeof(BaseCharacter<PlayerCharacterType>), new List<object>()}
-        };
+          //  {typeof(BaseCharacter<PlayerCharacterType>), new List<object>()}
+        
+        [Inject] private List<BaseCharacter<PlayerCharacterType>> characters;
         public PlayerCharacterType CurrentCharacter {get; private set;}
         public GameObject CurrentCharacterObject =>
             characterMap.TryGetValue(CurrentCharacter, out var c) ? c.gameObject : null;
@@ -19,10 +17,8 @@ namespace Refactoring
 
         void Awake()
         {
-            var characterList = injectedImplements[typeof(BaseCharacter<PlayerCharacterType>)];
-            foreach (var obj in characterList)
+            foreach (var character in characters)
             {
-                BaseCharacter<PlayerCharacterType> character = (BaseCharacter<PlayerCharacterType>)obj;
                 characterMap[character.Type] = character;
             }
         }

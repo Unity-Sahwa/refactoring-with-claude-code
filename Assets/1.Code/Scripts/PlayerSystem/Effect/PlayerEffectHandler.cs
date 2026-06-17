@@ -1,28 +1,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Refactoring;
 using UnityEngine;
 
 namespace Refactoring
 {
-    public class PlayerEffectHandler : MonoBehaviour, IInterfaceInjectable, IDataInjectable
+    public class PlayerEffectHandler : MonoBehaviour
     {
-        public Dictionary<Type, List<object>> injectedImplements { get; } = new()
-        {
-            { typeof(IEffectProvider), new List<object>() },
-            { typeof(IEffectAttachPoint), new List<object>() },
-            { typeof(ICharacterSwapNotifier), new List<object>()}
-        };
-
-        public Dictionary<Type, List<ScriptableObject>> RequiredData {get;} = new ()
-        {
-            {typeof(IPlayerStateEventSubscriber), new List<ScriptableObject>()}
-        };
-
-
-        private IPlayerStateEventSubscriber _eventSubscriber;
-        private ICharacterSwapNotifier _characterSwapNotifier;
-        private IEffectProvider _provider;
+        [Inject] private IPlayerStateEventSubscriber _eventSubscriber;
+        [Inject]private ICharacterSwapNotifier _characterSwapNotifier;
+        [Inject] private IEffectProvider _provider;
+        [Inject] private List<IEffectAttachPoint> _effectAttachPoints;
         private readonly Dictionary<EffectAttachPointType, Transform> _attachPoints = new();
         private readonly List<ActiveEffect> _actives = new();
 
@@ -35,19 +24,14 @@ namespace Refactoring
 
         void Awake()
         {
-            _eventSubscriber = (IPlayerStateEventSubscriber)RequiredData[typeof(IPlayerStateEventSubscriber)][0];
             _eventSubscriber.Subscribe(StateEventCategory.Effect, HandleEffect);
             _eventSubscriber.SubscribeReset(HandleReset);
 
-            _provider = (IEffectProvider)injectedImplements[typeof(IEffectProvider)][0];
-
-            _characterSwapNotifier = (ICharacterSwapNotifier)injectedImplements[typeof(ICharacterSwapNotifier)][0];
             _characterSwapNotifier.OnCharacterSwapped += OnCharacterSwapped;
 
-            foreach (var obj in injectedImplements[typeof(IEffectAttachPoint)])
+            foreach (var obj in _effectAttachPoints)
             {
-                var point = (IEffectAttachPoint)obj;
-                _attachPoints[point.Key] = point.Transform;
+                _attachPoints[obj.Key] = obj.Transform;
             }
         }
 

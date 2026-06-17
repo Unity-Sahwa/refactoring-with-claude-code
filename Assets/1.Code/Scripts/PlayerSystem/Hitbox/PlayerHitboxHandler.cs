@@ -5,26 +5,14 @@ using UnityEngine;
 
 namespace Refactoring
 {
-    public class PlayerHitboxHandler : MonoBehaviour, IInterfaceInjectable, IDataInjectable
+    public class PlayerHitboxHandler : MonoBehaviour
     {
-        public Dictionary<Type, List<object>> injectedImplements { get; } = new()
-        {
-            { typeof(IHitboxProvider), new List<object>() },
-            { typeof(IHitboxAttachPoint), new List<object>() },
-            { typeof(ICharacterSwapNotifier), new List<object>() }
-        };
-
-        public Dictionary<Type, List<ScriptableObject>> RequiredData {get;} = new ()
-        {
-            {typeof(IPlayerStateEventSubscriber), new List<ScriptableObject>()}
-        };
-
-
-        private IPlayerStateEventSubscriber _eventSubscriber;
-        private ICharacterSwapNotifier _characterSwapNotifier;
-        private IHitboxProvider _provider;
+        [Inject] private IPlayerStateEventSubscriber _eventSubscriber;
+        [Inject] private ICharacterSwapNotifier _characterSwapNotifier;
+        [Inject] private IHitboxProvider _provider;
+        [Inject] private List<IHitboxAttachPoint> _attachPoints;
         private int _targetMask;   // 플레이어 공격이 때릴 대상 레이어. 적 핸들러가 생기면 abstract로 분리한다.
-        private readonly Dictionary<HitboxAttachPointType, Transform> _attachPoints = new();
+        private readonly Dictionary<HitboxAttachPointType, Transform> _attachPointMap = new();
         private readonly List<ActiveHitbox> _actives = new();
 
         private class ActiveHitbox
@@ -36,19 +24,13 @@ namespace Refactoring
 
         void Awake()
         {
-            _eventSubscriber = (IPlayerStateEventSubscriber)RequiredData[typeof(IPlayerStateEventSubscriber)][0];
             _eventSubscriber.Subscribe(StateEventCategory.Hitbox, HandleHitbox);
             _eventSubscriber.SubscribeReset(HandleReset);
-
-            _provider = (IHitboxProvider)injectedImplements[typeof(IHitboxProvider)][0];
-
-            _characterSwapNotifier = (ICharacterSwapNotifier)injectedImplements[typeof(ICharacterSwapNotifier)][0];
             _characterSwapNotifier.OnCharacterSwapped += OnCharacterSwapped;
 
-            foreach (var obj in injectedImplements[typeof(IHitboxAttachPoint)])
+            foreach (var point in _attachPoints)
             {
-                var point = (IHitboxAttachPoint)obj;
-                _attachPoints[point.Key] = point.Transform;
+                _attachPointMap[point.Key] = point.Transform;
             }
 
             _targetMask = LayerMask.GetMask("Enemy", "Gimmick");
@@ -63,7 +45,7 @@ namespace Refactoring
             var instance = _provider.Rent(hitbox.HitboxObject);
             if (instance == null) return;
 
-            if (!_attachPoints.TryGetValue(hitbox.AttachKey, out var parent))
+            if (!_attachPointMap.TryGetValue(hitbox.AttachKey, out var parent))
             {
                 _provider.Return(instance);
                 return;

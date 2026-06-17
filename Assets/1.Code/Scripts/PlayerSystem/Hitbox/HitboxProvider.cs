@@ -6,13 +6,9 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace Refactoring
 {
-    public class HitboxProvider : MonoBehaviour, IHitboxProvider, IDataInjectable
+    public class HitboxProvider : MonoBehaviour, IHitboxProvider
     {
-        public Dictionary<Type, List<ScriptableObject>> RequiredData { get; } = new()
-        {
-            { typeof(BaseStateData), new List<ScriptableObject>() }
-        };
-
+        [Inject] private List<BaseStateData> _dataList;
         private readonly Dictionary<object, GameObject> _instances = new(); //키당 1개만 보관
         private readonly Dictionary<GameObject, MeshRenderer[]> _renderers = new(); //생성 시점에 캐싱한 MeshRenderer(런타임 순회 비용 제거)
         private readonly Dictionary<GameObject, IHitboxDamageReporter> _reporters = new(); //생성 시점에 캐싱한 감지 컴포넌트
@@ -25,7 +21,7 @@ namespace Refactoring
 
         private void CollectAndLoad()
         {
-            foreach (var so in RequiredData[typeof(BaseStateData)])
+            foreach (var so in _dataList)
             {
                 var data = (BaseStateData)so;
                 var hitboxMap = data.GetData<HitboxDataEntry>();

@@ -1,4 +1,4 @@
-// InputAction 콜백(PC·조이스틱)과 IMobileButton 이벤트(모바일 버튼)를 구독해
+// InputAction 콜백(PC·조이스틱)을 구독해
 // OnInputPressed / OnInputReleased / OnMoveInput 이벤트를 발행.
 // 폴링 없이 이벤트 기반으로 동작 — 입력 경로(키보드·UI 버튼)에 무관하게 액션 단위로 브로드캐스트.
 using System;
@@ -8,17 +8,11 @@ using System.Collections.Generic;
 
 namespace Refactoring
 {
-    public class InputEventBroadcaster : MonoBehaviour, IInterfaceInjectable, IInputEventProvider
+    public class InputEventBroadcaster : MonoBehaviour, IInputEventProvider
     {
-        public Dictionary<Type, List<object>> injectedImplements {get;} = new Dictionary<Type, List<object>>()
-        {
-            { typeof(IInputBlocker), new List<object>() },
-            { typeof(IMobileButton), new List<object>() }
-        };
-
         private static InputEventBroadcaster _instance;
         [SerializeField] private InputActionAsset _actionAsset;
-        private IInputBlocker _inputBlocker;
+        [Inject(optional: true)] private IInputBlocker _inputBlocker;
         private InputActionType[] _allActions = (InputActionType[])Enum.GetValues(typeof(InputActionType));
 
         public event Action<InputActionType> OnInputPressed; //입력시 OnInputPressed?.Invoke(actionType)로 호출됨.
@@ -37,14 +31,6 @@ namespace Refactoring
         }
         void Start()
         {
-            if(injectedImplements.TryGetValue(typeof(IMobileButton), out var buttons))
-            {
-                foreach (var obj in buttons)
-                {
-                    if (obj is IMobileButton btn)
-                        SubscribeMobileButton(btn);
-                }
-            }
             SubscribeActions();
         }
         private void OnEnable() => _actionAsset?.Enable();
@@ -81,13 +67,6 @@ namespace Refactoring
         {
             if (_inputBlocker != null && _inputBlocker.IsInputBlocked) return;
             OnMoveInput?.Invoke(value);
-        }
-        private void SubscribeMobileButton(IMobileButton btn)
-        {
-            Action down = () => HandlePressed(btn.ActionType);
-            Action up = () => HandleReleased(btn.ActionType);
-            btn.OnButtonDown += down;
-            btn.OnButtonUp += up;
         }
         private void HandlePressed(InputActionType actionType)
         {

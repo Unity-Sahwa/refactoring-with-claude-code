@@ -13,6 +13,22 @@ MonoBehaviour:
   m_Name: HNormalAttack1Data
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.HNormalAttack1Data
   input: []
+  skillMove:
+  - name: 
+    startProgress: 0.143
+    duration: 0.1
+    direction: {x: 0, y: 0, z: 1}
+    speed: 50
+  - name: 
+    startProgress: 0.143
+    duration: 0.05
+    direction: {x: 0, y: 1, z: 0}
+    speed: 10
+  - name: 
+    startProgress: 0.2
+    duration: 0.05
+    direction: {x: 0, y: -1, z: 0}
+    speed: 10
   effect:
   - name: 1
     untilFinish: 0
@@ -47,7 +63,7 @@ MonoBehaviour:
     attachKey: 0
     stopInPlace: 0
     stopTime: 0
-    showMesh: 1
+    showMesh: 0
     combat:
       damage: 1
       color: 1

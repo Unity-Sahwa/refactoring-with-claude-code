@@ -6,13 +6,9 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace Refactoring
 {
-    public class EffectProvider : MonoBehaviour, IEffectProvider, IDataInjectable
+    public class EffectProvider : MonoBehaviour, IEffectProvider
     {
-        public Dictionary<Type, List<ScriptableObject>> RequiredData { get; } = new()
-        {
-            { typeof(BaseStateData), new List<ScriptableObject>() }
-        };
-
+        [Inject] private List<BaseStateData> _stateDataList;
         private readonly Dictionary<object, Queue<GameObject>> _available = new();
         private readonly Dictionary<GameObject, object> _keyOfInstance = new(); //이펙트 반납시, 어디로 돌려보낼지를 위한 역맵핑
         private readonly HashSet<object> _requested = new(); //비동기 로딩 중복 방지용
@@ -24,9 +20,8 @@ namespace Refactoring
 
         private void CollectAndLoad()
         {
-            foreach (var so in RequiredData[typeof(BaseStateData)])
+            foreach (var data in _stateDataList)
             {
-                var data = (BaseStateData)so;
                 var effectMap = data.GetData<SkillEffectDataEntry>();
 
                 foreach (var entries in effectMap.Values)
