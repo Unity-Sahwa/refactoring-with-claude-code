@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace Refactoring
 {
@@ -11,8 +12,7 @@ namespace Refactoring
 
     public class PlayerSkillMoveHandler : MonoBehaviour
     {
-            //{ typeof(BaseCharacter<PlayerCharacterType>), new List<object>() },
-        [Inject(true)]private IPlayerStateEventSubscriber _eventSubscriber; 
+        [Inject(true)] private IPlayerStateEventSubscriber _eventSubscriber; 
         [Inject(true)] private ICharacterSwapNotifier _swapNotifier; 
         [Inject] private List<BaseCharacter<PlayerCharacterType>> _characters;
          
@@ -73,15 +73,21 @@ namespace Refactoring
         //왜 : 활성 이동 목록에 추가하고 시스템(FixedUpdate)을 켠다
         public void HandleSkillMove(IStartData data)
         {
-            var skill = (ISkillMove)data;
-            var active = new ActiveMove { data = skill, localVelocity = skill.Direction.normalized * skill.Speed };
+            if(data is not ISkillMove skillMoveData) 
+            {
+                Debug.LogError($"[PlayerSkillMoveHandler] ISkillMove가 필요한데 {data?.GetType().Name ?? "null"}을 받음");
+                return;
+            }
+
+            var active = new ActiveMove {data = skillMoveData, 
+                                        localVelocity = skillMoveData.Direction.normalized * skillMoveData.Speed };
             _actives.Add(active);
             enabled = true;
         }
 
         //호출조건: HandleSkillMove로 `enabled = true` 되면 매 물리프레임 작동
         //왜: 수명을 누적·만료 처리하고, 남은 이동이 있으면 물리 이동시킨다
-        // 대원_TODO: 주변 감지로 이동량 변화 확장 예정. 속도 계산을 별도 메서드/전략으로 분리해 여기는 '적용'만 하도록
+        // 대원_TODO: 주변 감지로 이동량 변화 확장 예정.
         private void FixedUpdate()
         {
             if (_actives.Count == 0) 
@@ -108,6 +114,8 @@ namespace Refactoring
             }
 
             Vector3 worldVelocity = Vector3.zero;
+            //속도 합산해서 적용
+            //대원_TODO: 물리이동이 의도한 모양대로 나올까?
             foreach (var active in _actives)
             {
                 //속도가 플레이어 방향으로 회전된 다음 더해줌.
