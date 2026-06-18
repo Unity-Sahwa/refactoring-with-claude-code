@@ -14,7 +14,7 @@ namespace Refactoring
     {
         [Inject(true)] private IPlayerStateEventSubscriber _eventSubscriber; 
         [Inject(true)] private ICharacterSwapNotifier _swapNotifier; 
-        [Inject] private List<BaseCharacter<PlayerCharacterType>> _characters;
+        [Inject] private List<PlayerCharacter> _characters;
          
         private readonly Dictionary<PlayerCharacterType, Rigidbody> _characterRB = new();
         private PlayerCharacterType _currentCharacter;

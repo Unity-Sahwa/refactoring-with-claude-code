@@ -1,7 +1,5 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using Refactoring;
 using UnityEngine;
 
 namespace Refactoring
@@ -9,7 +7,7 @@ namespace Refactoring
     public class PlayerEffectHandler : MonoBehaviour
     {
         [Inject] private IPlayerStateEventSubscriber _eventSubscriber;
-        [Inject]private ICharacterSwapNotifier _characterSwapNotifier;
+        [Inject] private ICharacterSwapNotifier _characterSwapNotifier;
         [Inject] private IEffectProvider _provider;
         [Inject] private List<IEffectAttachPoint> _effectAttachPoints;
         private readonly Dictionary<EffectAttachPointType, Transform> _attachPoints = new();

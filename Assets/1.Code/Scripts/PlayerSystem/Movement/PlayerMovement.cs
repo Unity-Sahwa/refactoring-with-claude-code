@@ -8,7 +8,7 @@ namespace Refactoring
     {
         [Inject] private IInputEventProvider _inputEventProvider;
         [Inject] private ICharacterSwapNotifier _playerCharacterSwitcher;
-        [Inject] private List<BaseCharacter<PlayerCharacterType>> _characters;
+        [Inject] private List<PlayerCharacter> _characters;
         private Dictionary<PlayerCharacterType, Rigidbody> _characterRB = new Dictionary<PlayerCharacterType, Rigidbody>();
         private PlayerCharacterType _currentCharacterType;
         

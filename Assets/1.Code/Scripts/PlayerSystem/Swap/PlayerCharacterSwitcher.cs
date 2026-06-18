@@ -6,12 +6,12 @@ namespace Refactoring
 {
     public class PlayerCharacterSwitcher : MonoBehaviour, ICharacterSwappable, ICharacterSwapNotifier
     {
-        [Inject] private List<BaseCharacter<PlayerCharacterType>> characters;
+        [Inject(true)] private List<PlayerCharacter> characters;
         public PlayerCharacterType CurrentCharacter {get; private set;}
         public GameObject CurrentCharacterObject =>
             characterMap.TryGetValue(CurrentCharacter, out var c) ? c.gameObject : null;
         public event Action<PlayerCharacterType> OnCharacterSwapped;
-        private Dictionary<PlayerCharacterType, BaseCharacter<PlayerCharacterType>> characterMap = new Dictionary<PlayerCharacterType, BaseCharacter<PlayerCharacterType>>();
+        private Dictionary<PlayerCharacterType, PlayerCharacter> characterMap = new Dictionary<PlayerCharacterType, PlayerCharacter>();
 
         void Awake()
         {
