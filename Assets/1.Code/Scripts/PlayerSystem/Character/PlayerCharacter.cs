@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using UnityEngine;
 
 namespace Refactoring
 {
-    public abstract class BaseCharacter<ECharacter> : MonoBehaviour where ECharacter : Enum
+    public class PlayerCharacter : MonoBehaviour
     {
-        public abstract ECharacter Type {get;}
+        [SerializeField] private PlayerCharacterType type;
+        public PlayerCharacterType Type => type;
         private readonly Dictionary<Type, Component> _componentCache = new Dictionary<Type, Component>();
 
         public T GetCharacterComponent<T>() where T : Component
