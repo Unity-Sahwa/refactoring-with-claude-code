@@ -7,7 +7,7 @@ namespace Refactoring
     // 흐름: 상태 이벤트 구독, 사용자 입력 구독 > 파라미터 갱신 활성화 이벤트 받음 > 입력을 받아 파라미터 갱신 > 비활성화 이벤트 받음 > 갱신 중지
     public class PlayerMoveAnimation : MonoBehaviour
     {
-        [Inject] private IInputEventProvider _inputEventProvider;
+        [Inject] private IInputMoveProvider _inputEventProvider;
         [Inject(true)] private IPlayerStateEventSubscriber _eventSubscriber;
         [Inject(true)] private ILockOnState _lockOnState;
 
