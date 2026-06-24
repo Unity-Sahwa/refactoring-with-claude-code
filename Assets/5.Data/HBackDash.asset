@@ -9,22 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a02beeb45597c474da3aabc4b24c1d15, type: 3}
-  m_Name: LocomotionData
-  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.LocomotionData
+  m_Script: {fileID: 11500000, guid: 24afd34f08404fc4daf78173af9ea382, type: 3}
+  m_Name: HBackDash
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.HBackDash
   inputBlock: []
   inputBuffer: []
   skillMove: []
-  moveControl:
-  - name: Move
-    startProgress: 0
-    duration: 0
-    untilEnd: 1
-  rotateControl:
-  - name: Lotate
-    startProgress: 0
-    duration: 0
-    untilEnd: 1
+  moveControl: []
+  rotateControl: []
   effect: []
   hitbox: []
   audio: []

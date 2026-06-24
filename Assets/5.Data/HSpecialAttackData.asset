@@ -9,22 +9,27 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c21ae9ab53953b4fb675ea63b0f10ee, type: 3}
-  m_Name: HNormalAttack1Data
-  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.HNormalAttack1Data
+  m_Script: {fileID: 11500000, guid: c2e0e41376c9ddf41b0f99da311a727b, type: 3}
+  m_Name: HSpecialAttackData
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.HSpecialAttackData
   inputBlock: []
   inputBuffer: []
   skillMove:
-  - name: 1
-    startProgress: 0
-    duration: 5
+  - name: "\uC55E"
+    startProgress: 0.105
+    duration: 0.7
     direction: {x: 0, y: 0, z: 1}
-    speed: 5
-  - name: 1
-    startProgress: 0
-    duration: 5
+    speed: 10
+  - name: "\uC704"
+    startProgress: 0.1
+    duration: 0.38
     direction: {x: 0, y: 1, z: 0}
-    speed: 1
+    speed: 7
+  - name: "\uC544\uB798"
+    startProgress: 0.33
+    duration: 0.1
+    direction: {x: 0, y: -1, z: 0}
+    speed: 20
   moveControl: []
   rotateControl: []
   effect: []
