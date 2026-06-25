@@ -1,28 +1,25 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace Refactoring
 {
-    // 책임: 플레이어 상태 이벤트를 구독해 정해진 시간 동안 현재 캐릭터를 직접 이동시킨다.
+    // 책임: 플레이어 상태 이벤트를 구독해 정해진 시간 동안 이벤트 주체(캐릭터)를 직접 이동시킨다.
     // 확장성: 없다. 플레이어 스킬 상태에서만 작동한다.
-    // 흐름: 플레이어 상태 이벤트 호출 -> HandleSkillMove(...) 호출 -> 오브젝트 활성화 -> FixedUpdate에서 수명 누적·만료 처리 + 물리이동. 수명이 다 끝나면 비활성화
-    // 핵심: BaseCharacter 캐릭터오브젝트 존재 / 외부에서 HandleSkillMove(IStartData data) 호출 / FixedUpdate에서 물리이동
+    // 흐름: 플레이어 상태 이벤트 호출 -> HandleSkillMove(주체, data) 호출 -> 오브젝트 활성화 -> FixedUpdate에서 수명 누적·만료 처리 + 물리이동. 수명이 다 끝나면 비활성화
+    // 핵심: 이동 대상 RB는 이벤트 주체(PlayerCharacter)에서 직접 얻는다 / FixedUpdate에서 물리이동
 
     public class PlayerSkillMoveHandler : MonoBehaviour
     {
-        [Inject(true)] private IPlayerStateEventSubscriber _eventSubscriber; 
-        [Inject(true)] private ICharacterSwapNotifier _swapNotifier; 
-        [Inject] private List<BaseCharacter<PlayerCharacterType>> _characters;
-         
-        private readonly Dictionary<PlayerCharacterType, Rigidbody> _characterRB = new();
-        private PlayerCharacterType _currentCharacter;
+        [Inject(true)] private IPlayerStateEventSubscriber _eventSubscriber;
+        [Inject(true)] private IPlayerSensor _sensor;
+
         private readonly List<ActiveMove> _actives = new();
 
         private class ActiveMove
         {
             public ISkillMove data;
+            public Rigidbody rb;          // 이 이동의 대상 캐릭터 RB (이벤트 주체에서 얻음)
+            public CapsuleCollider collider; // 이 이동의 대상 캐릭터 콜라이더 (센서 충돌 검사용)
             public Vector3 localVelocity; // Direction.normalized * Speed 미리 계산 (매 프레임 재정규화 방지)
             public float elapsed;         // 경과 시간 누적 (Duration 도달 시 만료)
         }
@@ -35,51 +32,30 @@ namespace Refactoring
                 _eventSubscriber.Subscribe(StateEventCategory.SkillMove, HandleSkillMove);
                 _eventSubscriber.SubscribeReset(HandleReset);
             }
-                
-            if (_swapNotifier != null)
-            {
-                _swapNotifier.OnCharacterSwapped += OnCharacterSwapped;
-            }
-
-            // 필수: 캐릭터(RB) 캐싱
-            foreach (var character in _characters)
-            {
-                _characterRB[character.Type] = character.GetCharacterComponent<Rigidbody>();
-            }
-            if (_characterRB.Count == 0)
-            {
-                Debug.LogWarning("[PlayerSkillMoveHandler] BaseCharacter 미주입으로 기능 실행 X");
-            }
 
             //이동 호출 전까지 비활성화
             enabled = false;
         }
 
-        //왜: ICharacterSwapNotifier.CurrentCharacter는 Awake() 단계에서 있을지 미지수기 때문에 Start()에서 할당받음
-        private void Start()
-        {
-            if (_swapNotifier != null) _currentCharacter = _swapNotifier.CurrentCharacter;
-            else
-            {
-                foreach (var key in _characterRB.Keys)
-                {
-                    _currentCharacter = key; 
-                    break;
-                }
-            }
-        }
-
         //호출조건: 구독중인 플레이어 상태이벤트(또는 외부)에 의해 호출
         //왜 : 활성 이동 목록에 추가하고 시스템(FixedUpdate)을 켠다
-        public void HandleSkillMove(IStartData data)
+        public void HandleSkillMove(PlayerCharacter source, IStartData data)
         {
-            if(data is not ISkillMove skillMoveData) 
+            if(data is not ISkillMove skillMoveData)
             {
                 Debug.LogError($"[PlayerSkillMoveHandler] ISkillMove가 필요한데 {data?.GetType().Name ?? "null"}을 받음");
                 return;
             }
 
-            var active = new ActiveMove {data = skillMoveData, 
+            Rigidbody rb = source != null ? source.GetCharacterComponent<Rigidbody>() : null;
+            if (rb == null)
+            {
+                Debug.LogError("[PlayerSkillMoveHandler] 이벤트 주체에서 Rigidbody를 얻지 못함");
+                return;
+            }
+
+            var active = new ActiveMove {data = skillMoveData, rb = rb,
+                                        collider = source.GetCharacterComponent<CapsuleCollider>(),
                                         localVelocity = skillMoveData.Direction.normalized * skillMoveData.Speed };
             _actives.Add(active);
             enabled = true;
@@ -90,7 +66,7 @@ namespace Refactoring
         // 대원_TODO: 주변 감지로 이동량 변화 확장 예정.
         private void FixedUpdate()
         {
-            if (_actives.Count == 0) 
+            if (_actives.Count == 0)
             {
                 return;
             }
@@ -102,13 +78,15 @@ namespace Refactoring
                 if (_actives[i].elapsed >= _actives[i].data.Duration) _actives.RemoveAt(i);
             }
 
-            if (_actives.Count == 0) 
+            if (_actives.Count == 0)
             {
                 enabled = false;
                 return;
             }
 
-            if (!_characterRB.TryGetValue(_currentCharacter, out var rb) || rb == null) 
+            // 활성 캐릭터는 동시에 1명뿐이라 모든 active는 같은 RB를 공유한다. 대표 RB로 합산 적용.
+            Rigidbody rb = _actives[0].rb;
+            if (rb == null)
             {
                 return;
             }
@@ -123,9 +101,15 @@ namespace Refactoring
             }
 
             Vector3 intended = worldVelocity * Time.fixedDeltaTime;
-            if (intended == Vector3.zero) 
+            if (intended == Vector3.zero)
             {
                 return;
+            }
+
+            // 지형 보정: 전방 장애물 정지 + 지면 관통 방지(내리꽂기 등이 땅을 뚫는 문제 해결).
+            if (_sensor != null)
+            {
+                intended = _sensor.ResolveMove(rb.position, intended, _actives[0].collider);
             }
 
             rb.MovePosition(rb.position + intended);
@@ -139,13 +123,6 @@ namespace Refactoring
             enabled = false;
         }
 
-        //호출조건: ICharacterSwapNotifier.OnCharacterSwapped 호출시 자동 호출
-        //왜: 2개의 캐릭터가 전환되는 시스템이라, RB도 그에 맞게 변해야 함
-        private void OnCharacterSwapped(PlayerCharacterType type)
-        {
-            _currentCharacter = type;
-        }
-
         //호출조건: 오브젝트 파괴시 호출
         //왜: 이벤트 구독해제 등 변수 차단
         private void OnDestroy()
@@ -154,11 +131,6 @@ namespace Refactoring
             {
                 _eventSubscriber.Unsubscribe(StateEventCategory.SkillMove, HandleSkillMove);
                 _eventSubscriber.UnsubscribeReset(HandleReset);
-            }
-
-            if (_swapNotifier != null)
-            {
-                _swapNotifier.OnCharacterSwapped -= OnCharacterSwapped;
             }
 
             _actives.Clear();
