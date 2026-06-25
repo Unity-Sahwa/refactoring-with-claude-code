@@ -4,8 +4,14 @@ using UnityEngine;
 
 namespace Refactoring
 {
-    public abstract class BaseStateData : ScriptableObject
+    [CreateAssetMenu(fileName = "StateData", menuName = "Data/StateData")]
+    public class BaseStateData : ScriptableObject
     {
+        [SerializeField] private PlayerStateType stateType;   // 상태 정체성. 자식 클래스 override 대신 인스펙터에서 지정
+        [SerializeField] private AnimationNodeName animationNode; //상태하나당 애니메이션 노드 하나. 애니메이션 노드 이름이랑 무조건 동일해야 함!
+        [SerializeField] private bool isLooping;
+
+        [Space(10f)]
         [SerializeField] private InputControlDataEntry[] inputBlock;
         [SerializeField] private InputControlDataEntry[] inputBuffer;
         [SerializeField] private SkillMoveDataEntry[] skillMove;
@@ -14,10 +20,12 @@ namespace Refactoring
         [SerializeField] private SkillEffectDataEntry[] effect;
         [SerializeField] private HitboxDataEntry[] hitbox;
         [SerializeField] private AudioDataEntry[] audio;
-        [SerializeField] private TimingDataEntry[] superArmor;   // 슈퍼아머(피격 경직 무시) 구간
-        [SerializeField] private TimingDataEntry[] invincible;   // 무적(피격 자체 무시) 구간
-
-        public abstract PlayerStateType StateType {get;}
+        [SerializeField] private TimingDataEntry[] superArmor;
+        [SerializeField] private TimingDataEntry[] invincible;
+        
+        public PlayerStateType StateType => stateType;
+        public bool IsLooping => isLooping;
+        public AnimationNodeName AnimationNode => animationNode;
 
         private Dictionary<StateEventCategory, Array> _dataMap;
 
@@ -41,7 +49,7 @@ namespace Refactoring
 
         public Dictionary<StateEventCategory,T[]> GetData<T>()
         {
-            // OnEnable() 문제가 생길경우 _dataMap이 누락됨.
+            // OnEnable() 문제가 생길경우 _dataMap이 누락될 경우 방지
             if(_dataMap == null) BuildDataMap();
 
             var result = new Dictionary<StateEventCategory, T[]>();
