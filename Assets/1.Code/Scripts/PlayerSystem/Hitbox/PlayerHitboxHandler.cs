@@ -8,7 +8,6 @@ namespace Refactoring
     public class PlayerHitboxHandler : MonoBehaviour
     {
         [Inject] private IPlayerStateEventSubscriber _eventSubscriber;
-        [Inject] private ICharacterSwapNotifier _characterSwapNotifier;
         [Inject] private IHitboxProvider _provider;
         [Inject] private List<IHitboxAttachPoint> _attachPoints;
         private int _targetMask;   // 플레이어 공격이 때릴 대상 레이어. 적 핸들러가 생기면 abstract로 분리한다.
@@ -26,7 +25,6 @@ namespace Refactoring
         {
             _eventSubscriber.Subscribe(StateEventCategory.Hitbox, HandleHitbox);
             _eventSubscriber.SubscribeReset(HandleReset);
-            _characterSwapNotifier.OnCharacterSwapped += OnCharacterSwapped;
 
             foreach (var point in _attachPoints)
             {
@@ -38,7 +36,7 @@ namespace Refactoring
 
         //대원_TODO: 히트박스 켜짐은 애니 진행률이 원하는 진행률을 지났을 때 켜지는 것이라 저프레임(10fps 정도)에선 타이밍이 늦을 수 있음. 
         //체감상 괜찮지만 원하는 타이밍에 진행되는 것이 아니기에 Animation Event로 타이밍을 2중 감시하기
-        private void HandleHitbox(IStartData data)
+        private void HandleHitbox(PlayerCharacter source, IStartData data)
         {
             var hitbox = (IPlayerHitbox)data;
 
@@ -60,11 +58,11 @@ namespace Refactoring
 
             _provider.SetMeshVisible(instance, hitbox.ShowMesh);
 
-            // 전투값과 공격자(충돌 시점의 현재 캐릭터)를 감지 컴포넌트에 주입한다.
+            // 전투값과 공격자(이벤트를 발행한 캐릭터)를 감지 컴포넌트에 주입한다.
             var reporter = _provider.GetReporter(instance);
             if (reporter != null)
             {
-                reporter.Setup((IHitboxCombat)data, _characterSwapNotifier.CurrentCharacterObject, _targetMask);
+                reporter.Setup((IHitboxCombat)data, source != null ? source.gameObject : null, _targetMask);
             }
 
             instance.SetActive(true);
@@ -91,6 +89,8 @@ namespace Refactoring
             FinishHitbox(active);
         }
 
+        // 왜: untilFinish 히트박스는 상태가 끝나도 살아남아야 한다. 다만 캐릭터 자식으로 붙어 있으면
+        //     이후 스왑(캐릭터 비활성화) 시 같이 꺼지므로, 이 시점에 부모에서 분리해 월드로 독립시킨다.
         private void HandleReset()
         {
             for (int i = _actives.Count - 1; i >= 0; i--)
@@ -98,6 +98,7 @@ namespace Refactoring
                 var active = _actives[i];
                 if (active.untilFinish)
                 {
+                    active.instance.transform.SetParent(null, true);
                     continue;
                 }
 
@@ -113,28 +114,12 @@ namespace Refactoring
             _provider.Return(active.instance);
         }
 
-        private void OnCharacterSwapped(PlayerCharacterType type)
-        {
-            foreach (var active in _actives)
-            {
-                if (active.untilFinish)
-                {
-                    active.instance.transform.SetParent(null, true);
-                }
-            }
-        }
-
         private void OnDestroy()
         {
             if (_eventSubscriber != null)
             {
                 _eventSubscriber.Unsubscribe(StateEventCategory.Hitbox, HandleHitbox);
                 _eventSubscriber.UnsubscribeReset(HandleReset);
-            }
-
-            if (_characterSwapNotifier != null)
-            {
-                _characterSwapNotifier.OnCharacterSwapped -= OnCharacterSwapped;
             }
 
             foreach (var active in _actives)

@@ -5,7 +5,7 @@ namespace Refactoring
 {
     public interface ICharacterSwappable
     {
-        public PlayerCharacterType CurrentCharacter {get;}
-        public void SwapPlayerCharacter(PlayerCharacterType type);
+        public PlayerCharacterType CurrentCharacterType {get;}
+        public void SwapPlayerCharacter();
     }
 }

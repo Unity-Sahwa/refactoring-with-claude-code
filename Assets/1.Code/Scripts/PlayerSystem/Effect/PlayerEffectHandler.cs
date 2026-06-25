@@ -1,7 +1,5 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using Refactoring;
 using UnityEngine;
 
 namespace Refactoring
@@ -9,7 +7,6 @@ namespace Refactoring
     public class PlayerEffectHandler : MonoBehaviour
     {
         [Inject] private IPlayerStateEventSubscriber _eventSubscriber;
-        [Inject]private ICharacterSwapNotifier _characterSwapNotifier;
         [Inject] private IEffectProvider _provider;
         [Inject] private List<IEffectAttachPoint> _effectAttachPoints;
         private readonly Dictionary<EffectAttachPointType, Transform> _attachPoints = new();
@@ -27,15 +24,13 @@ namespace Refactoring
             _eventSubscriber.Subscribe(StateEventCategory.Effect, HandleEffect);
             _eventSubscriber.SubscribeReset(HandleReset);
 
-            _characterSwapNotifier.OnCharacterSwapped += OnCharacterSwapped;
-
             foreach (var obj in _effectAttachPoints)
             {
                 _attachPoints[obj.Key] = obj.Transform;
             }
         }
 
-        private void HandleEffect(IStartData data)
+        private void HandleEffect(PlayerCharacter source, IStartData data)
         {
             var effect = (IPlayerEffect)data;
 
@@ -63,10 +58,7 @@ namespace Refactoring
         }
 
         private IEnumerator CoRunEffect(ActiveEffect active, IPlayerEffect effect)
-        {   
-            //대원_TODO: UntilFinish가 적용된 상태에서 캐릭터 스왑하면 이펙트가 캐릭터 자식으로 존재해 함께 비활성화되는 문제
-            //UtilFinish가 적용되면 reset되는 순간 밖으로 꺼낼까?
-            
+        {
             if (effect.StopInPlace)
             {
                 float stopTime = Mathf.Clamp(effect.StopTime, 0f, effect.Duration);
@@ -82,13 +74,16 @@ namespace Refactoring
             FinishEffect(active);
         }
 
+        // 왜: untilFinish 이펙트는 상태가 끝나도 살아남아야 한다. 다만 캐릭터 자식으로 붙어 있으면
+        //     이후 스왑(캐릭터 비활성화) 시 같이 꺼지므로, 이 시점에 부모에서 분리해 월드로 독립시킨다.
         private void HandleReset()
         {
             for (int i = _actives.Count - 1; i >= 0; i--)
             {
                 var active = _actives[i];
-                if (active.untilFinish) 
+                if (active.untilFinish)
                 {
+                    active.instance.transform.SetParent(null, true);
                     continue;
                 }
 
@@ -104,28 +99,12 @@ namespace Refactoring
             _provider.Return(active.instance);
         }
 
-        private void OnCharacterSwapped(PlayerCharacterType type)
-        {
-            foreach (var active in _actives)
-            {
-                if(active.untilFinish)
-                {
-                    active.instance.transform.SetParent(null,true);
-                }
-            }
-        }
-
         private void OnDestroy()
         {
             if (_eventSubscriber != null)
             {
                 _eventSubscriber.Unsubscribe(StateEventCategory.Effect, HandleEffect);
                 _eventSubscriber.UnsubscribeReset(HandleReset);
-            }
-
-            if(_characterSwapNotifier != null)
-            {
-                _characterSwapNotifier.OnCharacterSwapped -= OnCharacterSwapped;
             }
 
             foreach (var active in _actives)

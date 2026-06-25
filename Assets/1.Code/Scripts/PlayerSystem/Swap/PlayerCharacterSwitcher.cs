@@ -6,49 +6,57 @@ namespace Refactoring
 {
     public class PlayerCharacterSwitcher : MonoBehaviour, ICharacterSwappable, ICharacterSwapNotifier
     {
-          //  {typeof(BaseCharacter<PlayerCharacterType>), new List<object>()}
-        
-        [Inject] private List<BaseCharacter<PlayerCharacterType>> characters;
-        public PlayerCharacterType CurrentCharacter {get; private set;}
-        public GameObject CurrentCharacterObject =>
-            characterMap.TryGetValue(CurrentCharacter, out var c) ? c.gameObject : null;
+        [Inject] private List<PlayerCharacter> characters;
+        public PlayerCharacterType CurrentCharacterType => currentCharacter.Type;
+        public GameObject CurrentCharacterObject => currentCharacter.gameObject;
         public event Action<PlayerCharacterType> OnCharacterSwapped;
-        private Dictionary<PlayerCharacterType, BaseCharacter<PlayerCharacterType>> characterMap = new Dictionary<PlayerCharacterType, BaseCharacter<PlayerCharacterType>>();
+        private PlayerCharacter currentCharacter = null;
+    
 
         void Awake()
         {
             foreach (var character in characters)
             {
-                characterMap[character.Type] = character;
-            }
-        }
-
-        void Start()
-        {
-            SwapPlayerCharacter(PlayerCharacterType.HumanCharacter);
-        }
-
-
-        public void SwapPlayerCharacter(PlayerCharacterType type)
-        {
-            Vector3 currentPosition = characterMap[CurrentCharacter].transform.position;
-            Quaternion currentRotation = characterMap[CurrentCharacter].transform.rotation;
-
-            var next = characterMap[type];
-            next.gameObject.SetActive(true);
-            CurrentCharacter = type;
-            next.transform.position = currentPosition;
-            next.transform.rotation = currentRotation;
-
-            OnCharacterSwapped?.Invoke(type);
-
-            foreach (var (key,value) in characterMap)
-            {
-                if (key != type)
+                if (character.Type == PlayerCharacterType.HumanCharacter)
                 {
-                    value.gameObject.SetActive(false);
+                    currentCharacter = character;
+                    break;
                 }
             }
+
+            if (currentCharacter == null && characters.Count > 0)
+            {
+                currentCharacter = characters[0];
+            }
+
+            foreach (var character in characters)
+            {
+                character.gameObject.SetActive(character == currentCharacter);
+            }
+        }
+
+        public void SwapPlayerCharacter( )
+        {
+            
+            PlayerCharacter nextCharacter = null;
+
+            foreach (var character in characters)
+            {
+                if(character.Type != currentCharacter.Type)
+                {
+                    nextCharacter = character;
+                    break;
+                }
+            }
+
+            nextCharacter.transform.position = currentCharacter.transform.position;
+            nextCharacter.transform.rotation = currentCharacter.transform.rotation;
+            
+            currentCharacter.gameObject.SetActive(false);
+            nextCharacter.gameObject.SetActive(true);
+            currentCharacter = nextCharacter;
+
+            OnCharacterSwapped?.Invoke(CurrentCharacterType);
         }
     }
 }
