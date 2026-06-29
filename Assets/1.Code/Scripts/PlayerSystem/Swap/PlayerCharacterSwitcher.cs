@@ -4,12 +4,11 @@ using UnityEngine;
 
 namespace Refactoring
 {
-    public class PlayerCharacterSwitcher : MonoBehaviour, ICharacterSwappable, ICharacterSwapNotifier
+    public class PlayerCharacterSwitcher : MonoBehaviour, ICharacterSwappable, ICharacterSwapNotifier, ICurrentCharacterProvider
     {
         [Inject] private List<PlayerCharacter> characters;
-        public PlayerCharacterType CurrentCharacterType => currentCharacter.Type;
-        public GameObject CurrentCharacterObject => currentCharacter.gameObject;
-        public event Action<PlayerCharacterType> OnCharacterSwapped;
+        public PlayerCharacter CurrentCharacter => currentCharacter;
+        public event Action OnCharacterSwapped;
         private PlayerCharacter currentCharacter = null;
     
 
@@ -37,7 +36,6 @@ namespace Refactoring
 
         public void SwapPlayerCharacter( )
         {
-            
             PlayerCharacter nextCharacter = null;
 
             foreach (var character in characters)
@@ -56,7 +54,7 @@ namespace Refactoring
             nextCharacter.gameObject.SetActive(true);
             currentCharacter = nextCharacter;
 
-            OnCharacterSwapped?.Invoke(CurrentCharacterType);
+            OnCharacterSwapped?.Invoke();
         }
     }
 }
