@@ -64,7 +64,6 @@ namespace Refactoring
         private void HandleOff()
         {
             _canSetParameter = false;
-            //_animator.SetFloat(_moveXHash, 0f);
             _animator.SetFloat(_moveYHash, 0f);
             
         }
