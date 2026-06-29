@@ -8,7 +8,6 @@ namespace Refactoring
     public class BaseStateData : ScriptableObject
     {
         [SerializeField] private PlayerStateType stateType;   // 상태 정체성. 자식 클래스 override 대신 인스펙터에서 지정
-        [SerializeField] private AnimationNodeName animationNode; //상태하나당 애니메이션 노드 하나. 애니메이션 노드 이름이랑 무조건 동일해야 함!
         [SerializeField] private bool isLooping;
 
         [Space(10f)]
@@ -25,8 +24,6 @@ namespace Refactoring
         
         public PlayerStateType StateType => stateType;
         public bool IsLooping => isLooping;
-        public AnimationNodeName AnimationNode => animationNode;
-
         private Dictionary<StateEventCategory, Array> _dataMap;
 
         private void OnEnable() => BuildDataMap();
