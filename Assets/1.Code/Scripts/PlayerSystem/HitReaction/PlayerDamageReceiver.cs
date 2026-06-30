@@ -46,7 +46,7 @@ namespace Refactoring
 
             //체력 클래스가 없어도 리액션은 볼 수 있어야 함.
             float remaining = 100;
-            if (_health == null)
+            if (_health != null)
             {
                 remaining = _health.Decrease(info.Amount);
             }
