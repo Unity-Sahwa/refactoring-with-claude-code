@@ -8,12 +8,14 @@ namespace Refactoring
     public class WalkVelocitySource : IVelocitySource
     {
         private readonly IPlayerStateEventSubscriber _subscriber;
+        private readonly IStateTriggerRaiser _triggerRaiser;
         private readonly float _moveSpeed;
         private bool _canMove;
 
-        public WalkVelocitySource(IPlayerStateEventSubscriber subscriber, float moveSpeed)
+        public WalkVelocitySource(IPlayerStateEventSubscriber subscriber, IStateTriggerRaiser triggerRaiser, float moveSpeed)
         {
             _subscriber = subscriber;
+            _triggerRaiser = triggerRaiser;
             _moveSpeed = moveSpeed;
 
             if (_subscriber != null)
@@ -34,6 +36,8 @@ namespace Refactoring
             {
                 return Vector3.zero;
             }
+            // 실제 이동이 일어났으니 Locomotion 전환을 요청한다(이미 Locomotion이면 머신이 무시).
+            _triggerRaiser?.RaiseTrigger(StateTriggerType.Move);
             return frame.MoveDirection * _moveSpeed;
         }
 

@@ -19,6 +19,7 @@ namespace Refactoring
         [Inject] private ICurrentCharacterProvider _characterProvider;        // 필수: 움직일 대상(현재 캐릭터) 공급
         [Inject(true)] private IInputMoveProvider _inputEventProvider;        // 옵션: 없으면 걷기, 회전만 빠짐(스킬, 중력은 동작)
         [Inject(true)] private IPlayerStateEventSubscriber _eventSubscriber;  // 옵션: 없으면 스킬만 작동안함
+        [Inject(true)] private IStateTriggerRaiser _triggerRaiser;           // 옵션: 없으면 이동 시 Locomotion 전환 요청만 빠짐
         [Inject(true)] private ICharacterSwapNotifier _swapNotifier;          // 옵션: 없으면 스왑 시 재획득 통지에만 사용
         
         //대원_TODO: 데이터 SO로 그룹화
@@ -55,7 +56,7 @@ namespace Refactoring
             }
             _camera = Camera.main != null ? Camera.main.transform : null;
 
-            _velocitySources.Add(new WalkVelocitySource(_eventSubscriber, _moveSpeed));
+            _velocitySources.Add(new WalkVelocitySource(_eventSubscriber, _triggerRaiser, _moveSpeed));
             _velocitySources.Add(new SkillVelocitySource(_eventSubscriber));
             _velocitySources.Add(new GravityVelocitySource(_gravity, _maxFallSpeed, _groundedStick));
             _rotator = new CharacterRotator(_eventSubscriber, _rotateRate);
