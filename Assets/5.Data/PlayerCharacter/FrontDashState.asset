@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a2eaaa8a9363dd342bfc3ffb6feba3da, type: 3}
+  m_Script: {fileID: 11500000, guid: 3cd20114e96c7c040a662d82229ab91c, type: 3}
   m_Name: FrontDashState
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.BaseStateData
   stateType: 6
@@ -18,15 +18,10 @@ MonoBehaviour:
   inputBuffer: []
   skillMove:
   - name: 
-    startProgress: 0.1
-    duration: 0.3
+    startProgress: 0.148
+    duration: 0.2
     direction: {x: 0, y: 0, z: 1}
-    speed: 50
-  - name: 
-    startProgress: 0.1
-    duration: 0.3
-    direction: {x: 0, y: 1, z: 0}
-    speed: 5
+    speed: 10
   moveControl: []
   rotateControl: []
   effect: []

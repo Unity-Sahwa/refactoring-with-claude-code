@@ -3865,15 +3865,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.PlayerStateMachine
   _stateDataList:
+  - {fileID: 11400000, guid: db1a396b73468944180d5fe3d3e6a556, type: 2}
+  - {fileID: 11400000, guid: 1b5267c8db865ba4ea6e21492c9bbcc0, type: 2}
+  - {fileID: 11400000, guid: 5cec0e9719adb8a4b8e47588c4e90690, type: 2}
+  - {fileID: 11400000, guid: 0f40b7775d2e5fc47855b281ce3f25ff, type: 2}
   - {fileID: 11400000, guid: be711efbe4ce247448f8fc9ef08dce77, type: 2}
   - {fileID: 11400000, guid: d26b445877d8e4f4d9270d5cec226a11, type: 2}
   - {fileID: 11400000, guid: 158ea0c67b53aa249a3cb2ca854754d4, type: 2}
   - {fileID: 11400000, guid: feee68409e700db4db2f4bb859420c42, type: 2}
   - {fileID: 11400000, guid: e347082e840cee149b4dad134f0ffd11, type: 2}
   - {fileID: 11400000, guid: 91adffdb410e5a84995bf61d27c49997, type: 2}
-  - {fileID: 11400000, guid: db1a396b73468944180d5fe3d3e6a556, type: 2}
-  - {fileID: 11400000, guid: 1b5267c8db865ba4ea6e21492c9bbcc0, type: 2}
-  - {fileID: 11400000, guid: 0f40b7775d2e5fc47855b281ce3f25ff, type: 2}
 --- !u!1 &1502102468
 GameObject:
   m_ObjectHideFlags: 0
@@ -5999,15 +6000,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.PlayerStateMachine
   _stateDataList:
-  - {fileID: 11400000, guid: db1a396b73468944180d5fe3d3e6a556, type: 2}
-  - {fileID: 11400000, guid: 1b5267c8db865ba4ea6e21492c9bbcc0, type: 2}
   - {fileID: 11400000, guid: a0a4a278bc3637242a6b84345329b31d, type: 2}
   - {fileID: 11400000, guid: ac5effc2724d5384ca79f538e8513c7f, type: 2}
-  - {fileID: 11400000, guid: 5cec0e9719adb8a4b8e47588c4e90690, type: 2}
   - {fileID: 11400000, guid: 28e8a4f6ff7f8b5479b70f8f922e5e56, type: 2}
   - {fileID: 11400000, guid: 307f6900b65684a45a5049fc7672e3c2, type: 2}
   - {fileID: 11400000, guid: d7d688f2c90baa54ab085ffe93c547b7, type: 2}
   - {fileID: 11400000, guid: 6bfce6b8f862cd54b9bff0b9ee63e35c, type: 2}
+  - {fileID: 11400000, guid: db1a396b73468944180d5fe3d3e6a556, type: 2}
+  - {fileID: 11400000, guid: 1b5267c8db865ba4ea6e21492c9bbcc0, type: 2}
+  - {fileID: 11400000, guid: 5cec0e9719adb8a4b8e47588c4e90690, type: 2}
   - {fileID: 11400000, guid: 0f40b7775d2e5fc47855b281ce3f25ff, type: 2}
 --- !u!1 &2051592011
 GameObject:
