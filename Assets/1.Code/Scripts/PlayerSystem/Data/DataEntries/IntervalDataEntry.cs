@@ -3,10 +3,9 @@ using UnityEngine;
 
 namespace Refactoring
 {
-    // 이동 허용/회전 허용 구간 하나. MoveControl·RotateControl 두 카테고리가 같은 구조라 공용으로 쓴다.
-    // 한 상태가 여러 구간을 가질 수 있어 배열로 상태 데이터에 등록된다.
+    // 역할: 진행률 구간 동안 켜지는 공용 구간 데이터(입력차단·버퍼·이동·회전·슈퍼아머·무적에 공용)
     [Serializable]
-    public class MotionControlDataEntry : IStartData, IMotionControl
+    public class IntervalDataEntry : IStartData, IMotionControl
     {
         [SerializeField] private string name;
         [SerializeField] [Range(0, 1)] private float startProgress; // 이 진행률에 도달하면 허용을 켠다
