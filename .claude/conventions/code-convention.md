@@ -469,12 +469,12 @@ public Transform target;
 ## 12. 네임스페이스
 
 ```csharp
-namespace Sahwa.Core
+namespace Refactoring
 {
     public class GameManager : MonoBehaviour { }
 }
 
-namespace Sahwa.UI
+namespace Refactoring
 {
     public class HpHUD : MonoBehaviour { }
 }
