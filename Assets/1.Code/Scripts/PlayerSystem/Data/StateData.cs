@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Refactoring
 {
     [CreateAssetMenu(fileName = "StateData", menuName = "Data/StateData")]
-    public class BaseStateData : ScriptableObject
+    public class StateData : ScriptableObject
     {
         [SerializeField] private PlayerStateType stateType;   // 상태 정체성. 자식 클래스 override 대신 인스펙터에서 지정
         [SerializeField] private bool isLooping;

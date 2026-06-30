@@ -8,7 +8,7 @@ namespace Refactoring
 {
     public class HitboxProvider : MonoBehaviour, IHitboxProvider
     {
-        [Inject] private List<BaseStateData> _dataList;
+        [Inject] private List<StateData> _dataList;
         private readonly Dictionary<object, GameObject> _instances = new(); //키당 1개만 보관
         private readonly Dictionary<GameObject, MeshRenderer[]> _renderers = new(); //생성 시점에 캐싱한 MeshRenderer(런타임 순회 비용 제거)
         private readonly Dictionary<GameObject, IHitboxDamageReporter> _reporters = new(); //생성 시점에 캐싱한 감지 컴포넌트
@@ -23,7 +23,7 @@ namespace Refactoring
         {
             foreach (var so in _dataList)
             {
-                var data = (BaseStateData)so;
+                var data = (StateData)so;
                 var hitboxMap = data.GetData<HitboxDataEntry>();
 
                 foreach (var entries in hitboxMap.Values)

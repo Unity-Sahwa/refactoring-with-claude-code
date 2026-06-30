@@ -12,7 +12,7 @@ namespace Refactoring
         protected Animator Animator { get; private set; }
 
         private IPlayerStateEventRaiser _raiser;
-        private BaseStateData _data;   // 에디터용 변수
+        private StateData _data;   // 에디터용 변수
         private int _animationHash;
 
         private readonly AnimationTracker _tracker = new AnimationTracker();
@@ -21,7 +21,7 @@ namespace Refactoring
         public bool IsAnimationFinished => _tracker.IsFinished;
         public bool IsLooping {get; private set;}
 
-        public void Initialize(PlayerCharacter character, IPlayerStateEventRaiser raiser, BaseStateData data)
+        public void Initialize(PlayerCharacter character, IPlayerStateEventRaiser raiser, StateData data)
         {
             StateKey = data.StateType;
             _raiser = raiser;
@@ -76,7 +76,7 @@ namespace Refactoring
                 _readIndex++;
             }
         }
-        private void SortEvents(BaseStateData data)
+        private void SortEvents(StateData data)
         {
             _sortedEvents.Clear();
             if (data == null)

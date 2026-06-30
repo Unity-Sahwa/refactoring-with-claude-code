@@ -6,7 +6,7 @@ namespace Refactoring
     // 책임: 캐릭터에 붙어서 한 번에 하나의 상태만 진행되도록 관리. 규칙에 따른 상태 직접 전환
     public class PlayerStateMachine : MonoBehaviour
     {
-        [SerializeField] private List<BaseStateData> _stateDataList = new List<BaseStateData>();
+        [SerializeField] private List<StateData> _stateDataList = new List<StateData>();
         [Inject] private IPlayerStateEventRaiser _raiser;
         [Inject] private IStateTriggerSubscriber _triggerSubscriber;
 
@@ -98,7 +98,7 @@ namespace Refactoring
         }
         private void BuildStates()
         {
-            foreach (BaseStateData data in _stateDataList)
+            foreach (StateData data in _stateDataList)
             {
                 if (data == null)
                 {

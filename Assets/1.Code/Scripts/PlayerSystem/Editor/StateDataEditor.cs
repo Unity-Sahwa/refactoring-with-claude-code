@@ -3,12 +3,12 @@ using UnityEngine;
 
 namespace Refactoring
 {
-    // BaseStateData(및 자식 SO) 인스펙터에 "빈 항목 숨기기" 토글을 추가한다.
+    // StateData(및 자식 SO) 인스펙터에 "빈 항목 숨기기" 토글을 추가한다.
     // 토글이 켜지면 비어있는 배열 필드는 그리지 않는다(토글 상태는 SessionState에 저장 → 에셋 오염 없음).
-    [CustomEditor(typeof(BaseStateData), true)]
-    public class BaseStateDataEditor : Editor
+    [CustomEditor(typeof(StateData), true)]
+    public class StateDataEditor : Editor
     {
-        private const string HideEmptyKey = "BaseStateData.HideEmpty";
+        private const string HideEmptyKey = "StateData.HideEmpty";
 
         public override void OnInspectorGUI()
         {

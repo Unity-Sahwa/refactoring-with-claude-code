@@ -8,7 +8,7 @@ namespace Refactoring
 {
     public class EffectProvider : MonoBehaviour, IEffectProvider
     {
-        [Inject] private List<BaseStateData> _stateDataList;
+        [Inject] private List<StateData> _stateDataList;
         private readonly Dictionary<object, Queue<GameObject>> _available = new();
         private readonly Dictionary<GameObject, object> _keyOfInstance = new(); //이펙트 반납시, 어디로 돌려보낼지를 위한 역맵핑
         private readonly HashSet<object> _requested = new(); //비동기 로딩 중복 방지용
