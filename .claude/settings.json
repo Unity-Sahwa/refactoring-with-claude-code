@@ -20,5 +20,8 @@
       }
     ]
   },
-  "spinnerTipsEnabled": false
+  "spinnerTipsEnabled": false,
+  "enabledPlugins": {
+    "ponytail@ponytail": true
+  }
 }
