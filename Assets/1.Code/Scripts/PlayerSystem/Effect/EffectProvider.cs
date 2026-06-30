@@ -6,6 +6,7 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace Refactoring
 {
+    // 역할: 초기에 이펙트 로딩 및 복제하고, 이펙트를 대여/반납 형식으로 제공한다.(활성화 가능한 이펙트만 대여한다.)
     public class EffectProvider : MonoBehaviour, IEffectProvider
     {
         [Inject] private List<StateData> _stateDataList;
@@ -66,9 +67,15 @@ namespace Refactoring
 
         public GameObject Rent(AssetReferenceGameObject key)
         {
-            if (_available.TryGetValue(key.RuntimeKey, out var queue) && queue.Count > 0)
+            if (_available.TryGetValue(key.RuntimeKey, out var queue))
             {
-                return queue.Dequeue();
+                if (queue.Count > 0) 
+                {
+                    return queue.Dequeue();
+                }
+
+                Debug.LogWarning($"EffectProvider: 풀 고갈 (key={key.RuntimeKey}). 여유분 늘리기 검토");
+                return null;
             }
             return null;
         }

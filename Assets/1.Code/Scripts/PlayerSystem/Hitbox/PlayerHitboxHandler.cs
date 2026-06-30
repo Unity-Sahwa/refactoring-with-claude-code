@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace Refactoring
 {
+    // 역할: 상태 이벤트의 알림과 함께 전달받은 데이터(위치, 시간범위 등)로 IHitboxProvider으로부터 제공된 히트박스를 활성화시킨다.
     public class PlayerHitboxHandler : MonoBehaviour
     {
         [Inject] private IPlayerStateEventSubscriber _eventSubscriber;
@@ -34,8 +35,7 @@ namespace Refactoring
             _targetMask = LayerMask.GetMask("Enemy", "Gimmick");
         }
 
-        //대원_TODO: 히트박스 켜짐은 애니 진행률이 원하는 진행률을 지났을 때 켜지는 것이라 저프레임(10fps 정도)에선 타이밍이 늦을 수 있음. 
-        //체감상 괜찮지만 원하는 타이밍에 진행되는 것이 아니기에 Animation Event로 타이밍을 2중 감시하기
+        //대원_TODO: 원하는 타이밍에 이벤트 호출되는게 아니라 원하는 타이밍보다 늦을 수 있음. 필요시 Animation Event로 타이밍을 2중 감시하기
         private void HandleHitbox(PlayerCharacter source, IStartData data)
         {
             var hitbox = (IPlayerHitbox)data;

@@ -4,6 +4,8 @@ using UnityEngine;
 
 namespace Refactoring
 {
+    // 역할: 상태 이벤트의 알림과 함께 전달받은 데이터(위치, 시간범위 등)로 IEffectProvider으로부터 제공된 이펙트를 활성화시킨다.
+
     public class PlayerEffectHandler : MonoBehaviour
     {
         [Inject] private IPlayerStateEventSubscriber _eventSubscriber;

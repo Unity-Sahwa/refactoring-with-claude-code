@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -6,6 +5,7 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace Refactoring
 {
+    // 역할: 초기에 히트박스를 로딩하고, 히트박스를 대여/반납 형식으로 제공한다.
     public class HitboxProvider : MonoBehaviour, IHitboxProvider
     {
         [Inject] private List<StateData> _dataList;
