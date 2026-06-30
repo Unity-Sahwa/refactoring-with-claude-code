@@ -20,6 +20,7 @@ namespace Refactoring
             if (_character == null)
             {
                 Debug.LogError($"[StateMachine] {name}에 PlayerCharacter가 없습니다.");
+                return;
             }
 
             BuildStates();
