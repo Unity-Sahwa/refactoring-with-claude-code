@@ -20,23 +20,23 @@ MonoBehaviour:
     duration: 0.448
     untilEnd: 0
   inputBuffer: []
-  skillMove:
-  - name: 
-    startProgress: 0.101
-    duration: 0.2
-    direction: {x: 0, y: 0, z: 1}
-    speed: 10
   moveControl:
   - name: 
     startProgress: 0.492
     duration: 0
     untilEnd: 1
   rotateControl: []
+  superArmor: []
+  invincible: []
+  skillMove:
+  - name: 
+    startProgress: 0.101
+    duration: 1
+    direction: {x: 0, y: 1, z: 0}
+    speed: 10
   effect: []
   hitbox: []
   audio: []
-  superArmor: []
-  invincible: []
   references:
     version: 2
     RefIds: []

@@ -16,14 +16,36 @@ MonoBehaviour:
   isLooping: 0
   inputBlock: []
   inputBuffer: []
-  skillMove: []
   moveControl: []
   rotateControl: []
-  effect: []
-  hitbox: []
-  audio: []
   superArmor: []
   invincible: []
+  skillMove: []
+  effect: []
+  hitbox:
+  - name: 
+    untilFinish: 0
+    position: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 0, y: 0, z: 0}
+    startProgress: 0
+    duration: 2
+    hitboxObject:
+      m_AssetGUID: c37dcd22866e94148bcc634d606d03b4
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
+    attachKey: 0
+    stopInPlace: 0
+    stopTime: 0
+    showMesh: 1
+    combat:
+      damage: 5
+      color: 0
+      inkStack: 0
+      reactions: []
+  audio: []
   references:
     version: 2
     RefIds: []
