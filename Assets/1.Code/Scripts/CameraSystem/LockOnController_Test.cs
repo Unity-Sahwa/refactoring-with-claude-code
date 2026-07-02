@@ -76,8 +76,9 @@ namespace Refactoring
         //           원본의 hpBarCount 등 세부 죽음 판정은 보류.
         private static bool IsDead(Collider c)
         {
-            Enemy enemy = c.GetComponent<Enemy>();
-            return enemy == null || enemy.isDead;
+            //Enemy enemy = c.GetComponent<Enemy>();
+            //return enemy == null || enemy.isDead;
+            return false;
         }
 
         // y(높이)를 무시한 수평 거리.

@@ -56,8 +56,8 @@ namespace Refactoring
 
                 // ponytail: 원본 Enemy(글로벌 네임스페이스)의 isDead를 임시 참조.
                 //           적 상태 인터페이스가 정리되면 그쪽으로 교체.
-                Enemy enemy = c.GetComponent<Enemy>();
-                if (enemy == null || enemy.isDead) continue;
+                //Enemy enemy = c.GetComponent<Enemy>();
+                //if (enemy == null || enemy.isDead) continue;
 
                 float angle = AngleFromCenter(c.transform.position, playerPos, cameraPos);
                 float distance = FlatDistance(c.transform.position, playerPos);
