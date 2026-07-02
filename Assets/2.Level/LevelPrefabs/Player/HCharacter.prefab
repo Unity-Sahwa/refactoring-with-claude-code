@@ -1082,6 +1082,65 @@ Transform:
   - {fileID: 5412161033505231393}
   m_Father: {fileID: 1690041229846001522}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4178025834029555690
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5893805612033112531}
+  - component: {fileID: 1552025544722357055}
+  - component: {fileID: 5387774527276276038}
+  m_Layer: 0
+  m_Name: AttachPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5893805612033112531
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4178025834029555690}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.21226978, y: 0.9300003, z: 0.27120018}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6048376750277521002}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1552025544722357055
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4178025834029555690}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3c328b3346c2a047bc2e92af028eda6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.HitboxAttachPoint
+  key: 0
+--- !u!114 &5387774527276276038
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4178025834029555690}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e60bdf09f61346c4ba440204f9ccd348, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.EffectAttachPoint
+  key: 0
 --- !u!1 &4329677560615859579
 GameObject:
   m_ObjectHideFlags: 0
@@ -1958,7 +2017,6 @@ GameObject:
   - component: {fileID: 3523829458653047597}
   - component: {fileID: 1078326795572744288}
   - component: {fileID: 9034491159174184400}
-  - component: {fileID: 1571771913370626544}
   m_Layer: 6
   m_Name: HCharacter
   m_TagString: Untagged
@@ -1981,6 +2039,7 @@ Transform:
   m_Children:
   - {fileID: 3269315056574884559}
   - {fileID: 4727350480014594180}
+  - {fileID: 5893805612033112531}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &1184242474086271724
@@ -2090,19 +2149,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de38ecbb0dece974f90bcfa568d697ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.PlayerDamageReceiver
---- !u!114 &1571771913370626544
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6393974813386716368}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d3c328b3346c2a047bc2e92af028eda6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.HitboxAttachPoint
-  key: 0
 --- !u!1 &6415875916798487454
 GameObject:
   m_ObjectHideFlags: 0

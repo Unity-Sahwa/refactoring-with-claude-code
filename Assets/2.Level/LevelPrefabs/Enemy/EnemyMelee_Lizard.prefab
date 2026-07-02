@@ -143,7 +143,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.EnemySound
   audioSource: {fileID: 2744272835554374876}
-  audioClips: []
+  audioClips:
+  - {fileID: 8300000, guid: f4e64c0686e258742ae15b89b785e9d8, type: 3}
   mixerGroup: {fileID: 3737948159784882922, guid: 5c70bc02da2145844bdc60ff922835c3, type: 2}
   minDistance: 1
   maxDistance: 40
@@ -429,7 +430,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.EnemySound
   audioSource: {fileID: 5756113420396293765}
-  audioClips: []
+  audioClips:
+  - {fileID: 8300000, guid: 290d37758fed43e4ea376301e679bbda, type: 3}
+  - {fileID: 8300000, guid: 345483c305cd6f14a969d2fb9e18eb32, type: 3}
+  - {fileID: 8300000, guid: d8097b0bf3684e8428f76ec5da83c83b, type: 3}
+  - {fileID: 8300000, guid: 2657a516d1c7ffe48a94b62002e021b1, type: 3}
+  - {fileID: 8300000, guid: 7154722150cb14a4598907300c162453, type: 3}
+  - {fileID: 8300000, guid: 81ccacb7e0885134fa05788d061f3144, type: 3}
   mixerGroup: {fileID: 3737948159784882922, guid: 5c70bc02da2145844bdc60ff922835c3, type: 2}
   minDistance: 1
   maxDistance: 30
@@ -683,7 +690,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.EnemySound
   audioSource: {fileID: 3100945415332278764}
-  audioClips: []
+  audioClips:
+  - {fileID: 8300000, guid: f588d713bd784bb4bad1ef31f4c24890, type: 3}
   mixerGroup: {fileID: 3737948159784882922, guid: 5c70bc02da2145844bdc60ff922835c3, type: 2}
   minDistance: 1
   maxDistance: 40
@@ -906,7 +914,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.EnemySound
   audioSource: {fileID: 1867709113904562926}
-  audioClips: []
+  audioClips:
+  - {fileID: 8300000, guid: 7244d968d00fb36469bbdc31e0aede48, type: 3}
   mixerGroup: {fileID: 3737948159784882922, guid: 5c70bc02da2145844bdc60ff922835c3, type: 2}
   minDistance: 1
   maxDistance: 40
@@ -1204,7 +1213,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.EnemySound
   audioSource: {fileID: 6118406088731039427}
-  audioClips: []
+  audioClips:
+  - {fileID: 8300000, guid: d201a7389145803468be923c65e68f3e, type: 3}
   mixerGroup: {fileID: 3737948159784882922, guid: 5c70bc02da2145844bdc60ff922835c3, type: 2}
   minDistance: 1
   maxDistance: 40
@@ -2313,6 +2323,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2fcb218bae311564bb0644962a1b1d0d, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7187069814486858076}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2fcb218bae311564bb0644962a1b1d0d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4243405892421915039}
   m_SourcePrefab: {fileID: 100100000, guid: 2fcb218bae311564bb0644962a1b1d0d, type: 3}
 --- !u!4 &3869422674361743510 stripped
 Transform:
@@ -2470,6 +2483,19 @@ MonoBehaviour:
   - {fileID: 8859046608949321402}
   stackUI: {fileID: 8301857577512027007}
   enemyDataMelee: {fileID: 11400000, guid: ab5bee22ab5ec4c4099ac5645010a9eb, type: 2}
+--- !u!114 &4243405892421915039
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4537697438460027436}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a51fb6af3463289469b9749885e48352, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.CalliSystem
+  maxPaintOver: 5
 --- !u!4 &5190417601837871206 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8804637712421891867, guid: 2fcb218bae311564bb0644962a1b1d0d, type: 3}

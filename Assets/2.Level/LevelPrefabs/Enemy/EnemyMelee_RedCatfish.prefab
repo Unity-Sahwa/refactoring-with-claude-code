@@ -240,8 +240,8 @@ GameObject:
   - component: {fileID: 5760843832291873976}
   - component: {fileID: 7788360337590039474}
   - component: {fileID: 3667165341260744066}
-  - component: {fileID: 588963141137669711}
-  - component: {fileID: 3179846346752115188}
+  - component: {fileID: 456948045603957338}
+  - component: {fileID: 3862990609006577560}
   m_Layer: 7
   m_Name: EnemyMelee_RedCatfish
   m_TagString: Enemy
@@ -305,10 +305,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 714381748877544278}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 5
-  m_Drag: 1
-  m_AngularDrag: 0.05
+  m_LinearDamping: 1
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -349,7 +349,7 @@ NavMeshAgent:
   m_ObstacleAvoidanceType: 4
 --- !u!95 &3667165341260744066
 Animator:
-  serializedVersion: 5
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -363,12 +363,13 @@ Animator:
   m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &588963141137669711
+--- !u!114 &456948045603957338
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -377,9 +378,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 714381748877544278}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 365344169dc7a1e4b8c22f6255196162, type: 3}
+  m_Script: {fileID: 11500000, guid: 8270973fb8f5d4e479f4db7d3e54b1c8, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.EnemyMelee
   isKillTrigger: 0
   DeathEvent: []
   delayTimes: []
@@ -388,13 +389,13 @@ MonoBehaviour:
   patrolPointB: {fileID: 0}
   attackRoot: {fileID: 7895586222698084613}
   viewTransform: {fileID: 3897719411806881777}
-  audioSourceIdle: {fileID: 6877649059222972402}
-  audioSourceAttack: {fileID: 3539117398408969706}
-  audioSourceFindTarget: {fileID: 3255459526857187193}
-  audioSourceHit: {fileID: 8743081223770358227}
-  audioSourceDie: {fileID: 4134713817300875082}
+  audioSourceIdle: {fileID: 6079033049511796813}
+  audioSourceAttack: {fileID: 5860674209774020334}
+  audioSourceFindTarget: {fileID: 5606399641850075460}
+  audioSourceHit: {fileID: 953312788637876684}
+  audioSourceDie: {fileID: 864824293705126433}
   target: {fileID: 0}
-  animator: {fileID: 0}
+  animator: {fileID: 3667165341260744066}
   isDead: 0
   hp: 0
   hpBarCount: 0
@@ -419,15 +420,8 @@ MonoBehaviour:
   - {fileID: 7858852645179591198}
   - {fileID: 3959436459257589242}
   stackUI: {fileID: 86762828835637410}
-  DissolveSpeed: 0.01
-  DissolveYield: 0.1
-  Particle: {fileID: 3539292788564194467}
-  m_skinnedMeshResnderers:
-  - {fileID: 5596138452377624649}
-  m_materials:
-  - {fileID: 2100000, guid: 34352a26be8edb6468f11e0442b7911c, type: 2}
-  enemyDataMelee: {fileID: 11400000, guid: f038766e52ae7a544af37c6ee37e2c67, type: 2}
---- !u!114 &3179846346752115188
+  enemyDataMelee: {fileID: 11400000, guid: ab5bee22ab5ec4c4099ac5645010a9eb, type: 2}
+--- !u!114 &3862990609006577560
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -436,10 +430,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 714381748877544278}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 320dc7bdb81f972409ec072d494efbcb, type: 3}
+  m_Script: {fileID: 11500000, guid: a51fb6af3463289469b9749885e48352, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
-  maxPaintOver: 10
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.CalliSystem
+  maxPaintOver: 5
 --- !u!1 &719691153033087821
 GameObject:
   m_ObjectHideFlags: 0
@@ -801,7 +795,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2995325292039139907}
   - component: {fileID: 7163425930270406134}
-  - component: {fileID: 4134713817300875082}
+  - component: {fileID: 864824293705126433}
   m_Layer: 7
   m_Name: Audio_die
   m_TagString: Untagged
@@ -835,6 +829,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -965,7 +960,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &4134713817300875082
+--- !u!114 &864824293705126433
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -974,10 +969,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1335424509041203205}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f44e08be4611119459f042c2ed8080fb, type: 3}
+  m_Script: {fileID: 11500000, guid: dabc3f6dc68df1e489000e23e1d8b699, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
-  audioSource: {fileID: 7163425930270406134}
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.EnemySound
+  audioSource: {fileID: 0}
   audioClips:
   - {fileID: 8300000, guid: d75025e8228bd8a45820617aec9b7217, type: 3}
   mixerGroup: {fileID: 3737948159784882922, guid: 5c70bc02da2145844bdc60ff922835c3, type: 2}
@@ -1042,6 +1037,11 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1063,9 +1063,11 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &1443562898935925025
 GameObject:
@@ -1108,7 +1110,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4535436675894154087}
   - component: {fileID: 772103470601162718}
-  - component: {fileID: 3539117398408969706}
+  - component: {fileID: 5860674209774020334}
   m_Layer: 7
   m_Name: Audio_attack
   m_TagString: Untagged
@@ -1142,6 +1144,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -1272,7 +1275,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &3539117398408969706
+--- !u!114 &5860674209774020334
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1281,10 +1284,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1503144134001990511}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f44e08be4611119459f042c2ed8080fb, type: 3}
+  m_Script: {fileID: 11500000, guid: dabc3f6dc68df1e489000e23e1d8b699, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
-  audioSource: {fileID: 772103470601162718}
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.EnemySound
+  audioSource: {fileID: 0}
   audioClips:
   - {fileID: 8300000, guid: 0ecdb3863a2b44c4c9e99e5aeb4f3868, type: 3}
   mixerGroup: {fileID: 3737948159784882922, guid: 5c70bc02da2145844bdc60ff922835c3, type: 2}
@@ -1364,7 +1367,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5071008002170411340}
   - component: {fileID: 2070239897083823179}
-  - component: {fileID: 8743081223770358227}
+  - component: {fileID: 953312788637876684}
   m_Layer: 7
   m_Name: Audio_hit
   m_TagString: Untagged
@@ -1398,6 +1401,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -1528,7 +1532,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &8743081223770358227
+--- !u!114 &953312788637876684
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1537,10 +1541,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1680596610415553846}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f44e08be4611119459f042c2ed8080fb, type: 3}
+  m_Script: {fileID: 11500000, guid: dabc3f6dc68df1e489000e23e1d8b699, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
-  audioSource: {fileID: 2070239897083823179}
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.EnemySound
+  audioSource: {fileID: 0}
   audioClips:
   - {fileID: 8300000, guid: 8ed6ac8985961d34d843fc469a29a6bc, type: 3}
   mixerGroup: {fileID: 3737948159784882922, guid: 5c70bc02da2145844bdc60ff922835c3, type: 2}
@@ -1830,6 +1834,11 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1851,9 +1860,11 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &2523710284626286049
 GameObject:
@@ -7005,7 +7016,7 @@ ParticleSystem:
     vectorLabel1_3: W
 --- !u!199 &3539292788564194466
 ParticleSystemRenderer:
-  serializedVersion: 6
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -7021,6 +7032,11 @@ ParticleSystemRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -7042,9 +7058,11 @@ ParticleSystemRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -7076,7 +7094,6 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
-  m_MaskInteraction: 0
 --- !u!1 &3539292790395790781
 GameObject:
   m_ObjectHideFlags: 0
@@ -11835,7 +11852,7 @@ ParticleSystem:
     vectorLabel1_3: W
 --- !u!199 &3539292790395790783
 ParticleSystemRenderer:
-  serializedVersion: 6
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -11851,6 +11868,11 @@ ParticleSystemRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -11872,9 +11894,11 @@ ParticleSystemRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -11906,7 +11930,6 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
-  m_MaskInteraction: 0
 --- !u!1 &3543093998794189704
 GameObject:
   m_ObjectHideFlags: 0
@@ -12029,6 +12052,11 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -12050,9 +12078,11 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &3803747495565790377
 GameObject:
@@ -12588,6 +12618,11 @@ SkinnedMeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 3
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -12609,9 +12644,11 @@ SkinnedMeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   serializedVersion: 2
   m_Quality: 0
   m_UpdateWhenOffscreen: 0
@@ -12939,7 +12976,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6324991219944290429}
   - component: {fileID: 5038008847946193520}
-  - component: {fileID: 3255459526857187193}
+  - component: {fileID: 5606399641850075460}
   m_Layer: 7
   m_Name: Audio_findTarget
   m_TagString: Untagged
@@ -12973,6 +13010,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -13103,7 +13141,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &3255459526857187193
+--- !u!114 &5606399641850075460
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -13112,10 +13150,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 5785348781691261302}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f44e08be4611119459f042c2ed8080fb, type: 3}
+  m_Script: {fileID: 11500000, guid: dabc3f6dc68df1e489000e23e1d8b699, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
-  audioSource: {fileID: 5038008847946193520}
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.EnemySound
+  audioSource: {fileID: 0}
   audioClips:
   - {fileID: 8300000, guid: 3acae7b8fe596444aa86e10a2237c6f5, type: 3}
   mixerGroup: {fileID: 3737948159784882922, guid: 5c70bc02da2145844bdc60ff922835c3, type: 2}
@@ -13361,7 +13399,7 @@ GameObject:
   m_Component:
   - component: {fileID: 238805201474709757}
   - component: {fileID: 1846518989621211765}
-  - component: {fileID: 6877649059222972402}
+  - component: {fileID: 6079033049511796813}
   m_Layer: 7
   m_Name: Audio_idle
   m_TagString: Untagged
@@ -13395,6 +13433,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -13525,7 +13564,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &6877649059222972402
+--- !u!114 &6079033049511796813
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -13534,10 +13573,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 7212268565667506927}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f44e08be4611119459f042c2ed8080fb, type: 3}
+  m_Script: {fileID: 11500000, guid: dabc3f6dc68df1e489000e23e1d8b699, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
-  audioSource: {fileID: 1846518989621211765}
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.EnemySound
+  audioSource: {fileID: 0}
   audioClips:
   - {fileID: 8300000, guid: 9cd4e80ea9ea2bd44a9aceade39b53d0, type: 3}
   - {fileID: 8300000, guid: a24eca8848a40c9439c3a5cadc030faf, type: 3}
@@ -13736,6 +13775,11 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -13757,9 +13801,11 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &7672915014300720680
 GameObject:
@@ -14284,6 +14330,11 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -14305,9 +14356,11 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &8864647794454932552
 GameObject:

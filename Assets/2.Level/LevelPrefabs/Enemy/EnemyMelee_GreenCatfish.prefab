@@ -4920,7 +4920,7 @@ ParticleSystem:
     vectorLabel1_3: W
 --- !u!199 &818739202885034481
 ParticleSystemRenderer:
-  serializedVersion: 6
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -4936,6 +4936,11 @@ ParticleSystemRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -4957,9 +4962,11 @@ ParticleSystemRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -4991,7 +4998,6 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
-  m_MaskInteraction: 0
 --- !u!1 &818739204274663662
 GameObject:
   m_ObjectHideFlags: 0
@@ -9750,7 +9756,7 @@ ParticleSystem:
     vectorLabel1_3: W
 --- !u!199 &818739204274663660
 ParticleSystemRenderer:
-  serializedVersion: 6
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -9766,6 +9772,11 @@ ParticleSystemRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -9787,9 +9798,11 @@ ParticleSystemRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -9821,7 +9834,6 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
-  m_MaskInteraction: 0
 --- !u!1 &941352118447988679
 GameObject:
   m_ObjectHideFlags: 0
@@ -10028,7 +10040,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3910954475473772020}
   - component: {fileID: 5052806150866404851}
-  - component: {fileID: 6884651970910858565}
+  - component: {fileID: 565736639193961240}
   m_Layer: 7
   m_Name: Audio_idle
   m_TagString: Untagged
@@ -10062,6 +10074,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -10192,7 +10205,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &6884651970910858565
+--- !u!114 &565736639193961240
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -10201,10 +10214,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1666436888523229236}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f44e08be4611119459f042c2ed8080fb, type: 3}
+  m_Script: {fileID: 11500000, guid: dabc3f6dc68df1e489000e23e1d8b699, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
-  audioSource: {fileID: 5052806150866404851}
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.EnemySound
+  audioSource: {fileID: 0}
   audioClips:
   - {fileID: 8300000, guid: 9cd4e80ea9ea2bd44a9aceade39b53d0, type: 3}
   - {fileID: 8300000, guid: a24eca8848a40c9439c3a5cadc030faf, type: 3}
@@ -10383,7 +10396,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5266658120333034432}
   - component: {fileID: 3175243693552335434}
-  - component: {fileID: 1439377131955867356}
+  - component: {fileID: 117430346170546354}
   m_Layer: 7
   m_Name: Audio_findTarget
   m_TagString: Untagged
@@ -10417,6 +10430,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -10547,7 +10561,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &1439377131955867356
+--- !u!114 &117430346170546354
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -10556,10 +10570,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 2091880824598356465}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f44e08be4611119459f042c2ed8080fb, type: 3}
+  m_Script: {fileID: 11500000, guid: dabc3f6dc68df1e489000e23e1d8b699, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
-  audioSource: {fileID: 3175243693552335434}
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.EnemySound
+  audioSource: {fileID: 0}
   audioClips:
   - {fileID: 8300000, guid: 3acae7b8fe596444aa86e10a2237c6f5, type: 3}
   mixerGroup: {fileID: 3737948159784882922, guid: 5c70bc02da2145844bdc60ff922835c3, type: 2}
@@ -10962,7 +10976,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7018717439754184333}
   - component: {fileID: 6278338229638526770}
-  - component: {fileID: 5734355750323852829}
+  - component: {fileID: 4917361527643885272}
   m_Layer: 7
   m_Name: Audio_attack
   m_TagString: Untagged
@@ -10996,6 +11010,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -11126,7 +11141,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &5734355750323852829
+--- !u!114 &4917361527643885272
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -11135,10 +11150,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 3562132585873125115}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f44e08be4611119459f042c2ed8080fb, type: 3}
+  m_Script: {fileID: 11500000, guid: dabc3f6dc68df1e489000e23e1d8b699, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
-  audioSource: {fileID: 6278338229638526770}
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.EnemySound
+  audioSource: {fileID: 0}
   audioClips:
   - {fileID: 8300000, guid: d80a3d4b107df5246bd5f007f880c2be, type: 3}
   mixerGroup: {fileID: 3737948159784882922, guid: 5c70bc02da2145844bdc60ff922835c3, type: 2}
@@ -11693,7 +11708,7 @@ GameObject:
   m_Component:
   - component: {fileID: 637091180122781925}
   - component: {fileID: 3346878631914397313}
-  - component: {fileID: 3082359559252885405}
+  - component: {fileID: 8760930830459672758}
   m_Layer: 7
   m_Name: Audio_hit
   m_TagString: Untagged
@@ -11727,6 +11742,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -11857,7 +11873,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &3082359559252885405
+--- !u!114 &8760930830459672758
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -11866,10 +11882,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 5475723085199596729}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f44e08be4611119459f042c2ed8080fb, type: 3}
+  m_Script: {fileID: 11500000, guid: dabc3f6dc68df1e489000e23e1d8b699, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
-  audioSource: {fileID: 3346878631914397313}
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.EnemySound
+  audioSource: {fileID: 0}
   audioClips:
   - {fileID: 8300000, guid: 8ed6ac8985961d34d843fc469a29a6bc, type: 3}
   mixerGroup: {fileID: 3737948159784882922, guid: 5c70bc02da2145844bdc60ff922835c3, type: 2}
@@ -12328,6 +12344,11 @@ SkinnedMeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 3
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -12349,9 +12370,11 @@ SkinnedMeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   serializedVersion: 2
   m_Quality: 0
   m_UpdateWhenOffscreen: 0
@@ -12523,6 +12546,11 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -12544,9 +12572,11 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &6215393704382224799
 GameObject:
@@ -12769,8 +12799,8 @@ GameObject:
   - component: {fileID: 9026226595909243733}
   - component: {fileID: 5730523811025604706}
   - component: {fileID: 320156054672541660}
-  - component: {fileID: 4595061989162691922}
-  - component: {fileID: 2300956763642502074}
+  - component: {fileID: 3697283907977926102}
+  - component: {fileID: 6850541879664068037}
   m_Layer: 7
   m_Name: EnemyMelee_GreenCatfish
   m_TagString: Enemy
@@ -12834,10 +12864,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6726792660888042266}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 5
-  m_Drag: 1
-  m_AngularDrag: 0.05
+  m_LinearDamping: 1
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -12878,7 +12908,7 @@ NavMeshAgent:
   m_ObstacleAvoidanceType: 4
 --- !u!95 &320156054672541660
 Animator:
-  serializedVersion: 5
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -12892,12 +12922,13 @@ Animator:
   m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &4595061989162691922
+--- !u!114 &3697283907977926102
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -12906,9 +12937,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 6726792660888042266}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 365344169dc7a1e4b8c22f6255196162, type: 3}
+  m_Script: {fileID: 11500000, guid: 8270973fb8f5d4e479f4db7d3e54b1c8, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.EnemyMelee
   isKillTrigger: 0
   DeathEvent: []
   delayTimes: []
@@ -12917,13 +12948,13 @@ MonoBehaviour:
   patrolPointB: {fileID: 0}
   attackRoot: {fileID: 7041673793043669247}
   viewTransform: {fileID: 5305180807947355202}
-  audioSourceIdle: {fileID: 6884651970910858565}
-  audioSourceAttack: {fileID: 5734355750323852829}
-  audioSourceFindTarget: {fileID: 1439377131955867356}
-  audioSourceHit: {fileID: 3082359559252885405}
-  audioSourceDie: {fileID: 2430139724948214203}
+  audioSourceIdle: {fileID: 565736639193961240}
+  audioSourceAttack: {fileID: 4917361527643885272}
+  audioSourceFindTarget: {fileID: 117430346170546354}
+  audioSourceHit: {fileID: 8760930830459672758}
+  audioSourceDie: {fileID: 8103744342248933174}
   target: {fileID: 0}
-  animator: {fileID: 0}
+  animator: {fileID: 320156054672541660}
   isDead: 0
   hp: 0
   hpBarCount: 0
@@ -12948,15 +12979,8 @@ MonoBehaviour:
   - {fileID: 7659756143185125667}
   - {fileID: 3988384018375373676}
   stackUI: {fileID: 1823212147224363599}
-  DissolveSpeed: 0.01
-  DissolveYield: 0.1
-  Particle: {fileID: 818739202885034480}
-  m_skinnedMeshResnderers:
-  - {fileID: 8717334585269393561}
-  m_materials:
-  - {fileID: 2100000, guid: d2bb01f41e2d4b645ba0b3a83bcc961a, type: 2}
-  enemyDataMelee: {fileID: 11400000, guid: f038766e52ae7a544af37c6ee37e2c67, type: 2}
---- !u!114 &2300956763642502074
+  enemyDataMelee: {fileID: 11400000, guid: ab5bee22ab5ec4c4099ac5645010a9eb, type: 2}
+--- !u!114 &6850541879664068037
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -12965,10 +12989,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 6726792660888042266}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 320dc7bdb81f972409ec072d494efbcb, type: 3}
+  m_Script: {fileID: 11500000, guid: a51fb6af3463289469b9749885e48352, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
-  maxPaintOver: 10
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.CalliSystem
+  maxPaintOver: 5
 --- !u!1 &7005290177396308235
 GameObject:
   m_ObjectHideFlags: 0
@@ -13138,7 +13162,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1730724388966343932}
   - component: {fileID: 5191223567721048549}
-  - component: {fileID: 2430139724948214203}
+  - component: {fileID: 8103744342248933174}
   m_Layer: 7
   m_Name: Audio_die
   m_TagString: Untagged
@@ -13172,6 +13196,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -13302,7 +13327,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &2430139724948214203
+--- !u!114 &8103744342248933174
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -13311,10 +13336,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 7402455612683423125}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f44e08be4611119459f042c2ed8080fb, type: 3}
+  m_Script: {fileID: 11500000, guid: dabc3f6dc68df1e489000e23e1d8b699, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
-  audioSource: {fileID: 5191223567721048549}
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.EnemySound
+  audioSource: {fileID: 0}
   audioClips:
   - {fileID: 8300000, guid: d75025e8228bd8a45820617aec9b7217, type: 3}
   mixerGroup: {fileID: 3737948159784882922, guid: 5c70bc02da2145844bdc60ff922835c3, type: 2}
