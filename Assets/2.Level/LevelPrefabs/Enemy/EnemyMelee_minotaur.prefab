@@ -13960,7 +13960,7 @@ GameObject:
   - component: {fileID: 1490882598563353484}
   - component: {fileID: 1701661007856870648}
   m_Layer: 7
-  m_Name: EnemyMelee_minotaur
+  m_Name: EnemyMelee_Minotaur
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
