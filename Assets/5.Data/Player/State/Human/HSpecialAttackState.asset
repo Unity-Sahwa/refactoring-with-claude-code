@@ -17,7 +17,7 @@ MonoBehaviour:
   inputBlock:
   - name: 
     startProgress: 0
-    duration: 0.448
+    duration: 0
     untilEnd: 0
   inputBuffer: []
   moveControl:

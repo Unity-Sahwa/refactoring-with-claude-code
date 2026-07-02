@@ -25,7 +25,7 @@ MonoBehaviour:
   hitbox:
   - name: 
     untilFinish: 0
-    position: {x: 0, y: 0, z: 0}
+    position: {x: 0, y: -1, z: 0}
     rotation: {x: 0, y: 0, z: 0}
     scale: {x: 0, y: 0, z: 0}
     startProgress: 0
@@ -39,13 +39,19 @@ MonoBehaviour:
     attachKey: 0
     stopInPlace: 0
     stopTime: 0
-    showMesh: 1
+    showMesh: 0
     combat:
-      damage: 5
-      color: 0
-      inkStack: 0
-      reactions: []
+      damage: 1
+      color: 1
+      inkStack: 1
+      reactions:
+      - rid: 822169761597620303
   audio: []
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 822169761597620303
+      type: {class: KnockbackReaction, ns: Refactoring, asm: Assembly-CSharp}
+      data:
+        direction: {x: 0, y: 0, z: -1}
+        force: 10
