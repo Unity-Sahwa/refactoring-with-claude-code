@@ -104,12 +104,15 @@ namespace Refactoring
             }
 
             _rotator.Apply(in frame);
-
             // 합친 속도를 거리로 바꿔 한 번만 이동. 충돌·관통 방지는 CharacterController가 처리.
             _controller.Move(velocity * frame.DeltaTime);
         }
 
-        private void OnMove(Vector2 vector2) => _inputVector = vector2;
+        private void OnMove(Vector2 vector2)
+        {
+            _inputVector = vector2;
+        }
+
 
         private void SetupCurrentCharacter()
         {
