@@ -107,5 +107,14 @@ public class EnemyMino : Enemy
         isAttack = false;
         StartCoroutine(WaitBeforeTracking(waitTime));
     }
+    
+    protected override void OnDrawGizmos()
+    {
+        base.OnDrawGizmos();   // 부모 시야 기즈모 유지
+
+        if (attackRoot == null) return;
+        Gizmos.color = enemyState == eState.Attacking ? Color.red : Color.yellow;  // 공격 중 빨강
+        Gizmos.DrawWireSphere(attackRoot.position, autoAttackRange);
+    }
 }
 }
