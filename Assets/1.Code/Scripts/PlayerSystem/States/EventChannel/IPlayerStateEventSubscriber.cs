@@ -15,7 +15,5 @@ namespace Refactoring
         
         public void SubscribeReset(Action listener);
         public void UnsubscribeReset(Action listener);
-        
-        
     }
 }

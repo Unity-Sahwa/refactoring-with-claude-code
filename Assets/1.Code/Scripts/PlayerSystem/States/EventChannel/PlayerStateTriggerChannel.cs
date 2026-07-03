@@ -10,8 +10,20 @@ namespace Refactoring
     {
         private Action<StateTriggerType> _onTrigger;
 
-        public void RaiseTrigger(StateTriggerType trigger) => _onTrigger?.Invoke(trigger);
-        public void SubscribeTrigger(Action<StateTriggerType> listener) => _onTrigger += listener;
-        public void UnsubscribeTrigger(Action<StateTriggerType> listener) => _onTrigger -= listener;
+        public void RaiseTrigger(StateTriggerType trigger) 
+        {
+            _onTrigger?.Invoke(trigger);
+        }
+
+        public void SubscribeTrigger(Action<StateTriggerType> listener)
+        {
+            _onTrigger += listener;
+        } 
+
+        public void UnsubscribeTrigger(Action<StateTriggerType> listener) 
+        {
+            _onTrigger -= listener;
+        }
+
     }
 }
