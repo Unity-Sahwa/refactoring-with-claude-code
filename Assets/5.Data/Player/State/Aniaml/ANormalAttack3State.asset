@@ -14,16 +14,61 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.BaseStateData
   stateType: 3
   isLooping: 0
-  inputBlock: []
-  inputBuffer: []
-  skillMove: []
+  inputBlock:
+  - name: 
+    startProgress: 0
+    duration: 0.1
+    untilEnd: 0
+  inputBuffer:
+  - name: 
+    startProgress: 0.1
+    duration: 0.3
+    untilEnd: 0
   moveControl: []
-  rotateControl: []
-  effect: []
-  hitbox: []
-  audio: []
+  rotateControl:
+  - name: 
+    startProgress: 0
+    duration: 0.15
+    untilEnd: 0
   superArmor: []
   invincible: []
+  skillMove:
+  - name: 
+    startProgress: 0.2
+    duration: 0.1
+    direction: {x: 0, y: 0, z: 1}
+    speed: 1
+  effect: []
+  hitbox:
+  - name: 
+    untilFinish: 0
+    position: {x: 0, y: -1, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 0, y: 0, z: 0}
+    startProgress: 0
+    duration: 2
+    hitboxObject:
+      m_AssetGUID: c37dcd22866e94148bcc634d606d03b4
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
+    attachKey: 1
+    stopInPlace: 0
+    stopTime: 0
+    showMesh: 0
+    combat:
+      damage: 1
+      color: 0
+      inkStack: 1
+      reactions:
+      - rid: 822169761597620303
+  audio: []
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 822169761597620303
+      type: {class: KnockbackReaction, ns: Refactoring, asm: Assembly-CSharp}
+      data:
+        direction: {x: 0, y: 0, z: -1}
+        force: 10

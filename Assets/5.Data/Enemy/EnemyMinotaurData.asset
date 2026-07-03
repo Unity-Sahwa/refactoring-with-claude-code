@@ -24,4 +24,4 @@ MonoBehaviour:
   f_motionSpeed: 0.62
   f_autoAttackMeleeDamage: 1
   f_autoAttackMeleeMotionCoolTime: 4.16
-  f_autoAttackMeleeRange: 1.5
+  f_autoAttackMeleeRange: 2

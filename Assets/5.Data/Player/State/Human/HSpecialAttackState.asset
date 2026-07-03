@@ -17,23 +17,45 @@ MonoBehaviour:
   inputBlock:
   - name: 
     startProgress: 0
+    duration: 0.5
+    untilEnd: 0
+  inputBuffer:
+  - name: 
+    startProgress: 0
     duration: 0
     untilEnd: 0
-  inputBuffer: []
   moveControl:
   - name: 
-    startProgress: 0.492
+    startProgress: 0.8
     duration: 0
     untilEnd: 1
-  rotateControl: []
-  superArmor: []
+  rotateControl:
+  - name: 
+    startProgress: 0
+    duration: 0
+    untilEnd: 0
+  superArmor:
+  - name: 
+    startProgress: 0.1
+    duration: 0.4
+    untilEnd: 0
   invincible: []
   skillMove:
-  - name: 
-    startProgress: 0.101
-    duration: 1
+  - name: Up
+    startProgress: 0.1
+    duration: 0.6
     direction: {x: 0, y: 1, z: 0}
-    speed: 10
+    speed: 15
+  - name: Front
+    startProgress: 0.1
+    duration: 0.7
+    direction: {x: 0, y: 0, z: 1}
+    speed: 15
+  - name: 
+    startProgress: 0.7
+    duration: 1
+    direction: {x: 0, y: -1, z: 0}
+    speed: 100
   effect: []
   hitbox: []
   audio: []
