@@ -4,46 +4,51 @@ using UnityEngine.Audio;
 
 namespace Refactoring
 {
-public class EnemySound : MonoBehaviour
-{
-    public AudioSource audioSource;
-    public AudioClip[] audioClips;
-    public AudioMixerGroup mixerGroup;
-    public float minDistance = 1f;
-    public float maxDistance = 40f;
-    public float soundCooldown = 5f;
-
-    private bool canPlay = true;
-
-    private void Start()
+    public class EnemySound : MonoBehaviour
     {
-        audioSource.outputAudioMixerGroup = mixerGroup;
+        public AudioSource audioSource;
+        public AudioClip[] audioClips;
+        public AudioMixerGroup mixerGroup;
+        public float minDistance = 1f;
+        public float maxDistance = 40f;
+        public float soundCooldown = 5f;
 
-        audioSource.minDistance = minDistance;
-        audioSource.maxDistance = maxDistance;
-    }
+        private bool canPlay = true;
 
-
-    public void PlaySoundEffect(int num)
-    {
-        if (num != 0)
+        private void Awake()
         {
-            audioSource.PlayOneShot(audioClips[num-1]);
-            StartCoroutine(SoundCooldownRoutine());
+            if(audioSource == null) audioSource = GetComponent<AudioSource>();
         }
-        if (canPlay && audioClips.Length > 0)
-        {   
-            var randomIndex = Random.Range(0, audioClips.Length);
-            audioSource.PlayOneShot(audioClips[randomIndex]);
-            StartCoroutine(SoundCooldownRoutine());
-        }
-    }
+        
+        private void Start()
+        {
+            audioSource.outputAudioMixerGroup = mixerGroup;
 
-    IEnumerator SoundCooldownRoutine()
-    {
-        canPlay = false;
-        yield return new WaitForSeconds(soundCooldown); 
-        canPlay = true;
+            audioSource.minDistance = minDistance;
+            audioSource.maxDistance = maxDistance;
+        }
+
+
+        public void PlaySoundEffect(int num)
+        {
+            if (num != 0)
+            {
+                audioSource.PlayOneShot(audioClips[num-1]);
+                StartCoroutine(SoundCooldownRoutine());
+            }
+            if (canPlay && audioClips.Length > 0)
+            {   
+                var randomIndex = Random.Range(0, audioClips.Length);
+                audioSource.PlayOneShot(audioClips[randomIndex]);
+                StartCoroutine(SoundCooldownRoutine());
+            }
+        }
+
+        IEnumerator SoundCooldownRoutine()
+        {
+            canPlay = false;
+            yield return new WaitForSeconds(soundCooldown); 
+            canPlay = true;
+        }
     }
-}
 }
