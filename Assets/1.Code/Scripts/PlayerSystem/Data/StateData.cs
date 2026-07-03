@@ -33,6 +33,10 @@ namespace Refactoring
         private Dictionary<StateEventCategory, Array> _dataMap;
 
         private void OnEnable() => BuildDataMap();
+
+#if UNITY_EDITOR
+        private void OnValidate() => BuildDataMap();
+#endif
         
         //왜 이렇게 구현? : 2군데서 호출하기에 메서드로 만듬. 
         //                  (OnEnable 이전에 GetData가 호출되면 맵이 형성이 안되어 있기 때문에 GetData에서도 BuildDataMap 호출하도록 구성)
