@@ -271,8 +271,6 @@ namespace Refactoring
                 target = damageMessage.Damager.transform;
             }
 
-            //대원 임시수정: 플레이어 앞쪽으로 모이도록
-
             hitStopCoroutine = StartCoroutine(HitStop(2f, target.transform, knockbackForce));
 
             if (phaseHPs[phaseHPs.Count - 1] <= 0)
@@ -299,7 +297,7 @@ namespace Refactoring
                         for (var i = 0; i < calliSystem.MaxPaintOver + 1; i++)
                         {
                             paintOverStacks[i].SetActive(true);
-                            paintOverStacks[i].GetComponent<Image>().color = Color.white;
+                            paintOverStacks[i].GetComponent<Image>().color = Color.red;
                         }
                         paintOverMax = true;
                     }
