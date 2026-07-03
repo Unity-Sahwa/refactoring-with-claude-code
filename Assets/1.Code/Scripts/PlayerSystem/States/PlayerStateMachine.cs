@@ -1,10 +1,11 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Refactoring
 {
     // 책임: 캐릭터에 붙어서 한 번에 하나의 상태만 진행되도록 관리. 규칙에 따른 상태 직접 전환
-    public class PlayerStateMachine : MonoBehaviour
+    public class PlayerStateMachine : MonoBehaviour, IDataProvider
     {
         [SerializeField] private List<StateData> _stateDataList = new List<StateData>();
         [Inject] private IPlayerStateEventRaiser _raiser;
@@ -29,7 +30,6 @@ namespace Refactoring
         private void OnEnable()
         {
             _triggerSubscriber?.SubscribeTrigger(OnTrigger);
-            TransitionTo(PlayerStateType.Locomotion);
         }
 
         private void OnDisable()
@@ -79,7 +79,6 @@ namespace Refactoring
 
                 (PlayerStateType.Hit, StateTriggerType.Died)              => PlayerStateType.Dead,
                 (PlayerStateType.Hit, StateTriggerType.AnimationFinished) => PlayerStateType.Locomotion,
-                (PlayerStateType.Hit, _)                                  => null,
 
                 (PlayerStateType.NormalAttack1, StateTriggerType.Attack)      => PlayerStateType.NormalAttack2,
                 (PlayerStateType.NormalAttack2, StateTriggerType.Attack)      => PlayerStateType.NormalAttack3,
@@ -111,6 +110,8 @@ namespace Refactoring
                 state.Initialize(_character, _raiser, data);
                 _states[data.StateType] = state;
             }
+            
+            CurrentState = _states.GetValueOrDefault(PlayerStateType.Locomotion) ?? _states.Values.First();
         }
 
         private void TransitionTo(PlayerStateType next)
@@ -128,6 +129,11 @@ namespace Refactoring
             CurrentState?.Exit();
             CurrentState = nextState;
             CurrentState.Enter();
+        }
+
+        public List<ScriptableObject> ProvideData()
+        {
+            return _stateDataList.ConvertAll(d => (ScriptableObject)d);
         }
     }
 }

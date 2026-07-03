@@ -32,6 +32,8 @@ namespace Refactoring
             Animator = character.GetCharacterComponent<Animator>();
             _animationHash = Animator.StringToHash(StateKey.ToString());
 
+            _tracker.Initialize(Animator, _animationHash);
+            
             SortEvents(data);
         }
         public void Enter()
@@ -43,10 +45,12 @@ namespace Refactoring
 #endif
             _exited = false;
             _readIndex = 0;
-            _tracker.Begin(Animator, _animationHash);
-            Animator.CrossFade(StateKey.ToString(), 0.1f, 0, 0f);
-            _raiser.RaiseEnter(Character, StateKey);
 
+            _tracker.Begin();
+
+            Animator.CrossFade(StateKey.ToString(), 0.1f, 0, 0f);
+            
+            _raiser.RaiseEnter(Character, StateKey);
             RaiseEvent(0f);
         }
         public void Update()

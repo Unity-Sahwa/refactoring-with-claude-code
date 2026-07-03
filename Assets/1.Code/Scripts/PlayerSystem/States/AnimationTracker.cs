@@ -13,10 +13,13 @@ namespace Refactoring
         public float Progress { get; private set; }
         public bool IsFinished { get; private set; }
 
-        public void Begin(Animator animator, int animationHash)
+        public void Initialize(Animator animator, int animationHash)
         {
             _animator = animator;
             _animationHash = animationHash;
+        }
+        public void Begin()
+        {
             _hasStarted = false;
             IsFinished = false;
             Progress = 0f;
