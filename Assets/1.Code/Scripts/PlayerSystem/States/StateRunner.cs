@@ -18,6 +18,7 @@ namespace Refactoring
         private readonly AnimationTracker _tracker = new AnimationTracker();
         private readonly List<(float Progress, StateEventCategory Category, IStartData Data, bool IsEnd)> _sortedEvents = new();
         private int _readIndex;
+        private bool _exited;
         public bool IsAnimationFinished => _tracker.IsFinished;
         public bool IsLooping {get; private set;}
 
@@ -40,7 +41,7 @@ namespace Refactoring
             SortEvents(_data);
             IsLooping = _data.IsLooping;
 #endif
-
+            _exited = false;
             _readIndex = 0;
             _tracker.Begin(Animator, _animationHash);
             Animator.CrossFade(StateKey.ToString(), 0.1f, 0, 0f);
@@ -56,6 +57,7 @@ namespace Refactoring
         public void Exit()
         {
             _readIndex = 0;
+            _exited = true;
             _raiser.RaiseReset();
         }
         private void RaiseEvent(float progress)
@@ -63,6 +65,11 @@ namespace Refactoring
             while (_readIndex < _sortedEvents.Count
                    && progress >= _sortedEvents[_readIndex].Progress)
             {
+                if(_exited)
+                {
+                    return;
+                }
+
                 (float _, StateEventCategory category, IStartData data, bool isEnd) = _sortedEvents[_readIndex];
                 
                 if (isEnd)
