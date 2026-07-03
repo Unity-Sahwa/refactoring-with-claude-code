@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Refactoring
 {
     // 책임: 외부에서 ApplyDamage로 전달되는 데이터로 체력감소 및 플레이어 상태를 전환
-
+    [RequireComponent(typeof(CharacterController))]
     public class PlayerDamageReceiver : MonoBehaviour, IDamageable
     {
         [Inject(true)] private IHealthModifier _health;
@@ -14,7 +14,12 @@ namespace Refactoring
 
         private void Awake()
         {
-            if (_eventSubscriber == null) return;
+            gameObject.layer = LayerMask.NameToLayer("Player");
+
+            if (_eventSubscriber == null) 
+            {
+                return;
+            }
 
             _eventSubscriber.Subscribe(StateEventCategory.Invincible, HandleInvincibleOn);
             _eventSubscriber.SubscribeEnd(StateEventCategory.Invincible, HandleInvincibleOff);
