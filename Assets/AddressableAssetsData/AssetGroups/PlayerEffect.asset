@@ -14,22 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
   m_GroupName: PlayerEffect
   m_GUID: 13af0d7d550b2da49b59301f52c60797
-  m_SerializeEntries:
-  - m_GUID: 8cdb78173d9190e4382cf533192096e2
-    m_Address: PurpleHit
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: a2ccf81a1d5b163448ebdf66b5e746d6
-    m_Address: RedHit
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: cd2a6771c578ec3478980c2e5a5f41ea
-    m_Address: PinkCrossUp
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
+  m_SerializeEntries: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 57a17706e87945c4c8128d64ad62479c, type: 2}
   m_SchemaSet:
