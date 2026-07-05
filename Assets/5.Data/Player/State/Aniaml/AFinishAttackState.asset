@@ -16,14 +16,34 @@ MonoBehaviour:
   isLooping: 0
   inputBlock: []
   inputBuffer: []
-  skillMove: []
   moveControl: []
   rotateControl: []
+  superArmor: []
+  invincible: []
+  skillMove:
+  - name: Front
+    startProgress: 0.05
+    duration: 0.3
+    direction: {x: 0, y: 0, z: 1}
+    speed: 5
+  - name: Up
+    startProgress: 0.35
+    duration: 0.5
+    direction: {x: 0, y: 1, z: 0}
+    speed: 12
+  - name: Front
+    startProgress: 0.35
+    duration: 0.6
+    direction: {x: 0, y: 0, z: 1}
+    speed: 4
+  - name: Down
+    startProgress: 0.7
+    duration: 1
+    direction: {x: 0, y: -1, z: 0}
+    speed: 0
   effect: []
   hitbox: []
   audio: []
-  superArmor: []
-  invincible: []
   references:
     version: 2
     RefIds: []

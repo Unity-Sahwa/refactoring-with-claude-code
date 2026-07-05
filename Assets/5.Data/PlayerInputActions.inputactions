@@ -16,6 +16,15 @@
                     "initialStateCheck": true
                 },
                 {
+                    "name": "Look",
+                    "type": "Value",
+                    "id": "a1b2c3d4-e5f6-47a8-9b0c-1d2e3f4a5b6c",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
                     "name": "NormalAttack",
                     "type": "Button",
                     "id": "d0677c1f-b430-43e5-9429-d27a116efd9b",
@@ -74,15 +83,6 @@
                     "type": "Button",
                     "id": "91e57dc5-f747-4d06-8359-2f7e105cebf1",
                     "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Look",
-                    "type": "Value",
-                    "id": "a1b2c3d4-e5f6-47a8-9b0c-1d2e3f4a5b6c",
-                    "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -169,7 +169,7 @@
                 {
                     "name": "",
                     "id": "d1f2e347-f278-445e-bca7-117084a4f007",
-                    "path": "<Keyboard>/2",
+                    "path": "<Keyboard>/q",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -180,7 +180,7 @@
                 {
                     "name": "",
                     "id": "eecd6813-720d-4a35-bbd6-3d7ea45e1d39",
-                    "path": "<Keyboard>/3",
+                    "path": "<Keyboard>/f",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -213,7 +213,7 @@
                 {
                     "name": "",
                     "id": "4c3900b7-0e39-42ef-998c-78a1db89845e",
-                    "path": "<Keyboard>/z",
+                    "path": "<Keyboard>/escape",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
