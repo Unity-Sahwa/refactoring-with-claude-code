@@ -56,9 +56,9 @@ MonoBehaviour:
     attachKey: 0
     stopInPlace: 0
     stopTime: 0
-    showMesh: 0
+    showMesh: 1
     combat:
-      damage: 1
+      damage: 11111
       color: 1
       inkStack: 1
       reactions:
