@@ -1637,7 +1637,7 @@ GameObject:
   - component: {fileID: 3964825281258034543}
   m_Layer: 7
   m_Name: EnemyMelee_BlueRake
-  m_TagString: Enemy
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
