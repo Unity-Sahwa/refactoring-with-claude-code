@@ -37,7 +37,7 @@ MonoBehaviour:
     startProgress: 0.148
     duration: 0.2
     direction: {x: 0, y: 0, z: 1}
-    speed: 30
+    speed: 50
   effect: []
   hitbox: []
   audio: []
