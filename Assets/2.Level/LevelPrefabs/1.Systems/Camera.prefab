@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 2541838886565545085}
   - component: {fileID: 4344039592021232020}
   - component: {fileID: 8518602408690404092}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: DefaultCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -187,10 +187,10 @@ MonoBehaviour:
   CollideAgainst:
     serializedVersion: 2
     m_Bits: 513
-  IgnoreTag: 
+  IgnoreTag: Player
   TransparentLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1024
   MinimumDistanceFromTarget: 0.3
   AvoidObstacles:
     Enabled: 1
@@ -700,11 +700,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineDeoccluder
   CollideAgainst:
     serializedVersion: 2
-    m_Bits: 1
-  IgnoreTag: 
+    m_Bits: 513
+  IgnoreTag: Player
   TransparentLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1024
   MinimumDistanceFromTarget: 1
   AvoidObstacles:
     Enabled: 1
