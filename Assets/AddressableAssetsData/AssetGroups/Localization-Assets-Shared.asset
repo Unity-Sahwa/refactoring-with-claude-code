@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: PlayerHitbox
+  m_Name: Localization-Assets-Shared
   m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
-  m_GroupName: PlayerHitbox
-  m_GUID: bd3bfd11337f65b43a2923224c3de1f6
+  m_GroupName: Localization-Assets-Shared
+  m_GUID: 5408b24004572e34ca78e09aea74c149
   m_SerializeEntries:
-  - m_GUID: c37dcd22866e94148bcc634d606d03b4
-    m_Address: hitbox
-    m_ReadOnly: 0
+  - m_GUID: 3fb1df24b777fbd4ca17c725af193196
+    m_Address: Assets/GameResource/UI/Language/LanguageTable Shared Data.asset
+    m_ReadOnly: 1
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  m_ReadOnly: 0
+  m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: 57a17706e87945c4c8128d64ad62479c, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: 73467c933c4e03e43a5b1a5c7da43319, type: 2}
-    - {fileID: 11400000, guid: f0255186a0b2f1742a2ad86aa5f4ec0e, type: 2}
+    - {fileID: 11400000, guid: 8a03176bd45901d469639a5feaee92ce, type: 2}
+    - {fileID: 11400000, guid: f04c9f5d2116f824b84fae78ba6da581, type: 2}
