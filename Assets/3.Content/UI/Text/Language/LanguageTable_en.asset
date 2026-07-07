@@ -1,0 +1,386 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: LanguageTable_en
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: 3fb1df24b777fbd4ca17c725af193196, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 272622813184
+    m_Localized: 'Finisher :'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1024590217216
+    m_Localized: 'Normal :'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1173685141504
+    m_Localized: 'Dash :'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1215737233408
+    m_Localized: 'Assault :'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2146356822016
+    m_Localized: 'Move :'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2359536517120
+    m_Localized: 'Menu :'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2417338220544
+    m_Localized: 'LockOn :'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2462187913216
+    m_Localized: 'Interact :'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2670997143552
+    m_Localized: NewGame
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2676441350144
+    m_Localized: Load
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2678945349632
+    m_Localized: Settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2679620632576
+    m_Localized: Credit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2680245583872
+    m_Localized: Quit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2680878923776
+    m_Localized: Continue
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2681499680768
+    m_Localized: Load
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3210447552512
+    m_Localized: Settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3267561390080
+    m_Localized: Main Menu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3347609681920
+    m_Localized: Yes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3428719132672
+    m_Localized: No
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3614765875200
+    m_Localized: Would you like to start a new game?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4002596388864
+    m_Localized: Please select your record
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4293500731392
+    m_Localized: Would you like to load a saved file?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4512506314752
+    m_Localized: GamePlay
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4869332533248
+    m_Localized: MouseSpeed(Up,Down)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5035439554560
+    m_Localized: MouseSpeed(Left,Right)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5188259020800
+    m_Localized: Up
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5224816574464
+    m_Localized: Down
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5226351689728
+    m_Localized: Left
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227123441664
+    m_Localized: Right
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227681284096
+    m_Localized: LockOn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5305997328384
+    m_Localized: Interaction
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5307054292992
+    m_Localized: NormalAttack
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5312024543232
+    m_Localized: SpecialAttack
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5312628523008
+    m_Localized: FinishAttack
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5429586690048
+    m_Localized: Dash
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5491574308864
+    m_Localized: Menu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6082270724096
+    m_Localized: Sound
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6084229464064
+    m_Localized: "\xB7 MasterVolme"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6162948161536
+    m_Localized: "\xB7 BGM"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6207638470656
+    m_Localized: "\xB7 EnemySFX"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6209450409984
+    m_Localized: "\xB7 PlayerSFX"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6368804601856
+    m_Localized: Etc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6475847434240
+    m_Localized: "\xB7 Credits"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6478389182464
+    m_Localized: "\xB7 CopyRight"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6479085436928
+    m_Localized: "\xB7 Platform"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6888394981376
+    m_Localized: View
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6945408155648
+    m_Localized: Skip
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6993600708608
+    m_Localized: Interact
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7061443575808
+    m_Localized: Wisu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7530769416192
+    m_Localized: Area00
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7558049169408
+    m_Localized: Area01
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7560288927744
+    m_Localized: Area20
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9192850456576
+    m_Localized: Area21
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9219110993920
+    m_Localized: Area30
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9220868407296
+    m_Localized: Area31
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9224483897344
+    m_Localized: Area32
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9227021451264
+    m_Localized: Area33
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9229257015296
+    m_Localized: Area34
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9434886963200
+    m_Localized: Area40
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9438745722880
+    m_Localized: Area41
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9439567806464
+    m_Localized: Area42
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9440243089408
+    m_Localized: Area43
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9440960315392
+    m_Localized: Area44
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9441560100864
+    m_Localized: Area50
+    m_Metadata:
+      m_Items: []
+  - m_Id: 184423376355328
+    m_Localized: Display
+    m_Metadata:
+      m_Items: []
+  - m_Id: 184827652734976
+    m_Localized: Language
+    m_Metadata:
+      m_Items: []
+  - m_Id: 185096042053632
+    m_Localized: "\xB7 ChangeLanguage"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 185099905007616
+    m_Localized: Korean
+    m_Metadata:
+      m_Items: []
+  - m_Id: 185101209436160
+    m_Localized: English
+    m_Metadata:
+      m_Items: []
+  - m_Id: 232480646234112
+    m_Localized: Would you like to quit the game?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 233192503508992
+    m_Localized: Back
+    m_Metadata:
+      m_Items: []
+  - m_Id: 694109573873664
+    m_Localized: Normal Attack
+    m_Metadata:
+      m_Items: []
+  - m_Id: 694244940840960
+    m_Localized: Dash
+    m_Metadata:
+      m_Items: []
+  - m_Id: 694764246007808
+    m_Localized: Special Attack
+    m_Metadata:
+      m_Items: []
+  - m_Id: 694865668472832
+    m_Localized: Lock On
+    m_Metadata:
+      m_Items: []
+  - m_Id: 695041619525632
+    m_Localized: Finish
+    m_Metadata:
+      m_Items: []
+  - m_Id: 696080150167552
+    m_Localized: "Activation occurs when repainting \nis applied alternately to a
+      single target"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 700561935958016
+    m_Localized: Grace Cave Side Path
+    m_Metadata:
+      m_Items: []
+  - m_Id: 700679040925696
+    m_Localized: Ruined Wisu's Garden
+    m_Metadata:
+      m_Items: []
+  - m_Id: 700868279533568
+    m_Localized: Grace Cave Entrance
+    m_Metadata:
+      m_Items: []
+  - m_Id: 700968754085888
+    m_Localized: Wisu - Karmic Fire
+    m_Metadata:
+      m_Items: []
+  - m_Id: 701493033697280
+    m_Localized: Hyeonmu Central Road
+    m_Metadata:
+      m_Items: []
+  - m_Id: 701602916073472
+    m_Localized: Wisu's Bridge
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1066078597152768
+    m_Localized: YOU DIED
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1066914333196288
+    m_Localized: ENEMY FELLED
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14115279505588224
+    m_Localized: "Forward dash by default. \nWith Focus on, evade back"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14121671230619648
+    m_Localized: 'Press button to lock on enemy.
+
+      Press again to unlock.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14159464614985728
+    m_Localized: Character Movement
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14160654371258368
+    m_Localized: Camera Rotation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14250670351056896
+    m_Localized: Click here
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

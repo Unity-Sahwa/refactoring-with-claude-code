@@ -1,0 +1,392 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: LanguageTable Shared Data
+  m_EditorClassIdentifier: 
+  m_TableCollectionName: LanguageTable
+  m_TableCollectionNameGuidString: 3fb1df24b777fbd4ca17c725af193196
+  m_Entries:
+  - m_Id: 272622813184
+    m_Key: HUD_PC_BattleGuide_Finisher
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1024590217216
+    m_Key: HUD_PC_BattleGuide_NormalAttack
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1173685141504
+    m_Key: HUD_PC_BattleGuide_Dash
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1215737233408
+    m_Key: HUD_PC_BattleGuide_SpecialAttack
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2146356822016
+    m_Key: HUD_PC_BattleGuide_Move
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2359536517120
+    m_Key: HUD_PC_BattleGuide_Menu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2417338220544
+    m_Key: HUD_PC_BattleGuide_LockOn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2462187913216
+    m_Key: HUD_PC_BattleGuide_Interact
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2670997143552
+    m_Key: UI_Main_NewGame
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2676441350144
+    m_Key: UI_Main_Load
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2678945349632
+    m_Key: UI_Main_Settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2679620632576
+    m_Key: UI_Main_Credit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2680245583872
+    m_Key: UI_Main_Quit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2680878923776
+    m_Key: UI_Pause_Continue
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2681499680768
+    m_Key: UI_Pause_Load
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3210447552512
+    m_Key: UI_Pause_Settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3267561390080
+    m_Key: UI_Pause_MainMenu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3347609681920
+    m_Key: UI_Button_Yes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3428719132672
+    m_Key: UI_Button_No
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3614765875200
+    m_Key: UI_WindowExplain_NewGame
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4002596388864
+    m_Key: UI_WindowExplain_LoadSlot
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4293500731392
+    m_Key: UI_WindowExplain_Load
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4512506314752
+    m_Key: UI_Setting_GamePlay_GamePlay
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4869332533248
+    m_Key: UI_Setting_GamePlay_MouseSpeed(UpDown)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5035439554560
+    m_Key: UI_Setting_GamePlay_MouseSpeed(LeftRight)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5188259020800
+    m_Key: UI_Setting_GamePlay_Up
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5224816574464
+    m_Key: UI_Setting_GamePlay_Down
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5226351689728
+    m_Key: UI_Setting_GamePlay_Left
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227123441664
+    m_Key: UI_Setting_GamePlay_Right
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5227681284096
+    m_Key: UI_Setting_GamePlay_LockOn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5305997328384
+    m_Key: UI_Setting_GamePlay_Interaction
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5307054292992
+    m_Key: UI_Setting_GamePlay_NormalAttack
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5312024543232
+    m_Key: UI_Setting_GamePlay_SpecialAttack
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5312628523008
+    m_Key: UI_Setting_GamePlay_FinishAttack
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5429586690048
+    m_Key: UI_Setting_GamePlay_Dash
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5491574308864
+    m_Key: UI_Setting_GamePlay_Menu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6082270724096
+    m_Key: UI_Setting_Sound_Sound
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6084229464064
+    m_Key: UI_Setting_Sound_MasterVolme
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6162948161536
+    m_Key: UI_Setting_Sound_BGM
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6207638470656
+    m_Key: UI_Setting_Sound_EnemySFX
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6209450409984
+    m_Key: UI_Setting_Sound_PlayerSFX
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6368804601856
+    m_Key: UI_Setting_Etc_Etc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6475847434240
+    m_Key: UI_Setting_Etc_Credits
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6478389182464
+    m_Key: UI_Setting_Etc_CopyRight
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6479085436928
+    m_Key: UI_Setting_Etc_Platform
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6888394981376
+    m_Key: UI_Setting_Etc_View
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6945408155648
+    m_Key: UI_Skip
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6993600708608
+    m_Key: UI_Interaction
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7061443575808
+    m_Key: UI_Monster_Wisu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7530769416192
+    m_Key: UI_Env_Area00
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7558049169408
+    m_Key: UI_Env_Area01
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7560288927744
+    m_Key: UI_Env_Area20
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9192850456576
+    m_Key: UI_Env_Area21
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9219110993920
+    m_Key: UI_Env_Area30
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9220868407296
+    m_Key: UI_Env_Area31
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9224483897344
+    m_Key: UI_Env_Area32
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9227021451264
+    m_Key: UI_Env_Area33
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9229257015296
+    m_Key: UI_Env_Area34
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9434886963200
+    m_Key: UI_Env_Area40
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9438745722880
+    m_Key: UI_Env_Area41
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9439567806464
+    m_Key: UI_Env_Area42
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9440243089408
+    m_Key: UI_Env_Area43
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9440960315392
+    m_Key: UI_Env_Area44
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9441560100864
+    m_Key: UI_Env_Area50
+    m_Metadata:
+      m_Items: []
+  - m_Id: 184423376355328
+    m_Key: UI_Setting_Display
+    m_Metadata:
+      m_Items: []
+  - m_Id: 184827652734976
+    m_Key: UI_Setting_Language
+    m_Metadata:
+      m_Items: []
+  - m_Id: 185096042053632
+    m_Key: UI_Setting_Language_ChangeLanguage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 185099905007616
+    m_Key: UI_Setting_Language_Korean
+    m_Metadata:
+      m_Items: []
+  - m_Id: 185101209436160
+    m_Key: UI_Setting_Language_English
+    m_Metadata:
+      m_Items: []
+  - m_Id: 232480646234112
+    m_Key: UI_WindowExplain_Quit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 233192503508992
+    m_Key: UI_Back
+    m_Metadata:
+      m_Items: []
+  - m_Id: 694109573873664
+    m_Key: HUD_Tutorial_NormalAttack
+    m_Metadata:
+      m_Items: []
+  - m_Id: 694244940840960
+    m_Key: HUD_Tutorial__Dash
+    m_Metadata:
+      m_Items: []
+  - m_Id: 694764246007808
+    m_Key: HUD_Tutorial__SpecialAttack
+    m_Metadata:
+      m_Items: []
+  - m_Id: 694865668472832
+    m_Key: HUD_Tutorial__LockOn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 695041619525632
+    m_Key: HUD_Tutorial__Finish
+    m_Metadata:
+      m_Items: []
+  - m_Id: 696080150167552
+    m_Key: HUD_Tutorial__ExplainFinish
+    m_Metadata:
+      m_Items: []
+  - m_Id: 700561935958016
+    m_Key: UI_AreaName_GraceCaveSidePath
+    m_Metadata:
+      m_Items: []
+  - m_Id: 700679040925696
+    m_Key: UI_AreaName_RuinedWisusGarden
+    m_Metadata:
+      m_Items: []
+  - m_Id: 700868279533568
+    m_Key: UI_AreaName_GraceCaveEntrance
+    m_Metadata:
+      m_Items: []
+  - m_Id: 700968754085888
+    m_Key: UI_BossName_Wisu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 701493033697280
+    m_Key: UI_AreaName_HyeonmuCentralRoad
+    m_Metadata:
+      m_Items: []
+  - m_Id: 701602916073472
+    m_Key: UI_AreaName_WisusBridge
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1066078597152768
+    m_Key: UI_PlayerDie
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1066817180532736
+    m_Key: New Entry
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1066914333196288
+    m_Key: UI_EnemyFelled
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14115279505588224
+    m_Key: HUD_Tutorial__ExplainDash
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14121671230619648
+    m_Key: HUD_Tutorial__ExplainLockOn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14159464614985728
+    m_Key: HUD_Tutorial_Joystick
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14160654371258368
+    m_Key: HUD_Tutorial_CameraRotation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14250670351056896
+    m_Key: UI_Pause_Settings_ClickHere
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 7080956346039533593
+  references:
+    version: 2
+    RefIds:
+    - rid: 7080956346039533593
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1739457113292
