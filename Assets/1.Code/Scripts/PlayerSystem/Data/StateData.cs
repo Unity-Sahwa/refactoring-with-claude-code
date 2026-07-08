@@ -26,6 +26,7 @@ namespace Refactoring
         [SerializeField] private SkillEffectDataEntry[] effect;
         [SerializeField] private HitboxDataEntry[] hitbox;
         [SerializeField] private AudioDataEntry[] audio;
+        [SerializeField] private FinishDataEntry[] finish;
         
         
         public PlayerStateType StateType => stateType;
@@ -54,6 +55,7 @@ namespace Refactoring
                 [StateEventCategory.Audio] = audio,
                 [StateEventCategory.SuperArmor] = superArmor,
                 [StateEventCategory.Invincible] = invincible,
+                [StateEventCategory.Finish] = finish,
             };
         }
         

@@ -11,6 +11,7 @@ namespace Refactoring
         Hitbox,
         Audio,
         SuperArmor,    // 슈퍼아머 구간(피격 경직 무시)
-        Invincible     // 무적 구간(피격 자체 무시)
+        Invincible,    // 무적 구간(피격 자체 무시)
+        Finish         // 처형: 타이밍에 스턴/처형 실행
     }
 }
