@@ -1,0 +1,40 @@
+using Unity.Cinemachine;
+using UnityEngine;
+
+namespace Refactoring
+{
+    public class CameraDebugHud : MonoBehaviour
+    {
+        [Inject(true)] private ILockOnState _lockOn;
+        [Inject(true)] private ILockOnTarget _lockOnTarget;
+        [Inject(true)] private ILockOnTargetDetector _detector;
+
+        private CinemachineBrain _brain;
+        private GUIStyle _style;
+
+        private void Awake()
+        {
+            if (Camera.main != null) _brain = Camera.main.GetComponent<CinemachineBrain>();
+        }
+
+        private void OnGUI()
+        {
+            _style ??= new GUIStyle(GUI.skin.label) { fontSize = 20, normal = { textColor = Color.white } };
+
+            string activeCam = _brain != null && _brain.ActiveVirtualCamera != null
+                ? _brain.ActiveVirtualCamera.Name
+                : "(없음)";
+            bool isLockOn = _lockOn != null && _lockOn.IsLockOn;
+            string locked = _lockOnTarget != null && _lockOnTarget.LockedTarget != null ? _lockOnTarget.LockedTarget.name : "-";
+            string detected = _detector != null ? _detector.Candidates.Count.ToString() : "-";
+
+            // 밝은 씬에서도 글자가 보이도록 어두운 판을 먼저 깐다.
+            GUI.Box(new Rect(8, 8, 320, 128), GUIContent.none);
+
+            GUI.Label(new Rect(16, 14, 600, 28), $"활성 카메라: {activeCam}", _style);
+            GUI.Label(new Rect(16, 42, 600, 28), $"IsLockOn: {isLockOn}", _style);
+            GUI.Label(new Rect(16, 70, 600, 28), $"락온 대상: {locked}", _style);
+            GUI.Label(new Rect(16, 98, 600, 28), $"탐지 후보: {detected}개", _style);
+        }
+    }
+}
