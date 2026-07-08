@@ -10,6 +10,7 @@ namespace Refactoring
         [SerializeField] private List<StateData> _stateDataList = new List<StateData>();
         [Inject] private IPlayerStateEventRaiser _raiser;
         [Inject] private IStateTriggerSubscriber _triggerSubscriber;
+        [Inject(true)] private ICurrentStateWriter _currentStateWriter;
 
         private readonly Dictionary<PlayerStateType, StateRunner> _states = new Dictionary<PlayerStateType, StateRunner>();
         private PlayerCharacter _character;
@@ -30,6 +31,11 @@ namespace Refactoring
         private void OnEnable()
         {
             _triggerSubscriber?.SubscribeTrigger(OnTrigger);
+            // 스왑으로 다시 활성화될 때도 "현재 활성 상태"가 공유 SO에 최신으로 반영되게 한 번 기록한다.
+            if (CurrentState != null)
+            {
+                _currentStateWriter?.SetCurrentState(CurrentState.StateKey);
+            }
         }
 
         private void OnDisable()
@@ -128,6 +134,7 @@ namespace Refactoring
 
             CurrentState?.Exit();
             CurrentState = nextState;
+            _currentStateWriter?.SetCurrentState(next);
             CurrentState.Enter();
         }
 
