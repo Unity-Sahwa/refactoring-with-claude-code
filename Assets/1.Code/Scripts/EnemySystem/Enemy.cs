@@ -110,7 +110,7 @@ namespace Refactoring
         #endregion
 
         #region 덧칠 시스템
-        protected CalliSystem calliSystem;
+        protected CaliSystem calliSystem;
         public GameObject[] paintOverStacks;
         public GameObject stackUI;
         protected bool paintOverMax;
@@ -123,7 +123,7 @@ namespace Refactoring
             targetLayer = LayerMask.GetMask("Player");
             navAgent = GetComponent<NavMeshAgent>();
             animator = GetComponent<Animator>();
-            calliSystem = GetComponent<CalliSystem>();
+            calliSystem = GetComponent<CaliSystem>();
             rb = GetComponent<Rigidbody>();
             enemyState = eState.Idle;
             previousState = eState.A;
