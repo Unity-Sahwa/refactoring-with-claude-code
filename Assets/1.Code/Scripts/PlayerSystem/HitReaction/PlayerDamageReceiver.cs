@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Refactoring
@@ -9,6 +10,8 @@ namespace Refactoring
         [Inject(true)] private IHealthModifier _health;
         [Inject(true)] private IStateTriggerRaiser _triggerRaiser;
         [Inject(true)] private IPlayerStateEventSubscriber _eventSubscriber;
+        private IDisposable _invincibleEventDisposable;
+        private IDisposable _superArmorEventDisposable;
         private bool _invincible;
         private bool _superArmor;
 
@@ -21,26 +24,14 @@ namespace Refactoring
                 return;
             }
 
-            _eventSubscriber.Subscribe(StateEventCategory.Invincible, HandleInvincibleOn);
-            _eventSubscriber.SubscribeEnd(StateEventCategory.Invincible, HandleInvincibleOff);
-
-            _eventSubscriber.Subscribe(StateEventCategory.SuperArmor, HandleSuperArmorOn);
-            _eventSubscriber.SubscribeEnd(StateEventCategory.SuperArmor, HandleSuperArmorOff);
-
-            // 상태가 강제 중단될 때 끄는 이벤트가 누락돼 영구 무적이 되는 걸 막는다.
-            _eventSubscriber.SubscribeReset(HandleReset);
+            // 게이트로 등록하면 채널이 End/Reset 시 알아서 닫아준다(끄기 누락으로 영구 무적 되는 버그 자체가 불가능).
+            _invincibleEventDisposable = _eventSubscriber.RegisterEventSwitch(StateEventCategory.Invincible, HandleInvincibleOn, HandleInvincibleClose);
+            _superArmorEventDisposable = _eventSubscriber.RegisterEventSwitch(StateEventCategory.SuperArmor, HandleSuperArmorOn, HandleSuperArmorClose);
         }
         private void OnDestroy()
         {
-            if (_eventSubscriber == null) return;
-
-            _eventSubscriber.Unsubscribe(StateEventCategory.Invincible, HandleInvincibleOn);
-            _eventSubscriber.UnsubscribeEnd(StateEventCategory.Invincible, HandleInvincibleOff);
-
-            _eventSubscriber.Unsubscribe(StateEventCategory.SuperArmor, HandleSuperArmorOn);
-            _eventSubscriber.UnsubscribeEnd(StateEventCategory.SuperArmor, HandleSuperArmorOff);
-
-            _eventSubscriber.UnsubscribeReset(HandleReset);
+            _invincibleEventDisposable?.Dispose();
+            _superArmorEventDisposable?.Dispose();
         }
         public void ApplyDamage(DamageInfo info) // 적 히트박스가 호출한다.
         {
@@ -69,13 +60,8 @@ namespace Refactoring
             }
         }
         private void HandleInvincibleOn(PlayerCharacter source, IStartData data) => _invincible = true;
-        private void HandleInvincibleOff() => _invincible = false;
+        private void HandleInvincibleClose(CloseEventType reason) => _invincible = false;
         private void HandleSuperArmorOn(PlayerCharacter source, IStartData data) => _superArmor = true;
-        private void HandleSuperArmorOff() => _superArmor = false;
-        private void HandleReset()
-        {
-            _invincible = false;
-            _superArmor = false;
-        }
+        private void HandleSuperArmorClose(CloseEventType reason) => _superArmor = false;
     }
 }

@@ -14,6 +14,7 @@ namespace Refactoring
         private int _targetMask;   // 플레이어 공격이 때릴 대상 레이어. 적 핸들러가 생기면 abstract로 분리한다.
         private readonly Dictionary<HitboxAttachPointType, Transform> _attachPointMap = new();
         private readonly List<ActiveHitbox> _actives = new();
+        private IDisposable _hitboxEventDisposable;
 
         private class ActiveHitbox
         {
@@ -24,8 +25,7 @@ namespace Refactoring
 
         void Awake()
         {
-            _eventSubscriber.Subscribe(StateEventCategory.Hitbox, HandleHitbox);
-            _eventSubscriber.SubscribeReset(HandleReset);
+            _hitboxEventDisposable = _eventSubscriber.RegisterEventShot(StateEventCategory.Hitbox, HandleHitbox, HandleReset);
 
             foreach (var point in _attachPoints)
             {
@@ -38,7 +38,11 @@ namespace Refactoring
         //대원_TODO: 원하는 타이밍에 이벤트 호출되는게 아니라 원하는 타이밍보다 늦을 수 있음. 필요시 Animation Event로 타이밍을 2중 감시하기
         private void HandleHitbox(PlayerCharacter source, IStartData data)
         {
-            var hitbox = (IPlayerHitbox)data;
+            if (data is not IPlayerHitbox hitbox)
+            {
+                Debug.LogError($"[PlayerHitboxHandler] IPlayerHitbox가 필요한데 {data?.GetType().Name ?? "null"}을 받음");
+                return;
+            }
 
             var instance = _provider.Rent(hitbox.HitboxObject);
             if (instance == null) return;
@@ -53,8 +57,14 @@ namespace Refactoring
             t.SetParent(parent, false);
             t.localPosition = hitbox.Position;
             t.localRotation = Quaternion.Euler(hitbox.Rotation);
-            if (hitbox.Scale == Vector3.zero) t.localScale = Vector3.one;
-            else t.localScale = hitbox.Scale;
+            
+            // 부모 스케일에 영향받지 않도록, 입력 스케일을 부모 월드스케일로 나눠 월드 크기를 고정한다.
+            var wantScale = hitbox.Scale == Vector3.zero ? Vector3.one : hitbox.Scale;
+            var ps = parent.lossyScale;
+            t.localScale = new Vector3(
+                ps.x != 0f ? wantScale.x / ps.x : wantScale.x,
+                ps.y != 0f ? wantScale.y / ps.y : wantScale.y,
+                ps.z != 0f ? wantScale.z / ps.z : wantScale.z);
 
             _provider.SetMeshVisible(instance, hitbox.ShowMesh);
 
@@ -116,11 +126,7 @@ namespace Refactoring
 
         private void OnDestroy()
         {
-            if (_eventSubscriber != null)
-            {
-                _eventSubscriber.Unsubscribe(StateEventCategory.Hitbox, HandleHitbox);
-                _eventSubscriber.UnsubscribeReset(HandleReset);
-            }
+            _hitboxEventDisposable?.Dispose();
 
             foreach (var active in _actives)
             {

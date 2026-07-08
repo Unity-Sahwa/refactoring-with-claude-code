@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Refactoring
@@ -10,6 +11,7 @@ namespace Refactoring
         private readonly IPlayerStateEventSubscriber _subscriber;
         private readonly IStateTriggerRaiser _triggerRaiser;
         private readonly float _moveSpeed;
+        private readonly IDisposable _moveEventDisposable;
         private bool _canMove;
 
         public WalkVelocitySource(IPlayerStateEventSubscriber subscriber, IStateTriggerRaiser triggerRaiser, float moveSpeed)
@@ -20,9 +22,7 @@ namespace Refactoring
 
             if (_subscriber != null)
             {
-                _subscriber.Subscribe(StateEventCategory.MoveControl, HandleMoveOn);
-                _subscriber.SubscribeEnd(StateEventCategory.MoveControl, HandleMoveOff);
-                _subscriber.SubscribeReset(HandleReset);
+                _moveEventDisposable = _subscriber.RegisterEventSwitch(StateEventCategory.MoveControl, HandleMoveOn, HandleMoveClose);
             }
             else
             {
@@ -46,16 +46,10 @@ namespace Refactoring
 
         public void Dispose()
         {
-            if (_subscriber != null)
-            {
-                _subscriber.Unsubscribe(StateEventCategory.MoveControl, HandleMoveOn);
-                _subscriber.UnsubscribeEnd(StateEventCategory.MoveControl, HandleMoveOff);
-                _subscriber.UnsubscribeReset(HandleReset);
-            }
+            _moveEventDisposable?.Dispose();
         }
 
         private void HandleMoveOn(PlayerCharacter source, IStartData data) => _canMove = true;
-        private void HandleMoveOff() => _canMove = false;
-        private void HandleReset() => _canMove = false;
+        private void HandleMoveClose(CloseEventType reason) => _canMove = false;
     }
 }

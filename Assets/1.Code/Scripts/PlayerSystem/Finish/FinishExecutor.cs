@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Refactoring
@@ -11,17 +12,17 @@ namespace Refactoring
         [Inject] private IPlayerStateEventSubscriber _playerStateEventSubscriber;
         [Inject] private IFinishTargetProvider _finishTargetProvider;
 
+        private IDisposable _finishEventDisposable;
+
         private void Awake()
         {
-            _playerStateEventSubscriber?.Subscribe(StateEventCategory.Finish, HandleFinish);
+            // 처형은 정리가 필요 없는 순수 원샷이라 onReset 없이 등록한다.
+            _finishEventDisposable = _playerStateEventSubscriber?.RegisterEventShot(StateEventCategory.Finish, HandleFinish);
         }
 
         private void OnDestroy()
         {
-            if (_playerStateEventSubscriber != null)
-            {
-                _playerStateEventSubscriber.Unsubscribe(StateEventCategory.Finish, HandleFinish);
-            }
+            _finishEventDisposable?.Dispose();
         }
 
         private void HandleFinish(PlayerCharacter source, IStartData data)

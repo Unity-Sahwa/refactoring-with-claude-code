@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,6 +10,7 @@ namespace Refactoring
     {
         private readonly IPlayerStateEventSubscriber _subscriber;
         private readonly List<ActiveSkillMove> _actives = new();
+        private readonly IDisposable _skillMoveEventDisposable;
 
         private class ActiveSkillMove
         {
@@ -23,8 +25,7 @@ namespace Refactoring
 
             if (_subscriber != null)
             {
-                _subscriber.Subscribe(StateEventCategory.SkillMove, HandleSkillMove);
-                _subscriber.SubscribeReset(HandleReset);
+                _skillMoveEventDisposable = _subscriber.RegisterEventShot(StateEventCategory.SkillMove, HandleSkillMove, HandleReset);
             }
         }
 
@@ -58,11 +59,7 @@ namespace Refactoring
 
         public void Dispose()
         {
-            if (_subscriber != null)
-            {
-                _subscriber.Unsubscribe(StateEventCategory.SkillMove, HandleSkillMove);
-                _subscriber.UnsubscribeReset(HandleReset);
-            }
+            _skillMoveEventDisposable?.Dispose();
             _actives.Clear();
         }
 

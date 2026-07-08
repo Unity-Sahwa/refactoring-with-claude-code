@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,6 +14,7 @@ namespace Refactoring
         [Inject] private List<IEffectAttachPoint> _effectAttachPoints;
         private readonly Dictionary<EffectAttachPointType, Transform> _attachPoints = new();
         private readonly List<ActiveEffect> _actives = new();
+        private IDisposable _effectEventDisposable;
 
         private class ActiveEffect
         {
@@ -23,8 +25,7 @@ namespace Refactoring
 
         void Awake()
         {
-            _eventSubscriber.Subscribe(StateEventCategory.Effect, HandleEffect);
-            _eventSubscriber.SubscribeReset(HandleReset);
+            _effectEventDisposable = _eventSubscriber.RegisterEventShot(StateEventCategory.Effect, HandleEffect, HandleReset);
 
             foreach (var obj in _effectAttachPoints)
             {
@@ -34,7 +35,11 @@ namespace Refactoring
 
         private void HandleEffect(PlayerCharacter source, IStartData data)
         {
-            var effect = (IPlayerEffect)data;
+            if (data is not IPlayerEffect effect)
+            {
+                Debug.LogError($"[PlayerEffectHandler] IPlayerEffect가 필요한데 {data?.GetType().Name ?? "null"}을 받음");
+                return;
+            }
 
             var instance = _provider.Rent(effect.EffectObject);
             if (instance == null) return;
@@ -103,11 +108,7 @@ namespace Refactoring
 
         private void OnDestroy()
         {
-            if (_eventSubscriber != null)
-            {
-                _eventSubscriber.Unsubscribe(StateEventCategory.Effect, HandleEffect);
-                _eventSubscriber.UnsubscribeReset(HandleReset);
-            }
+            _effectEventDisposable?.Dispose();
 
             foreach (var active in _actives)
             {

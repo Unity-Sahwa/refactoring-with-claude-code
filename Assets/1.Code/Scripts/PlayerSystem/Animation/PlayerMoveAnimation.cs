@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Refactoring
@@ -13,6 +14,7 @@ namespace Refactoring
 
         private Animator _animator;
         private Vector2 _playerMoveVector = new Vector2();
+        private IDisposable _moveEventDisposable;
         private bool _canSetParameter;
 
         // 대원_TODO : 파라미터 이름 플레이어 데이터로 옮기기
@@ -24,12 +26,9 @@ namespace Refactoring
         {
             _inputEventProvider.OnVector2Input += OnMove;
 
-            // 허용 구간 켜기/끄기와 상태 전환 Reset을 구독한다.
             if (_eventSubscriber != null)
             {
-                _eventSubscriber.Subscribe(StateEventCategory.MoveControl, HandleOn);
-                _eventSubscriber.SubscribeEnd(StateEventCategory.MoveControl, HandleOff);
-                _eventSubscriber.SubscribeReset(HandleReset);
+                _moveEventDisposable = _eventSubscriber.RegisterEventSwitch(StateEventCategory.MoveControl, HandleOn, HandleClose);
             }
         }
         void Update()
@@ -47,12 +46,7 @@ namespace Refactoring
             {
                 _inputEventProvider.OnVector2Input -= OnMove;
             }
-            if (_eventSubscriber != null)
-            {
-                _eventSubscriber.Unsubscribe(StateEventCategory.MoveControl, HandleOn);
-                _eventSubscriber.UnsubscribeEnd(StateEventCategory.MoveControl, HandleOff);
-                _eventSubscriber.UnsubscribeReset(HandleReset);
-            }
+            _moveEventDisposable?.Dispose();
         }
 
         private void OnMove(Vector2 vector2) => _playerMoveVector = vector2;
@@ -61,14 +55,15 @@ namespace Refactoring
             SetAnimator(source);
             _canSetParameter = true;
         }
-        private void HandleOff()
+        
+        private void HandleClose(CloseEventType reason)
         {
             _canSetParameter = false;
-            _animator.SetFloat(_moveYHash, 0f);
-            
+            if (reason == CloseEventType.End)
+            {
+                _animator.SetFloat(_moveYHash, 0f);
+            }
         }
-        // 상태 전환 시 호출. 허용이 다음 상태로 새지 않게 끈다.
-        private void HandleReset() => _canSetParameter = false;
         private void SetAnimator(PlayerCharacter source)
         {
             if (source != null)
