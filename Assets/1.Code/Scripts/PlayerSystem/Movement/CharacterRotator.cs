@@ -11,18 +11,21 @@ namespace Refactoring
     {
         private readonly IPlayerStateEventSubscriber _subscriber;
         private readonly float _rotateRate;
+        private readonly ILockOnTarget _lockOnTarget;
+        private readonly IDisposable _rotateEventDisposal;
         private bool _canRotate;
 
-        public CharacterRotator(IPlayerStateEventSubscriber subscriber, float rotateRate)
+
+        public CharacterRotator(IPlayerStateEventSubscriber subscriber, float rotateRate, ILockOnTarget lockOnTarget)
         {
             _subscriber = subscriber;
             _rotateRate = rotateRate;
+            _lockOnTarget = lockOnTarget;
+
 
             if (_subscriber != null)
             {
-                _subscriber.Subscribe(StateEventCategory.RotateControl, HandleRotateOn);
-                _subscriber.SubscribeEnd(StateEventCategory.RotateControl, HandleRotateOff);
-                _subscriber.SubscribeReset(HandleReset);
+                _rotateEventDisposal = _subscriber.RegisterEventSwitch(StateEventCategory.RotateControl, HandleRotateOn, HandleRotateClose);
             }
             else
             {
@@ -36,24 +39,34 @@ namespace Refactoring
             {
                 return;
             }
-            Quaternion target = Quaternion.LookRotation(frame.MoveDirection);
+
+            Vector3 lookDir;
+            Collider locked = _lockOnTarget?.LockedTarget;
+            if (locked != null)
+            {
+                // 락온: 이동 중이어도 고정된 적을 바라봄(스트레이프·백스텝).
+                lookDir = locked.transform.position - frame.CharacterTransform.position;
+                lookDir.y = 0f;
+                if (lookDir == Vector3.zero) return;   // 적과 겹칠 때 방어
+            }
+            else
+            {
+                // 비락온: 이동 방향을 바라봄.
+                lookDir = frame.MoveDirection;
+            }
+
+            Quaternion target = Quaternion.LookRotation(lookDir);
             frame.CharacterTransform.rotation =
                 Quaternion.Slerp(frame.CharacterTransform.rotation, target, frame.DeltaTime * _rotateRate);
         }
 
         public void Dispose()
         {
-            if (_subscriber != null)
-            {
-                _subscriber.Unsubscribe(StateEventCategory.RotateControl, HandleRotateOn);
-                _subscriber.UnsubscribeEnd(StateEventCategory.RotateControl, HandleRotateOff);
-                _subscriber.UnsubscribeReset(HandleReset);
-            }
+            _rotateEventDisposal?.Dispose();
         }
 
         private void HandleRotateOn(PlayerCharacter source, IStartData data) => _canRotate = true;
-        private void HandleRotateOff() => _canRotate = false;
-        // 상태 전환 시 허용이 다음 상태로 새지 않게 끈다.
-        private void HandleReset() => _canRotate = false;
+        // End(구간 끝)든 Reset(강제 이탈)이든 회전 허용을 끄는 동작은 같아서 이유는 보지 않는다.
+        private void HandleRotateClose(CloseEventType reason) => _canRotate = false;
     }
 }
