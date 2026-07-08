@@ -12992,7 +12992,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a51fb6af3463289469b9749885e48352, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.CalliSystem
-  maxPaintOver: 3
+  maxPaintOver: 2
 --- !u!1 &7005290177396308235
 GameObject:
   m_ObjectHideFlags: 0

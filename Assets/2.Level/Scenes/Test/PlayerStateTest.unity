@@ -184,6 +184,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1609013863598396738}
     m_Modifications:
+    - target: {fileID: 978649467171832831, guid: ec732706d9e8ef447bd8c03b08572089, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.03520012
+      objectReference: {fileID: 0}
+    - target: {fileID: 978649467171832831, guid: ec732706d9e8ef447bd8c03b08572089, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 4.31779
+      objectReference: {fileID: 0}
+    - target: {fileID: 978649467171832831, guid: ec732706d9e8ef447bd8c03b08572089, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -7.0199995
+      objectReference: {fileID: 0}
     - target: {fileID: 1708255887540401967, guid: ec732706d9e8ef447bd8c03b08572089, type: 3}
       propertyPath: m_LocalPosition.x
       value: 8.8381
@@ -227,6 +239,18 @@ PrefabInstance:
     - target: {fileID: 5583058414336404196, guid: ec732706d9e8ef447bd8c03b08572089, type: 3}
       propertyPath: m_Name
       value: Camera
+      objectReference: {fileID: 0}
+    - target: {fileID: 7686339034474702613, guid: ec732706d9e8ef447bd8c03b08572089, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.03520012
+      objectReference: {fileID: 0}
+    - target: {fileID: 7686339034474702613, guid: ec732706d9e8ef447bd8c03b08572089, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 4.31779
+      objectReference: {fileID: 0}
+    - target: {fileID: 7686339034474702613, guid: ec732706d9e8ef447bd8c03b08572089, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -7.0199995
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -745,6 +769,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3747507465728453129}
     m_Modifications:
+    - target: {fileID: 4798347642736752744, guid: dc28ab3407b80bf42a4b02b2ebdfeb80, type: 3}
+      propertyPath: _enemyMask.m_Bits
+      value: 128
+      objectReference: {fileID: 0}
     - target: {fileID: 7790510517285152335, guid: dc28ab3407b80bf42a4b02b2ebdfeb80, type: 3}
       propertyPath: m_LocalPosition.x
       value: 16.14695
@@ -789,7 +817,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerSystem
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2737878034479798301, guid: dc28ab3407b80bf42a4b02b2ebdfeb80, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
