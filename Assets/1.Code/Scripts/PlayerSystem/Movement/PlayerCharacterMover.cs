@@ -21,7 +21,8 @@ namespace Refactoring
         [Inject(true)] private IPlayerStateEventSubscriber _eventSubscriber;  // 옵션: 없으면 스킬만 작동안함
         [Inject(true)] private IStateTriggerRaiser _triggerRaiser;           // 옵션: 없으면 이동 시 Locomotion 전환 요청만 빠짐
         [Inject(true)] private ICharacterSwapNotifier _swapNotifier;          // 옵션: 없으면 스왑 시 재획득 통지에만 사용
-        
+        [Inject(true)] private ILockOnTarget _lockOnTarget;                   // 옵션: 없으면 회전은 항상 이동 방향
+
         //대원_TODO: 데이터 SO로 그룹화
         [Header("일반 이동")] 
         [SerializeField] private float _moveSpeed = 10f;   
@@ -59,7 +60,7 @@ namespace Refactoring
             _velocitySources.Add(new WalkVelocitySource(_eventSubscriber, _triggerRaiser, _moveSpeed));
             _velocitySources.Add(new SkillVelocitySource(_eventSubscriber));
             _velocitySources.Add(new GravityVelocitySource(_gravity, _maxFallSpeed, _groundedStick));
-            _rotator = new CharacterRotator(_eventSubscriber, _rotateRate);
+            _rotator = new CharacterRotator(_eventSubscriber, _rotateRate, _lockOnTarget);
         }
 
         private void Start()
