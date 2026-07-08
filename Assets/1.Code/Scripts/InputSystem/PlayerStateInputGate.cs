@@ -3,7 +3,6 @@ using UnityEngine;
 
 namespace Refactoring
 {
-    //대원_TODO: '설계 재검토 필요성 논의' resume 다시 보기. 변신 + 자동 특수기 나가도록 해서, 복잡하지 않게 코드 변경
     // 책임: 사용자 입력을 받아 PlayerStateMachine에 규칙에 따라 전달한다. 
     public class PlayerStateInputGate : MonoBehaviour
     {
