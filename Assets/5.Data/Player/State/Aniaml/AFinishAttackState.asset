@@ -44,6 +44,19 @@ MonoBehaviour:
   effect: []
   hitbox: []
   audio: []
+  finish:
+  - name: 
+    startProgress: 0.13
+    action: 0
+  - name: 
+    startProgress: 0.3
+    action: 0
+  - name: 
+    startProgress: 0.4
+    action: 0
+  - name: 
+    startProgress: 0.5
+    action: 1
   references:
     version: 2
     RefIds: []

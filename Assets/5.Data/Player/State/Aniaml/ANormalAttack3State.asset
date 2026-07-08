@@ -22,7 +22,7 @@ MonoBehaviour:
   inputBuffer:
   - name: 
     startProgress: 0.1
-    duration: 0.3
+    duration: 0.4
     untilEnd: 0
   moveControl: []
   rotateControl:
@@ -42,9 +42,9 @@ MonoBehaviour:
   hitbox:
   - name: 
     untilFinish: 0
-    position: {x: 0, y: -1, z: 0}
+    position: {x: 0, y: 1, z: 1.5}
     rotation: {x: 0, y: 0, z: 0}
-    scale: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
     startProgress: 0
     duration: 2
     hitboxObject:
@@ -56,14 +56,15 @@ MonoBehaviour:
     attachKey: 1
     stopInPlace: 0
     stopTime: 0
-    showMesh: 0
+    showMesh: 1
     combat:
-      damage: 1
+      damage: 0
       color: 0
       inkStack: 1
       reactions:
       - rid: 822169761597620303
   audio: []
+  finish: []
   references:
     version: 2
     RefIds:
