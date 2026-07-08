@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Refactoring
 {
-    public class CalliSystem : MonoBehaviour
+    public class CaliSystem : MonoBehaviour
     {
         [SerializeField] private int maxPaintOver = 3;
         public int MaxPaintOver => maxPaintOver;
@@ -18,6 +18,9 @@ namespace Refactoring
 
             _lastColor = color;
         }
+
+        // 덧칠이 최대치인가. 최대치 설정이 0이면(작동 안 함) 무조건 false.
+        public bool IsPaintOverMax() => maxPaintOver > 0 && paintOver >= maxPaintOver;
 
         public void ResetPaint()
         {
