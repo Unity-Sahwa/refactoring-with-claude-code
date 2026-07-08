@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Refactoring
 {
     // 역할: 요청 시점마다 범위 내 처형 대상을 스캔해 알려준다.
-    public class FinishTargetScanner : MonoBehaviour, IFinishTargetProvider
+    public class FinishTargetScanner : MonoBehaviour, IFinishTargetProvider, IFinishChecker
     {
         [SerializeField] private float _radius = 20f;
         [SerializeField] private LayerMask _enemyMask;
