@@ -25,7 +25,7 @@ namespace Refactoring
 
         void Awake()
         {
-            _effectEventDisposable = _eventSubscriber.RegisterEventShot(StateEventCategory.Effect, HandleEffect, HandleReset);
+            _effectEventDisposable = _eventSubscriber.Register(StateEventCategory.Effect, HandleEffect, HandleReset);
 
             foreach (var obj in _effectAttachPoints)
             {
@@ -33,7 +33,7 @@ namespace Refactoring
             }
         }
 
-        private void HandleEffect(PlayerCharacter source, IStartData data)
+        private void HandleEffect(IStartData data)
         {
             if (data is not IPlayerEffect effect)
             {
@@ -83,7 +83,7 @@ namespace Refactoring
 
         // 왜: untilFinish 이펙트는 상태가 끝나도 살아남아야 한다. 다만 캐릭터 자식으로 붙어 있으면
         //     이후 스왑(캐릭터 비활성화) 시 같이 꺼지므로, 이 시점에 부모에서 분리해 월드로 독립시킨다.
-        private void HandleReset()
+        private void HandleReset(CloseEventType reason)
         {
             for (int i = _actives.Count - 1; i >= 0; i--)
             {

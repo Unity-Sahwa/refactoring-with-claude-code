@@ -16,8 +16,8 @@ namespace Refactoring
 
         private void Awake()
         {
-            // 처형은 정리가 필요 없는 순수 원샷이라 onReset 없이 등록한다.
-            _finishEventDisposable = _playerStateEventSubscriber?.RegisterEventShot(StateEventCategory.Finish, HandleFinish);
+            // 처형은 정리가 필요 없는 순수 원샷이라 close 없이 등록한다.
+            _finishEventDisposable = _playerStateEventSubscriber?.Register(StateEventCategory.Finish, HandleFinish);
         }
 
         private void OnDestroy()
@@ -25,7 +25,7 @@ namespace Refactoring
             _finishEventDisposable?.Dispose();
         }
 
-        private void HandleFinish(PlayerCharacter source, IStartData data)
+        private void HandleFinish(IStartData data)
         {
             if (data is not FinishDataEntry entry) return;
 

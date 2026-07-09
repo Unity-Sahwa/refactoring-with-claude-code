@@ -11,6 +11,7 @@ namespace Refactoring
         [Inject] private IInputMoveProvider _inputEventProvider;
         [Inject(true)] private IPlayerStateEventSubscriber _eventSubscriber;
         [Inject(true)] private ILockOnState _lockOnState;
+        [Inject(true)] private ICurrentCharacterProvider _currentCharacterProvider;   // 현재 캐릭터의 Animator 조회용
 
         private Animator _animator;
         private Vector2 _playerMoveVector = new Vector2();
@@ -28,7 +29,7 @@ namespace Refactoring
 
             if (_eventSubscriber != null)
             {
-                _moveEventDisposable = _eventSubscriber.RegisterEventSwitch(StateEventCategory.MoveControl, HandleOn, HandleClose);
+                _moveEventDisposable = _eventSubscriber.Register(StateEventCategory.MoveControl, HandleOn, HandleClose);
             }
         }
         void Update()
@@ -50,9 +51,9 @@ namespace Refactoring
         }
 
         private void OnMove(Vector2 vector2) => _playerMoveVector = vector2;
-        private void HandleOn(PlayerCharacter source, IStartData data)
+        private void HandleOn(IStartData data)
         {
-            SetAnimator(source);
+            SetAnimator(_currentCharacterProvider?.CurrentCharacter);
             _canSetParameter = true;
         }
         

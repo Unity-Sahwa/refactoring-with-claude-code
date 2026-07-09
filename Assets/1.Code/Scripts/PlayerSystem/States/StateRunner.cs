@@ -49,8 +49,7 @@ namespace Refactoring
             _tracker.Begin();
 
             Animator.CrossFade(StateKey.ToString(), 0.1f, 0, 0f);
-            
-            _raiser.RaiseEnter(Character, StateKey);
+
             RaiseEvent(0f);
         }
         public void Update()
@@ -82,7 +81,7 @@ namespace Refactoring
                 }
                 else
                 {
-                    _raiser.Raise(Character, category, data);
+                    _raiser.Raise(category, data);
                 }
                 _readIndex++;
             }

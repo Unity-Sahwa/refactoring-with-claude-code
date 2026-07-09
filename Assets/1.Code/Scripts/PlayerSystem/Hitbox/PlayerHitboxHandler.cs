@@ -10,6 +10,7 @@ namespace Refactoring
     {
         [Inject] private IPlayerStateEventSubscriber _eventSubscriber;
         [Inject] private IHitboxProvider _provider;
+        [Inject] private ICurrentCharacterProvider _currentCharacterProvider;   // 공격자(현재 캐릭터) 조회용
         [Inject] private List<IHitboxAttachPoint> _attachPoints;
         private int _targetMask;   // 플레이어 공격이 때릴 대상 레이어. 적 핸들러가 생기면 abstract로 분리한다.
         private readonly Dictionary<HitboxAttachPointType, Transform> _attachPointMap = new();
@@ -25,7 +26,7 @@ namespace Refactoring
 
         void Awake()
         {
-            _hitboxEventDisposable = _eventSubscriber.RegisterEventShot(StateEventCategory.Hitbox, HandleHitbox, HandleReset);
+            _hitboxEventDisposable = _eventSubscriber.Register(StateEventCategory.Hitbox, HandleHitbox, HandleReset);
 
             foreach (var point in _attachPoints)
             {
@@ -35,8 +36,7 @@ namespace Refactoring
             _targetMask = LayerMask.GetMask("Enemy", "Gimmick");
         }
 
-        //대원_TODO: 원하는 타이밍에 이벤트 호출되는게 아니라 원하는 타이밍보다 늦을 수 있음. 필요시 Animation Event로 타이밍을 2중 감시하기
-        private void HandleHitbox(PlayerCharacter source, IStartData data)
+        private void HandleHitbox(IStartData data)
         {
             if (data is not IPlayerHitbox hitbox)
             {
@@ -68,11 +68,12 @@ namespace Refactoring
 
             _provider.SetMeshVisible(instance, hitbox.ShowMesh);
 
-            // 전투값과 공격자(이벤트를 발행한 캐릭터)를 감지 컴포넌트에 주입한다.
+            // 전투값과 공격자(현재 캐릭터)를 감지 컴포넌트에 주입한다.
             var reporter = _provider.GetReporter(instance);
             if (reporter != null)
             {
-                reporter.Setup((IHitboxCombat)data, source != null ? source.gameObject : null, _targetMask);
+                PlayerCharacter attacker = _currentCharacterProvider?.CurrentCharacter;
+                reporter.Setup((IHitboxCombat)data, attacker != null ? attacker.gameObject : null, _targetMask);
             }
 
             instance.SetActive(true);
@@ -101,7 +102,7 @@ namespace Refactoring
 
         // 왜: untilFinish 히트박스는 상태가 끝나도 살아남아야 한다. 다만 캐릭터 자식으로 붙어 있으면
         //     이후 스왑(캐릭터 비활성화) 시 같이 꺼지므로, 이 시점에 부모에서 분리해 월드로 독립시킨다.
-        private void HandleReset()
+        private void HandleReset(CloseEventType reason)
         {
             for (int i = _actives.Count - 1; i >= 0; i--)
             {

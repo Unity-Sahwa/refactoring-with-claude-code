@@ -29,8 +29,8 @@ namespace Refactoring
             }
             if (_playerStateEventSubscriber != null)
             {
-                _blockEventDisposable = _playerStateEventSubscriber.RegisterEventSwitch(StateEventCategory.InputBlock, HandleBlockOn, HandleBlockClose);
-                _bufferEventDisposable = _playerStateEventSubscriber.RegisterEventSwitch(StateEventCategory.InputBuffer, HandleBufferOn, HandleBufferClose);
+                _blockEventDisposable = _playerStateEventSubscriber.Register(StateEventCategory.InputBlock, HandleBlockOn, HandleBlockClose);
+                _bufferEventDisposable = _playerStateEventSubscriber.Register(StateEventCategory.InputBuffer, HandleBufferOn, HandleBufferClose);
             }
         }
 
@@ -111,10 +111,10 @@ namespace Refactoring
             };
         }
 
-        private void HandleBlockOn(PlayerCharacter source, IStartData data) => _inputBlock = true;
+        private void HandleBlockOn(IStartData data) => _inputBlock = true;
         // End든 Reset이든 입력 차단을 푸는 동작은 같다.
         private void HandleBlockClose(CloseEventType reason) => _inputBlock = false;
-        private void HandleBufferOn(PlayerCharacter source, IStartData data) => _buffering = true;
+        private void HandleBufferOn(IStartData data) => _buffering = true;
         // End(구간 정상 종료): 저장된 입력을 발사. Reset(강제 이탈): 저장된 입력을 폐기.
         private void HandleBufferClose(CloseEventType reason)
         {

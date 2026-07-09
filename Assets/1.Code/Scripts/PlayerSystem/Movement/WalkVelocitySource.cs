@@ -22,7 +22,7 @@ namespace Refactoring
 
             if (_subscriber != null)
             {
-                _moveEventDisposable = _subscriber.RegisterEventSwitch(StateEventCategory.MoveControl, HandleMoveOn, HandleMoveClose);
+                _moveEventDisposable = _subscriber.Register(StateEventCategory.MoveControl, HandleMoveOn, HandleMoveClose);
             }
             else
             {
@@ -49,7 +49,7 @@ namespace Refactoring
             _moveEventDisposable?.Dispose();
         }
 
-        private void HandleMoveOn(PlayerCharacter source, IStartData data) => _canMove = true;
+        private void HandleMoveOn(IStartData data) => _canMove = true;
         private void HandleMoveClose(CloseEventType reason) => _canMove = false;
     }
 }

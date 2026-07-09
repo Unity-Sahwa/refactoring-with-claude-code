@@ -25,8 +25,8 @@ namespace Refactoring
             }
 
             // 게이트로 등록하면 채널이 End/Reset 시 알아서 닫아준다(끄기 누락으로 영구 무적 되는 버그 자체가 불가능).
-            _invincibleEventDisposable = _eventSubscriber.RegisterEventSwitch(StateEventCategory.Invincible, HandleInvincibleOn, HandleInvincibleClose);
-            _superArmorEventDisposable = _eventSubscriber.RegisterEventSwitch(StateEventCategory.SuperArmor, HandleSuperArmorOn, HandleSuperArmorClose);
+            _invincibleEventDisposable = _eventSubscriber.Register(StateEventCategory.Invincible, HandleInvincibleOn, HandleInvincibleClose);
+            _superArmorEventDisposable = _eventSubscriber.Register(StateEventCategory.SuperArmor, HandleSuperArmorOn, HandleSuperArmorClose);
         }
         private void OnDestroy()
         {
@@ -59,9 +59,9 @@ namespace Refactoring
                 }
             }
         }
-        private void HandleInvincibleOn(PlayerCharacter source, IStartData data) => _invincible = true;
+        private void HandleInvincibleOn(IStartData data) => _invincible = true;
         private void HandleInvincibleClose(CloseEventType reason) => _invincible = false;
-        private void HandleSuperArmorOn(PlayerCharacter source, IStartData data) => _superArmor = true;
+        private void HandleSuperArmorOn(IStartData data) => _superArmor = true;
         private void HandleSuperArmorClose(CloseEventType reason) => _superArmor = false;
     }
 }

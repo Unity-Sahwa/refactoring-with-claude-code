@@ -25,7 +25,7 @@ namespace Refactoring
 
             if (_subscriber != null)
             {
-                _skillMoveEventDisposable = _subscriber.RegisterEventShot(StateEventCategory.SkillMove, HandleSkillMove, HandleReset);
+                _skillMoveEventDisposable = _subscriber.Register(StateEventCategory.SkillMove, HandleSkillMove, HandleReset);
             }
         }
 
@@ -64,7 +64,7 @@ namespace Refactoring
         }
 
         // 상태가 스킬 이동을 켤 때 호출. ISkillMove 데이터(방향·속도·시간) 그대로 활성 목록에 추가한다.
-        private void HandleSkillMove(PlayerCharacter source, IStartData data)
+        private void HandleSkillMove(IStartData data)
         {
             if (data is not ISkillMove skillMoveData)
             {
@@ -80,7 +80,7 @@ namespace Refactoring
             });
         }
 
-        // 상태 전환 시 진행 중인 스킬 이동을 모두 끈다(다음 상태로 새지 않게).
-        private void HandleReset() => _actives.Clear();
+        // 상태 전환 시 진행 중인 스킬 이동을 모두 끈다(다음 상태로 새지 않게). SkillMove엔 End가 없어 reason은 항상 Reset.
+        private void HandleReset(CloseEventType reason) => _actives.Clear();
     }
 }
