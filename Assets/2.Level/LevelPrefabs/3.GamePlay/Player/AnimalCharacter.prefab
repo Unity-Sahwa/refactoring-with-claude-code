@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 6403742448839767271}
   - component: {fileID: 1636715185954809983}
   - component: {fileID: 1508554727841263870}
+  - component: {fileID: 370555321304792989}
   - component: {fileID: 7286515257061800649}
   m_Layer: 6
   m_Name: AnimalCharacter
@@ -124,6 +125,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de38ecbb0dece974f90bcfa568d697ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.PlayerDamageReceiver
+--- !u!114 &370555321304792989
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4055417958303217}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90a11ae7c8fea6e46954390b10fa0f7a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.FootstepEmitter
+  footstepId: 24
+  moveThreshold: 0.5
+  minInterval: 0.12
 --- !u!114 &7286515257061800649
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -341,7 +357,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &663495757890064138
 Transform:
   m_ObjectHideFlags: 0
@@ -22199,7 +22215,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1962374420399448337
 Transform:
   m_ObjectHideFlags: 0
