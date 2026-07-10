@@ -9,6 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4be936c99415ea24c8ccc3451e98e608, type: 3}
+  m_Script: {fileID: 11500000, guid: 7862c5c47c1953a4aba2e13cc0ee7a68, type: 3}
   m_Name: HitChannel
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.HitChannel
