@@ -58,7 +58,16 @@ MonoBehaviour:
     speed: 100
   effect: []
   hitbox: []
-  audio: []
+  audio:
+  - name: Spin
+    id: 7
+    startProgress: 0.1
+    untilFinish: 0
+  - name: Splash
+    id: 8
+    startProgress: 0.22
+    untilFinish: 1
+  finish: []
   references:
     version: 2
     RefIds: []

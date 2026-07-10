@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: def3b8bf14c5c4c46995e72016a26414, type: 3}
+  m_Name: AudioCatalog
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.AudioCatalog
+  entries:
+  - id: 1
+    clips:
+    - {fileID: 8300000, guid: b3456ec349683a34bb4beeb41a8d3071, type: 3}
+    - {fileID: 8300000, guid: 7c473dd3473f0924680b1c8eeda63c0e, type: 3}
+    volume: 1
+    pitch: 1
+    spatialBlend: 0
+    minDistance: 0
+    maxDistance: 0
+    loop: 0
+  - id: 3
+    clips:
+    - {fileID: 8300000, guid: 7c473dd3473f0924680b1c8eeda63c0e, type: 3}
+    volume: 1
+    pitch: 1
+    spatialBlend: 0
+    minDistance: 0
+    maxDistance: 0
+    loop: 0
+  - id: 7
+    clips:
+    - {fileID: 8300000, guid: e781cb5edc3de4b4c8fc8f1ccad8dea0, type: 3}
+    volume: 1
+    pitch: 1
+    spatialBlend: 0
+    minDistance: 0
+    maxDistance: 0
+    loop: 0
+  - id: 8
+    clips:
+    - {fileID: 8300000, guid: b6faf43c725a4b24fa2c59988645da73, type: 3}
+    volume: 1
+    pitch: 1
+    spatialBlend: 0
+    minDistance: 0
+    maxDistance: 0
+    loop: 0
+  - id: 8
+    clips:
+    - {fileID: 8300000, guid: b6faf43c725a4b24fa2c59988645da73, type: 3}
+    volume: 1
+    pitch: 1
+    spatialBlend: 0
+    minDistance: 0
+    maxDistance: 0
+    loop: 0

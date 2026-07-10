@@ -63,7 +63,11 @@ MonoBehaviour:
       inkStack: 1
       reactions:
       - rid: 822169761597620303
-  audio: []
+  audio:
+  - name: NA1
+    id: 1
+    startProgress: 0.185
+    untilFinish: 1
   finish: []
   references:
     version: 2

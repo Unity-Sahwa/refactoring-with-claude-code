@@ -17,7 +17,7 @@ MonoBehaviour:
   inputBlock:
   - name: 
     startProgress: 0
-    duration: 0.5
+    duration: 1
     untilEnd: 0
   inputBuffer: []
   moveControl:
@@ -41,6 +41,7 @@ MonoBehaviour:
   effect: []
   hitbox: []
   audio: []
+  finish: []
   references:
     version: 2
     RefIds: []

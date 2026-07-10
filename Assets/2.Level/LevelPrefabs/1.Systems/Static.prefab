@@ -70,6 +70,66 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c1674ca3449b0d4fb68f32313877cf5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.CursorController
+--- !u!1 &2191230270741868240
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8847119261097283466}
+  - component: {fileID: 7049580118508839716}
+  - component: {fileID: 2058234770092184505}
+  m_Layer: 0
+  m_Name: Audio
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8847119261097283466
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2191230270741868240}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1414124093448434948}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7049580118508839716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2191230270741868240}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f45f8339907f67b48829bfb0e883d5d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.VolumeController
+  mixer: {fileID: 24100000, guid: 4990067f5205fde4b84c5ff6e158bd4c, type: 2}
+--- !u!114 &2058234770092184505
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2191230270741868240}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b88cd65c4cde73c47865e6a46d8260b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.AudioPlayer
+  sfxGroup: {fileID: -5011017390960947947, guid: 4990067f5205fde4b84c5ff6e158bd4c, type: 2}
+  initialVoices: 8
 --- !u!1 &4654362183888643388
 GameObject:
   m_ObjectHideFlags: 0
@@ -189,6 +249,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 4ecf10c50ecb68042844c40126fb42c6, type: 2}
   - {fileID: 11400000, guid: cf2ea3a9486770942be3b87b01e3010c, type: 2}
   - {fileID: 11400000, guid: b61dd5d1007136d4e9b7ce3600847336, type: 2}
+  - {fileID: 11400000, guid: b9b38b8b6e783644f8e489f10df68e4a, type: 2}
+  - {fileID: 11400000, guid: 07a6f6c415461014c8987252085d260c, type: 2}
+  - {fileID: 11400000, guid: e644af13002140c4cb850b9b25da2b30, type: 2}
 --- !u!1 &7790186032845487929
 GameObject:
   m_ObjectHideFlags: 0
@@ -222,6 +285,7 @@ Transform:
   - {fileID: 1571135709370935179}
   - {fileID: 7960769153997152397}
   - {fileID: 2176940063922440167}
+  - {fileID: 8847119261097283466}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7828943417087937300
