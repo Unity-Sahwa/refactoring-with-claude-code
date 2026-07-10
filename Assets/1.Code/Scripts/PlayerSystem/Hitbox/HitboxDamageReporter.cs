@@ -11,6 +11,9 @@ namespace Refactoring
 
     public class HitboxDamageReporter : MonoBehaviour, IHitboxDamageReporter
     {
+        [SerializeField] private HitChannel hitChannel; // 타격 성공 발행(프리팹에 SO 할당). 없으면 발행 생략.
+        [SerializeField] private AudioId hitSound;      // 이 공격이 명중 시 낼 소리
+
         private IHitboxCombat _combat;
         private GameObject _damager;
         private Collider[] _colliders;       // 모양 정의용. Box/Capsule 콜라이더(자식 포함)
@@ -143,6 +146,12 @@ namespace Refactoring
             };
 
             target.ApplyDamage(info);
+
+            // 타격 성공 사실만 발행한다. 소리는 구독자(PlayerAudioHandler)가 재생한다.
+            if (hitChannel != null)
+            {
+                hitChannel.Raise(hitSound, info.HitPoint);
+            }
         }
 
         // 검사에 실제로 쓰는 영역을 와이어로 그려, 콜라이더 모양과 맞는지 확인한다.
