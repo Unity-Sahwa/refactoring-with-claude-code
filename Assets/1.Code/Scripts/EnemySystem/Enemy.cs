@@ -163,7 +163,7 @@ namespace Refactoring
                 return;
             }
             audioSourceIdle.PlaySoundEffect(0);
-            if (hasTarget && enemyState == eState.AttackBegin || enemyState == eState.Attacking)
+            if (hasTarget && (enemyState == eState.AttackBegin || enemyState == eState.Attacking))
             {
                 var lookRotation = Quaternion.LookRotation(target.gameObject.transform.position - transform.position);
                 var targetAngleY = lookRotation.eulerAngles.y;
