@@ -7,7 +7,7 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 namespace Refactoring
 {
     // 역할: 초기에 이펙트 로딩 및 복제하고, 이펙트를 대여/반납 형식으로 제공한다.(활성화 가능한 이펙트만 대여한다.)
-    public class EffectProvider : MonoBehaviour, IEffectProvider
+    public class PlayerEffectProvider : MonoBehaviour, IEffectProvider
     {
         [Inject] private List<StateData> _stateDataList;
         private readonly Dictionary<object, Queue<GameObject>> _available = new();
