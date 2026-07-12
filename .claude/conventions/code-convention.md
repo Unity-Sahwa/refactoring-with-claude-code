@@ -2,6 +2,7 @@
 
 > 기준: Unity 공식 e-book ("Create a C# Style Guide") + 커뮤니티 관행 절충
 > private 필드는 `_camelCase` (커뮤니티 관행 채택)
+> `Old/` 폴더와 실험용(`_Test`) 코드는 이 컨벤션 검사 대상에서 제외한다(삭제 예정 레거시).
 
 ---
 
@@ -56,25 +57,26 @@ public bool HasStartedTurn() { }
 
 ### 필드
 ```csharp
-// public / protected — PascalCase
-public int MaxHealth;
+// public 인스턴스 필드 — 사용 금지 (10절 참고, SerializeField로 대체)
 
-// [SerializeField] private — _camelCase (줄 분리)
+// 모든 멤버 필드(private / protected / [SerializeField] private / [Inject]) — _camelCase (줄 분리)
 [SerializeField]
 private Rigidbody _rigidbody;
 
 [SerializeField, Range(0f, 100f)]
 private float _moveSpeed;
 
-// private — _camelCase
-private int _currentHealth;
-private bool _isGrounded;
+[Inject]
+private AudioChannel _audioChannel;
 
-// 상수
+private int _currentHealth;
+protected bool _isGrounded;
+
+// 상수 — PascalCase (예외)
 private const int MaxSlotCount = 5;
 public const string SavePath = "SaveData";
 
-// static readonly
+// static readonly — PascalCase (예외)
 private static readonly WaitForSeconds WaitOneSecond = new WaitForSeconds(1f);
 ```
 
@@ -385,6 +387,13 @@ if (_playerState.HasSuperArmor)
 - 주석 처리된 코드는 제거 (버전 관리로 복원 가능)
 - TODO 주석은 완료 시 즉시 제거
 
+**주석 밀도 규칙:**
+- 메서드마다 그 위에 한 줄 요약을 단다. 단, 이름만으로 자명한 메서드
+  (Awake의 단순 참조 연결, 단순 위임 등)는 생략한다.
+- 비직관적 로직 라인(트릭, 수식, 한눈에 안 들어오는 API)엔 그 줄 위에 설명을 단다.
+- "왜 이렇게 구현했나"는 선택이 비직관적일 때만 단다.
+  (모든 메서드에 이유를 달면 13절 '과도한 주석' 스멜이 된다.)
+
 ```csharp
 // XML summary — public 메서드에 사용 가능 (IntelliSense 지원)
 /// <summary>
@@ -451,6 +460,9 @@ public Transform target;
   // O — 공통 추출
   private void PlayFXWithSound(ParticleSystem particle, AudioClip clip, Vector3 pos) { ... }
   ```
+- **expression-bodied(`=>`) 사용 조건**: 본문이 한 문장이고 한 줄에 들어갈 때만 쓴다.
+  분기·반복이 있거나 여러 문장이면 중괄호 블록으로 쓴다.
+  (근거: Microsoft C# 가이드, C# Coding Guidelines AV2410)
 - **Extension 메서드**: Unity API 확장 시 static 클래스에 정의
   ```csharp
   public static class TransformExtensions
