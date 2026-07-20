@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
 namespace Refactoring
 {
@@ -13,7 +12,7 @@ namespace Refactoring
         Vector3 Position { get; }
         Vector3 Rotation { get; }   // 오일러각
         Vector3 Scale { get; }
-        AssetReferenceGameObject HitboxObject { get; } //Addressable로 등록된 프리팹을 가리키는 RuntimeKey를 담음
+        HitboxId HitboxId { get; }  // 카탈로그(HitboxCatalog)에서 프리팹을 찾을 이름표
         HitboxAttachPointType AttachKey { get; }
         bool StopInPlace { get; }      // 도중에 부모에서 떨어져 그 자리 정지할지
         float StopTime { get; }         // 멈추는 시점(초)
