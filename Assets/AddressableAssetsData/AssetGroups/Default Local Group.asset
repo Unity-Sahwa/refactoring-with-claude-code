@@ -14,7 +14,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
   m_GroupName: Default Local Group
   m_GUID: b1339d32e98ef1548b7a6c6e4fcbe21d
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 067cd3fa68bb73b45873857b79151853
+    m_Address: Assets/2.Level/Scenes/Build/Scene5_Boss.unity
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3bec39fb01bc4f24ca5648711007b61d
+    m_Address: Assets/2.Level/Scenes/Build/Scene2.unity
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7a854cc20e01fec41b2cfd18cca8edbf
+    m_Address: Assets/2.Level/Scenes/Build/Scene4.unity
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8e5dc63407546304393305ff3b5bcf82
+    m_Address: Assets/2.Level/Scenes/Build/Scene1_Tutorial.unity
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: dc16ef656f54cd845880f17bdece7751
+    m_Address: Assets/2.Level/Scenes/Build/Scene3.unity
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 57a17706e87945c4c8128d64ad62479c, type: 2}
   m_SchemaSet:
