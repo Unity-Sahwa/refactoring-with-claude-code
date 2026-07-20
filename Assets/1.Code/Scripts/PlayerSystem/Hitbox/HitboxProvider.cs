@@ -1,70 +1,38 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
-using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace Refactoring
 {
-    // 역할: 초기에 히트박스를 로딩하고, 히트박스를 대여/반납 형식으로 제공한다.
+    // 역할: 시작 시 카탈로그의 히트박스 프리팹을 미리 복제하고, 히트박스를 대여/반납 형식으로 제공한다.
     public class HitboxProvider : MonoBehaviour, IHitboxProvider
     {
-        [Inject] private List<StateData> _dataList;
-        private readonly Dictionary<object, GameObject> _instances = new(); //키당 1개만 보관
+        [Inject] private HitboxCatalog _catalog;
+        private readonly Dictionary<HitboxId, GameObject> _instances = new(); //키당 1개만 보관
         private readonly Dictionary<GameObject, MeshRenderer[]> _renderers = new(); //생성 시점에 캐싱한 MeshRenderer(런타임 순회 비용 제거)
         private readonly Dictionary<GameObject, IHitboxDamageReporter> _reporters = new(); //생성 시점에 캐싱한 감지 컴포넌트
-        private readonly HashSet<object> _requested = new(); //비동기 로딩 중복 방지용
-        private readonly List<AsyncOperationHandle<GameObject>> _handles = new(); //비동기 로딩된 오브젝트 해제용
         private void Awake()
         {
-            CollectAndLoad();
+            BuildInstances();
         }
 
-        private void CollectAndLoad()
+        private void BuildInstances()
         {
-            foreach (var so in _dataList)
+            foreach (var entry in _catalog.Entries)
             {
-                var data = (StateData)so;
-                var hitboxMap = data.GetData<HitboxDataEntry>();
+                if (entry == null || entry.Id == HitboxId.None || entry.Prefab == null) continue;
+                if (_instances.ContainsKey(entry.Id)) continue; //같은 id 중복 방지
 
-                foreach (var entries in hitboxMap.Values)
-                {
-                    foreach (var entry in entries)
-                    {
-                        LoadAndBuild(entry.HitboxObject);
-                    }
-                }
-            }
-        }
-
-        private void LoadAndBuild(AssetReferenceGameObject asset)
-        {
-            if (asset == null || !asset.RuntimeKeyIsValid()) return;
-
-            object key = asset.RuntimeKey;
-            if (!_requested.Add(key)) return;
-
-            var handle = Addressables.LoadAssetAsync<GameObject>(asset);
-            _handles.Add(handle);
-
-            handle.Completed += op =>
-            {
-                if (op.Status != AsyncOperationStatus.Succeeded)
-                {
-                    Debug.LogWarning($"HitboxProvider: 히트박스 로딩 실패 (key={key})");
-                    return;
-                }
-
-                var instance = Instantiate(op.Result, transform); //여분 없이 키당 1개만 생성
+                var instance = Instantiate(entry.Prefab, transform); //여분 없이 키당 1개만 생성
                 instance.SetActive(false);
                 _renderers[instance] = instance.GetComponentsInChildren<MeshRenderer>(true); //비활성 자식까지 포함해 한 번만 수집
                 _reporters[instance] = instance.GetComponentInChildren<IHitboxDamageReporter>(true); //감지 컴포넌트도 한 번만 수집
-                _instances[key] = instance;
-            };
+                _instances[entry.Id] = instance;
+            }
         }
 
-        public GameObject Rent(AssetReferenceGameObject key)
+        public GameObject Rent(HitboxId id)
         {
-            return _instances.TryGetValue(key.RuntimeKey, out var instance) ? instance : null;
+            return _instances.TryGetValue(id, out var instance) ? instance : null;
         }
 
         public void SetMeshVisible(GameObject instance, bool visible)
@@ -98,11 +66,6 @@ namespace Refactoring
             foreach (var instance in _instances.Values)
             {
                 if (instance != null) Destroy(instance);
-            }
-
-            foreach (var handle in _handles)
-            {
-                if (handle.IsValid()) Addressables.Release(handle);
             }
         }
     }

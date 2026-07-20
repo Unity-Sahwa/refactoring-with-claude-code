@@ -44,7 +44,7 @@ namespace Refactoring
                 return;
             }
 
-            var instance = _provider.Rent(hitbox.HitboxObject);
+            var instance = _provider.Rent(hitbox.HitboxId);
             if (instance == null) return;
 
             if (!_attachPointMap.TryGetValue(hitbox.AttachKey, out var parent))

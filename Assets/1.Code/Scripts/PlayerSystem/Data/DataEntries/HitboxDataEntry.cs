@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
 namespace Refactoring
 {
@@ -15,7 +14,7 @@ namespace Refactoring
         [SerializeField] private Vector3 scale;
         [SerializeField] [Range(0,1)] private float startProgress;
         [SerializeField] private float duration;
-        [SerializeField] private AssetReferenceGameObject hitboxObject;
+        [SerializeField] private HitboxId hitboxId;
         [SerializeField] private HitboxAttachPointType attachKey;
         [SerializeField] private bool stopInPlace;   // 도중에 부모에서 떨어져 그 자리 정지할지
         [SerializeField] private float stopTime;       // 멈추는 시점(초)
@@ -32,7 +31,7 @@ namespace Refactoring
         public Vector3 Position => position;
         public Vector3 Rotation => rotation;
         public Vector3 Scale => scale;
-        public AssetReferenceGameObject HitboxObject => hitboxObject;
+        public HitboxId HitboxId => hitboxId;
         public HitboxAttachPointType AttachKey => attachKey;
         public bool StopInPlace => stopInPlace;
         public float StopTime => stopTime;

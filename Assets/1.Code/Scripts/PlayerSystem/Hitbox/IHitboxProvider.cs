@@ -1,11 +1,10 @@
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
 namespace Refactoring
 {
     public interface IHitboxProvider
     {
-        GameObject Rent(AssetReferenceGameObject key);
+        GameObject Rent(HitboxId id);
 
         void Return(GameObject instance);
 
