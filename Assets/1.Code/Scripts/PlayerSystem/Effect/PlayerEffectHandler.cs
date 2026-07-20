@@ -41,7 +41,7 @@ namespace Refactoring
                 return;
             }
 
-            var instance = _provider.Rent(effect.EffectObject);
+            var instance = _provider.Rent(effect.EffectId);
             if (instance == null) return;
         
             if (!_attachPoints.TryGetValue(effect.AttachKey, out var parent))

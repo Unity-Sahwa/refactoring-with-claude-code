@@ -1,11 +1,10 @@
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
 namespace Refactoring
 {
     public interface IEffectProvider
     {
-        GameObject Rent(AssetReferenceGameObject key);
+        GameObject Rent(EffectId id);
 
         void Return(GameObject instance);
     }

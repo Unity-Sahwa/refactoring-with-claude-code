@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
 namespace Refactoring
 {
@@ -14,7 +13,7 @@ namespace Refactoring
         [SerializeField] private Vector3 scale;
         [SerializeField] [Range(0,1)] private float startProgress;
         [SerializeField] private float duration;
-        [SerializeField] private AssetReferenceGameObject effectObject;
+        [SerializeField] private EffectId effectId;
         [SerializeField] private EffectAttachPointType attachKey;
         [SerializeField] private bool stopInPlace;   // 도중에 부모에서 떨어져 그 자리 정지할지
         [SerializeField] private float stopTime;       // 멈추는 시점(초)
@@ -28,7 +27,7 @@ namespace Refactoring
         public Vector3 Position => position;
         public Vector3 Rotation => rotation;
         public Vector3 Scale => scale;
-        public AssetReferenceGameObject EffectObject => effectObject;
+        public EffectId EffectId => effectId;
         public EffectAttachPointType AttachKey => attachKey;
         public bool StopInPlace => stopInPlace;
         public float StopTime => stopTime;
