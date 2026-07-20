@@ -47,12 +47,7 @@ MonoBehaviour:
     scale: {x: 5, y: 5, z: 10}
     startProgress: 0
     duration: 2
-    hitboxObject:
-      m_AssetGUID: c37dcd22866e94148bcc634d606d03b4
-      m_SubObjectName: 
-      m_SubObjectType: 
-      m_SubObjectGUID: 
-      m_EditorAssetChanged: 0
+    hitboxId: 1
     attachKey: 0
     stopInPlace: 0
     stopTime: 0
