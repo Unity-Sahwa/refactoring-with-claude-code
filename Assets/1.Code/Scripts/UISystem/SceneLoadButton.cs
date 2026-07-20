@@ -1,16 +1,18 @@
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Refactoring
 {
-    // 클릭하면 지정한 빌드 인덱스의 씬을 비동기로 불러온다. (로딩 화면은 추후 LoadingUI 재설계 때)
+    // 클릭하면 연결된 Addressable 씬(맵)을 비동기로 불러온다. (로딩 화면은 추후 LoadingUI 재설계 때)
+    // Single 모드라 이전 씬은 자동으로 내려감(메모리 해제 직접 관리 안 해도 됨).
     [RequireComponent(typeof(Button))]
     public class SceneLoadButton : MonoBehaviour
     {
-        // Build Settings의 씬 순번. 값이라 리임포트에 안 깨짐.
+        // 불러올 맵 씬을 Addressable 참조로 꽂는 칸. GUID 문자열이라 리임포트에 안 깨짐.
         [SerializeField]
-        private int _sceneBuildIndex;
+        private AssetReference _mapScene;
 
         private void Awake()
         {
@@ -19,7 +21,7 @@ namespace Refactoring
 
         private void HandleClicked()
         {
-            SceneManager.LoadSceneAsync(_sceneBuildIndex);
+            _mapScene.LoadSceneAsync(LoadSceneMode.Single);
         }
     }
 }
