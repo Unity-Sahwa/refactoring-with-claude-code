@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 6515751509387366021}
   - component: {fileID: 6403742448839767271}
   - component: {fileID: 1636715185954809983}
-  - component: {fileID: 1508554727841263870}
   - component: {fileID: 370555321304792989}
   - component: {fileID: 7286515257061800649}
   m_Layer: 6
@@ -113,18 +112,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.PlayerCharacter
   type: 1
---- !u!114 &1508554727841263870
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4055417958303217}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: de38ecbb0dece974f90bcfa568d697ab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.PlayerDamageReceiver
 --- !u!114 &370555321304792989
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -139,7 +126,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.FootstepEmitter
   footstepId: 24
   moveThreshold: 0.5
-  minInterval: 0.12
 --- !u!114 &7286515257061800649
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6296,8 +6282,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4500557844624437226}
-  - component: {fileID: 7305675559138646986}
   - component: {fileID: 6149827153081181896}
+  - component: {fileID: 2681325960606621543}
   m_Layer: 12
   m_Name: AttachPoint
   m_TagString: Untagged
@@ -6320,19 +6306,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4904764761536572597}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7305675559138646986
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2163704211993245069}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d3c328b3346c2a047bc2e92af028eda6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.HitboxAttachPoint
-  key: 1
 --- !u!114 &6149827153081181896
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6345,6 +6318,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e60bdf09f61346c4ba440204f9ccd348, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.EffectAttachPoint
+  key: 1
+--- !u!114 &2681325960606621543
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2163704211993245069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7de9327c4f33bd941922010ab559c8aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.HitboxAttachPoint
   key: 1
 --- !u!1 &2205652251569315964
 GameObject:

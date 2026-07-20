@@ -30,11 +30,6 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 8e5dc63407546304393305ff3b5bcf82
-    m_Address: Assets/2.Level/Scenes/Build/Scene1_Tutorial.unity
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: dc16ef656f54cd845880f17bdece7751
     m_Address: Assets/2.Level/Scenes/Build/Scene3.unity
     m_ReadOnly: 0

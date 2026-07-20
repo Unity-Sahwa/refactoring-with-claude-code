@@ -38,7 +38,18 @@ MonoBehaviour:
     duration: 0.1
     direction: {x: 0, y: 0, z: 1}
     speed: 10
-  effect: []
+  effect:
+  - name: 
+    untilFinish: 1
+    position: {x: 3.12, y: 1.94, z: 0.1}
+    rotation: {x: -82.654, y: 270, z: -124}
+    scale: {x: 1.651313, y: 1, z: 0.8361627}
+    startProgress: 0.145
+    duration: 0.5
+    effectId: 1
+    attachKey: 0
+    stopInPlace: 0
+    stopTime: 0
   hitbox:
   - name: 
     untilFinish: 0

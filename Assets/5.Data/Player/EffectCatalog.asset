@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.EffectCatalog
   entries:
   - id: 1
-    prefab: {fileID: 0}
-    poolSize: 0
+    prefab: {fileID: 3126814462210701979, guid: 6e9b09ba8a0deef44b2e5d2b668c8ba4, type: 3}
+    poolSize: 3

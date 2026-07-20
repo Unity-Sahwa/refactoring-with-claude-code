@@ -253,7 +253,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6257960504917662675}
   - component: {fileID: 351041400342162727}
-  - component: {fileID: 2557271690286432946}
+  - component: {fileID: 5700888375221765997}
   m_Layer: 6
   m_Name: Effect
   m_TagString: Untagged
@@ -288,7 +288,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a13ca213746bcde42b6cbab12d340749, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.PlayerEffectHandler
---- !u!114 &2557271690286432946
+--- !u!114 &5700888375221765997
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -297,9 +297,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 8386930583115712846}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9a9da6b684f02d49949162ac53339bf, type: 3}
+  m_Script: {fileID: 11500000, guid: c46dada64d6de814c867a79a05baec2a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.EffectProvider
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.PlayerEffectProvider
 --- !u!1 &8500756477960852823
 GameObject:
   m_ObjectHideFlags: 0
@@ -392,8 +392,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6288805994546884251}
-  - component: {fileID: 8088247300799777564}
-  - component: {fileID: 8507468305566598582}
+  - component: {fileID: 944074307334039754}
+  - component: {fileID: 105738926052115346}
   m_Layer: 6
   m_Name: Hitbox
   m_TagString: Untagged
@@ -416,7 +416,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 7790510517285152335}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8088247300799777564
+--- !u!114 &944074307334039754
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -425,18 +425,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 8913104274009761175}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a19b3ec326f515a48a53373acd1881e8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.HitboxProvider
---- !u!114 &8507468305566598582
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8913104274009761175}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 63b23816ad05949459b57f71b2fa7ae7, type: 3}
+  m_Script: {fileID: 11500000, guid: 5c75fd96be1a2fa45b9f3cc5eb46c01c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.PlayerHitboxHandler
+--- !u!114 &105738926052115346
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8913104274009761175}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f68d8ddefb0c87b488b82d98921ab789, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.HitboxProvider
