@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 286535736406208662}
-  - component: {fileID: 8440839391865337121}
+  - component: {fileID: 3686680512609458829}
   m_Layer: 0
   m_Name: PlayerHitboxSample
   m_TagString: Player
@@ -33,7 +33,7 @@ Transform:
   - {fileID: 9094977850975785449}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8440839391865337121
+--- !u!114 &3686680512609458829
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -42,9 +42,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 2653233288760106542}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 85c02bf2b14541c4ba81270dc9334054, type: 3}
+  m_Script: {fileID: 11500000, guid: b0ce4a9b4bd27324bae1cf2cf1eaacfd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.HitboxDamageReporter
+  hitChannel: {fileID: 11400000, guid: 0a4f7186303a29a40ab0bd36632d1f6d, type: 2}
+  hitSound: 0
 --- !u!1 &3039386982563521193
 GameObject:
   m_ObjectHideFlags: 0
