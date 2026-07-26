@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Refactoring
@@ -12,6 +11,5 @@ namespace Refactoring
         public Vector3 HitPoint;            // 부딪힌 지점(근사값)
         public InkColor Color;              // 칠하는 색
         public float InkStack;              // 잉크 스택값
-        public IReadOnlyList<IHitReaction> Reactions;   // 피격 시 적용할 효과들(넉백·상태이상 등). 처리는 받는 쪽이 한다.
     }
 }
