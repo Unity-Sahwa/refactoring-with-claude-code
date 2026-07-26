@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: HitboxCatalog
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.HitboxCatalog
   entries:
-  - id: 0
-    prefab: {fileID: 0}
+  - id: 1
+    prefab: {fileID: 2653233288760106542, guid: c37dcd22866e94148bcc634d606d03b4, type: 3}

@@ -56,8 +56,8 @@ MonoBehaviour:
     position: {x: 0, y: 1, z: 1.5}
     rotation: {x: 0, y: 0, z: 0}
     scale: {x: 5, y: 5, z: 10}
-    startProgress: 0
-    duration: 2
+    startProgress: 0.25
+    duration: 0.1
     hitboxId: 1
     attachKey: 0
     stopInPlace: 0
@@ -67,19 +67,9 @@ MonoBehaviour:
       damage: 1
       color: 1
       inkStack: 1
-      reactions:
-      - rid: 822169761597620303
   audio:
   - name: NA1
     id: 1
     startProgress: 0.185
     untilFinish: 1
   finish: []
-  references:
-    version: 2
-    RefIds:
-    - rid: 822169761597620303
-      type: {class: KnockbackReaction, ns: Refactoring, asm: Assembly-CSharp}
-      data:
-        direction: {x: 0, y: 0, z: -1}
-        force: 111

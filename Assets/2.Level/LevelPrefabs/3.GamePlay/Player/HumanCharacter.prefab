@@ -8323,6 +8323,7 @@ GameObject:
   - component: {fileID: 3511476456645648882}
   - component: {fileID: 2158754574838356245}
   - component: {fileID: 6780262119185167161}
+  - component: {fileID: 6100168457637868747}
   m_Layer: 6
   m_Name: HumanCharacter
   m_TagString: Untagged
@@ -8457,6 +8458,18 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a0a4a278bc3637242a6b84345329b31d, type: 2}
   - {fileID: 11400000, guid: 5cec0e9719adb8a4b8e47588c4e90690, type: 2}
   - {fileID: 11400000, guid: db1a396b73468944180d5fe3d3e6a556, type: 2}
+--- !u!114 &6100168457637868747
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2691157191121692041}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f5a134662728e54190c5b18cf17a814, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.PlayerDamageReceiver
 --- !u!1 &2738894523914522254
 GameObject:
   m_ObjectHideFlags: 0

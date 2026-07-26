@@ -61,19 +61,9 @@ MonoBehaviour:
       damage: 0
       color: 1
       inkStack: 1
-      reactions:
-      - rid: 822169761597620303
   audio:
   - name: NA2
     id: 3
     startProgress: 0.214
     untilFinish: 1
   finish: []
-  references:
-    version: 2
-    RefIds:
-    - rid: 822169761597620303
-      type: {class: KnockbackReaction, ns: Refactoring, asm: Assembly-CSharp}
-      data:
-        direction: {x: 0, y: 0, z: -1}
-        force: 10

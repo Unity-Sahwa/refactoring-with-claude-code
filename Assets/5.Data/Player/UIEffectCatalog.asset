@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90ee538a50e779a42b67a99c0571f9da, type: 3}
+  m_Name: UIEffectCatalog
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.UIEffectCatalog
+  entries:
+  - id: 2
+    prefab: {fileID: 262125547565565900, guid: ad36e16f955d8ea4ca0f23f1da46cb9b, type: 3}
+    config:
+      rid: 822170240253428036
+  references:
+    version: 2
+    RefIds:
+    - rid: 822170240253428036
+      type: {class: FadeConfig, ns: Refactoring, asm: Assembly-CSharp}
+      data:
+        duration: 0.5
+        deactivateOnStop: 1
+        fadeInTime: 0.3
+        fadeOutTime: 0.3

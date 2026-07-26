@@ -128,8 +128,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b88cd65c4cde73c47865e6a46d8260b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.AudioPlayer
-  sfxGroup: {fileID: -5011017390960947947, guid: 4990067f5205fde4b84c5ff6e158bd4c, type: 2}
-  initialVoices: 8
+  _sfxGroup: {fileID: 0}
+  _initialVoices: 8
 --- !u!1 &4654362183888643388
 GameObject:
   m_ObjectHideFlags: 0
@@ -252,6 +252,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b9b38b8b6e783644f8e489f10df68e4a, type: 2}
   - {fileID: 11400000, guid: 07a6f6c415461014c8987252085d260c, type: 2}
   - {fileID: 11400000, guid: 0a4f7186303a29a40ab0bd36632d1f6d, type: 2}
+  - {fileID: 11400000, guid: 11991351a6f84284792f1be102138006, type: 2}
+  - {fileID: 11400000, guid: a56acb68555d40a49a56f36ae438df9b, type: 2}
 --- !u!1 &7790186032845487929
 GameObject:
   m_ObjectHideFlags: 0
