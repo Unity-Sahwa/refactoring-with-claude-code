@@ -94,7 +94,7 @@ namespace Refactoring
         public float hp;
         public float hpBarCount;
         public float phaseHP;
-        public float knockbackForce = 1000f;
+        public float knockbackForce = 2000f;
         public float knockbackDuration = 0.5f;
 
         [HideInInspector] public float trackingSpeed;
@@ -270,7 +270,7 @@ namespace Refactoring
                 target = damageMessage.Damager.transform;
             }
 
-            hitStopCoroutine = StartCoroutine(HitStop(2f, target.transform, knockbackForce));
+            hitStopCoroutine = StartCoroutine(HitStop(target.position, 2f));
 
             if (phaseHPs[phaseHPs.Count - 1] <= 0)
             {
@@ -395,7 +395,7 @@ namespace Refactoring
             {
                 animator.SetBool("BattleMode", true);
             }
-            if (hasTarget)
+            if (hasTarget && navAgent.isOnNavMesh)
             {
                 var destination = new Vector3(target.transform.position.x, transform.position.y, target.transform.position.z);
                 navAgent.SetDestination(destination);
@@ -560,33 +560,44 @@ namespace Refactoring
             lastAttackTime = Time.time;
         }
 
-        protected IEnumerator HitStop(float waitTime, Transform target, float knockbackForce)
+        // 피격 경직: 넉백으로 밀린 뒤 잠깐 멈췄다가 다시 추적 상태로 복귀함.
+        // 넉백 자체는 Knockback 코루틴이 담당함(여기선 호출만).
+        protected IEnumerator HitStop(Vector3 attackerPos, float stunTime)
         {
-            this.GetComponent<NavMeshAgent>().enabled = true;
+            // 먼저 넉백으로 밀림. 끝날 때까지 기다림.
+            yield return Knockback(attackerPos);
+
+            // 밀린 뒤 남은 시간동안 멈춰서 경직됨.
             navAgent.isStopped = true;
             navAgent.velocity = Vector3.zero;
-
-            if (target != null && knockbackForce > 0f)
-            {
-                navAgent.enabled = false;
-                rb.isKinematic = false;
-
-                Vector3 knockbackDirection = (transform.position - target.position).normalized;
-
-                rb.AddForce(knockbackDirection * knockbackForce, ForceMode.Impulse);
-            }
-
-            yield return new WaitForSeconds(waitTime);
-
-            if (target != null && knockbackForce > 0f)
-            {
-                rb.isKinematic = true;
-                navAgent.enabled = true;
-            }
-
+            yield return new WaitForSeconds(stunTime);
             navAgent.isStopped = false;
 
             enemyState = eState.Tracking;
+        }
+
+        // 넉백: 맞은 반대 방향으로 밀어냄. Rigidbody 물리(AddForce) 대신 NavMeshAgent.Move로 밀어줌.
+        // agent 켠 채로 밀어서 몬스터끼리 avoidance가 겹침을 자동으로 정리함(뭉쳐도 안 튐, navmesh 밖으로도 안 나감).
+        protected IEnumerator Knockback(Vector3 attackerPos)
+        {
+            navAgent.enabled = true;
+            navAgent.ResetPath();       // 추적하던 목적지 지움. 안 지우면 agent가 밀린 걸 도로 끌고 감.
+            navAgent.isStopped = false; // isStopped=true면 Move가 씹혀서 안 밀림. 반드시 풀어야 함.
+
+            Vector3 dir = (transform.position - attackerPos).normalized;
+            dir.y = 0f;
+
+            // knockbackForce를 초기 속도(m/s)로 씀. 예전 Impulse 값과 단위 달라서 인스펙터에서 재조정 필요함.
+            // ponytail: 감쇠는 선형(Lerp). 곡선 넉백 필요하면 그때 곡선으로 바꾸기.
+            float duration = Mathf.Max(knockbackDuration, 0.05f); // 0이면 아예 안 밀리니 최소값 보장.
+            float elapsed = 0f;
+            while (elapsed < duration)
+            {
+                float speed = Mathf.Lerp(knockbackForce, 0f, elapsed / duration);
+                navAgent.Move(dir * speed * Time.deltaTime);
+                elapsed += Time.deltaTime;
+                yield return null;
+            }
         }
         #endregion
 
