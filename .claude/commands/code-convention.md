@@ -1,3 +1,7 @@
+---
+description: 이 프로젝트의 C#/Unity 코드 컨벤션. 코드 작성·검사 시 이 규칙을 따른다.
+---
+
 # 코드 컨벤션
 
 > 기준: Unity 공식 e-book ("Create a C# Style Guide") + 커뮤니티 관행 절충
@@ -172,9 +176,60 @@ public enum AttackModes
 void ApplyDamage(int damageAmount)
 {
     int newHealth = _currentHealth - damageAmount;
+    RectTransform panelRect = _panel.GetComponent<RectTransform>();
 }
 ```
 - camelCase
+- **약어·줄임말 금지 (필드와 동일 규칙 적용)**
+  ```csharp
+  // X — 타입 첫글자만 딴 이름, 무슨 뜻인지 읽는 사람이 추측해야 함
+  RectTransform rt;
+  Transform t;
+  var go = gameObject;
+  int idx;
+
+  // O — 사전에 있는 단어를 그대로 씀
+  RectTransform panelRect;
+  Transform targetTransform;
+  GameObject spawnedObject;
+  int index;
+  ```
+- 예외: 루프 카운터(`i`, `j`), 수식 변수(`x`, `y`, 보간 비율 `t`)만 허용
+- 이유: 줄임말은 읽는 사람이 원래 단어를 **추측**해야 함. 추측이 필요 없는 이름이 좋은 이름임.
+  (13절 '불가사의한 네이밍' 스멜)
+
+### 쉬운 단어로 이름 짓기 (클래스 / 메서드 / 변수 전부 해당)
+
+이 프로젝트는 한국인 개발자가 읽음. **중학교 수준 영단어**로 이름을 지어라.
+영어 사전을 찾아봐야 뜻을 아는 단어는 쓰지 마라.
+
+```csharp
+// X — 뜻은 정확하지만 사전을 찾아야 하는 단어
+public void InstantiateProjectileEntity() { }
+private bool _isTraversalOccluded;
+int accumulatedAttenuation;
+
+// O — 같은 뜻, 쉬운 단어
+public void SpawnBullet() { }
+private bool _isPathBlocked;
+int totalDamageReduce;
+```
+
+- 어려운 단어 대신 쓸 쉬운 말 예시
+  | 어려운 말 | 쉬운 말 |
+  |---|---|
+  | Instantiate / Initiate | Create, Spawn, Start |
+  | Terminate / Dispose | Stop, Clear, Remove |
+  | Retrieve / Acquire | Get, Find |
+  | Validate / Verify | Check, IsValid |
+  | Propagate | Send, Notify |
+  | Accumulate | AddUp, Total |
+  | Occlude | Block, Hide |
+  | Threshold | Limit, MinValue, MaxValue |
+- 단, Unity·C#이 이미 쓰는 이름(`Instantiate`, `Dispose`, `Serialize` 등)은 그대로 둔다.
+  엔진이 정한 이름을 억지로 바꾸면 오히려 헷갈림.
+- 도메인 용어(게임 기획서에 나오는 말: `Mask`, `Stagger`, `Hitbox` 등)도 그대로 둔다.
+  팀이 이미 공유하는 말이면 어려워 보여도 쉬운 말임.
 
 ---
 
@@ -332,7 +387,7 @@ if (x == y) { }
 타입이 오른쪽에서 명확히 보일 때만 허용
 ```csharp
 var player = new Player();                    // O — 타입 보임
-var rb = GetComponent<Rigidbody>();           // O — 타입 보임
+var rigidbody = GetComponent<Rigidbody>();    // O — 타입 보임
 var powerUps = new List<PowerUps>();          // O — 타입 보임
 
 var data = LoadData();                        // X — 타입 불명확
