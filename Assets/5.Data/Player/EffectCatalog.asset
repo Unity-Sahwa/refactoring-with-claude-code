@@ -18,4 +18,4 @@ MonoBehaviour:
     poolSize: 3
   - id: 11
     prefab: {fileID: 3905875521159426845, guid: 2b8377b0ef589b544ad3653f6d04de31, type: 3}
-    poolSize: 1
+    poolSize: 3

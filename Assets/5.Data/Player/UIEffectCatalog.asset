@@ -13,17 +13,17 @@ MonoBehaviour:
   m_Name: UIEffectCatalog
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.UIEffectCatalog
   entries:
-  - id: 2
+  - id: 1
     prefab: {fileID: 262125547565565900, guid: ad36e16f955d8ea4ca0f23f1da46cb9b, type: 3}
     config:
-      rid: 822170240253428036
+      rid: 822170329775865941
   references:
     version: 2
     RefIds:
-    - rid: 822170240253428036
-      type: {class: FadeConfig, ns: Refactoring, asm: Assembly-CSharp}
+    - rid: 822170329775865941
+      type: {class: UIShakeConfig, ns: Refactoring, asm: Assembly-CSharp}
       data:
         duration: 0.5
         deactivateOnStop: 1
-        fadeInTime: 0.3
-        fadeOutTime: 0.3
+        amplitude: 10
+        frequency: 25
