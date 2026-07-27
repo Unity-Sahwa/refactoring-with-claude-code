@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Refactoring
@@ -42,21 +41,5 @@ namespace Refactoring
         public float Damage => combat.Damage;
         public InkColor Color => combat.Color;
         public float InkStack => combat.InkStack;
-        public IReadOnlyList<IHitReaction> Reactions => combat.Reactions;
-    }
-
-    // 히트박스가 부딪힌 상대에게 줄 전투값에 관한 정보.
-    [Serializable]
-    public class CombatInfo : IHitboxCombat
-    {
-        [SerializeField] private float damage;
-        [SerializeField] private InkColor color;
-        [SerializeField] private float inkStack;
-        [SerializeReference, SubclassSelector] private List<IHitReaction> reactions = new(); // 다형성 직렬화: 인스펙터 드롭다운으로 반응 종류별 추가
-
-        public float Damage => damage;
-        public InkColor Color => color;
-        public float InkStack => inkStack;
-        public IReadOnlyList<IHitReaction> Reactions => reactions;
     }
 }
