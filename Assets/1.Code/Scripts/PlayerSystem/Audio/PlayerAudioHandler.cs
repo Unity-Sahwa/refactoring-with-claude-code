@@ -49,10 +49,10 @@ namespace Refactoring
         }
 
         // 타격 성공 시 그 지점에서 타격음 재생(한 번 나고 마니 정지 추적 안 함).
-        private void HandleHit(AudioId sound, Vector3 point)
+        private void HandleHit(HitReport hitReport)
         {
-            if (sound == AudioId.None) return;
-            _audioChannel.RaisePlay(AudioPlayRequest.At(sound, point));
+            if (hitReport.Sound == AudioId.None) return;
+            _audioChannel.RaisePlay(AudioPlayRequest.At(hitReport.Sound, hitReport.Point));
         }
 
         private void OnDestroy()
