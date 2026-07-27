@@ -19,5 +19,8 @@ namespace Refactoring
         AnimalNormalAttack3,
         AnimalSpecialAttack,
         AnimalFinishAttack,
+
+        // 화면 연출
+        HitVignette,   // 피격 시 화면 가장자리 비네트 깜빡임
     }
 }
