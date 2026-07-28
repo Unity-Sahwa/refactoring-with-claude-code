@@ -13,11 +13,13 @@ namespace Refactoring
         [SerializeField, Min(0f)] private float _duration = 1f;
 
         private ObjectPool<GameObject> _pool;
+        private WaitForSeconds _wait;
         private IDisposable _hitDisposable;
 
         private void Awake()
         {
             _pool = new ObjectPool<GameObject>(CreateEffect, actionOnRelease: HideEffect, defaultCapacity: 8);
+            _wait = new WaitForSeconds(_duration);
         }
 
         private GameObject CreateEffect()
@@ -28,9 +30,9 @@ namespace Refactoring
         }
 
         // 풀이 이펙트를 돌려받을 때 부른다.
-        private void HideEffect(GameObject gameObject)
+        private void HideEffect(GameObject hitEffectPrefab)
         {
-            gameObject.SetActive(false);
+            hitEffectPrefab.SetActive(false);
         }
 
         // 구독을 Awake가 아니라 여기서 하는 이유: 꺼진 동안 알림을 받으면 StartCoroutine이 실패해
@@ -40,7 +42,7 @@ namespace Refactoring
             _hitDisposable = _hitChannel.Register(HandleHit);
         }
 
-        private void OnDisable() 
+        private void OnDisable()
         {
             _hitDisposable?.Dispose(); _hitDisposable = null; 
         }
@@ -61,7 +63,7 @@ namespace Refactoring
 
         private IEnumerator ReleaseAfter(GameObject hitEffectObject)
         {
-            yield return new WaitForSeconds(_duration);
+            yield return _wait;
             
             if (hitEffectObject != null)
             {
