@@ -906,12 +906,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 517426186003780859, guid: dc28ab3407b80bf42a4b02b2ebdfeb80, type: 3}
+    - {fileID: 105738926052115346, guid: dc28ab3407b80bf42a4b02b2ebdfeb80, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 8913104274009761175, guid: dc28ab3407b80bf42a4b02b2ebdfeb80, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1238660454}
+    - targetCorrespondingSourceObject: {fileID: 8913104274009761175, guid: dc28ab3407b80bf42a4b02b2ebdfeb80, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1238660456}
   m_SourcePrefab: {fileID: 100100000, guid: dc28ab3407b80bf42a4b02b2ebdfeb80, type: 3}
 --- !u!1 &1238660448 stripped
 GameObject:
@@ -932,6 +936,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.HitEffectHandler
   _hitEffectPrefab: {fileID: 6972745545236655097, guid: 37d8e41336bfcc241a6d232a0e1a3faa, type: 3}
   _duration: 2
+--- !u!114 &1238660456
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1238660448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c75fd96be1a2fa45b9f3cc5eb46c01c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.PlayerHitboxHandler
+  hitChannel: {fileID: 11400000, guid: 0a4f7186303a29a40ab0bd36632d1f6d, type: 2}
 --- !u!4 &1361826204 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3869422674361743510, guid: 5473a48801e29eb439308ec9f926c48d, type: 3}
@@ -984,6 +1001,14 @@ PrefabInstance:
     - target: {fileID: 1414124093448434948, guid: be18510bd60a3494494765612e402163, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7664395040389418550, guid: be18510bd60a3494494765612e402163, type: 3}
+      propertyPath: SOAssets.Array.size
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 7664395040389418550, guid: be18510bd60a3494494765612e402163, type: 3}
+      propertyPath: 'SOAssets.Array.data[7]'
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 7790186032845487929, guid: be18510bd60a3494494765612e402163, type: 3}
       propertyPath: m_Name
