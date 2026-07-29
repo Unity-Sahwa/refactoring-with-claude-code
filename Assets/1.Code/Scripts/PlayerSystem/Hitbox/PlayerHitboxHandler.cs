@@ -1,39 +1,39 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Refactoring
 {
-    // 역할: 상태 이벤트의 알림과 함께 전달받은 데이터(위치, 시간범위 등)로 IHitboxProvider으로부터 제공된 히트박스를 활성화시킨다.
+    // 역할: 플레이어 상태 이벤트를 알림 받아, overlap 형태로 충돌체 활성화. 충돌된 대상에게 데이터 주입 및 충돌 성공 이벤트 호출
     public class PlayerHitboxHandler : MonoBehaviour
     {
         [Inject] private IPlayerStateEventSubscriber _eventSubscriber;
-        [Inject] private IHitboxProvider _provider;
-        [Inject] private ICurrentCharacterProvider _currentCharacterProvider;   // 공격자(현재 캐릭터) 조회용
-        [Inject] private List<IHitboxAttachPoint> _attachPoints;
-        private int _targetMask;   // 플레이어 공격이 때릴 대상 레이어. 적 핸들러가 생기면 abstract로 분리한다.
-        private readonly Dictionary<HitboxAttachPointType, Transform> _attachPointMap = new();
+        [Inject] private ICurrentCharacterProvider _currentCharacterProvider;
+        [Inject] private HitChannel hitChannel;
+
+        private int _targetMask;
         private readonly List<ActiveHitbox> _actives = new();
+        private readonly Collider[] _buffer = new Collider[32];   // 겹침 결과 버퍼(GC 방지). 넘치면 뒤쪽은 잘림
         private IDisposable _hitboxEventDisposable;
 
+        // 활성화된 히트박스에 대한 정보
         private class ActiveHitbox
         {
-            public GameObject instance;
-            public Coroutine routine;
-            public bool untilFinish;
+            public IPlayerHitbox data;
+            public Transform attach;
+            public float endTime;
+            public readonly HashSet<IDamageable> alreadyHit = new();
         }
 
         void Awake()
         {
             _hitboxEventDisposable = _eventSubscriber.Register(StateEventCategory.Hitbox, HandleHitbox, HandleReset);
 
-            foreach (var point in _attachPoints)
-            {
-                _attachPointMap[point.Key] = point.Transform;
-            }
-
             _targetMask = LayerMask.GetMask("Enemy", "Gimmick");
+            if (_targetMask == 0) 
+            {
+                Debug.LogError("[PlayerHitboxHandler] targetMask가 0임. 아무도 안 맞음");
+            }
         }
 
         private void HandleHitbox(IStartData data)
@@ -44,96 +44,152 @@ namespace Refactoring
                 return;
             }
 
-            var instance = _provider.Rent(hitbox.HitboxId);
-            if (instance == null) return;
-
-            if (!_attachPointMap.TryGetValue(hitbox.AttachKey, out var parent))
+            PlayerCharacter attacker = _currentCharacterProvider?.CurrentCharacter;
+            if (attacker == null) 
             {
-                _provider.Return(instance);
                 return;
             }
 
-            var t = instance.transform;
-            t.SetParent(parent, false);
-            t.localPosition = hitbox.Position;
-            t.localRotation = Quaternion.Euler(hitbox.Rotation);
-            
-            // 부모 스케일에 영향받지 않도록, 입력 스케일을 부모 월드스케일로 나눠 월드 크기를 고정한다.
-            var wantScale = hitbox.Scale == Vector3.zero ? Vector3.one : hitbox.Scale;
-            var ps = parent.lossyScale;
-            t.localScale = new Vector3(
-                ps.x != 0f ? wantScale.x / ps.x : wantScale.x,
-                ps.y != 0f ? wantScale.y / ps.y : wantScale.y,
-                ps.z != 0f ? wantScale.z / ps.z : wantScale.z);
-
-            _provider.SetMeshVisible(instance, hitbox.ShowMesh);
-
-            // 전투값과 공격자(현재 캐릭터)를 감지 컴포넌트에 주입한다.
-            var reporter = _provider.GetReporter(instance);
-            if (reporter != null)
+            _actives.Add(new ActiveHitbox
             {
-                PlayerCharacter attacker = _currentCharacterProvider?.CurrentCharacter;
-                reporter.Setup((IHitboxCombat)data, attacker != null ? attacker.gameObject : null, _targetMask);
-            }
-
-            instance.SetActive(true);
-
-            var active = new ActiveHitbox { instance = instance, untilFinish = hitbox.UntilFinish };
-            active.routine = StartCoroutine(CoRunHitbox(active, hitbox));
-            _actives.Add(active);
+                data = hitbox,
+                attach = attacker.transform,
+                endTime = Time.time + hitbox.Duration
+            });
         }
 
-        private IEnumerator CoRunHitbox(ActiveHitbox active, IPlayerHitbox hitbox)
-        {
-            if (hitbox.StopInPlace)
-            {
-                float stopTime = Mathf.Clamp(hitbox.StopTime, 0f, hitbox.Duration);
-                yield return new WaitForSeconds(stopTime);
-                active.instance.transform.SetParent(null, true);
-                yield return new WaitForSeconds(hitbox.Duration - stopTime);
-            }
-            else
-            {
-                yield return new WaitForSeconds(hitbox.Duration);
-            }
-
-            FinishHitbox(active);
-        }
-
-        // 왜: untilFinish 히트박스는 상태가 끝나도 살아남아야 한다. 다만 캐릭터 자식으로 붙어 있으면
-        //     이후 스왑(캐릭터 비활성화) 시 같이 꺼지므로, 이 시점에 부모에서 분리해 월드로 독립시킨다.
         private void HandleReset(CloseEventType reason)
         {
+            _actives.Clear();
+        }
+
+        // 켜져 있는 동안 매 물리 스텝마다 각 히트박스 영역을 검사한다(켜진 순간 이미 안에 있던 대상도 잡힌다).
+        private void FixedUpdate()
+        {
+            // 시간 다 된 히트박스를 도중에 빼도 인덱스가 안 꼬임.
             for (int i = _actives.Count - 1; i >= 0; i--)
             {
                 var active = _actives[i];
-                if (active.untilFinish)
+
+                if (Time.time >= active.endTime)
                 {
-                    active.instance.transform.SetParent(null, true);
+                    _actives.RemoveAt(i);
                     continue;
                 }
 
-                if (active.routine != null) StopCoroutine(active.routine);
-                active.instance.SetActive(false);
-                FinishHitbox(active);
+                var pos = active.attach.TransformPoint(active.data.Position); // attach 정면기준 hitbox의 월드좌표 반환
+                var rot = active.attach.rotation * Quaternion.Euler(active.data.Rotation);
+
+                int count = Overlap(active.data, pos, rot);
+                for (int j = 0; j < count; j++)
+                {
+                    TryHit(active, _buffer[j], pos);
+                }
             }
         }
 
-        private void FinishHitbox(ActiveHitbox active)
+        private int Overlap(IPlayerHitbox data, Vector3 pos, Quaternion rot)
         {
-            _actives.Remove(active);
-            _provider.Return(active.instance);
+            Vector3 size = data.ShapeScale;
+            
+            switch (data.Shape)
+            {
+                case HitboxShape.Sphere:
+                    return Physics.OverlapSphereNonAlloc(pos, size.x * 0.5f, _buffer, _targetMask);
+
+                case HitboxShape.Capsule:
+                    GetCapsuleEnds(size, pos, rot, out var p0, out var p1, out var radius);
+                    return Physics.OverlapCapsuleNonAlloc(p0, p1, radius, _buffer, _targetMask);
+
+                default:
+                    return Physics.OverlapBoxNonAlloc(pos, size * 0.5f, _buffer, rot, _targetMask);
+            }
         }
 
+        // 캡슐 양 끝 반구의 중심점 캡슐을 유니티가 요구하는 두 끝점(구 중심)과 반지름으로 바꾼다.
+        private void GetCapsuleEnds(Vector3 size, Vector3 pos, Quaternion rot, out Vector3 p0, out Vector3 p1, out float radius)
+        {
+            radius = size.x * 0.5f;
+            float half = Mathf.Max(size.y, radius * 2f) * 0.5f - radius; //높이가 지름보다 작아지는 문제 방지
+            Vector3 axis = rot * Vector3.up; // 캡슐의 실제 축을 나타냄. Quaternion * Vector3는 Vector3 화살표를 Quaternion만큼 회전을 의미
+            p0 = pos + axis * half;
+            p1 = pos - axis * half;
+        }
+
+        private void TryHit(ActiveHitbox active, Collider hitCollider, Vector3 center)
+        {
+            var target = hitCollider.GetComponent<IDamageable>();
+
+            // GetComponent 실패 또는 유니티 오브젝트가 아닌지 || 참조가 가리키는 대상이 삭제되었는지.(참조만 존재하는 문제)
+            if (target is not Component componenet || componenet == null) 
+            {
+                return;
+            }
+            
+            if (!active.alreadyHit.Add(target)) 
+            {
+                return;
+            }
+                
+            var combat = active.data.Combat;
+            var info = new DamageInfo
+            {
+                Damager = active.attach.gameObject,
+                Amount = combat.Damage,
+                HitPoint = hitCollider.ClosestPoint(center), // 판정 영역 중심 기준 표면점 근사
+                Color = combat.Color,
+                InkStack = combat.InkStack
+            };
+
+            target.ApplyDamage(info);
+
+            // 타격 성공 사실만 발행한다. 소리·히트스탑 등은 구독자가 알아서 처리한다.
+            if (hitChannel != null)
+            {
+                hitChannel.Raise(new HitReport
+                {
+                    Attacker = active.attach.gameObject,
+                    Target = componenet.gameObject,
+                    Point = info.HitPoint,
+                    Sound = combat.HitSound
+                });
+            }
+        }
         private void OnDestroy()
         {
             _hitboxEventDisposable?.Dispose();
-
+            _actives.Clear();
+        }
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.blue;
             foreach (var active in _actives)
             {
-                if (active.routine != null) StopCoroutine(active.routine);
+                var pos = active.attach.TransformPoint(active.data.Position);
+                var rot = active.attach.rotation * Quaternion.Euler(active.data.Rotation);
+
+                Vector3 size = active.data.ShapeScale;
+
+                switch (active.data.Shape)
+                {
+                    case HitboxShape.Sphere:
+                        Gizmos.DrawWireSphere(pos, size.x * 0.5f);
+                        break;
+
+                    case HitboxShape.Capsule:
+                        GetCapsuleEnds(size, pos, rot, out var p0, out var p1, out var radius);
+                        Gizmos.DrawWireSphere(p0, radius);
+                        Gizmos.DrawWireSphere(p1, radius);
+                        break;
+
+                    default:
+                        Gizmos.matrix = Matrix4x4.TRS(pos, rot, Vector3.one);
+                        Gizmos.DrawWireCube(Vector3.zero, size);
+                        Gizmos.matrix = Matrix4x4.identity;
+                        break;
+                }
             }
-            _actives.Clear();
+            Gizmos.matrix = Matrix4x4.identity;
         }
     }
 }
