@@ -15,7 +15,8 @@ namespace Refactoring
             gameObject.SetActive(true);
         }
 
-        public void Close()
+        // 닫힐 때 더 할 일이 있는 창(설정창의 저장 등)이 있어서 물려받아 고칠 수 있게 둔다.
+        public virtual void Close()
         {
             gameObject.SetActive(false);
         }

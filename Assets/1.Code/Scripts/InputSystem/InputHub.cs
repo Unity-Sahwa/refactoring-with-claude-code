@@ -11,6 +11,7 @@ namespace Refactoring
         [SerializeField] private InputActionAsset _actionAsset;
         [Inject] private List<IDomainInputHandler> _handlers;
         [Inject(true)] private IGameStateProvider _gameStateProvider;
+        [Inject(true)] private IInputKeySettings _keySettings;
 
         private readonly InputActionType[] _allActions = (InputActionType[])Enum.GetValues(typeof(InputActionType));
 
@@ -24,8 +25,22 @@ namespace Refactoring
         
         private void Awake()
         {
+            LoadChangedKeys();
             BuildContextMap();
             SubscribeActions();
+        }
+
+        // 설정에서 바꿔둔 조작키를 액션 에셋에 덮어씌운다. 바꾼 적 없으면 그냥 기본값.
+        private void LoadChangedKeys()
+        {
+            string bindings = _keySettings?.Bindings;
+
+            if (string.IsNullOrEmpty(bindings))
+            {
+                return;
+            }
+
+            _actionAsset?.LoadBindingOverridesFromJson(bindings);
         }
 
         private void BuildContextMap()
