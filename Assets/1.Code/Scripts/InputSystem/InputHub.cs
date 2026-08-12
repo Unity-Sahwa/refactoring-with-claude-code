@@ -67,19 +67,6 @@ namespace Refactoring
             _actionAsset?.LoadBindingOverridesFromJson(bindings);
         }
 
-        // 설정에서 바꿔둔 조작키를 액션 에셋에 덮어씌운다. 바꾼 적 없으면 그냥 기본값.
-        private void LoadChangedKeys()
-        {
-            string bindings = _keySettings?.Bindings;
-
-            if (string.IsNullOrEmpty(bindings))
-            {
-                return;
-            }
-
-            _actionAsset?.LoadBindingOverridesFromJson(bindings);
-        }
-
         private void BuildContextMap()
         {
             foreach (IDomainInputHandler handler in _handlers)
