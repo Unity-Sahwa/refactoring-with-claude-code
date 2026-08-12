@@ -15,6 +15,37 @@ namespace Refactoring
 
         [SerializeField] private AudioMixer mixer;
 
+        // 설정창이 바꾼 소리 크기를 여기서 읽어서 믹서에 넣는다. 설정 쪽은 믹서를 모른다.
+        [Inject(true)] private ISoundSettings _soundSettings;
+
+        // Awake가 아니라 Start인 이유: 주입이 Awake에 일어나서, Awake에 읽으면 아직 비어 있다.
+        private void Start()
+        {
+            if (_soundSettings == null)
+            {
+                return;
+            }
+
+            _soundSettings.OnChanged += ApplySettings;
+            ApplySettings();
+        }
+
+        private void OnDestroy()
+        {
+            if (_soundSettings != null)
+            {
+                _soundSettings.OnChanged -= ApplySettings;
+            }
+        }
+
+        // 세 개 다 다시 넣는다. 뭐가 바뀌었는지 따지는 것보다 이게 싸고 단순하다.
+        private void ApplySettings()
+        {
+            SetVolume(VolumeCategory.Master, _soundSettings.GetVolume(VolumeCategory.Master));
+            SetVolume(VolumeCategory.Bgm, _soundSettings.GetVolume(VolumeCategory.Bgm));
+            SetVolume(VolumeCategory.Sfx, _soundSettings.GetVolume(VolumeCategory.Sfx));
+        }
+
         public void SetVolume(VolumeCategory category, float volume01)
         {
             volume01 = Mathf.Clamp01(volume01);

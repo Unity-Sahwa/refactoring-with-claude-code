@@ -12,14 +12,21 @@ namespace Refactoring
             Enemy
         }
 
-        public MeshRenderer meshRenderer;
         public TriggerTarget triggerTarget = TriggerTarget.Player;
         public List<EventData> enterEvents;
         public List<float> delayTimes;
         public bool isLoop = false;
 
         private bool hasTriggered = false;
+        private MeshRenderer meshRenderer;
 
+        private void Awake()
+        {
+            if (TryGetComponent<MeshRenderer>(out MeshRenderer mr))
+            {
+                meshRenderer = mr;
+            }
+        }
         private void Start()
         {
             meshRenderer.enabled = false;

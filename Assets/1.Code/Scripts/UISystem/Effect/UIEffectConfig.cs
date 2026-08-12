@@ -27,12 +27,22 @@ namespace Refactoring
 
     // 서서히 떴다 서서히 사라지는 수치
     [Serializable]
-    public class UIFadeConfig : UIEffectConfig
+    public class UIFadeInOutConfig : UIEffectConfig
     {
         [SerializeField] private float fadeInTime = 0.3f;  // 서서히 뜨는 시간
         [SerializeField] private float fadeOutTime = 0.3f; // 서서히 사라지는 시간
+        [SerializeField] private float endAlpha = 0f;      // 끝났을 때 남길 투명도
 
         public float FadeInTime => fadeInTime;
         public float FadeOutTime => fadeOutTime;
+        public float EndAlpha => endAlpha;
     }
+
+    // Duration 동안 alpha 0 -> 1
+    [Serializable]
+    public class UIFadeInConfig : UIEffectConfig { }
+
+    // Duration 동안 alpha 1 -> 0
+    [Serializable]
+    public class UIFadeOutConfig : UIEffectConfig { }
 }

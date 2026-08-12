@@ -42,9 +42,13 @@ namespace Refactoring
         }
     }
 
-    public class FadeInOut : IUIEffectLogic
+    // 알파를 만지는 효과들의 공통부. 대상별 CanvasGroup을 기억해두고 시작/끝 알파만 자식이 정함.
+    public abstract class FadeBase : IUIEffectLogic
     {
-        public Type ConfigType => typeof(UIFadeConfig);
+        public abstract Type ConfigType { get; }
+        protected abstract float StartAlpha(UIEffectConfig config);
+        protected abstract float EndAlpha(UIEffectConfig config);
+        protected abstract float AlphaAt(UIEffectConfig config, float elapsed);
 
         private readonly Dictionary<GameObject, CanvasGroup> _groups = new();
 
@@ -53,7 +57,7 @@ namespace Refactoring
             var canvasGroup = target.GetComponent<CanvasGroup>();
             if (canvasGroup == null) return;
 
-            canvasGroup.alpha = 0f;
+            canvasGroup.alpha = StartAlpha(config);
             _groups[target] = canvasGroup;
         }
 
@@ -61,31 +65,59 @@ namespace Refactoring
         {
             if (!_groups.TryGetValue(target, out CanvasGroup canvasGroup)) return;
 
-            var cfg = (UIFadeConfig)config;
-            float elapsed = progress * cfg.Duration;
-            float remaining = cfg.Duration - elapsed;
-
-            if (elapsed < cfg.FadeInTime)
-            {
-                canvasGroup.alpha = elapsed / cfg.FadeInTime; // 서서히 뜸
-            }
-            else if (remaining < cfg.FadeOutTime)
-            {
-                canvasGroup.alpha = remaining / cfg.FadeOutTime; // 서서히 사라짐
-            }
-            else
-            {
-                canvasGroup.alpha = 1f; // 가운데 구간은 그대로 보임
-            }
+            canvasGroup.alpha = AlphaAt(config, progress * config.Duration);
         }
 
         public void End(GameObject target, UIEffectConfig config)
         {
             if (_groups.TryGetValue(target, out CanvasGroup canvasGroup))
             {
-                canvasGroup.alpha = 0f;
+                canvasGroup.alpha = EndAlpha(config);
             }
             _groups.Remove(target);
         }
+    }
+
+    // 서서히 떴다가 서서히 사라짐
+    public class FadeInOut : FadeBase
+    {
+        public override Type ConfigType => typeof(UIFadeInOutConfig);
+
+        protected override float StartAlpha(UIEffectConfig config) => 0f;
+        protected override float EndAlpha(UIEffectConfig config) => ((UIFadeInOutConfig)config).EndAlpha;
+
+        protected override float AlphaAt(UIEffectConfig config, float elapsed)
+        {
+            var cfg = (UIFadeInOutConfig)config;
+            float remaining = cfg.Duration - elapsed;
+
+            if (elapsed < cfg.FadeInTime)
+            {
+                return elapsed / cfg.FadeInTime; // 서서히 뜸
+            }
+            if (remaining < cfg.FadeOutTime)
+            {
+                return remaining / cfg.FadeOutTime; // 서서히 사라짐
+            }
+            return 1f; // 가운데 구간은 그대로 보임
+        }
+    }
+
+    public class FadeIn : FadeBase
+    {
+        public override Type ConfigType => typeof(UIFadeInConfig);
+
+        protected override float StartAlpha(UIEffectConfig config) => 0f;
+        protected override float EndAlpha(UIEffectConfig config) => 1f;
+        protected override float AlphaAt(UIEffectConfig config, float elapsed) => elapsed / config.Duration;
+    }
+
+    public class FadeOut : FadeBase
+    {
+        public override Type ConfigType => typeof(UIFadeOutConfig);
+
+        protected override float StartAlpha(UIEffectConfig config) => 1f;
+        protected override float EndAlpha(UIEffectConfig config) => 0f;
+        protected override float AlphaAt(UIEffectConfig config, float elapsed) => 1f - elapsed / config.Duration;
     }
 }

@@ -88,6 +88,51 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97ea0f955eb185f449df842d376f7278, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.PlayerStateInputGate
+--- !u!1 &1977785793996219655
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8925544347341846952}
+  - component: {fileID: 6178398051466776230}
+  m_Layer: 0
+  m_Name: Health
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8925544347341846952
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1977785793996219655}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -18.84, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7790510517285152335}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6178398051466776230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1977785793996219655}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ad5b927cd83f6b4f966a0f6d073c170, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.Health
+  _maxHealth: 20
 --- !u!1 &2554093445638554341
 GameObject:
   m_ObjectHideFlags: 0
@@ -224,6 +269,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.FinishExecutor
   _stunTime: 7
+  _executionGear:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  _normalGear:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!114 &4798347642736752744
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -378,6 +432,7 @@ Transform:
   - {fileID: 8319972125290230062}
   - {fileID: 6257960504917662675}
   - {fileID: 7840312909684921908}
+  - {fileID: 8925544347341846952}
   - {fileID: 3334551965824524661}
   - {fileID: 6288805994546884251}
   - {fileID: 7884691333058377808}
@@ -440,9 +495,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6288805994546884251}
   - component: {fileID: 944074307334039754}
-  - component: {fileID: 105738926052115346}
   - component: {fileID: 3836870414903745259}
-  - component: {fileID: 517426186003780859}
+  - component: {fileID: 1976249647711732336}
   m_Layer: 6
   m_Name: Hit
   m_TagString: Untagged
@@ -477,18 +531,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c75fd96be1a2fa45b9f3cc5eb46c01c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.PlayerHitboxHandler
---- !u!114 &105738926052115346
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8913104274009761175}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f68d8ddefb0c87b488b82d98921ab789, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.HitboxProvider
 --- !u!114 &3836870414903745259
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -504,7 +546,7 @@ MonoBehaviour:
   _flashColor: {r: 1, g: 0, b: 0, a: 1}
   _duration: 0.1
   _blinkCount: 1
---- !u!114 &517426186003780859
+--- !u!114 &1976249647711732336
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -513,8 +555,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 8913104274009761175}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e5a693a15807f0b4a8eb1a574e9da7be, type: 3}
+  m_Script: {fileID: 11500000, guid: 573f28d5b7be7c94d85bb6beb38cc6cc, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.HitVfxHandler
-  _effectPrefab: {fileID: 4123665373639130443, guid: 75b68ae49a9af494fac61f12ad07ea77, type: 3}
-  _duration: 2
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.HitEffectHandler
+  _hitEffectPrefab: {fileID: 6972745545236655097, guid: 37d8e41336bfcc241a6d232a0e1a3faa, type: 3}
+  _duration: 1

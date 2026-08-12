@@ -5,12 +5,14 @@ using UnityEngine.InputSystem;
 
 namespace Refactoring
 {
-    // 책임: InputSystem에서 입력 수집, 처리기들에게 전파
-    public class InputHub : MonoBehaviour
+    // 책임: 사용자 입력을 수집, 처리기들에게 전파
+    // 입력이 들어오는 문은 두 개. 키보드/패드는 InputSystem 액션에서, 모바일 UI 버튼은 IInputSender로 들어옴.
+    public class InputHub : MonoBehaviour, IInputSender
     {
-        [SerializeField] private InputActionAsset _actionAsset;
+        [Inject(true)] private InputActionAsset _actionAsset;
         [Inject] private List<IDomainInputHandler> _handlers;
         [Inject(true)] private IGameStateProvider _gameStateProvider;
+        [Inject(true)] private IInputKeySettings _keySettings;
 
         private readonly InputActionType[] _allActions = (InputActionType[])Enum.GetValues(typeof(InputActionType));
 
@@ -24,8 +26,45 @@ namespace Refactoring
         
         private void Awake()
         {
+            LoadChangedKeys();
             BuildContextMap();
             SubscribeActions();
+
+            if (_gameStateProvider != null)
+            {
+                _gameStateProvider.OnChanged += HandleStateChanged;
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (_gameStateProvider != null)
+            {
+                _gameStateProvider.OnChanged -= HandleStateChanged;
+            }
+        }
+
+        // 모드가 바뀌면 모든 처리기에 이동 정지를 알린다.
+        // 안 그러면 키를 뗀 신호가 새 모드로 가버려서, 이전 모드는 마지막 이동값에 갇혀 계속 움직인다.
+        private void HandleStateChanged(GameStateType state)
+        {
+            foreach (IDomainInputHandler handler in _handlers)
+            {
+                handler.OnMove(Vector2.zero);
+            }
+        }
+
+        // 설정에서 바꿔둔 조작키를 액션 에셋에 덮어씌운다. 바꾼 적 없으면 그냥 기본값.
+        private void LoadChangedKeys()
+        {
+            string bindings = _keySettings?.Bindings;
+
+            if (string.IsNullOrEmpty(bindings))
+            {
+                return;
+            }
+
+            _actionAsset?.LoadBindingOverridesFromJson(bindings);
         }
 
         private void BuildContextMap()
@@ -59,14 +98,21 @@ namespace Refactoring
             }
         }
 
-        private void RoutePressed(InputActionType action)
+        // 현재 모드를 받는 처리기가 없으면 입력을 버린다(컷씬처럼 아무도 입력을 받지 않는 모드가 정상 상황).
+        public void RoutePressed(InputActionType action)
         {
-            _contextMap[_gameStateProvider.Current].OnPressed(action);
+            if (_contextMap.TryGetValue(_gameStateProvider.Current, out IDomainInputHandler handler))
+            {
+                handler.OnPressed(action);
+            }
         }
 
-        private void RouteMove(Vector2 move)
+        public void RouteMove(Vector2 move)
         {
-            _contextMap[_gameStateProvider.Current].OnMove(move);
+            if (_contextMap.TryGetValue(_gameStateProvider.Current, out IDomainInputHandler handler))
+            {
+                handler.OnMove(move);
+            }
         }
     }
 }

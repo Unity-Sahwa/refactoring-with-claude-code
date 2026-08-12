@@ -21,16 +21,20 @@ MonoBehaviour:
     untilEnd: 0
   inputBuffer:
   - name: 
-    startProgress: 0
-    duration: 0.3
+    startProgress: 0.1
+    duration: 0.2
     untilEnd: 0
   moveControl: []
   rotateControl:
   - name: 
     startProgress: 0
-    duration: 0.15
+    duration: 0.2
     untilEnd: 0
-  superArmor: []
+  superArmor:
+  - name: 
+    startProgress: 0
+    duration: 0.3
+    untilEnd: 0
   invincible: []
   skillMove:
   - name: 
@@ -38,32 +42,34 @@ MonoBehaviour:
     duration: 0.1
     direction: {x: 0, y: 0, z: 1}
     speed: 10
-  effect: []
-  hitbox:
-  - name: 
-    untilFinish: 0
-    position: {x: 0, y: 1, z: 1.5}
-    rotation: {x: 0, y: 0, z: 0}
-    scale: {x: 1, y: 1, z: 1}
-    startProgress: 0
-    duration: 2
-    hitboxObject:
-      m_AssetGUID: c37dcd22866e94148bcc634d606d03b4
-      m_SubObjectName: 
-      m_SubObjectType: 
-      m_SubObjectGUID: 
-      m_EditorAssetChanged: 0
+  effect:
+  - name: Ink
+    untilFinish: 1
+    position: {x: -2.98, y: 2, z: 0.1}
+    rotation: {x: -95, y: 270.876, z: -66.728}
+    scale: {x: 1.809179, y: 1, z: 0.9167688}
+    startProgress: 0.145
+    duration: 3
+    effectId: 2
     attachKey: 0
     stopInPlace: 0
     stopTime: 0
-    showMesh: 1
+  hitbox:
+  - name: 
+    position: {x: 0, y: 0, z: 22.09}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    shapeScalescale: {x: 6.99, y: 3, z: 4}
+    startProgress: 0.28
+    duration: 0.05
     combat:
-      damage: 0
+      damage: 1
       color: 1
       inkStack: 1
+      hitSound: 0
   audio:
-  - name: NA2
+  - name: NA1
     id: 3
-    startProgress: 0.214
+    startProgress: 0.185
     untilFinish: 1
   finish: []

@@ -55,10 +55,32 @@ namespace Refactoring
                 }
                 else if (!_superArmor)
                 {
+                    // 넉백은 Damaged 상태의 로컬 이동(뒤로)이라 캐릭터가 보는 방향이 곧 넉백 방향이다.
+                    // 피격 순간 공격자 쪽을 보게 돌려서 결과적으로 "공격자 반대"로 밀리게 만든다.
+                    // ponytail: 회전으로 방향을 대신함. 회전 없이 밀어야 하면 넉백 전용 IVelocitySource가 필요.
+                    LookAtDamager(info.Damager);
                     _triggerRaiser?.RaiseTrigger(StateTriggerType.Damaged);
                 }
             }
         }
+        // 수평 성분만 사용한다(위/아래에서 맞아도 캐릭터가 눕지 않게).
+        private void LookAtDamager(GameObject damager)
+        {
+            if (damager == null || damager == gameObject)
+            {
+                return;
+            }
+
+            Vector3 toDamager = damager.transform.position - transform.position;
+            toDamager.y = 0f;
+            if (toDamager.sqrMagnitude < 0.0001f)   // 완전히 겹쳐 있으면 방향을 못 정하니 그대로 둔다.
+            {
+                return;
+            }
+
+            transform.rotation = Quaternion.LookRotation(toDamager);
+        }
+
         private void HandleInvincibleOn(IStartData data) => _invincible = true;
         private void HandleInvincibleClose(CloseEventType reason) => _invincible = false;
         private void HandleSuperArmorOn(IStartData data) => _superArmor = true;

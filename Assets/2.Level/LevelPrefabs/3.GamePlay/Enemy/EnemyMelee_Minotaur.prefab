@@ -2177,6 +2177,51 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &3380896221428472314
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2992003029210417047}
+  - component: {fileID: 7943282357689768588}
+  m_Layer: 0
+  m_Name: EnemyActiveTrue
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2992003029210417047
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3380896221428472314}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0.34469858, z: -0, w: 0.93871343}
+  m_LocalPosition: {x: 101.9957, y: -0.26457143, z: -9.115322}
+  m_LocalScale: {x: 0.4, y: 0.39999998, z: 0.4}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 936953984514807301}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7943282357689768588
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3380896221428472314}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25d86cb0eb9b864408c64c91671adf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.EventParentActive
+  setActive: 1
 --- !u!1 &3395213573833485983
 GameObject:
   m_ObjectHideFlags: 0
@@ -4403,6 +4448,7 @@ Transform:
   - {fileID: 7578527955686145946}
   - {fileID: 3054119999923595383}
   - {fileID: 5204760435545652858}
+  - {fileID: 2992003029210417047}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &3973597405952275836
@@ -4530,8 +4576,9 @@ MonoBehaviour:
   hp: 0
   hpBarCount: 0
   phaseHP: 0
-  knockbackForce: 0
-  knockbackDuration: 0
+  knockbackForce: 10
+  knockbackDuration: 0.1
+  knockbackPullDistance: 50
   trackingSpeed: 0
   patrolSpeed: 0
   patrolWaitingTimeMin: 0

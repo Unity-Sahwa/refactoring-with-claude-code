@@ -25,7 +25,20 @@ MonoBehaviour:
     loop: 0
   - id: 3
     clips:
+    - {fileID: 8300000, guid: 566256dc09f771c418b423d54263adcc, type: 3}
+    - {fileID: 8300000, guid: fa76bbaf4d1b7134eb1e0227a2fb4f78, type: 3}
+    volume: 1
+    pitch: 1
+    spatialBlend: 0
+    minDistance: 0
+    maxDistance: 0
+    loop: 0
+  - id: 5
+    clips:
+    - {fileID: 8300000, guid: b3456ec349683a34bb4beeb41a8d3071, type: 3}
     - {fileID: 8300000, guid: 7c473dd3473f0924680b1c8eeda63c0e, type: 3}
+    - {fileID: 8300000, guid: 566256dc09f771c418b423d54263adcc, type: 3}
+    - {fileID: 8300000, guid: fa76bbaf4d1b7134eb1e0227a2fb4f78, type: 3}
     volume: 1
     pitch: 1
     spatialBlend: 0
@@ -50,9 +63,210 @@ MonoBehaviour:
     minDistance: 0
     maxDistance: 0
     loop: 0
-  - id: 8
+  - id: 10
     clips:
-    - {fileID: 8300000, guid: b6faf43c725a4b24fa2c59988645da73, type: 3}
+    - {fileID: 8300000, guid: 3f4b2a014caa04d4a9375d022d7e30ce, type: 3}
+    - {fileID: 8300000, guid: 75675c7c7a1a02845bfff932083235c5, type: 3}
+    - {fileID: 8300000, guid: 1701e241bb34708428af23f2718e7e19, type: 3}
+    volume: 1
+    pitch: 1
+    spatialBlend: 0
+    minDistance: 0
+    maxDistance: 0
+    loop: 0
+  - id: 11
+    clips:
+    - {fileID: 8300000, guid: cde93ba241d48804e93ca6f294a43f05, type: 3}
+    - {fileID: 8300000, guid: 2236b72abcf88804dbcd0761e819d4ca, type: 3}
+    volume: 1
+    pitch: 1
+    spatialBlend: 0
+    minDistance: 0
+    maxDistance: 0
+    loop: 0
+  - id: 12
+    clips:
+    - {fileID: 8300000, guid: 79bc55eeadef7544f8a77172c994c2da, type: 3}
+    - {fileID: 8300000, guid: b4841bc807170164b87bc20085b52fec, type: 3}
+    - {fileID: 8300000, guid: ce26837ad9e2e8246ac4f1d0df7faaf6, type: 3}
+    volume: 1
+    pitch: 1
+    spatialBlend: 0
+    minDistance: 0
+    maxDistance: 0
+    loop: 0
+  - id: 14
+    clips:
+    - {fileID: 8300000, guid: ebfc6262ff66550408c775b053f8bfaa, type: 3}
+    - {fileID: 8300000, guid: 2ec66177e6e2de14b99b9759edd18949, type: 3}
+    - {fileID: 8300000, guid: 54c8e902f0bc691448b7987e2588363a, type: 3}
+    volume: 1
+    pitch: 1
+    spatialBlend: 0
+    minDistance: 0
+    maxDistance: 0
+    loop: 0
+  - id: 15
+    clips:
+    - {fileID: 8300000, guid: 8dfec098b87c52a49914f522bb3a3e84, type: 3}
+    - {fileID: 8300000, guid: 69bc11b6f26b8bc49bb68d4dc8ebfe11, type: 3}
+    volume: 1
+    pitch: 1
+    spatialBlend: 0
+    minDistance: 0
+    maxDistance: 0
+    loop: 0
+  - id: 16
+    clips:
+    - {fileID: 8300000, guid: 6c7504fd134a27e429f9ab28ba69389d, type: 3}
+    - {fileID: 8300000, guid: 2b1a4284984333b49b49ce075e2808d5, type: 3}
+    volume: 1
+    pitch: 1
+    spatialBlend: 0
+    minDistance: 0
+    maxDistance: 0
+    loop: 0
+  - id: 18
+    clips:
+    - {fileID: 8300000, guid: e6e6df3dc0304b343ba0862ca66f5901, type: 3}
+    volume: 1
+    pitch: 1
+    spatialBlend: 0
+    minDistance: 0
+    maxDistance: 0
+    loop: 0
+  - id: 20
+    clips:
+    - {fileID: 8300000, guid: 039716496e8403943b59c761266c00ff, type: 3}
+    volume: 1
+    pitch: 1
+    spatialBlend: 0
+    minDistance: 0
+    maxDistance: 0
+    loop: 0
+  - id: 22
+    clips:
+    - {fileID: 8300000, guid: 8a5e70c9adb1b8a4888994aab974bb72, type: 3}
+    volume: 1
+    pitch: 1
+    spatialBlend: 0
+    minDistance: 0
+    maxDistance: 0
+    loop: 0
+  - id: 23
+    clips:
+    - {fileID: 8300000, guid: 41085ff79bab1a04eafbdee487850ab8, type: 3}
+    volume: 1
+    pitch: 1
+    spatialBlend: 0
+    minDistance: 0
+    maxDistance: 0
+    loop: 0
+  - id: 24
+    clips:
+    - {fileID: 8300000, guid: 464db232733c1e349a0c0a8d76924272, type: 3}
+    - {fileID: 8300000, guid: 70f3f2d07269fa445bef3e89b4c4c96c, type: 3}
+    volume: 1
+    pitch: 1
+    spatialBlend: 0
+    minDistance: 0
+    maxDistance: 0
+    loop: 0
+  - id: 26
+    clips:
+    - {fileID: 8300000, guid: 68454698ab69e5948bc8e1c06208af60, type: 3}
+    volume: 1
+    pitch: 1
+    spatialBlend: 0
+    minDistance: 0
+    maxDistance: 0
+    loop: 0
+  - id: 27
+    clips:
+    - {fileID: 8300000, guid: cde93ba241d48804e93ca6f294a43f05, type: 3}
+    - {fileID: 8300000, guid: 2236b72abcf88804dbcd0761e819d4ca, type: 3}
+    volume: 1
+    pitch: 1
+    spatialBlend: 0
+    minDistance: 0
+    maxDistance: 0
+    loop: 0
+  - id: 28
+    clips:
+    - {fileID: 8300000, guid: 79bc55eeadef7544f8a77172c994c2da, type: 3}
+    - {fileID: 8300000, guid: b4841bc807170164b87bc20085b52fec, type: 3}
+    - {fileID: 8300000, guid: ce26837ad9e2e8246ac4f1d0df7faaf6, type: 3}
+    volume: 1
+    pitch: 1
+    spatialBlend: 0
+    minDistance: 0
+    maxDistance: 0
+    loop: 0
+  - id: 30
+    clips:
+    - {fileID: 8300000, guid: ebfc6262ff66550408c775b053f8bfaa, type: 3}
+    - {fileID: 8300000, guid: 2ec66177e6e2de14b99b9759edd18949, type: 3}
+    - {fileID: 8300000, guid: 54c8e902f0bc691448b7987e2588363a, type: 3}
+    volume: 1
+    pitch: 1
+    spatialBlend: 0
+    minDistance: 0
+    maxDistance: 0
+    loop: 0
+  - id: 31
+    clips:
+    - {fileID: 8300000, guid: 904a5ad3a3bcee343b29583663c64e09, type: 3}
+    - {fileID: 8300000, guid: 8dfec098b87c52a49914f522bb3a3e84, type: 3}
+    - {fileID: 8300000, guid: 69bc11b6f26b8bc49bb68d4dc8ebfe11, type: 3}
+    volume: 1
+    pitch: 1
+    spatialBlend: 0
+    minDistance: 0
+    maxDistance: 0
+    loop: 0
+  - id: 32
+    clips:
+    - {fileID: 8300000, guid: ebfc6262ff66550408c775b053f8bfaa, type: 3}
+    - {fileID: 8300000, guid: 2ec66177e6e2de14b99b9759edd18949, type: 3}
+    - {fileID: 8300000, guid: 54c8e902f0bc691448b7987e2588363a, type: 3}
+    volume: 1
+    pitch: 1
+    spatialBlend: 0
+    minDistance: 0
+    maxDistance: 0
+    loop: 0
+  - id: 33
+    clips:
+    - {fileID: 8300000, guid: 5d43899c58cbc6c479bb9234ef50b6c5, type: 3}
+    - {fileID: 8300000, guid: 3c1b53eeaceafe64d8cececf6ffd9f3b, type: 3}
+    - {fileID: 8300000, guid: af4400db8057a894ba70949839858eec, type: 3}
+    volume: 1
+    pitch: 1
+    spatialBlend: 0
+    minDistance: 0
+    maxDistance: 0
+    loop: 0
+  - id: 34
+    clips:
+    - {fileID: 8300000, guid: 595716abd93859a4eb7defeef0604bbf, type: 3}
+    volume: 1
+    pitch: 1
+    spatialBlend: 0
+    minDistance: 0
+    maxDistance: 0
+    loop: 0
+  - id: 35
+    clips:
+    - {fileID: 8300000, guid: c4373077db0e9a444a23e20944cc9c57, type: 3}
+    volume: 1
+    pitch: 1
+    spatialBlend: 0
+    minDistance: 0
+    maxDistance: 0
+    loop: 0
+  - id: 36
+    clips:
+    - {fileID: 8300000, guid: 72df72acbf774c74086cd321ed3a005e, type: 3}
     volume: 1
     pitch: 1
     spatialBlend: 0

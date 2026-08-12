@@ -17,12 +17,12 @@ MonoBehaviour:
   inputBlock:
   - name: 
     startProgress: 0
-    duration: 0.5
+    duration: 0.45
     untilEnd: 0
   inputBuffer:
   - name: 
     startProgress: 0
-    duration: 0
+    duration: 0.3
     untilEnd: 0
   moveControl:
   - name: 
@@ -32,14 +32,18 @@ MonoBehaviour:
   rotateControl:
   - name: 
     startProgress: 0
-    duration: 0
+    duration: 0.1
     untilEnd: 0
   superArmor:
   - name: 
-    startProgress: 0.1
-    duration: 0.4
+    startProgress: 0
+    duration: 0.8
+    untilEnd: 1
+  invincible:
+  - name: 
+    startProgress: 0
+    duration: 1
     untilEnd: 0
-  invincible: []
   skillMove:
   - name: Up
     startProgress: 0.1
@@ -50,14 +54,106 @@ MonoBehaviour:
     startProgress: 0.1
     duration: 0.7
     direction: {x: 0, y: 0, z: 1}
-    speed: 15
+    speed: 10
   - name: 
     startProgress: 0.7
     duration: 1
     direction: {x: 0, y: -1, z: 0}
     speed: 100
-  effect: []
-  hitbox: []
+  effect:
+  - name: 
+    untilFinish: 1
+    position: {x: 0, y: 0, z: 2}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 2.7, y: 2.7, z: 2.7}
+    startProgress: 0.35
+    duration: 3
+    effectId: 5
+    attachKey: 0
+    stopInPlace: 0
+    stopTime: 0
+  - name: 
+    untilFinish: 1
+    position: {x: 0, y: 0, z: 4}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    startProgress: 0.1
+    duration: 2
+    effectId: 4
+    attachKey: 2
+    stopInPlace: 1
+    stopTime: 1
+  - name: 
+    untilFinish: 1
+    position: {x: 1, y: 0, z: 1}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    startProgress: 0.1
+    duration: 2
+    effectId: 4
+    attachKey: 2
+    stopInPlace: 1
+    stopTime: 1
+  - name: 
+    untilFinish: 1
+    position: {x: 0, y: 1, z: -2}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    startProgress: 0.1
+    duration: 2
+    effectId: 4
+    attachKey: 2
+    stopInPlace: 1
+    stopTime: 1
+  hitbox:
+  - name: spin
+    position: {x: 0, y: 15, z: 15}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    shapeScalescale: {x: 5, y: 10, z: 7}
+    startProgress: 0.125
+    duration: 0.05
+    combat:
+      damage: 1
+      color: 1
+      inkStack: 1
+      hitSound: 0
+  - name: spin
+    position: {x: 0, y: 15, z: 15}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    shapeScalescale: {x: 5, y: 10, z: 7}
+    startProgress: 0.2
+    duration: 0.05
+    combat:
+      damage: 3
+      color: 1
+      inkStack: 1
+      hitSound: 0
+  - name: spin
+    position: {x: 0, y: 15, z: 15}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 0
+    shapeScalescale: {x: 5, y: 10, z: 7}
+    startProgress: 0.27
+    duration: 0.1
+    combat:
+      damage: 1
+      color: 1
+      inkStack: 1
+      hitSound: 0
+  - name: 
+    position: {x: 0, y: 0, z: 33.31}
+    rotation: {x: 0, y: 0, z: 0}
+    shape: 1
+    shapeScalescale: {x: 7.29, y: 0, z: 0}
+    startProgress: 0.4
+    duration: 1
+    combat:
+      damage: 3
+      color: 1
+      inkStack: 0
+      hitSound: 0
   audio:
   - name: Spin
     id: 7
@@ -68,6 +164,3 @@ MonoBehaviour:
     startProgress: 0.22
     untilFinish: 1
   finish: []
-  references:
-    version: 2
-    RefIds: []

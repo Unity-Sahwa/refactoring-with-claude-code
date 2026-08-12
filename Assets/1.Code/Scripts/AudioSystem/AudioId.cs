@@ -16,22 +16,28 @@ namespace Refactoring
         HumanSpecialAttackSpin,
         HumanSpecialAttackSplash,
         HumanSpecialAttackHit,
-        HumanFinishAttack,
+        HumanFinishAttackHitGround,
+        HumanFinishAttackSwing,
+        HumanFinishAttackAfterSwing,
         HumanFinishAttackHit,
         HumanBackDash,
         HumanWalk,
 
+
         // 동물탈
-        
         AnimalNormalAttack1,
         AnimalNormalAttack1Hit,
         AnimalNormalAttack2,
         AnimalNormalAttack2Hit,
         AnimalNormalAttack3,
         AnimalNormalAttack3Hit,
-        AnimalSpecialAttack,
+        AnimalSpecialAttackJump,
+        AnimalSpecialAttackFloat,
+        AnimalSpecialAttackSlash,
         AnimalSpecialAttackHit,
-        AnimalFinishAttack,
+        AnimalFinishAttackSweap,
+        AnimalFinishAttackSwing,
+        AnimalFinishAttackAfterSwing,
         AnimalFinishAttackHit,
         AnimalBackDash,
         AnimalWalk,
@@ -39,8 +45,10 @@ namespace Refactoring
         // 플레이어 공용
         FrontDash,
         Hit,
+        HitHeartBeat,
         Die,
-        
+        CharacterSwap,
+
 
         // UI
         UIClick,

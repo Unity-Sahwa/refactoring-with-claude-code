@@ -1,0 +1,299 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bf46a4b6f6bcd44998e723b05adca26, type: 3}
+  m_Name: TextTableData
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.TextTableData
+  _entries:
+  - Key: HUD_PC_BattleGuide_Finisher
+    Korean: "\uCC98\uD615 \uBCA0\uAE30 :"
+    English: 'Finisher :'
+  - Key: HUD_PC_BattleGuide_NormalAttack
+    Korean: "\uAE30\uBCF8 \uACF5\uACA9 :"
+    English: 'Normal :'
+  - Key: HUD_PC_BattleGuide_Dash
+    Korean: "\uC21C\uAC04 \uB3CC\uC9C4 :"
+    English: 'Dash :'
+  - Key: HUD_PC_BattleGuide_SpecialAttack
+    Korean: "\uCD08\uC2DD-\uC2B5\uACA9 :"
+    English: 'Assault :'
+  - Key: HUD_PC_BattleGuide_Move
+    Korean: "\uC774\uB3D9 :"
+    English: 'Move :'
+  - Key: HUD_PC_BattleGuide_Menu
+    Korean: "\uBA54\uB274 :"
+    English: 'Menu :'
+  - Key: HUD_PC_BattleGuide_LockOn
+    Korean: "\uC8FC\uBAA9 :"
+    English: 'LockOn :'
+  - Key: HUD_PC_BattleGuide_Interact
+    Korean: "\uC0C1\uD638\uC791\uC6A9 :"
+    English: 'Interact :'
+  - Key: UI_Main_NewGame
+    Korean: "\uC0C8 \uAC8C\uC784"
+    English: NewGame
+  - Key: UI_Main_Load
+    Korean: "\uBD88\uB7EC\uC624\uAE30"
+    English: Load
+  - Key: UI_Main_Settings
+    Korean: "\uC124\uC815"
+    English: Settings
+  - Key: UI_Main_Credit
+    Korean: "\uD06C\uB808\uB527"
+    English: Credit
+  - Key: UI_Main_Quit
+    Korean: "\uAC8C\uC784 \uC885\uB8CC"
+    English: Quit
+  - Key: UI_Pause_Continue
+    Korean: "\uACC4\uC18D\uD558\uAE30"
+    English: Continue
+  - Key: UI_Pause_Load
+    Korean: "\uBD88\uB7EC\uC624\uAE30"
+    English: Load
+  - Key: UI_Pause_Settings
+    Korean: "\uC124\uC815"
+    English: Settings
+  - Key: UI_Pause_MainMenu
+    Korean: "\uBA54\uB274\uB85C \uB098\uAC00\uAE30"
+    English: Main Menu
+  - Key: UI_Button_Yes
+    Korean: "\uB124"
+    English: Yes
+  - Key: UI_Button_No
+    Korean: "\uC544\uB2C8\uC624"
+    English: No
+  - Key: UI_WindowExplain_NewGame
+    Korean: "\uAC8C\uC784\uC744 \uC0C8\uB85C \uC2DC\uC791\uD558\uACA0\uC2B5\uB2C8\uAE4C?"
+    English: Would you like to start a new game?
+  - Key: UI_WindowExplain_LoadSlot
+    Korean: "\uC5EC\uD589\uC758 \uAE30\uB85D\uC744 \uC120\uD0DD\uD574\uC8FC\uC2ED\uC2DC\uC624"
+    English: Please select your record
+  - Key: UI_WindowExplain_Load
+    Korean: "\uAE30\uB85D\uC744 \uBD88\uB7EC\uC624\uC2DC\uACA0\uC2B5\uB2C8\uAE4C?"
+    English: Would you like to load a saved file?
+  - Key: UI_Setting_GamePlay_GamePlay
+    Korean: "\uAC8C\uC784 \uD50C\uB808\uC774"
+    English: GamePlay
+  - Key: UI_Setting_GamePlay_MouseSpeed(UpDown)
+    Korean: "\uB9C8\uC6B0\uC2A4 \uC18D\uB3C4(\uC0C1\uD558)"
+    English: MouseSpeed(Up,Down)
+  - Key: UI_Setting_GamePlay_MouseSpeed(LeftRight)
+    Korean: "\uB9C8\uC6B0\uC2A4 \uC18D\uB3C4(\uC88C\uC6B0)"
+    English: MouseSpeed(Left,Right)
+  - Key: UI_Setting_GamePlay_Up
+    Korean: "\uC704"
+    English: Up
+  - Key: UI_Setting_GamePlay_Down
+    Korean: "\uC544\uB798"
+    English: Down
+  - Key: UI_Setting_GamePlay_Left
+    Korean: "\uC88C "
+    English: Left
+  - Key: UI_Setting_GamePlay_Right
+    Korean: "\uC6B0"
+    English: Right
+  - Key: UI_Setting_GamePlay_LockOn
+    Korean: "\uC8FC\uBAA9"
+    English: LockOn
+  - Key: UI_Setting_GamePlay_Interaction
+    Korean: "\uC0C1\uD638\uC791\uC6A9"
+    English: Interaction
+  - Key: UI_Setting_GamePlay_NormalAttack
+    Korean: "\uAE30\uBCF8\uACF5\uACA9"
+    English: NormalAttack
+  - Key: UI_Setting_GamePlay_SpecialAttack
+    Korean: "\uD2B9\uC218\uACF5\uACA9"
+    English: SpecialAttack
+  - Key: UI_Setting_GamePlay_FinishAttack
+    Korean: "\uCC98\uD615"
+    English: FinishAttack
+  - Key: UI_Setting_GamePlay_Dash
+    Korean: "\uC9C8\uC8FC"
+    English: Dash
+  - Key: UI_Setting_GamePlay_Menu
+    Korean: "\uBA54\uB274"
+    English: Menu
+  - Key: UI_Setting_Sound_Sound
+    Korean: "\uC18C\uB9AC"
+    English: Sound
+  - Key: UI_Setting_Sound_MasterVolme
+    Korean: "\xB7 \uB9C8\uC2A4\uD130 \uBCFC\uB968"
+    English: "\xB7 MasterVolme"
+  - Key: UI_Setting_Sound_BGM
+    Korean: "\xB7 \uBC30\uACBD\uC74C"
+    English: "\xB7 BGM"
+  - Key: UI_Setting_Sound_EnemySFX
+    Korean: "\xB7 \uC801 \uD6A8\uACFC\uC74C"
+    English: "\xB7 EnemySFX"
+  - Key: UI_Setting_Sound_PlayerSFX
+    Korean: "\xB7 \uCE90\uB9AD\uD130 \uD6A8\uACFC\uC74C"
+    English: "\xB7 PlayerSFX"
+  - Key: UI_Setting_Etc_Etc
+    Korean: "\uAE30\uD0C0"
+    English: Etc
+  - Key: UI_Setting_Etc_Credits
+    Korean: "\xB7 \uC81C\uC791\uC9C4"
+    English: "\xB7 Credits"
+  - Key: UI_Setting_Etc_CopyRight
+    Korean: "\xB7 \uC800\uC791\uAD8C"
+    English: "\xB7 CopyRight"
+  - Key: UI_Setting_Etc_Platform
+    Korean: "\xB7 \uD50C\uB7AB\uD3FC"
+    English: "\xB7 Platform"
+  - Key: UI_Setting_Etc_View
+    Korean: "\uBCF4\uAE30"
+    English: View
+  - Key: UI_Skip
+    Korean: "\uAC74\uB108\uB6F0\uAE30"
+    English: Skip
+  - Key: UI_Interaction
+    Korean: "\uC0C1\uD638\uC791\uC6A9 (X)"
+    English: Interact (X)
+  - Key: UI_Monster_Wisu
+    Korean: "\uC704\uC218"
+    English: Wisu
+  - Key: UI_Env_Area00
+    Korean: "\uB355\uAD74 \uC606 \uC0DB\uAE38 1"
+    English: Grace Cave Side Path 1
+  - Key: UI_Env_Area01
+    Korean: "\uB355\uAD74 \uC606 \uC0DB\uAE38 2"
+    English: Grace Cave Side Path 2
+  - Key: UI_Env_Area02
+    Korean: "\uB355\uAD74 \uC785\uAD6C 1"
+    English: Grace Cave Entrance 1
+  - Key: UI_Env_Area10
+    Korean: "\uB355\uAD74 \uC785\uAD6C 2"
+    English: Grace Cave Entrance 2
+  - Key: UI_Env_Area11
+    Korean: "\uD604\uBB34 \uC911\uC559\uAE38"
+    English: Hyeonmu Central Road
+  - Key: UI_Env_Area20
+    Korean: "\uC11C\uCABD\uC73C\uB85C \uAC00\uB294 \uAE38"
+    English: The Westward Path
+  - Key: UI_Env_Area21
+    Korean: "\uC704\uC218\uC758 \uB2E4\uB9AC"
+    English: Wisu's Bridge
+  - Key: UI_Env_Area22
+    Korean: "\uC704\uC218\uC758 \uB2E4\uB9AC 2"
+    English: Wisu's Bridge 2
+  - Key: UI_Env_Area23
+    Korean: "\uC704\uC218\uC758 \uB2E4\uB9AC 3"
+    English: Wisu's Bridge 3
+  - Key: UI_Env_Area24
+    Korean: "\uC704\uC218\uC758 \uB2E4\uB9AC 4"
+    English: Wisu's Bridge 4
+  - Key: UI_Env_Area30
+    Korean: "\uC704\uC218\uC758 \uC815\uC6D0 1"
+    English: Wisu's Garden 1
+  - Key: UI_Env_Area31
+    Korean: "\uC704\uC218\uC758 \uC815\uC6D0 2"
+    English: Wisu's Garden 2
+  - Key: UI_Env_Area32
+    Korean: "\uC704\uC218\uC758 \uC815\uC6D0 3"
+    English: Wisu's Garden 3
+  - Key: UI_Env_Area33
+    Korean: "\uC704\uC218\uC758 \uC815\uC6D0 4"
+    English: Wisu's Garden 4
+  - Key: UI_Env_Area34
+    Korean: "\uC704\uC218\uC758 \uC815\uC6D0 5"
+    English: Wisu's Garden 5
+  - Key: UI_Env_Area40
+    Korean: "\uC704\uC218\uC758 \uBC29"
+    English: Chamber of Wisu
+  - Key: UI_Setting_Display
+    Korean: "\uD654\uBA74"
+    English: Display
+  - Key: UI_Setting_Language
+    Korean: "\uC5B8\uC5B4"
+    English: Language
+  - Key: UI_Setting_Language_ChangeLanguage
+    Korean: "\xB7 \uC5B8\uC5B4 \uBCC0\uACBD"
+    English: "\xB7 ChangeLanguage"
+  - Key: UI_Setting_Language_Korean
+    Korean: "\uD55C\uAD6D\uC5B4"
+    English: Korean
+  - Key: UI_Setting_Language_English
+    Korean: "\uC601\uC5B4"
+    English: English
+  - Key: UI_WindowExplain_Quit
+    Korean: "\uAC8C\uC784\uC744 \uC885\uB8CC\uD558\uC2DC\uACA0\uC2B5\uB2C8\uAE4C?"
+    English: Would you like to quit the game?
+  - Key: UI_Back
+    Korean: "\uB4A4\uB85C\uAC00\uAE30"
+    English: Back
+  - Key: HUD_Tutorial_NormalAttack
+    Korean: "\uAE30\uBCF8 \uACF5\uACA9"
+    English: Normal Attack
+  - Key: HUD_Tutorial__Dash
+    Korean: "\uC9C8\uC8FC"
+    English: Dash
+  - Key: HUD_Tutorial__SpecialAttack
+    Korean: "\uCD08\uC2DD-\uC2B5\uACA9"
+    English: Special Attack
+  - Key: HUD_Tutorial__LockOn
+    Korean: "\uC8FC\uBAA9"
+    English: Lock On
+  - Key: HUD_Tutorial__Finish
+    Korean: "\uCC98\uD615"
+    English: Finish
+  - Key: HUD_Tutorial__ExplainFinish
+    Korean: "\uD558\uB098\uC758 \uB300\uC0C1\uC5D0\uAC8C \uBC88\uAC08\uC544\uC11C
+      \n\uB367\uCE60\uC744 \uC801\uC6A9\uD558\uBA74 \uD65C\uC131\uD654"
+    English: "Activation occurs when repainting \nis applied alternately to a single
+      target"
+  - Key: UI_AreaName_GraceCaveSidePath
+    Korean: "\uB355\uAD74 \uC606 \uC0DB\uAE38"
+    English: Grace Cave Side Path
+  - Key: UI_AreaName_GraceCaveEntrance
+    Korean: "\uB355\uAD74 \uC785\uAD6C"
+    English: Grace Cave Entrance
+  - Key: UI_AreaName_HyeonmuCentralRoad
+    Korean: "\uD604\uBB34 \uC911\uC559\uAE38"
+    English: Hyeonmu Central Road
+  - Key: UI_AreaName_WisusBridge
+    Korean: "\uC704\uC218\uC758 \uB2E4\uB9AC"
+    English: Wisu's Bridge
+  - Key: UI_AreaName_RuinedWisusGarden
+    Korean: "\uC704\uC218\uC758 \uC815\uC6D0"
+    English: Ruined Wisu's Garden
+  - Key: UI_BossName_Wisu
+    Korean: "\uC5C5\uD654\uC758 \uC704\uC218"
+    English: Wisu - Karmic Fire
+  - Key: UI_PlayerDie
+    Korean: "\uC0AC\uB9DD"
+    English: YOU DIED
+  - Key: UI_EnemyFelled
+    Korean: "\uC5C5\uD654\uC758 \uC704\uC218 \uD1A0\uBC8C"
+    English: ENEMY FELLED
+  - Key: HUD_Tutorial__ExplainDash
+    Korean: "\uC8FC\uBAA9 \uBE44\uD65C\uC131\uD654\uC2DC,  \uC55E\uC73C\uB85C \uC9C8\uC8FC\n\uC8FC\uBAA9
+      \uD65C\uC131\uD654\uC2DC, \uB4A4\uB85C \uD68C\uD53C"
+    English: "Forward dash by default. \nWith Focus on, evade back"
+  - Key: HUD_Tutorial__ExplainLockOn
+    Korean: "\uBC84\uD2BC \uC785\uB825\uC2DC, \uC801\uC5D0\uAC8C \uC8FC\uBAA9. \n\uBC84\uD2BC
+      \uC7AC\uC785\uB825\uC2DC, \uC8FC\uBAA9 \uD574\uC81C"
+    English: 'Press button to lock on enemy.
+
+      Press again to unlock.'
+  - Key: HUD_Tutorial_Joystick
+    Korean: "\uCE90\uB9AD\uD130 \uC6C0\uC9C1\uC784"
+    English: Character Movement
+  - Key: HUD_Tutorial_CameraRotation
+    Korean: "\uCE74\uBA54\uB77C \uD68C\uC804"
+    English: Camera Rotation
+  - Key: UI_Pause_Settings_ClickHere
+    Korean: "\uBC84\uD2BC\uC744 \uB204\uB974\uC138\uC694"
+    English: Click here
+  - Key: NoRecord
+    Korean: "\uAE30\uB85D \uC5C6\uC74C"
+    English: No Record
+  _koreanFont: {fileID: 11400000, guid: 65b044f4455545b4c943c9dcb0df523b, type: 2}
+  _englishFont: {fileID: 11400000, guid: 65b044f4455545b4c943c9dcb0df523b, type: 2}

@@ -51,6 +51,7 @@ namespace Refactoring
         protected LayerMask targetLayer;
         protected NavMeshAgent navAgent;
         [HideInInspector] public Transform target;
+        [Inject(true)] protected ICurrentCharacterProvider currentCharacterProvider; // 캐릭터 스왑 시 타겟 갈아끼우기용
         protected Rigidbody rb;
         protected List<IDamageable> lastAttackedTarget = new List<IDamageable>();
         public Animator animator;
@@ -96,6 +97,7 @@ namespace Refactoring
         public float phaseHP;
         public float knockbackForce = 2000f;
         public float knockbackDuration = 0.5f;
+        public float knockbackPullDistance = 5f;    // 공격자 정면 이 거리의 지점으로 적들이 모임.
 
         [HideInInspector] public float trackingSpeed;
         [HideInInspector] public float patrolSpeed;
@@ -176,6 +178,12 @@ namespace Refactoring
         #region 시야 체크
         public void InSightTargetCheck()
         {
+            // 타겟이 비활성이면 스왑된 것뿐이다(파괴는 아님). 전투 중이므로 현재 캐릭터로 그대로 이어받는다.
+            if (target != null && !target.gameObject.activeInHierarchy && currentCharacterProvider?.CurrentCharacter != null)
+            {
+                target = currentCharacterProvider.CurrentCharacter.transform;
+            }
+
             if (hasTarget)
             {
                 if (!IsTargetOnSight(target.transform))
@@ -270,7 +278,8 @@ namespace Refactoring
                 target = damageMessage.Damager.transform;
             }
 
-            hitStopCoroutine = StartCoroutine(HitStop(target.position, 2f));
+            // 넉백 기준은 추적 대상(target)이 아니라 실제로 때린 주체여야 함(캐릭터 전환 시 어긋남 방지).
+            hitStopCoroutine = StartCoroutine(HitStop(damageMessage.Damager.transform, 2f));
 
             if (phaseHPs[phaseHPs.Count - 1] <= 0)
             {
@@ -562,10 +571,10 @@ namespace Refactoring
 
         // 피격 경직: 넉백으로 밀린 뒤 잠깐 멈췄다가 다시 추적 상태로 복귀함.
         // 넉백 자체는 Knockback 코루틴이 담당함(여기선 호출만).
-        protected IEnumerator HitStop(Vector3 attackerPos, float stunTime)
+        protected IEnumerator HitStop(Transform attacker, float stunTime)
         {
             // 먼저 넉백으로 밀림. 끝날 때까지 기다림.
-            yield return Knockback(attackerPos);
+            yield return Knockback(attacker);
 
             // 밀린 뒤 남은 시간동안 멈춰서 경직됨.
             navAgent.isStopped = true;
@@ -576,16 +585,19 @@ namespace Refactoring
             enemyState = eState.Tracking;
         }
 
-        // 넉백: 맞은 반대 방향으로 밀어냄. Rigidbody 물리(AddForce) 대신 NavMeshAgent.Move로 밀어줌.
+        // 넉백: 공격자 정면 앞의 한 점으로 밀어 모음. Rigidbody 물리(AddForce) 대신 NavMeshAgent.Move로 밀어줌.
         // agent 켠 채로 밀어서 몬스터끼리 avoidance가 겹침을 자동으로 정리함(뭉쳐도 안 튐, navmesh 밖으로도 안 나감).
-        protected IEnumerator Knockback(Vector3 attackerPos)
+        protected IEnumerator Knockback(Transform attacker)
         {
             navAgent.enabled = true;
             navAgent.ResetPath();       // 추적하던 목적지 지움. 안 지우면 agent가 밀린 걸 도로 끌고 감.
             navAgent.isStopped = false; // isStopped=true면 Move가 씹혀서 안 밀림. 반드시 풀어야 함.
 
-            Vector3 dir = (transform.position - attackerPos).normalized;
+            // 공격자 정면 앞의 목표 지점으로 향하는 수평 방향. 이미 목표보다 앞에 있던 적은 뒤로 되밀림.
+            Vector3 goal = attacker.position + attacker.forward * knockbackPullDistance;
+            Vector3 dir = goal - transform.position;
             dir.y = 0f;
+            dir.Normalize();
 
             // knockbackForce를 초기 속도(m/s)로 씀. 예전 Impulse 값과 단위 달라서 인스펙터에서 재조정 필요함.
             // ponytail: 감쇠는 선형(Lerp). 곡선 넉백 필요하면 그때 곡선으로 바꾸기.

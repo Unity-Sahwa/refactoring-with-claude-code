@@ -12,16 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b468c423c8c41d4c8672fe119ef4ba8, type: 3}
   m_Name: EnemyMinionData
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.EnemyDataMelee
-  f_hp: 10
+  f_hp: 12
   i_hpBarCount: 1
-  f_trackingSpeed: 7
-  f_patrolSpeed: 3
-  i_patrolWaitingTimeMin: 1
-  i_patrolWaitingTimeMax: 1
-  f_viewAngle: 150
-  f_viewDistance: 15
-  f_leftDeadBody: 5
+  f_trackingSpeed: 4.5
+  f_patrolSpeed: 4
+  i_patrolWaitingTimeMin: 2
+  i_patrolWaitingTimeMax: 3
+  f_viewAngle: 359
+  f_viewDistance: 50
+  f_leftDeadBody: 10
   f_motionSpeed: 1
   f_autoAttackMeleeDamage: 1
-  f_autoAttackMeleeMotionCoolTime: 2
-  f_autoAttackMeleeRange: 1.2
+  f_autoAttackMeleeMotionCoolTime: 5
+  f_autoAttackMeleeRange: 1.3

@@ -13,17 +13,32 @@ MonoBehaviour:
   m_Name: DeadState
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.BaseStateData
   stateType: 9
-  isLooping: 0
-  inputBlock: []
+  isLooping: 1
+  inputBlock:
+  - name: 
+    startProgress: 0
+    duration: 1
+    untilEnd: 1
   inputBuffer: []
-  skillMove: []
   moveControl: []
   rotateControl: []
+  superArmor: []
+  invincible:
+  - name: 
+    startProgress: 0
+    duration: 1
+    untilEnd: 1
+  skillMove:
+  - name: 
+    startProgress: 0
+    duration: 0.1
+    direction: {x: 0, y: 0, z: -1}
+    speed: 20
   effect: []
   hitbox: []
-  audio: []
-  superArmor: []
-  invincible: []
-  references:
-    version: 2
-    RefIds: []
+  audio:
+  - name: 
+    id: 35
+    startProgress: 0
+    untilFinish: 0
+  finish: []

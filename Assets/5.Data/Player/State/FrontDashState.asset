@@ -21,26 +21,32 @@ MonoBehaviour:
     untilEnd: 0
   inputBuffer:
   - name: 
-    startProgress: 0.3
-    duration: 0.4
+    startProgress: 0
+    duration: 0
     untilEnd: 0
   moveControl: []
   rotateControl:
   - name: 
     startProgress: 0
-    duration: 0.2
+    duration: 0.1
     untilEnd: 0
-  superArmor: []
+  superArmor:
+  - name: 
+    startProgress: 0
+    duration: 0.45
+    untilEnd: 0
   invincible: []
   skillMove:
   - name: 
     startProgress: 0.148
-    duration: 0.2
+    duration: 0.28
     direction: {x: 0, y: 0, z: 1}
-    speed: 50
+    speed: 30
   effect: []
   hitbox: []
-  audio: []
-  references:
-    version: 2
-    RefIds: []
+  audio:
+  - name: 
+    id: 32
+    startProgress: 0
+    untilFinish: 0
+  finish: []

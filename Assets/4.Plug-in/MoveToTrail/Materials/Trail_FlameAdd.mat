@@ -78,6 +78,7 @@ Material:
     - _LineFade: 1
     - _MainScrollSpeedU: 5
     - _MainScrollSpeedV: 0
+    - _MainTexAPow: 1
     - _MainTexMultiplier: 1.1
     - _MainTexPow: 0.5
     - _MainTexVFade: 0
@@ -90,9 +91,11 @@ Material:
     - _OffSetUnits: 0
     - _OffsetAmount: 0
     - _OffsetColor: 0
+    - _Opacity: 0
     - _Parallax: 0.02
     - _ScrollSpeed: 0
     - _SmoothnessTextureChannel: 0
+    - _SoftAlpha: 1
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _UVSec: 0
@@ -104,3 +107,4 @@ Material:
     - _ColorArrow: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
+  m_AllowLocking: 1

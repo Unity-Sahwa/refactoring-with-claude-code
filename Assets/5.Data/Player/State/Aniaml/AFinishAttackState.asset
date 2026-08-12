@@ -14,12 +14,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.BaseStateData
   stateType: 5
   isLooping: 0
-  inputBlock: []
+  inputBlock:
+  - name: 
+    startProgress: 0
+    duration: 1
+    untilEnd: 1
   inputBuffer: []
   moveControl: []
   rotateControl: []
   superArmor: []
-  invincible: []
+  invincible:
+  - name: 
+    startProgress: 0
+    duration: 0
+    untilEnd: 1
   skillMove:
   - name: Front
     startProgress: 0.05
@@ -28,22 +36,61 @@ MonoBehaviour:
     speed: 5
   - name: Up
     startProgress: 0.35
-    duration: 0.5
+    duration: 0.6
     direction: {x: 0, y: 1, z: 0}
-    speed: 12
+    speed: 15
   - name: Front
     startProgress: 0.35
     duration: 0.6
     direction: {x: 0, y: 0, z: 1}
-    speed: 4
+    speed: 8
   - name: Down
-    startProgress: 0.7
+    startProgress: 0.5
     duration: 1
     direction: {x: 0, y: -1, z: 0}
-    speed: 0
-  effect: []
+    speed: 50
+  - name: Front
+    startProgress: 0.5
+    duration: 0.1
+    direction: {x: 0, y: 0, z: 1}
+    speed: 40
+  effect:
+  - name: 
+    untilFinish: 1
+    position: {x: 0, y: 35.3, z: 0}
+    rotation: {x: 0, y: 0, z: 90}
+    scale: {x: 12, y: 12, z: 12}
+    startProgress: 0.1
+    duration: 5
+    effectId: 11
+    attachKey: 1
+    stopInPlace: 1
+    stopTime: 1
+  - name: 
+    untilFinish: 1
+    position: {x: 0, y: 0.5, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    startProgress: 0.4
+    duration: 5
+    effectId: 12
+    attachKey: 1
+    stopInPlace: 1
+    stopTime: 1
   hitbox: []
-  audio: []
+  audio:
+  - name: 
+    id: 26
+    startProgress: 0.08
+    untilFinish: 1
+  - name: 
+    id: 27
+    startProgress: 0.5
+    untilFinish: 1
+  - name: 
+    id: 28
+    startProgress: 0.5
+    untilFinish: 1
   finish:
   - name: 
     startProgress: 0.13
@@ -57,6 +104,9 @@ MonoBehaviour:
   - name: 
     startProgress: 0.5
     action: 1
-  references:
-    version: 2
-    RefIds: []
+  - name: 
+    startProgress: 0.08
+    action: 2
+  - name: 
+    startProgress: 0.55
+    action: 3

@@ -17,27 +17,23 @@ MonoBehaviour:
   inputBlock:
   - name: 
     startProgress: 0
+    duration: 0
+    untilEnd: 1
+  inputBuffer: []
+  moveControl: []
+  rotateControl: []
+  superArmor: []
+  invincible:
+  - name: 
+    startProgress: 0
     duration: 1
     untilEnd: 0
-  inputBuffer: []
-  moveControl:
-  - name: 
-    startProgress: 0.95
-    duration: 0
-    untilEnd: 1
-  rotateControl:
-  - name: 
-    startProgress: 0.85
-    duration: 0
-    untilEnd: 1
-  superArmor: []
-  invincible: []
   skillMove:
   - name: 
     startProgress: 0
     duration: 0.1
     direction: {x: 0, y: 0, z: -1}
-    speed: 2
+    speed: 10
   effect:
   - name: Hit Vignette
     untilFinish: 1
@@ -46,10 +42,18 @@ MonoBehaviour:
     scale: {x: 0, y: 0, z: 0}
     startProgress: 0
     duration: 1.5
-    effectId: 11
+    effectId: 13
     attachKey: 0
     stopInPlace: 0
     stopTime: 0
   hitbox: []
-  audio: []
+  audio:
+  - name: 
+    id: 33
+    startProgress: 0
+    untilFinish: 0
+  - name: 
+    id: 34
+    startProgress: 0
+    untilFinish: 0
   finish: []

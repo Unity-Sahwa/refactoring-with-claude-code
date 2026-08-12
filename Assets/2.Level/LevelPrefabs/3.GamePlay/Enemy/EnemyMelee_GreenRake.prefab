@@ -1189,6 +1189,7 @@ Transform:
   - {fileID: 6785983878429339459}
   - {fileID: 3671146355280490946}
   - {fileID: 1006887748465193144}
+  - {fileID: 4818091761310946541}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &668562450546399748
@@ -1316,8 +1317,9 @@ MonoBehaviour:
   hp: 0
   hpBarCount: 0
   phaseHP: 0
-  knockbackForce: 8
-  knockbackDuration: 0.3
+  knockbackForce: 10
+  knockbackDuration: 0.2
+  knockbackPullDistance: 50
   trackingSpeed: 0
   patrolSpeed: 0
   patrolWaitingTimeMin: 0
@@ -1477,6 +1479,51 @@ Transform:
   - {fileID: 2492642679285087422}
   m_Father: {fileID: 5278741212027816628}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3379468486978877283
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4818091761310946541}
+  - component: {fileID: 7211204698247086137}
+  m_Layer: 0
+  m_Name: EnemyActiveTrue
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4818091761310946541
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3379468486978877283}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0.34469858, z: -0, w: 0.93871343}
+  m_LocalPosition: {x: 157.1055, y: -0.39998752, z: -0.76709896}
+  m_LocalScale: {x: 0.6153845, y: 0.6153846, z: 0.6153845}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1517337902523371737}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7211204698247086137
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3379468486978877283}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25d86cb0eb9b864408c64c91671adf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.EventParentActive
+  setActive: 1
 --- !u!1 &3391758747893684605
 GameObject:
   m_ObjectHideFlags: 0

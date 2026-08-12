@@ -38,6 +38,7 @@ namespace Refactoring
         private CharacterController _controller;
         private Transform _characterTransform;
         private GroundProbe _groundProbe;
+        private Animator _animator;
 
         private Vector2 _inputVector;
         private Transform _camera;
@@ -93,6 +94,15 @@ namespace Refactoring
                 return;
             }
 
+            // 히트스탑(HitStopHandler가 anim.speed=0으로 애니만 정지) 동안에는 이동 계산을 통째로 건너뛴다.
+            // 안 그러면 애니는 멈춘 채 SkillVelocitySource의 elapsed만 흘러서, 스탑이 끝났을 땐 스킬 이동 구간이
+            // 이미 소진돼 있다(= 스킬무브가 짧게 끊기거나 아예 안 나가는 증상).
+            // ponytail: 스탑 동안 중력/걷기도 같이 멈춘다. 히트스탑은 곧 시간 정지라 의도된 동작.
+            if (_animator != null && _animator.speed == 0f)
+            {
+                return;
+            }
+
             UpdateInputMoveDirection();
 
             Vector3 groundNormal = _groundProbe != null ? _groundProbe.GroundNormal : Vector3.up;
@@ -127,6 +137,7 @@ namespace Refactoring
             _controller = character.GetCharacterComponent<CharacterController>();
             _characterTransform = character.transform;
             _groundProbe = character.GetCharacterComponent<GroundProbe>();
+            _animator = character.GetComponentInChildren<Animator>(); // 히트스탑 판정용(HitStopHandler와 같은 탐색 방식)
 
             // 캐릭터가 바뀌었으니 소스들의 누적 상태(예: 낙하속도)를 초기화한다.
             for (int i = 0; i < _velocitySources.Count; i++)

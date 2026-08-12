@@ -14,32 +14,76 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.BaseStateData
   stateType: 5
   isLooping: 0
-  inputBlock: []
+  inputBlock:
+  - name: 
+    startProgress: 0
+    duration: 0
+    untilEnd: 1
   inputBuffer: []
   moveControl: []
   rotateControl: []
   superArmor: []
-  invincible: []
-  skillMove: []
-  effect: []
+  invincible:
+  - name: 
+    startProgress: 0
+    duration: 0
+    untilEnd: 0
+  skillMove:
+  - name: 
+    startProgress: 0.65
+    duration: 0.1
+    direction: {x: 0, y: 0, z: 1}
+    speed: 20
+  effect:
+  - name: 
+    untilFinish: 1
+    position: {x: 0, y: 30, z: 0}
+    rotation: {x: 0, y: 0, z: 90}
+    scale: {x: 10, y: 10, z: 10}
+    startProgress: 0.15
+    duration: 5
+    effectId: 11
+    attachKey: 0
+    stopInPlace: 1
+    stopTime: 0.5
+  - name: 
+    untilFinish: 1
+    position: {x: 0, y: 0.5, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
+    startProgress: 0.5
+    duration: 4
+    effectId: 12
+    attachKey: 0
+    stopInPlace: 1
+    stopTime: 1
   hitbox: []
-  audio: []
+  audio:
+  - name: 
+    id: 10
+    startProgress: 0.2
+    untilFinish: 1
+  - name: 
+    id: 11
+    startProgress: 0.58
+    untilFinish: 1
+  - name: 
+    id: 12
+    startProgress: 0.6
+    untilFinish: 1
   finish:
   - name: 
-    startProgress: 0.15
-    action: 0
-  - name: 
-    startProgress: 0.3
-    action: 0
-  - name: 
-    startProgress: 0.4
+    startProgress: 0
     action: 0
   - name: 
     startProgress: 0.5
     action: 0
   - name: 
-    startProgress: 0.65
+    startProgress: 0.7
     action: 1
-  references:
-    version: 2
-    RefIds: []
+  - name: 
+    startProgress: 0.2
+    action: 2
+  - name: 
+    startProgress: 0.6
+    action: 3

@@ -6,7 +6,8 @@
       "Read(//tmp/**)",
       "Bash(git add *)",
       "Bash(git commit -m ' *)",
-      "WebSearch"
+      "WebSearch",
+      "WebFetch(domain:godotshaders.com)"
     ]
   }
 }
