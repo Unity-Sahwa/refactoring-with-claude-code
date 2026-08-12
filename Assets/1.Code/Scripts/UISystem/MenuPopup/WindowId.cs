@@ -17,6 +17,10 @@ namespace Refactoring
         Credit,
         StoryToon,
         SettingsPlatform,
+<<<<<<< HEAD:Assets/1.Code/Scripts/UISystem/MenuPopup/WindowId.cs
+=======
+        Confirm,
+>>>>>>> 13301c901c13016ba31dd9e76b9dbe839c667f42:Assets/1.Code/Scripts/UISystem/WindowId.cs
         // 정지메뉴에서 "메뉴로 나갈까요?" 물어보는 창.
         ExitToMenuConfirm,
     }
