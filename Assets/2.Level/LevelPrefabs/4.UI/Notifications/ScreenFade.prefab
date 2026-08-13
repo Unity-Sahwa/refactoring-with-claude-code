@@ -103,6 +103,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.EventUIFade
   playOnStart: 0
   fadeIn: 1
-  duration: 1
+  fadeInDuration: 1
   holdDuration: 3
   fadeOutDuration: 1

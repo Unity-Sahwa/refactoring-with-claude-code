@@ -16712,6 +16712,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.EventFallRespawn
   _damage: 3
+  _reloadScene: 1
 --- !u!1 &193146490
 GameObject:
   m_ObjectHideFlags: 0
