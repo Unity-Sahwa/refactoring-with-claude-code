@@ -17,7 +17,7 @@ MonoBehaviour:
   inputBlock:
   - name: 
     startProgress: 0
-    duration: 0
+    duration: 1
     untilEnd: 1
   inputBuffer: []
   moveControl: []
@@ -26,8 +26,8 @@ MonoBehaviour:
   invincible:
   - name: 
     startProgress: 0
-    duration: 0
-    untilEnd: 0
+    duration: 1
+    untilEnd: 1
   skillMove:
   - name: 
     startProgress: 0.65

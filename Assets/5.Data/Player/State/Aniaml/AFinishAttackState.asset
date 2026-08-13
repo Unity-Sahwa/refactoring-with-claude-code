@@ -26,7 +26,7 @@ MonoBehaviour:
   invincible:
   - name: 
     startProgress: 0
-    duration: 0
+    duration: 1
     untilEnd: 1
   skillMove:
   - name: Front

@@ -5,9 +5,7 @@ namespace Refactoring
     // 플레이어를 정해둔 자리로 옮기고 방향을 맞춘다.
     public class EventPlayerWarp : EventData
     {
-        [SerializeField] private Vector3 _playerPosition;
-        [SerializeField] private Vector3 _playerRotation;
-
+        [SerializeField] private Transform _playerTransform;
         [Inject(true)] private ICurrentCharacterProvider _character;
 
         public override void Execute()
@@ -27,8 +25,10 @@ namespace Refactoring
                 controller.enabled = false;
             }
 
-            current.transform.position = _playerPosition;
-            current.transform.rotation = Quaternion.Euler(_playerRotation);
+
+            current.transform.position = _playerTransform.position;
+            current.transform.rotation = Quaternion.Euler(0f, _playerTransform.eulerAngles.y, 0f);
+            _playerTransform.gameObject.SetActive(false);
 
             if (controller != null)
             {
