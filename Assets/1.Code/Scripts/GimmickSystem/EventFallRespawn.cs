@@ -8,6 +8,9 @@ namespace Refactoring
     {
         [SerializeField] private float _damage = 1f;
 
+        // 켜면 자리만 되돌리지 않고 씬을 다시 띄운다. 이미 지난 기믹·죽인 적까지 저장 시점으로 되감고 싶을 때 쓴다.
+        [SerializeField] private bool _reloadScene;
+
         [Inject(true)] private IHealthModifier _health;
         [Inject(true)] private SaveSlotManager _slots;
         [Inject(true)] private SlotLoadRunner _runner;
@@ -38,6 +41,13 @@ namespace Refactoring
             // 칸을 새로 고르지 않고 지금 칸에 덮어쓴다. 떨어진 것 때문에 저장 지점이 바뀌면 안 된다.
             data.Hp = remain;
             _slots.OverwriteCurrent(data);
+
+            // LoadSlot은 같은 씬이어도 반드시 새로 띄운다. 방금 덮어쓴 칸을 그대로 읽으므로 깎인 체력이 따라온다.
+            if (_reloadScene)
+            {
+                _runner.LoadSlot(_slots.CurrentSlot);
+                return;
+            }
 
             _runner.Begin(data);
         }

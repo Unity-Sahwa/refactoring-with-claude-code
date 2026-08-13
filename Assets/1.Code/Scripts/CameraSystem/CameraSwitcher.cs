@@ -62,6 +62,7 @@ namespace Refactoring
             if (character != null && _cameras.TryGetValue(CameraKind.Default, out CinemachineCamera defaultCam))
             {
                 defaultCam.Target.TrackingTarget = character.transform;
+                defaultCam.Target.LookAtTarget = character.transform;
             }
 
             // 락온 카메라는 현재 캐릭터를 따라가고 또 바라본다(적이 아니라 플레이어).
