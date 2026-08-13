@@ -6,7 +6,7 @@ namespace Refactoring
     // 여러 번 떨어질 수 있으니 붙이는 EnterTrigger의 isLoop를 켜야 한다.
     public class EventFallRespawn : EventData
     {
-        [SerializeField] private float _damage = 1f;
+        [SerializeField] private float _damage = 3f;
 
         // 켜면 자리만 되돌리지 않고 씬을 다시 띄운다. 이미 지난 기믹·죽인 적까지 저장 시점으로 되감고 싶을 때 쓴다.
         [SerializeField] private bool _reloadScene;

@@ -24,12 +24,18 @@ namespace Refactoring
         // 씬을 넘어 남아야 하는 건 오브젝트가 아니라 이 값 하나뿐이라, 값만 남기면 그 충돌이 아예 안 생긴다.
         private static GameSaveData _pending;
 
+        // 이번 씬이 불러오기(낙사 복귀 포함)로 떴는지. 씬을 그냥 넘어온 것과 구별하려고 둔다.
+        // 씬 시작용 연출(EventStartView 등)은 불러오기 때 자리를 도로 덮으므로 이걸 보고 스스로 건너뛴다.
+        // sceneLoaded가 Start보다 먼저라, Start에서 읽으면 이미 값이 정해져 있다.
+        public static bool LoadedFromSlot { get; private set; }
+
         // static은 게임을 껐다 켜야 지워진다. 에디터에서 도메인 리로드를 끄면 지난 판의 값이 그대로 딸려 온다.
         // 그래서 게임이 시작될 때 손으로 비운다. AttributeInjector.CollectType도 같은 이유로 같은 짓을 한다.
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
         private static void ResetStatic()
         {
             _pending = null;
+            LoadedFromSlot = false;
         }
 
         private void OnEnable()
@@ -81,6 +87,8 @@ namespace Refactoring
         // 씬이 다 뜬 뒤라야 플레이어가 존재한다. 그전에 값을 넣으면 아무 일도 일어나지 않는다.
         private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
         {
+            LoadedFromSlot = _pending != null;
+
             if (_pending == null)
             {
                 return;

@@ -86,8 +86,10 @@ namespace Refactoring
 
             // 상승 조각이 살아있는 동안 + 시작 높이보다 떠 있는 동안 검사한다.
             // (상승이 끝나고 앞으로만 가는 구간에서 적 머리 위를 지나치는 걸 막으려면 후자가 필요하다)
+            // 앞으로 나아갈 때만 검사한다(백덤블링처럼 뒤로 가는 이동은 앞쪽 박스에 걸릴 이유가 없다).
+            bool movingForward = (Quaternion.Inverse(frame.CharacterTransform.rotation) * worldVelocity).z > 0f;
             bool airborne = frame.CharacterTransform.position.y > _skillStartY + AirborneEpsilon;
-            if ((hasRise || airborne) && OverlapEnemyInFront(frame, _skillStartY))
+            if (movingForward && (hasRise || airborne) && OverlapEnemyInFront(frame, _skillStartY))
             {
                 // 수평만 죽인다. y까지 죽이면 공중에 그대로 멈춰버린다(상승·낙하는 그대로 진행돼야 함).
                 worldVelocity.x = 0f;
