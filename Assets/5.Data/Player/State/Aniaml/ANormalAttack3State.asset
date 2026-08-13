@@ -59,7 +59,7 @@ MonoBehaviour:
     position: {x: 0, y: 0, z: 15}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
-    shapeScalescale: {x: 5, y: 3, z: 4}
+    shapeScalescale: {x: 7, y: 3, z: 6}
     startProgress: 0.28
     duration: 0.05
     combat:

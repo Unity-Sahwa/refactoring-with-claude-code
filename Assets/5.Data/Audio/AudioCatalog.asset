@@ -266,6 +266,15 @@ MonoBehaviour:
     loop: 0
   - id: 36
     clips:
+    - {fileID: 8300000, guid: 739c40363402e554eb9ca98d462a478e, type: 3}
+    volume: 1
+    pitch: 1
+    spatialBlend: 0
+    minDistance: 0
+    maxDistance: 0
+    loop: 0
+  - id: 37
+    clips:
     - {fileID: 8300000, guid: 72df72acbf774c74086cd321ed3a005e, type: 3}
     volume: 1
     pitch: 1

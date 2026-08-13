@@ -56,11 +56,11 @@ MonoBehaviour:
     stopTime: 0
   hitbox:
   - name: 
-    position: {x: 0, y: 0, z: 15}
+    position: {x: 0, y: 0, z: 18}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
-    shapeScalescale: {x: 5, y: 3, z: 4}
-    startProgress: 0.28
+    shapeScalescale: {x: 5, y: 3, z: 5}
+    startProgress: 0.22
     duration: 0.05
     combat:
       damage: 1

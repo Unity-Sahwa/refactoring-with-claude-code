@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -17,6 +18,10 @@ namespace Refactoring
         [SerializeField]
         private bool _deleteAllSaves;
 
+        // 씬을 부르기 전에 기다릴 시간. 페이드가 끝날 때까지 버는 용도라 EventUIFade의 시간과 손으로 맞춘다.
+        [SerializeField]
+        private float _delay;
+
         [Inject(true)] private SaveSlotManager _slots;
 
         private void Awake()
@@ -35,6 +40,25 @@ namespace Refactoring
                 _slots?.DeleteAll();
             }
 
+            if (_delay > 0f)
+            {
+                StartCoroutine(LoadAfter());
+            }
+            else
+            {
+                LoadNow();
+            }
+        }
+
+        // 메뉴에서는 timeScale이 0이라 Invoke가 영영 안 터진다. 그래서 실제 시간으로 센다.
+        private IEnumerator LoadAfter()
+        {
+            yield return new WaitForSecondsRealtime(_delay);
+            LoadNow();
+        }
+
+        private void LoadNow()
+        {
             SceneManager.LoadScene(_nextScene);
         }
     }

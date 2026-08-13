@@ -81,7 +81,7 @@ MonoBehaviour:
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     shapeScalescale: {x: 6.76, y: 5, z: 6}
-    startProgress: 0.4
+    startProgress: 0.37
     duration: 0.1
     combat:
       damage: 3

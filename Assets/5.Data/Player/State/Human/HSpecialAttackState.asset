@@ -107,10 +107,10 @@ MonoBehaviour:
     stopTime: 1
   hitbox:
   - name: spin
-    position: {x: 0, y: 15, z: 15}
+    position: {x: 0, y: 15, z: 2}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
-    shapeScalescale: {x: 5, y: 10, z: 7}
+    shapeScalescale: {x: 5, y: 6, z: 6}
     startProgress: 0.125
     duration: 0.05
     combat:
@@ -119,10 +119,10 @@ MonoBehaviour:
       inkStack: 1
       hitSound: 0
   - name: spin
-    position: {x: 0, y: 15, z: 15}
+    position: {x: 0, y: 15, z: 2}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
-    shapeScalescale: {x: 5, y: 10, z: 7}
+    shapeScalescale: {x: 5, y: 6, z: 6}
     startProgress: 0.2
     duration: 0.05
     combat:
@@ -131,10 +131,10 @@ MonoBehaviour:
       inkStack: 1
       hitSound: 0
   - name: spin
-    position: {x: 0, y: 15, z: 15}
+    position: {x: 0, y: 15, z: 2}
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
-    shapeScalescale: {x: 5, y: 10, z: 7}
+    shapeScalescale: {x: 5, y: 6, z: 6}
     startProgress: 0.27
     duration: 0.1
     combat:

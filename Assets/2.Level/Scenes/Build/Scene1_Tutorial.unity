@@ -6650,6 +6650,17 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 75962434}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &76226173 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6995376717956377810, guid: 5473a48801e29eb439308ec9f926c48d, type: 3}
+  m_PrefabInstance: {fileID: 2078627147}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25d86cb0eb9b864408c64c91671adf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.EventParentActive
 --- !u!1001 &77733981
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14055,6 +14066,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 930154141}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &162043030 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7943282357689768588, guid: 8c0b1c4a1b1b0164b96fef29c17b49b7, type: 3}
+  m_PrefabInstance: {fileID: 1258441676}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25d86cb0eb9b864408c64c91671adf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.EventParentActive
 --- !u!1 &166296066
 GameObject:
   m_ObjectHideFlags: 0
@@ -23336,6 +23358,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.EventSceneLoad
   _nextScene: 2
   _deleteAllSaves: 0
+  _delay: 0
 --- !u!1 &297214347
 GameObject:
   m_ObjectHideFlags: 0
@@ -58042,7 +58065,7 @@ MonoBehaviour:
   - {fileID: 1963372303}
   - {fileID: 635362790}
   - {fileID: 698438681}
-  - {fileID: 0}
+  - {fileID: 76226173}
   - {fileID: 1606251952}
   delayTimes:
   - 0
@@ -123859,7 +123882,7 @@ MonoBehaviour:
   - {fileID: 1606251950}
   - {fileID: 2078627148}
   killEvents:
-  - {fileID: 1827160660}
+  - {fileID: 162043030}
   delayTimes:
   - 5
   isLoop: 0
@@ -150766,17 +150789,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1826964686}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &1827160660 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6076075860149295830, guid: 8c0b1c4a1b1b0164b96fef29c17b49b7, type: 3}
-  m_PrefabInstance: {fileID: 1258441676}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 25d86cb0eb9b864408c64c91671adf14, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.EventParentActive
 --- !u!1 &1827205827
 GameObject:
   m_ObjectHideFlags: 0
