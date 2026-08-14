@@ -687,7 +687,6 @@ GameObject:
   - component: {fileID: 5281923203009789182}
   - component: {fileID: 669178450786398683}
   - component: {fileID: 5358238805938839863}
-  - component: {fileID: 6484622902983385956}
   m_Layer: 0
   m_Name: HealthHUD
   m_TagString: Untagged
@@ -778,40 +777,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &6484622902983385956
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1310736236443927608}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 342edd0c15b05fd4caf8c1752103a494, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.HealthHUD
-  _hpIcons:
-  - {fileID: 6728797672650980958}
-  - {fileID: 8606067032406054362}
-  - {fileID: 302858916887155778}
-  - {fileID: 3160083325649007173}
-  - {fileID: 861812429317744686}
-  - {fileID: 1757713973927240877}
-  - {fileID: 6289538516619223858}
-  - {fileID: 5206766449869603861}
-  - {fileID: 2763186334150395914}
-  - {fileID: 5228328645315207101}
-  - {fileID: 1002520564923829668}
-  - {fileID: 2307983181529785875}
-  - {fileID: 6830316771064514868}
-  - {fileID: 8923203659891669687}
-  - {fileID: 691807045804570627}
-  - {fileID: 8956013881313957080}
-  - {fileID: 4034137714546005722}
-  - {fileID: 3616673273454965061}
-  - {fileID: 8398761066826586273}
-  - {fileID: 2383552535110947400}
-  _text: {fileID: 712289116843369284}
 --- !u!1 &1520697145344834543
 GameObject:
   m_ObjectHideFlags: 0
@@ -2032,8 +1997,11 @@ GameObject:
   - component: {fileID: 4252403827408901156}
   - component: {fileID: 751452325578680849}
   - component: {fileID: 355847300198667445}
+  - component: {fileID: 4564065825275095872}
+  - component: {fileID: 7732629864254773289}
+  - component: {fileID: 7433727609438736366}
   m_Layer: 0
-  m_Name: HpBGImage
+  m_Name: HealthHUD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2135,6 +2103,67 @@ MonoBehaviour:
         deactivateOnStop: 1
         amplitude: 10
         frequency: 25
+--- !u!114 &4564065825275095872
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5443643787552662381}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09cab3d3a1eef1e4daf85dd85a8441f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.UIFader
+  _fadeTime: 0.3
+--- !u!114 &7732629864254773289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5443643787552662381}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df8ff9c89af3b8f4d8e4bea35f0fadde, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.UIShake
+  _shakeTime: 0.2
+  _power: 10
+--- !u!114 &7433727609438736366
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5443643787552662381}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 342edd0c15b05fd4caf8c1752103a494, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.HealthHUD
+  _hpIcons:
+  - {fileID: 6728797672650980958}
+  - {fileID: 8606067032406054362}
+  - {fileID: 302858916887155778}
+  - {fileID: 3160083325649007173}
+  - {fileID: 861812429317744686}
+  - {fileID: 1757713973927240877}
+  - {fileID: 6289538516619223858}
+  - {fileID: 5206766449869603861}
+  - {fileID: 2763186334150395914}
+  - {fileID: 5228328645315207101}
+  - {fileID: 1002520564923829668}
+  - {fileID: 2307983181529785875}
+  - {fileID: 6830316771064514868}
+  - {fileID: 8923203659891669687}
+  - {fileID: 691807045804570627}
+  - {fileID: 8956013881313957080}
+  - {fileID: 4034137714546005722}
+  - {fileID: 3616673273454965061}
+  - {fileID: 8398761066826586273}
+  - {fileID: 2383552535110947400}
+  _text: {fileID: 712289116843369284}
 --- !u!1 &5579426259105976048
 GameObject:
   m_ObjectHideFlags: 0

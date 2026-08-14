@@ -19,6 +19,13 @@ namespace Refactoring
                 return;
             }
 
+            // 건너뛰기 구간에서는 같은 키가 메뉴 대신 컷씬 스킵으로 쓰인다.
+            if (CutsceneSkipper.Active != null)
+            {
+                CutsceneSkipper.Active.Skip();
+                return;
+            }
+
             OnCutscenePressed?.Invoke(action);
         }
 

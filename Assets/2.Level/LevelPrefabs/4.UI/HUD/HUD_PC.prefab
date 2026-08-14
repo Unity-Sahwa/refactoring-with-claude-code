@@ -39,7 +39,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 369.00003, y: -279.09998}
-  m_SizeDelta: {x: 1064.9, y: 663.1}
+  m_SizeDelta: {x: 1149.9, y: 663.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3549314784243219418
 CanvasRenderer:
@@ -379,7 +379,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 33, y: 0.000002136232}
+  m_AnchoredPosition: {x: 40.8, y: 0.000002136232}
   m_SizeDelta: {x: 894, y: 253}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &7222803831276568098
@@ -694,7 +694,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 68.9, y: -0.00000091552647}
+  m_AnchoredPosition: {x: 79.3, y: -0.00000091552647}
   m_SizeDelta: {x: 266, y: 267}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &6251255112956722161
@@ -1748,7 +1748,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 40.5, y: -0.00000091552647}
+  m_AnchoredPosition: {x: 46.8, y: -0.00000091552647}
   m_SizeDelta: {x: 378, y: 247}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &6542597583330633526
@@ -1949,6 +1949,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2456309945990145539}
+  - component: {fileID: 827728305141330598}
+  - component: {fileID: 3518888108034433163}
   m_Layer: 0
   m_Name: SkillGuide
   m_TagString: Untagged
@@ -1980,6 +1982,31 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &827728305141330598
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7608742381947162724}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &3518888108034433163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7608742381947162724}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09cab3d3a1eef1e4daf85dd85a8441f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.UIFader
+  _fadeTime: 1
 --- !u!1 &7616765644640315933
 GameObject:
   m_ObjectHideFlags: 0

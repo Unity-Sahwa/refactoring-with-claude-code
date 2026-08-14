@@ -14,6 +14,9 @@ namespace Refactoring
         public bool IsLockOn { get; private set; }
         public Collider LockedTarget { get; private set; }
 
+        // 지금 조준 중인 적. 락온 전이면 "누르면 잡힐 후보", 락온 중이면 고정된 적. 없으면 null.
+        public Collider AimTarget => IsLockOn ? LockedTarget : PickBest();
+
         public event Action OnLockOnChanged;
 
         private Camera _mainCamera;

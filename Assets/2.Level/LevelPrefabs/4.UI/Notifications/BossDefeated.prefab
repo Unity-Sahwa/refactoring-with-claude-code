@@ -87,6 +87,8 @@ GameObject:
   - component: {fileID: 9208794464055864119}
   - component: {fileID: 8984534527091641504}
   - component: {fileID: 4754658348040093704}
+  - component: {fileID: 329943718187852719}
+  - component: {fileID: 516153113424058416}
   m_Layer: 0
   m_Name: BossDefeated
   m_TagString: Untagged
@@ -103,7 +105,7 @@ RectTransform:
   m_GameObject: {fileID: 988278867380449119}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 9038887512867302539}
@@ -177,6 +179,34 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!225 &329943718187852719
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 988278867380449119}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &516153113424058416
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 988278867380449119}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2aa5550e637780940a470ef8f0dc6f8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.EventUIFade
+  fadeIn: 1
+  fadeInDuration: 1
+  holdDuration: 3
+  fadeOutDuration: 0
 --- !u!1 &1252624635850454722
 GameObject:
   m_ObjectHideFlags: 0
@@ -188,8 +218,6 @@ GameObject:
   - component: {fileID: 9038887512867302539}
   - component: {fileID: 716726694431413819}
   - component: {fileID: 8049316105164528656}
-  - component: {fileID: 7655818240648067954}
-  - component: {fileID: 4347374207401581476}
   m_Layer: 0
   m_Name: Panel
   m_TagString: Untagged
@@ -257,35 +285,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!225 &7655818240648067954
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1252624635850454722}
-  m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
---- !u!114 &4347374207401581476
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1252624635850454722}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2aa5550e637780940a470ef8f0dc6f8a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.EventUIFade
-  playOnStart: 0
-  fadeIn: 1
-  fadeInDuration: 1
-  holdDuration: 10
-  fadeOutDuration: 0
 --- !u!1 &1593378293063968564
 GameObject:
   m_ObjectHideFlags: 0
@@ -448,7 +447,6 @@ GameObject:
   - component: {fileID: 7879256104769472813}
   - component: {fileID: 6025813384405038163}
   - component: {fileID: 8997302243372580271}
-  - component: {fileID: 6148956018336317246}
   m_Layer: 0
   m_Name: BossDefeated_BG2
   m_TagString: Untagged
@@ -513,15 +511,3 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!225 &6148956018336317246
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8010746077899528946}
-  m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0

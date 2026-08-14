@@ -4,11 +4,10 @@ using UnityEngine;
 namespace Refactoring
 {
     // 역할: 이 스크립트가 붙은 UI의 CanvasGroup alpha를 서서히 바꾸는 기믹 이벤트.
-    // playOnStart가 true면 게임 시작하자마자 혼자 돌고, false면 EnterTrigger 같은 데서 Execute()로 불러줘야 함.
+    // EnterTrigger나 StartTrigger 같은 데서 Execute()로 불러줘야 돈다.
     [RequireComponent(typeof(CanvasGroup))]
     public class EventUIFade : EventData
     {
-        [SerializeField] private bool playOnStart = false; // true면 시작하자마자 자동 재생
         [SerializeField] private bool fadeIn = true;       // true: alpha 0->1 (검은 패널이면 점점 어두워짐) / false: alpha 1->0 (점점 밝아짐)
         [SerializeField] private float fadeInDuration = 1f;       // 들어오는 데 걸리는 시간
         [SerializeField] private float holdDuration = 0f;   // 0 이하면 들어온 상태로 그냥 둠. 0보다 크면 이만큼 버틴 뒤 되돌아가고 오브젝트를 끔
@@ -20,14 +19,6 @@ namespace Refactoring
         private void Awake()
         {
             _canvasGroup = GetComponent<CanvasGroup>();
-        }
-
-        private void Start()
-        {
-            if (playOnStart)
-            {
-                Execute();
-            }
         }
 
         public override void Execute()
