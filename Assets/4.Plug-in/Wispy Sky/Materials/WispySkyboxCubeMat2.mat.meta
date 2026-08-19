@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 794eb5f8516828240b12c676f5aac8c3
+timeCreated: 1437855474
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 21737
+  packageName: Wispy Skybox
+  packageVersion: 2.1
+  assetPath: Assets/Wispy Sky/Materials/WispySkyboxCubeMat2.mat
+  uploadId: 333875

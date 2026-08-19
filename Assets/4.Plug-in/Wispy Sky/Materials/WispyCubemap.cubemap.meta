@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 3977a445bc0cbf1498161e4f4b99b771
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 21737
+  packageName: Wispy Skybox
+  packageVersion: 2.1
+  assetPath: Assets/Wispy Sky/Materials/WispyCubemap.cubemap
+  uploadId: 333875

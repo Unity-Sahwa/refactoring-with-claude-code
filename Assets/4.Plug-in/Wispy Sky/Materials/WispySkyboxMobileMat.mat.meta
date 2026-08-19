@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 03902d0b450add74fa144e9510fd0f85
+timeCreated: 1437855262
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 21737
+  packageName: Wispy Skybox
+  packageVersion: 2.1
+  assetPath: Assets/Wispy Sky/Materials/WispySkyboxMobileMat.mat
+  uploadId: 333875
