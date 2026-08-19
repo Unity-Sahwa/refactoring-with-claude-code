@@ -62,7 +62,7 @@ namespace Refactoring
 
             AudioSource audioSource = RentVoice();
             Apply(audioSource, entry);
-            audioSource.outputAudioMixerGroup = _sfxGroup;
+            audioSource.outputAudioMixerGroup = entry.Output != null ? entry.Output : _sfxGroup;
 
             Transform t = audioSource.transform;
             if (request.Follow != null)

@@ -13,6 +13,7 @@ namespace Refactoring
         private const string AxisY = "Look Orbit Y";
 
         [Inject(true)] private IMouseSettings _mouseSettings;
+        [Inject(true)] private IGameStateProvider _gameState;
 
         private CinemachineInputAxisController _controller;
 
@@ -27,13 +28,17 @@ namespace Refactoring
             _baseGainX = GetGain(AxisX);
             _baseGainY = GetGain(AxisY);
 
-            if (_mouseSettings == null)
+            if (_mouseSettings != null)
             {
-                return;
+                _mouseSettings.OnChanged += ApplySettings;
+                ApplySettings();
             }
 
-            _mouseSettings.OnChanged += ApplySettings;
-            ApplySettings();
+            if (_gameState != null)
+            {
+                _gameState.OnChanged += HandleStateChanged;
+                HandleStateChanged(_gameState.Current);
+            }
         }
 
         private void OnDestroy()
@@ -42,6 +47,17 @@ namespace Refactoring
             {
                 _mouseSettings.OnChanged -= ApplySettings;
             }
+
+            if (_gameState != null)
+            {
+                _gameState.OnChanged -= HandleStateChanged;
+            }
+        }
+
+        // 컷씬 중엔 카메라 회전 입력을 꺼서 시점을 고정한다.
+        private void HandleStateChanged(GameStateType state)
+        {
+            _controller.enabled = state != GameStateType.Cutscene;
         }
 
         private void ApplySettings()

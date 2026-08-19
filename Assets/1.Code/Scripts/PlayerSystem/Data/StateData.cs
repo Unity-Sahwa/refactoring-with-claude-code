@@ -13,6 +13,8 @@ namespace Refactoring
     {
         [SerializeField] private PlayerStateType stateType;   // 상태 정체성. 자식 클래스 override 대신 인스펙터에서 지정
         [SerializeField] private bool isLooping;
+        [Tooltip("이 상태를 다시 사용하려면 마지막 진입 후 최소 이 시간(초)이 지나야 한다. 스킬 연타 방지용")]
+        [SerializeField] private float cooldown;
 
         [Space(10f)]
         [SerializeField] private IntervalDataEntry[] inputBlock;
@@ -21,16 +23,21 @@ namespace Refactoring
         [SerializeField] private IntervalDataEntry[] rotateControl;
         [SerializeField] private IntervalDataEntry[] superArmor;
         [SerializeField] private IntervalDataEntry[] invincible;
+        [SerializeField] private IntervalDataEntry[] cameraLock;
         [SerializeField] private SkillMoveDataEntry[] skillMove;
         
         [SerializeField] private SkillEffectDataEntry[] effect;
         [SerializeField] private HitboxDataEntry[] hitbox;
         [SerializeField] private AudioDataEntry[] audio;
+        [SerializeField] private CameraShakeDataEntry[] cameraShake;
+        [SerializeField] private CameraZoomDataEntry[] cameraZoom;
         [SerializeField] private FinishDataEntry[] finish;
-        
+        [SerializeField] private ObjectToggleDataEntry[] objectToggle;
+
         
         public PlayerStateType StateType => stateType;
         public bool IsLooping => isLooping;
+        public float Cooldown => cooldown;
         private Dictionary<StateEventCategory, Array> _dataMap;
 
         private void OnEnable() => BuildDataMap();
@@ -53,9 +60,13 @@ namespace Refactoring
                 [StateEventCategory.Effect] = effect,
                 [StateEventCategory.Hitbox] = hitbox,
                 [StateEventCategory.Audio] = audio,
+                [StateEventCategory.CameraShake] = cameraShake,
+                [StateEventCategory.CameraZoom] = cameraZoom,
                 [StateEventCategory.SuperArmor] = superArmor,
                 [StateEventCategory.Invincible] = invincible,
+                [StateEventCategory.CameraLock] = cameraLock,
                 [StateEventCategory.Finish] = finish,
+                [StateEventCategory.ObjectToggle] = objectToggle,
             };
         }
         

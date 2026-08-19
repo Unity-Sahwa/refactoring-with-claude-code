@@ -2,16 +2,12 @@ using UnityEngine;
 
 namespace Refactoring
 {
-    // 낙사 구역. 플레이어가 닿으면(EnterTrigger가 Execute를 부름) 체력을 깎고 마지막 저장 지점으로 되돌린다.
+    // 낙사 등으로 부활 지점을 다시 불러온다. 데미지는 EventDamage가 따로 처리하고,
+    // 여기서는 지금 체력 그대로 저장 슬롯에 반영한 뒤 씬을 다시 띄운다.
     // 여러 번 떨어질 수 있으니 붙이는 EnterTrigger의 isLoop를 켜야 한다.
     public class EventFallRespawn : EventData
     {
-        [SerializeField] private float _damage = 3f;
-
-        // 켜면 자리만 되돌리지 않고 씬을 다시 띄운다. 이미 지난 기믹·죽인 적까지 저장 시점으로 되감고 싶을 때 쓴다.
-        [SerializeField] private bool _reloadScene;
-
-        [Inject(true)] private IHealthModifier _health;
+        [Inject(true)] private IHealthInfo _health;
         [Inject(true)] private SaveSlotManager _slots;
         [Inject(true)] private SlotLoadRunner _runner;
 
@@ -22,11 +18,9 @@ namespace Refactoring
                 return;
             }
 
-            float remain = _health.Decrease(_damage);
-
-            if (remain <= 0f)
+            if (_health.Current <= 0)
             {
-                // ponytail: 사망 처리가 아직 프로젝트에 없어서 비워 둠. 죽는 연출·처리가 정해지면 여기서 부른다.
+                // 체력이 0이면 사망 처리가 따로 진행되므로 여기서 씬을 다시 띄우지 않는다.
                 return;
             }
 
@@ -37,19 +31,12 @@ namespace Refactoring
                 return;
             }
 
-            // 깎인 체력을 슬롯에도 적어 둔다. 안 그러면 되돌아간 뒤 체력이 도로 차서 계속 떨어져도 손해가 없다.
-            // 칸을 새로 고르지 않고 지금 칸에 덮어쓴다. 떨어진 것 때문에 저장 지점이 바뀌면 안 된다.
-            data.Hp = remain;
+            // 현재 체력을 그대로 슬롯에 적어 둔다. 칸을 새로 고르지 않고 지금 칸에 덮어쓴다.
+            data.Hp = _health.Current;
             _slots.OverwriteCurrent(data);
 
-            // LoadSlot은 같은 씬이어도 반드시 새로 띄운다. 방금 덮어쓴 칸을 그대로 읽으므로 깎인 체력이 따라온다.
-            if (_reloadScene)
-            {
-                _runner.LoadSlot(_slots.CurrentSlot);
-                return;
-            }
-
-            _runner.Begin(data);
+            // LoadSlot은 같은 씬이어도 반드시 새로 띄운다. 방금 덮어쓴 칸을 그대로 읽으므로 체력이 따라온다.
+            _runner.LoadSlot(_slots.CurrentSlot);
         }
     }
 }

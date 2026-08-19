@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Refactoring
 {
     // 역할: 현재 캐릭터의 머리 왼쪽 뒤를 부드럽게 따라다니며 떠 있고,
-    //       캐릭터 스왑/처형 장착 시 캐릭터에게 부딪혀 이펙트와 소리를 낸다.
+    //       캐릭터 스왑 시 캐릭터에게 부딪혀 이펙트와 소리를 낸다.
     public class PlayerPartner : MonoBehaviour
     {
         [Inject]
@@ -14,18 +14,12 @@ namespace Refactoring
         [Inject]
         private ICharacterSwapNotifier _swapNotifier;
 
-        [Inject]
-        private IPlayerStateEventSubscriber _stateEventSubscriber;
-
         [Tooltip("부딪힐 때 켤 이펙트. 파트너 자식으로 미리 배치하고 꺼둔다")]
         [SerializeField]
         private GameObject _swapToHumanEffect;
 
         [SerializeField]
         private GameObject _swapToAnimalEffect;
-
-        [SerializeField]
-        private GameObject _finishEffect;
 
         [Tooltip("부딪힐 때 낼 소리. 세 경우 모두 같다")]
         [SerializeField]
@@ -69,10 +63,12 @@ namespace Refactoring
         [SerializeField]
         private float _effectTime = 1f;
 
+        // 불러오기·낙하 복귀로 캐릭터를 되돌릴 때는 스왑 소리를 내지 않는다. GameStateSaver가 스왑 직전에 켠다.
+        public bool SkipNextCollideSound;
+
         private float[] _maskBaseHeights;
         private Vector3 _velocity;
         private Coroutine _collideRoutine;
-        private IDisposable _finishEventDisposable;
 
         private void Awake()
         {
@@ -81,8 +77,6 @@ namespace Refactoring
             {
                 _maskBaseHeights[i] = _masks[i].localPosition.y;
             }
-
-            _finishEventDisposable = _stateEventSubscriber?.Register(StateEventCategory.Finish, HandleFinish);
 
             if (_swapNotifier != null)
             {
@@ -122,8 +116,6 @@ namespace Refactoring
 
         private void OnDestroy()
         {
-            _finishEventDisposable?.Dispose();
-
             if (_swapNotifier != null)
             {
                 _swapNotifier.OnCharacterSwapped -= HandleCharacterSwapped;
@@ -190,22 +182,6 @@ namespace Refactoring
             StartCollide(effect);
         }
 
-        // 처형 장비(귀신탈) 장착 타이밍에 맞춰 부딪힌다.
-        private void HandleFinish(IStartData data)
-        {
-            if (data is not FinishDataEntry entry)
-            {
-                return;
-            }
-
-            if (entry.Action != FinishActionType.GearOn)
-            {
-                return;
-            }
-
-            StartCollide(_finishEffect);
-        }
-
         private void StartCollide(GameObject effect)
         {
             // 이미 부딪히는 중이면 무시한다.
@@ -236,7 +212,14 @@ namespace Refactoring
                 yield return null;
             }
 
-            _collideAudio?.Play();
+            if (SkipNextCollideSound)
+            {
+                SkipNextCollideSound = false;
+            }
+            else
+            {
+                _collideAudio?.Play();
+            }
 
             if (effect != null)
             {

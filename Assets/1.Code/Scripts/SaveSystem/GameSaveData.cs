@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Refactoring
 {
@@ -22,5 +23,8 @@ namespace Refactoring
 
         public SerializableVector3 PlayerPosition;
         public float Hp;
+
+        // 세이브 포인트에서 지정한 오브젝트들의 켜짐/꺼짐 상태.
+        public List<ObjectActiveState> ObjectStates;
     }
 }

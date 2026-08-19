@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -10,6 +11,9 @@ namespace Refactoring
         // 이 지점의 이름표이자 지역 이름을 꺼낼 번역 표의 키. 같은 지점이면 새 칸을 쓰지 않고 그 칸에 덮어쓴다.
         // 인스펙터에서 표의 키를 드롭다운으로 고른다. Area가 든 키만 보인다.
         [TextKey("Area")] [SerializeField] private string _savePointKey;
+
+        // 이 지점에서 같이 기억할 오브젝트들. Active를 체크하면 불러올 때 켜진 채로, 끄면 꺼진 채로 되돌린다.
+        [SerializeField] private List<ObjectActiveEntry> _objectStates;
 
         // 체크하면 플레이어를 기다리지 않고 씬이 시작할 때 바로 저장한다.
 
@@ -36,9 +40,36 @@ namespace Refactoring
 
                 // 주입이 안 됐으면 사람 캐릭터로 본다. 게임 시작이 사람 캐릭터라서 그게 덜 어긋난다.
                 CharacterType = _character != null ? _character.CurrentCharacter.Type : PlayerCharacterType.HumanCharacter,
+                ObjectStates = BuildObjectStates(),
             };
 
             _slots.Save(data);
+        }
+
+        private List<ObjectActiveState> BuildObjectStates()
+        {
+            if (_objectStates == null || _objectStates.Count == 0)
+            {
+                return null;
+            }
+
+            List<ObjectActiveState> result = new List<ObjectActiveState>(_objectStates.Count);
+
+            foreach (ObjectActiveEntry entry in _objectStates)
+            {
+                if (entry.Target == null)
+                {
+                    continue;
+                }
+
+                result.Add(new ObjectActiveState
+                {
+                    Path = ObjectActiveState.GetPath(entry.Target.transform),
+                    Active = entry.Active,
+                });
+            }
+
+            return result;
         }
     }
 }

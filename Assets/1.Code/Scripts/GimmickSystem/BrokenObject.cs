@@ -8,10 +8,16 @@ public class BrokenObject : Enemy
     public ParticleSystem hpEffect;
     public ParticleSystem DieEffect;
 
+    [Header("피격 시 흔들릴 오브젝트")]
+    public Transform shakeTarget;
+    public float shakeDuration = 0.2f;
+    public float shakeStrength = 0.1f;
+
     private float restoreHP;
     private float restoreHPCount;
 
     private bool isInvincible = false;
+    private Coroutine shakeCoroutine;
 
 
     [Header("���� �� �ִ� ��")]
@@ -43,10 +49,34 @@ public class BrokenObject : Enemy
         //Debug.Log($"������Ʈ ü�� : {phaseHPs[phaseHPs.Count - 1]}");
         //audioSourceHit.PlaySoundEffect(0);
 
+        if (shakeTarget != null)
+        {
+            if (shakeCoroutine != null) StopCoroutine(shakeCoroutine);
+            shakeCoroutine = StartCoroutine(Shake());
+        }
+
         if (phaseHPs[phaseHPs.Count - 1] <= 0)
         {
             ClearHPBar();
         }
+    }
+
+    // ponytail: 랜덤 오프셋 흔들림. DOTween 없이 코루틴으로만 처리. 감쇠 곡선 필요하면 그때 추가.
+    private IEnumerator Shake()
+    {
+        Vector3 originalPos = shakeTarget.localPosition;
+        float elapsed = 0f;
+
+        while (elapsed < shakeDuration)
+        {
+            float strength = shakeStrength * (1f - elapsed / shakeDuration);
+            shakeTarget.localPosition = originalPos + Random.insideUnitSphere * strength;
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        shakeTarget.localPosition = originalPos;
+        shakeCoroutine = null;
     }
 
     public override void DieAction()

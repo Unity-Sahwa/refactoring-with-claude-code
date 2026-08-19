@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Refactoring
@@ -10,6 +11,7 @@ namespace Refactoring
         [Inject(true)] private ICurrentCharacterProvider _character;
         [Inject(true)] private ICharacterSwappable _swapper;
         [Inject(true)] private IHealthModifier _health;
+        [Inject(true)] private PlayerPartner _partner;
 
         public void Restore(GameSaveData data)
         {
@@ -24,6 +26,22 @@ namespace Refactoring
             RestorePosition(data.PlayerPosition);
 
             _health?.SetCurrent(data.Hp);
+
+            RestoreObjectStates(data.ObjectStates);
+        }
+
+        private void RestoreObjectStates(List<ObjectActiveState> states)
+        {
+            if (states == null)
+            {
+                return;
+            }
+
+            foreach (ObjectActiveState state in states)
+            {
+                Transform target = ObjectActiveState.Find(state.Path);
+                target?.gameObject.SetActive(state.Active);
+            }
         }
 
         private void RestoreCharacter(PlayerCharacterType type)
@@ -35,6 +53,12 @@ namespace Refactoring
 
             if (_character.CurrentCharacter.Type != type)
             {
+                // 되돌리는 스왑은 플레이어가 한 게 아니라서 스왑 소리를 내지 않는다.
+                if (_partner != null)
+                {
+                    _partner.SkipNextCollideSound = true;
+                }
+
                 _swapper.SwapPlayerCharacter();
             }
         }

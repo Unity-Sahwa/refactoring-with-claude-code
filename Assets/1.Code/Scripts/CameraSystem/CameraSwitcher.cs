@@ -6,7 +6,7 @@ namespace Refactoring
 {
     // 역할: 구독 이벤트의 알람을 받고 카메라를 전환시킨다.(셋팅 정보 포함)
     // 우선순위: 타임라인,컷씬 카메라 > 락온 카메라 > 디폴트 카메라. (타임라인, 컷씬 카메라는 다루지 않지만 우선순위 존재)
-    public class CameraSwitcher : MonoBehaviour
+    public class CameraSwitcher : MonoBehaviour, ICurrentCameraProvider
     {
         private const int Active = 20;  // 켤 카메라 우선순위
         private const int Idle = 10;    // 나머지 카메라 우선순위
@@ -17,6 +17,9 @@ namespace Refactoring
         [Inject] private ILockOnState _lockOn;
 
         private readonly Dictionary<CameraKind, CinemachineCamera> _cameras = new();
+
+        // ICurrentCameraProvider: 지금 켜진(Priority == Active) 가상 카메라. 카메라 연출(줌)이 이걸 대상으로 삼는다.
+        public CinemachineCamera ActiveCamera { get; private set; }
 
         private void Awake()
         {
@@ -55,6 +58,8 @@ namespace Refactoring
             {
                 entry.Value.Priority.Value = entry.Key == chosen ? Active : Idle;
             }
+            _cameras.TryGetValue(chosen, out CinemachineCamera activeCamera);
+            ActiveCamera = activeCamera;
 
             PlayerCharacter character = _currentCharacter?.CurrentCharacter;
 

@@ -48,6 +48,8 @@ namespace Refactoring
             LockedTarget = target;
             IsLockOn = true;
             OnLockOnChanged?.Invoke();
+
+            Debug.Log($"target: {LockedTarget.gameObject.name}");
         }
 
         private void Update()
@@ -101,6 +103,7 @@ namespace Refactoring
             for (int i = 0; i < candidates.Count; i++)
             {
                 Collider collider = candidates[i];
+                if (collider == null) continue;
                 Vector3 viewportPoint = _mainCamera.WorldToViewportPoint(collider.bounds.center);
                 float offsetX = viewportPoint.x - 0.5f;
                 float offsetY = viewportPoint.y - 0.5f;

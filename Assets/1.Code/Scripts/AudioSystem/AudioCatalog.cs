@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 namespace Refactoring
 {
@@ -49,6 +50,7 @@ namespace Refactoring
         [SerializeField] private float minDistance = 1f;
         [SerializeField] private float maxDistance = 20f;
         [SerializeField] private bool loop;
+        [SerializeField] private AudioMixerGroup output; // 비워두면 AudioPlayer 기본 그룹 사용
 
         public AudioId Id => id;
         public AudioClip[] Clips => clips;
@@ -58,5 +60,6 @@ namespace Refactoring
         public float MinDistance => minDistance;
         public float MaxDistance => maxDistance;
         public bool Loop => loop;
+        public AudioMixerGroup Output => output;
     }
 }

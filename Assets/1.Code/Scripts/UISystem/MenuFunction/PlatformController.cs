@@ -15,20 +15,6 @@ namespace Refactoring
         private const string LookAction = "Look";
         private const string MousePath = "<Mouse>/delta";
 
-        // 에디터 전용. 재생 중에 체크를 바꾸면 바로 반영된다.
-        [SerializeField] private bool _isMobileTest;
-        private bool _applied;
-
-#if UNITY_EDITOR
-        private void Update()
-        {
-            if (_isMobileTest != _applied)
-            {
-                Apply();
-            }
-        }
-#endif
-
         // ponytail: 주입이 Awake에 끝나므로 Start에서 한 번만 맞춘다.
         private void Start()
         {
@@ -38,10 +24,7 @@ namespace Refactoring
         private void Apply()
         {
             bool isMobile = Application.isMobilePlatform;
-#if UNITY_EDITOR
-            isMobile = _isMobileTest;
-            _applied = _isMobileTest;
-#endif
+
             // 빈 문자열이면 그 바인딩이 꺼지고, null이면 원래 경로로 되돌아간다.
             _actionAsset?.FindAction(LookAction)?.ApplyBindingOverride(isMobile ? "" : null, path: MousePath);
 

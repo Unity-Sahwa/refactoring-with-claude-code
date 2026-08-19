@@ -8,13 +8,12 @@ namespace Refactoring
     public class FinishExecutor : MonoBehaviour
     {
         [SerializeField] private float _stunTime = 7f;   // 스턴(모션 정지) 시간
-
-        // 씬에 배치된 오브젝트라 StateData(SO)가 참조할 수 없어 여기서 직접 들고 있는다.
-        [SerializeField] private GameObject[] _executionGear;  // 낫, 귀신탈
-        [SerializeField] private GameObject[] _normalGear;     // 평상시 무기, 마스크
+        [SerializeField] private float _executeHeal = 10f; // 처형 성공 시 회복량
 
         [Inject] private IPlayerStateEventSubscriber _playerStateEventSubscriber;
         [Inject] private IFinishTargetProvider _finishTargetProvider;
+        [Inject(true)] private IHealthInfo _healthInfo;
+        [Inject(true)] private IHealthModifier _healthModifier;
 
         private IDisposable _finishEventDisposable;
 
@@ -37,15 +36,7 @@ namespace Refactoring
             {
                 case FinishActionType.Stun:    Stun();    break;
                 case FinishActionType.Execute: Execute(); break;
-                case FinishActionType.GearOn:  SwapGear(true);  break;
-                case FinishActionType.GearOff: SwapGear(false); break;
             }
-        }
-
-        private void SwapGear(bool execution)
-        {
-            foreach (var obj in _executionGear) if (obj != null) obj.SetActive(execution);
-            foreach (var obj in _normalGear)    if (obj != null) obj.SetActive(!execution);
         }
 
         // 현재 범위 내 스턴 대상 전부를 모션 정지.
@@ -70,8 +61,19 @@ namespace Refactoring
             for (int i = 0; i < targets.Count; i++)
             {
                 Enemy enemy = targets[i];
-                if (enemy != null && !enemy.isDead) enemy.Execution();
+                if (enemy != null && !enemy.isDead)
+                {
+                    enemy.Execution();
+                    Heal(_executeHeal);
+                }
             }
+        }
+
+        // 처형 성공 1회당 소량 회복.
+        private void Heal(float amount)
+        {
+            if (_healthInfo == null || _healthModifier == null || amount <= 0f) return;
+            _healthModifier.SetCurrent(_healthInfo.Current + amount);
         }
     }
 }

@@ -5,15 +5,21 @@ namespace Refactoring
 {
     // 책임: 외부에서 ApplyDamage로 전달되는 데이터로 체력감소 및 플레이어 상태를 전환
     [RequireComponent(typeof(CharacterController))]
-    public class PlayerDamageReceiver : MonoBehaviour, IDamageable
+    public class PlayerDamageReceiver : MonoBehaviour, IDamageable, IPlayerDamageable
     {
         [Inject(true)] private IHealthModifier _health;
         [Inject(true)] private IStateTriggerRaiser _triggerRaiser;
         [Inject(true)] private IPlayerStateEventSubscriber _eventSubscriber;
+        [Tooltip("피격 후 이 시간(초) 동안은 추가 피격을 무시한다. 슈퍼아머 중 다단히트로 순삭당하는 것 방지")]
+        [SerializeField] private float _damageCooldown = 0.5f;
         private IDisposable _invincibleEventDisposable;
         private IDisposable _superArmorEventDisposable;
         private bool _invincible;
         private bool _superArmor;
+        private float _lastDamageTime = -999f;
+
+        // 사망 순간 딱 한 번 발행. UI 연출/씬 전환 등은 이걸 구독해서 처리(PlayerDeathTrigger 참고).
+        public event Action OnPlayerDied;
 
         private void Awake()
         {
@@ -35,10 +41,17 @@ namespace Refactoring
         }
         public void ApplyDamage(DamageInfo info) // 적 히트박스가 호출한다.
         {
-            if (_invincible) 
+            if (_invincible)
             {
                 return;
             }
+
+            // 슈퍼아머 등 Hit 상태로 안 넘어가는 경우, 지속 피격(TriggerStay)에 매 프레임 데미지가 쌓이는 것 방지
+            if (Time.time - _lastDamageTime < _damageCooldown)
+            {
+                return;
+            }
+            _lastDamageTime = Time.time;
 
             //체력 클래스가 없어도 리액션은 볼 수 있어야 함.
             float remaining = 100;
@@ -52,6 +65,7 @@ namespace Refactoring
                 if (remaining <= 0f)
                 {
                     _triggerRaiser?.RaiseTrigger(StateTriggerType.Died);
+                    OnPlayerDied?.Invoke();
                 }
                 else if (!_superArmor)
                 {

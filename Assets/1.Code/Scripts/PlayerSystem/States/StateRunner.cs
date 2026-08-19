@@ -21,6 +21,7 @@ namespace Refactoring
         private bool _exited;
         public bool IsAnimationFinished => _tracker.IsFinished;
         public bool IsLooping {get; private set;}
+        public float Cooldown => _data.Cooldown;
 
         public void Initialize(PlayerCharacter character, IPlayerStateEventRaiser raiser, StateData data)
         {

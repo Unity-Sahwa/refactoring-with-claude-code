@@ -13,6 +13,7 @@ namespace Refactoring
         [Inject(true)] private ICurrentStateWriter _currentStateWriter;
 
         private readonly Dictionary<PlayerStateType, StateRunner> _states = new Dictionary<PlayerStateType, StateRunner>();
+        private readonly Dictionary<PlayerStateType, float> _lastEnterTime = new Dictionary<PlayerStateType, float>();
         private PlayerCharacter _character;
         public StateRunner CurrentState { get; private set; }
 
@@ -132,8 +133,15 @@ namespace Refactoring
                 return;
             }
 
+            // 상태별 쿨타임: 마지막으로 이 상태에 들어간 뒤 설정된 시간이 안 지났으면 전환 무시 (스킬 연타 방지)
+            if (_lastEnterTime.TryGetValue(next, out float lastTime) && Time.time - lastTime < nextState.Cooldown)
+            {
+                return;
+            }
+
             CurrentState?.Exit();
             CurrentState = nextState;
+            _lastEnterTime[next] = Time.time;
             _currentStateWriter?.SetCurrentState(next);
             CurrentState.Enter();
         }

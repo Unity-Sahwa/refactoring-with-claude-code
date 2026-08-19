@@ -8,6 +8,11 @@ namespace Refactoring
         [SerializeField] private Transform _playerTransform;
         [Inject(true)] private ICurrentCharacterProvider _character;
 
+        private void Awake()
+        {
+            _playerTransform.gameObject.SetActive(false);
+        }
+
         public override void Execute()
         {
             PlayerCharacter current = _character?.CurrentCharacter;
@@ -28,7 +33,6 @@ namespace Refactoring
 
             current.transform.position = _playerTransform.position;
             current.transform.rotation = Quaternion.Euler(0f, _playerTransform.eulerAngles.y, 0f);
-            _playerTransform.gameObject.SetActive(false);
 
             if (controller != null)
             {

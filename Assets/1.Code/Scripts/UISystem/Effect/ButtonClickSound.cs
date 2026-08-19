@@ -20,6 +20,9 @@ namespace Refactoring
         {
             foreach (Button button in _buttons)
             {
+                // NoClickSound가 붙은 버튼(예: 모바일 공격 버튼)은 제외한다.
+                if (button.GetComponent<NoClickSound>() != null) continue;
+
                 button.onClick.AddListener(PlayClick);
             }
         }

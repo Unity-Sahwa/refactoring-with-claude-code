@@ -31,7 +31,7 @@ namespace Refactoring
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject == currentCharacterProvider.CurrentCharacter)
+            if (other.gameObject == currentCharacterProvider.CurrentCharacter.gameObject)
             {
                 PlayerStateMachine playerStateMachine = currentCharacterProvider.CurrentCharacter.GetComponent<PlayerStateMachine>();
                 PlayerDamageReceiver playerDamageReceiver = currentCharacterProvider.CurrentCharacter.GetComponent<PlayerDamageReceiver>();

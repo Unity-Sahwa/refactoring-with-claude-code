@@ -557,7 +557,10 @@ namespace Refactoring
         protected IEnumerator WaitBeforeMotion(float waitTime)
         {
             yield return new WaitForSeconds(waitTime);
-            navAgent.isStopped = false;
+            if (navAgent != null && navAgent.enabled)
+            {
+                navAgent.isStopped = false;
+            }
         }
 
         protected IEnumerator WaitBeforeTracking(float waitTime)
