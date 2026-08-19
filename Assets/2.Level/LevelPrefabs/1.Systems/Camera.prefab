@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 7814997301189041169}
   - component: {fileID: 8518602408690404092}
   - component: {fileID: 5675885051064571763}
+  - component: {fileID: 3993377353257606296}
   m_Layer: 0
   m_Name: DefaultCamera
   m_TagString: Untagged
@@ -314,6 +315,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f26c2daae539d1c47b38434b607e1337, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.MouseSpeedApplier
+--- !u!114 &3993377353257606296
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2566839534438886214}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a60957515bc0aba40a935780fe4464af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.PlayerCameraLockHandler
 --- !u!1 &5165246191304374224
 GameObject:
   m_ObjectHideFlags: 0
@@ -515,6 +528,10 @@ GameObject:
   - component: {fileID: 1186548873993257071}
   - component: {fileID: 869270230680007618}
   - component: {fileID: 3339010353417437025}
+  - component: {fileID: 2768322672009632731}
+  - component: {fileID: 4561768414220016481}
+  - component: {fileID: 1478911926273949842}
+  - component: {fileID: 6027360213540337166}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -600,6 +617,96 @@ MonoBehaviour:
   _holeSize: 1.5
   _opacity: 0.049
   _edgeSoftness: 0.473
+--- !u!114 &2768322672009632731
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5583058414336404196}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11ec2da0318ae2745b9b19dee4ff2797, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.PlayerCameraShake
+  _impulseSource: {fileID: 4561768414220016481}
+--- !u!114 &4561768414220016481
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5583058414336404196}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 180ecf9b41d478f468eb3e9083753217, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineImpulseSource
+  ImpulseDefinition:
+    ImpulseChannel: 1
+    ImpulseShape: 2
+    CustomImpulseShape:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    ImpulseDuration: 0.2
+    ImpulseType: 0
+    DissipationRate: 0.25
+    RawSignal: {fileID: 0}
+    AmplitudeGain: 1
+    FrequencyGain: 1
+    RepeatMode: 0
+    Randomize: 1
+    TimeEnvelope:
+      AttackShape:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      DecayShape:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      AttackTime: 0
+      SustainTime: 0.2
+      DecayTime: 0.7
+      ScaleWithImpact: 1
+      HoldForever: 0
+    ImpactRadius: 100
+    DirectionMode: 0
+    DissipationMode: 2
+    DissipationDistance: 100
+    PropagationSpeed: 343
+  DefaultVelocity: {x: 0, y: -1, z: 0}
+--- !u!114 &1478911926273949842
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5583058414336404196}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc5d5a4eec5b8384f9f0fdf032889270, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.PlayerCameraShakeHandler
+--- !u!114 &6027360213540337166
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5583058414336404196}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a36bf7866bcf37428f2a4b639a48a58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.PlayerCameraZoomHandler
 --- !u!1 &6907174011024874382
 GameObject:
   m_ObjectHideFlags: 0

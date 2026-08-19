@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.BaseStateData
   stateType: 5
   isLooping: 0
+  cooldown: 0
   inputBlock:
   - name: 
     startProgress: 0
@@ -21,9 +22,18 @@ MonoBehaviour:
     untilEnd: 1
   inputBuffer: []
   moveControl: []
-  rotateControl: []
+  rotateControl:
+  - name: 
+    startProgress: 0
+    duration: 0.1
+    untilEnd: 0
   superArmor: []
   invincible:
+  - name: 
+    startProgress: 0
+    duration: 1
+    untilEnd: 1
+  cameraLock:
   - name: 
     startProgress: 0
     duration: 1
@@ -71,6 +81,30 @@ MonoBehaviour:
     id: 12
     startProgress: 0.6
     untilFinish: 1
+  cameraShake:
+  - name: 
+    startProgress: 0.2
+    shake:
+      ImpulseShape: 3
+      AmplitudeGain: 1
+      FrequencyGain: 1
+      Duration: 0.2
+      Velocity: {x: 0, y: 0.2}
+  - name: 
+    startProgress: 0.7
+    shake:
+      ImpulseShape: 1
+      AmplitudeGain: 1
+      FrequencyGain: 1
+      Duration: 0.2
+      Velocity: {x: 0.5, y: 0}
+  cameraZoom:
+  - name: 
+    startProgress: 0.2
+    distanceScale: 1.5
+    zoomOutTime: 0.1
+    zoomHoldTime: 0.9
+    zoomDuration: 1.1
   finish:
   - name: 
     startProgress: 0
@@ -87,3 +121,34 @@ MonoBehaviour:
   - name: 
     startProgress: 0.6
     action: 3
+  objectToggle:
+  - key: 200
+    startProgress: 0.15
+    activate: 1
+  - key: 200
+    startProgress: 0.8
+    activate: 0
+  - key: 201
+    startProgress: 0.15
+    activate: 1
+  - key: 201
+    startProgress: 0.8
+    activate: 0
+  - key: 202
+    startProgress: 0.15
+    activate: 1
+  - key: 202
+    startProgress: 0.8
+    activate: 0
+  - key: 203
+    startProgress: 0.15
+    activate: 0
+  - key: 203
+    startProgress: 0.8
+    activate: 1
+  - key: 204
+    startProgress: 0.15
+    activate: 1
+  - key: 204
+    startProgress: 0.8
+    activate: 0

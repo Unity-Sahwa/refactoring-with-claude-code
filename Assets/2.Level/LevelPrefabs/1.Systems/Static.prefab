@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1579530535347352639}
   - component: {fileID: 841758803552250268}
   - component: {fileID: 9177716713796005779}
+  - component: {fileID: 7436907393905135518}
   m_Layer: 0
   m_Name: GameState
   m_TagString: Untagged
@@ -70,7 +71,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c1674ca3449b0d4fb68f32313877cf5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.CursorController
-  isMobileTest: 0
+--- !u!114 &7436907393905135518
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 131126436228879302}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a00b4fdb65174e4b99279ed4b64da37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.MobileTestMode
+  isMobileTest: 1
+  cameraAxisController: {fileID: 0}
 --- !u!1 &2003687768665335262
 GameObject:
   m_ObjectHideFlags: 0
@@ -364,6 +378,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 0a4f7186303a29a40ab0bd36632d1f6d, type: 2}
   - {fileID: 11400000, guid: 11991351a6f84284792f1be102138006, type: 2}
   - {fileID: -944628639613478452, guid: cf30e06df4d13274c8ffcedf1cb827e3, type: 3}
+  - {fileID: 11400000, guid: ed41fb8753ce58144b1a38e87eadf82d, type: 2}
 --- !u!1 &6212969295007786471
 GameObject:
   m_ObjectHideFlags: 0
@@ -575,4 +590,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 794f8aefdf48b4c47b4d0070c56ba4c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.PlatformController
-  _isMobileTest: 0
+  _isMobileTest: 1

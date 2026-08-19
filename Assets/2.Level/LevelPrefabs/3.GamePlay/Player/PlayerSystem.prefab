@@ -546,6 +546,7 @@ MonoBehaviour:
   _flashColor: {r: 1, g: 0, b: 0, a: 1}
   _duration: 0.1
   _blinkCount: 1
+  _emissionIntensity: 1
 --- !u!114 &1976249647711732336
 MonoBehaviour:
   m_ObjectHideFlags: 0

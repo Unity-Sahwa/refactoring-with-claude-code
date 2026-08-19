@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.BaseStateData
   stateType: 3
   isLooping: 0
+  cooldown: 0
   inputBlock:
   - name: 
     startProgress: 0
@@ -33,7 +34,7 @@ MonoBehaviour:
   superArmor:
   - name: 
     startProgress: 0
-    duration: 0.5
+    duration: 1
     untilEnd: 0
   invincible: []
   skillMove:

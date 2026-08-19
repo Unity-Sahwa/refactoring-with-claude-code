@@ -162,6 +162,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f5a134662728e54190c5b18cf17a814, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.PlayerDamageReceiver
+  _damageCooldown: 2
 --- !u!1 &21045170880973501
 GameObject:
   m_ObjectHideFlags: 0

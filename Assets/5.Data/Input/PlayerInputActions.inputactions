@@ -11,7 +11,7 @@
                     "type": "Value",
                     "id": "d8dbd2ce-2a87-4eaf-ac19-262762610062",
                     "expectedControlType": "Vector2",
-                    "processors": "",
+                    "processors": "NormalizeVector2",
                     "interactions": "",
                     "initialStateCheck": true
                 },
@@ -158,7 +158,7 @@
                 {
                     "name": "",
                     "id": "63179bb5-1aee-4422-8783-7b79f743f7fe",
-                    "path": "<Mouse>/leftButton",
+                    "path": "<Keyboard>/1",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

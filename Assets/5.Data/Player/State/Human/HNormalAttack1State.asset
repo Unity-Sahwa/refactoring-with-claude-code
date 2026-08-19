@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.BaseStateData
   stateType: 1
   isLooping: 0
+  cooldown: 0
   inputBlock:
   - name: 
     startProgress: 0
@@ -32,7 +33,7 @@ MonoBehaviour:
     untilEnd: 0
   superArmor:
   - name: 
-    startProgress: 0.1
+    startProgress: 0
     duration: 0.2
     untilEnd: 0
   invincible: []
@@ -61,7 +62,7 @@ MonoBehaviour:
     shape: 0
     shapeScalescale: {x: 6, y: 3, z: 4}
     startProgress: 0.28
-    duration: 0.05
+    duration: 0.1
     combat:
       damage: 1
       color: 1
@@ -73,3 +74,4 @@ MonoBehaviour:
     startProgress: 0.185
     untilFinish: 1
   finish: []
+  objectToggle: []
