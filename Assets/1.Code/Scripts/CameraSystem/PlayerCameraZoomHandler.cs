@@ -36,7 +36,7 @@ namespace Refactoring
             }
 
             // DistanceScale이 1이면 변화 없는 항목이므로 생략
-            if (Mathf.Approximately(zoom.DistanceScale, 1f) || zoom.ZoomDuration <= 0f)
+            if (Mathf.Approximately(zoom.DistanceScale, 1f))
             {
                 return;
             }
@@ -59,7 +59,7 @@ namespace Refactoring
             }
 
             _zoomSetter = setter;
-            _zoomRoutine = StartCoroutine(CoZoom(setter, zoom.DistanceScale, zoom.ZoomOutTime, zoom.ZoomHoldTime, zoom.ZoomDuration));
+            _zoomRoutine = StartCoroutine(CoZoom(setter, zoom.DistanceScale, zoom.ZoomOutTime, zoom.ZoomHoldTime, zoom.ZoomInTime));
         }
 
         // 상태가 끝나면 진행 중인 줌을 즉시 원래 거리로 되돌린다.
@@ -108,12 +108,12 @@ namespace Refactoring
             return null;
         }
 
-        // outTime 동안 목표 배율까지 "확" 도달 → holdTime 동안 유지 → 남은 시간 동안 1배(원래 거리)로 천천히 복귀.
-        private IEnumerator CoZoom(Action<float> setter, float targetScale, float outTime, float holdTime, float totalDuration)
+        // outTime 동안 목표 배율까지 "확" 도달 → holdTime 동안 유지 → inTime 동안 1배(원래 거리)로 복귀.
+        private IEnumerator CoZoom(Action<float> setter, float targetScale, float outTime, float holdTime, float inTime)
         {
-            outTime = Mathf.Clamp(outTime, 0f, totalDuration);
-            holdTime = Mathf.Clamp(holdTime, 0f, totalDuration - outTime);
-            float returnTime = Mathf.Max(totalDuration - outTime - holdTime, 0.01f);
+            outTime = Mathf.Max(outTime, 0f);
+            holdTime = Mathf.Max(holdTime, 0f);
+            float returnTime = Mathf.Max(inTime, 0.01f);
 
             for (float elapsed = 0f; elapsed < outTime; elapsed += Time.deltaTime)
             {

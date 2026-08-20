@@ -187,6 +187,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.EventCameraCart
   _cart: {fileID: 8996329681861234468}
+  trail: {fileID: 6417308590282726222}
 --- !u!1 &1085265264383706953
 GameObject:
   m_ObjectHideFlags: 0

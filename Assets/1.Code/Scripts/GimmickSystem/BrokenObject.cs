@@ -32,6 +32,8 @@ public class BrokenObject : Enemy
         GetHP();
 
         enemyState = eState.Idle;
+
+        GetComponent<OutlineHighlight>()?.SetOutline(true);
     }
     protected override void Update() { }
     protected override void FixedUpdate() { }
@@ -81,6 +83,8 @@ public class BrokenObject : Enemy
 
     public override void DieAction()
     {
+        GetComponent<OutlineHighlight>()?.SetOutline(false);
+
         foreach (Enemy enemy in enemies)
         {
             if (enemy != null && !enemy.isDead)

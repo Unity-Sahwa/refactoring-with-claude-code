@@ -53,6 +53,7 @@ namespace Refactoring
         {
             yield return new WaitForSeconds(delay);
             eventData.Execute();
+            Debug.Log($"eventData.name : {eventData.name}");
         }
     }
 }

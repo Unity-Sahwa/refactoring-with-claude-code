@@ -4,6 +4,10 @@ namespace Refactoring
     {
         Master,
         Bgm,
-        Sfx
+        Sfx,
+        Enemy,
+        Player,
+        Environment,
+        Ui
     }
 }

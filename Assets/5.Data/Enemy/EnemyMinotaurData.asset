@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b468c423c8c41d4c8672fe119ef4ba8, type: 3}
   m_Name: EnemyMinotaurData
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.EnemyDataMelee
-  f_hp: 30
+  f_hp: 40
   i_hpBarCount: 1
   f_trackingSpeed: 5.2
   f_patrolSpeed: 4

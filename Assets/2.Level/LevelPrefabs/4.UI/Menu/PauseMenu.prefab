@@ -136,6 +136,7 @@ GameObject:
   - component: {fileID: 7294389938730993439}
   - component: {fileID: 3414719474319682155}
   - component: {fileID: 2913330638077773482}
+  - component: {fileID: 3357916020317632319}
   m_Layer: 0
   m_Name: Explain
   m_TagString: Untagged
@@ -262,6 +263,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &3357916020317632319
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1677846761045807760}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60331b211a6c7414fb59188d523354b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.LocalizedText
+  _key: 
 --- !u!1 &2147867980431477349
 GameObject:
   m_ObjectHideFlags: 0
@@ -1842,6 +1856,7 @@ GameObject:
   - component: {fileID: 5970595716393954506}
   - component: {fileID: 1562694112096562433}
   - component: {fileID: 260978009840915431}
+  - component: {fileID: 2623002073931846842}
   m_Layer: 0
   m_Name: Button_Yes
   m_TagString: Untagged
@@ -2027,6 +2042,19 @@ MonoBehaviour:
   _nextScene: 0
   _deleteAllSaves: 0
   _delay: 0
+--- !u!114 &2623002073931846842
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8237851335421136705}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60331b211a6c7414fb59188d523354b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.LocalizedText
+  _key: UI_Button_Yes
 --- !u!1 &8701772657762999502
 GameObject:
   m_ObjectHideFlags: 0
@@ -2040,6 +2068,7 @@ GameObject:
   - component: {fileID: 933680351989935363}
   - component: {fileID: 64121980015974309}
   - component: {fileID: 6504574649760548494}
+  - component: {fileID: 2737614830247853216}
   m_Layer: 0
   m_Name: Button_No
   m_TagString: Untagged
@@ -2224,6 +2253,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.MenuButton
   _action: 1
   _targetWindow: 1
+--- !u!114 &2737614830247853216
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8701772657762999502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60331b211a6c7414fb59188d523354b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.LocalizedText
+  _key: UI_Button_No
 --- !u!1 &8759300886011349019
 GameObject:
   m_ObjectHideFlags: 0

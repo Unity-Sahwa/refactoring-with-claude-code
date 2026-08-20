@@ -47,6 +47,7 @@ namespace Refactoring
 
             LockedTarget = target;
             IsLockOn = true;
+            SetHighlight(LockedTarget, true);
             OnLockOnChanged?.Invoke();
 
             Debug.Log($"target: {LockedTarget.gameObject.name}");
@@ -62,7 +63,9 @@ namespace Refactoring
                 Collider next = PickBest();
                 if (next != null)
                 {
+                    SetHighlight(LockedTarget, false);
                     LockedTarget = next;
+                    SetHighlight(LockedTarget, true);
                     OnLockOnChanged?.Invoke();
                 }
                 else Release();
@@ -76,11 +79,19 @@ namespace Refactoring
         }
 
         //락온 해제
-        private void Release() 
+        private void Release()
         {
+            SetHighlight(LockedTarget, false);
             IsLockOn = false;
             LockedTarget = null;
             OnLockOnChanged?.Invoke();
+        }
+
+        // 락온 대상 아웃라인 표시 on/off. 대상에 OutlineHighlight가 없으면 아무 일도 안 함.
+        private static void SetHighlight(Collider target, bool isOn)
+        {
+            if (target == null) return;
+            target.GetComponentInParent<OutlineHighlight>()?.SetOutline(isOn);
         }
 
         //기믹이 파괴되거나 적이 죽은 상태를 반환

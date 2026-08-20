@@ -64,9 +64,10 @@ namespace Refactoring
                 if (enemy != null && !enemy.isDead)
                 {
                     enemy.Execution();
-                    Heal(_executeHeal);
                 }
             }
+
+            Heal(_executeHeal);
         }
 
         // 처형 성공 1회당 소량 회복.

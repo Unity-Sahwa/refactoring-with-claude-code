@@ -39,6 +39,10 @@ namespace Refactoring
         [SerializeField, Range(0f, 1f)]
         private float _edgeSoftness = 0.5f;
 
+        [Tooltip("가림 판정에 쓸 레이어. 벽 등 가리는 오브젝트만 포함")]
+        [SerializeField]
+        private LayerMask _occluderMask;
+
         private Camera _camera;
         private CharacterController _controller;
         private PlayerCharacter _cachedCharacter;
@@ -64,13 +68,31 @@ namespace Refactoring
                 _controller = character.GetComponent<CharacterController>();
             }
 
+            Vector3 bodyCenter = GetBodyCenter(character);
+
+            // 카메라와 몸 중앙 사이에 실제로 가리는 오브젝트가 있을 때만 구멍을 뚫는다.
+            if (!IsOccluded(bodyCenter))
+            {
+                Shader.SetGlobalFloat(SizeId, 0f);
+                return;
+            }
+
             // z에 카메라~플레이어 거리가 들어가므로, 그보다 가까운 픽셀만 셰이더가 깎는다.
-            Vector3 view = _camera.WorldToViewportPoint(GetBodyCenter(character));
+            Vector3 view = _camera.WorldToViewportPoint(bodyCenter);
 
             Shader.SetGlobalFloat(SizeId, _holeSize);
             Shader.SetGlobalFloat(OpacityId, _opacity);
             Shader.SetGlobalFloat(EdgeSoftnessId, _edgeSoftness);
             Shader.SetGlobalVector(PositionId, view);
+        }
+
+        private bool IsOccluded(Vector3 bodyCenter)
+        {
+            Vector3 origin = _camera.transform.position;
+            Vector3 offset = bodyCenter - origin;
+            float distance = offset.magnitude;
+
+            return Physics.Raycast(origin, offset / distance, distance, _occluderMask);
         }
 
         // 캐릭터마다 스케일이 달라, 콜라이더 중앙을 월드 좌표로 바꿔서 쓴다.

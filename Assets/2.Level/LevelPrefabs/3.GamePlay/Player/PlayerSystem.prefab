@@ -269,15 +269,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.FinishExecutor
   _stunTime: 7
-  _executionGear:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  _normalGear:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  _executeHeal: 2
 --- !u!114 &4798347642736752744
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -451,6 +443,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7884691333058377808}
   - component: {fileID: 6210200265034832531}
+  - component: {fileID: 1328530741594193957}
   m_Layer: 6
   m_Name: Swap
   m_TagString: Untagged
@@ -485,6 +478,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 311cf4ed2f629c24db6c773c099c5938, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.PlayerCharacterSwitcher
+--- !u!114 &1328530741594193957
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8851638645065810974}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be76c2eec67c57c44ad9bb6771ea59e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.PlayerObjectToggleHandler
 --- !u!1 &8913104274009761175
 GameObject:
   m_ObjectHideFlags: 0
@@ -544,9 +549,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.HitFlashHandler
   _flashColor: {r: 1, g: 0, b: 0, a: 1}
-  _duration: 0.1
+  _duration: 0.3
   _blinkCount: 1
-  _emissionIntensity: 1
+  _emissionIntensity: 0.4
 --- !u!114 &1976249647711732336
 MonoBehaviour:
   m_ObjectHideFlags: 0

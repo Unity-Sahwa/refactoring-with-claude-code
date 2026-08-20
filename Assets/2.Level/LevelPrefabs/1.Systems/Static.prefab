@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 1579530535347352639}
   - component: {fileID: 841758803552250268}
   - component: {fileID: 9177716713796005779}
-  - component: {fileID: 7436907393905135518}
   m_Layer: 0
   m_Name: GameState
   m_TagString: Untagged
@@ -71,20 +70,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c1674ca3449b0d4fb68f32313877cf5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.CursorController
---- !u!114 &7436907393905135518
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 131126436228879302}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a00b4fdb65174e4b99279ed4b64da37, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.MobileTestMode
-  isMobileTest: 1
-  cameraAxisController: {fileID: 0}
 --- !u!1 &2003687768665335262
 GameObject:
   m_ObjectHideFlags: 0
@@ -228,7 +213,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b88cd65c4cde73c47865e6a46d8260b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.AudioPlayer
-  _sfxGroup: {fileID: -5011017390960947947, guid: 4990067f5205fde4b84c5ff6e158bd4c, type: 2}
+  _sfxGroup: {fileID: 8140940479546855537, guid: 4990067f5205fde4b84c5ff6e158bd4c, type: 2}
   _initialVoices: 8
 --- !u!114 &1603486921556361555
 MonoBehaviour:
@@ -590,4 +575,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 794f8aefdf48b4c47b4d0070c56ba4c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.PlatformController
-  _isMobileTest: 1

@@ -40,6 +40,7 @@ namespace Refactoring
                 {
                     var message = new DamageInfo();
                     message.Amount = damage;
+                    message.Damager = gameObject;
                     playerDamageReceiver.ApplyDamage(message);
                 }
 

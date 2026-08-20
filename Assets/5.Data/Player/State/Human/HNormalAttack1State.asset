@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.BaseStateData
   stateType: 1
   isLooping: 0
-  cooldown: 0
+  cooldown: 1
   inputBlock:
   - name: 
     startProgress: 0
@@ -23,7 +23,7 @@ MonoBehaviour:
   inputBuffer:
   - name: 
     startProgress: 0.1
-    duration: 0.2
+    duration: 0.25
     untilEnd: 0
   moveControl: []
   rotateControl:
@@ -37,6 +37,7 @@ MonoBehaviour:
     duration: 0.2
     untilEnd: 0
   invincible: []
+  cameraLock: []
   skillMove:
   - name: 
     startProgress: 0.25
@@ -61,7 +62,7 @@ MonoBehaviour:
     rotation: {x: 0, y: 0, z: 0}
     shape: 0
     shapeScalescale: {x: 6, y: 3, z: 4}
-    startProgress: 0.28
+    startProgress: 0.25
     duration: 0.1
     combat:
       damage: 1
@@ -73,5 +74,7 @@ MonoBehaviour:
     id: 1
     startProgress: 0.185
     untilFinish: 1
+  cameraShake: []
+  cameraZoom: []
   finish: []
   objectToggle: []

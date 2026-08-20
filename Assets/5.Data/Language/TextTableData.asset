@@ -125,17 +125,17 @@ MonoBehaviour:
     Korean: "\uC18C\uB9AC"
     English: Sound
   - Key: UI_Setting_Sound_MasterVolme
-    Korean: "\xB7 \uB9C8\uC2A4\uD130 \uBCFC\uB968"
+    Korean: "\xB7 \uC804\uCCB4 \uC74C\uB7C9"
     English: "\xB7 MasterVolme"
   - Key: UI_Setting_Sound_BGM
     Korean: "\xB7 \uBC30\uACBD\uC74C"
     English: "\xB7 BGM"
   - Key: UI_Setting_Sound_EnemySFX
     Korean: "\xB7 \uC801 \uD6A8\uACFC\uC74C"
-    English: "\xB7 EnemySFX"
+    English: "\xB7 Enemy SFX"
   - Key: UI_Setting_Sound_PlayerSFX
     Korean: "\xB7 \uCE90\uB9AD\uD130 \uD6A8\uACFC\uC74C"
-    English: "\xB7 PlayerSFX"
+    English: "\xB7 Player SFX"
   - Key: UI_Setting_Etc_Etc
     Korean: "\uAE30\uD0C0"
     English: Etc
@@ -295,5 +295,14 @@ MonoBehaviour:
   - Key: NoRecord
     Korean: "\uAE30\uB85D \uC5C6\uC74C"
     English: No Record
+  - Key: UI_WindowExplain_GoToMainMenu
+    Korean: "\uBA54\uB274\uB85C \uB3CC\uC544\uAC00\uC2DC\uACA0\uC2B5\uB2C8\uAE4C?"
+    English: Would you like to go back to the main menu?
+  - Key: UI_Setting_Sound_EnvVolume
+    Korean: "\xB7 \uD658\uACBD \uD6A8\uACFC\uC74C"
+    English: "\xB7 Environment SFX"
+  - Key: UI_Setting_Sound_UiVolume
+    Korean: "\xB7 UI \uD6A8\uACFC\uC74C"
+    English: "\xB7 UI SFX"
   _koreanFont: {fileID: 11400000, guid: 65b044f4455545b4c943c9dcb0df523b, type: 2}
   _englishFont: {fileID: 11400000, guid: 65b044f4455545b4c943c9dcb0df523b, type: 2}

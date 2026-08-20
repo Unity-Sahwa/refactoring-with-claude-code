@@ -12,7 +12,6 @@ namespace Refactoring
     {
         [Inject] private AudioChannel _audioChannel;
         [Inject] private AudioCatalog _audioCatalog;
-        [SerializeField] private AudioMixerGroup _sfxGroup;
         [SerializeField] private int _initialVoices = 8;
 
         private readonly List<AudioSource> _pool = new();    // 사용 가능한 오디오 소스
@@ -62,7 +61,7 @@ namespace Refactoring
 
             AudioSource audioSource = RentVoice();
             Apply(audioSource, entry);
-            audioSource.outputAudioMixerGroup = entry.Output != null ? entry.Output : _sfxGroup;
+            audioSource.outputAudioMixerGroup = entry.Output;
 
             Transform t = audioSource.transform;
             if (request.Follow != null)

@@ -52,6 +52,7 @@ namespace Refactoring
         protected NavMeshAgent navAgent;
         [HideInInspector] public Transform target;
         [Inject(true)] protected ICurrentCharacterProvider currentCharacterProvider; // 캐릭터 스왑 시 타겟 갈아끼우기용
+        [Inject(true)] protected ICharacterSwapNotifier characterSwapNotifier; // 캐릭터 스왑 통지(이벤트로 즉시 타겟 교체)
         protected Rigidbody rb;
         protected List<IDamageable> lastAttackedTarget = new List<IDamageable>();
         public Animator animator;
@@ -129,6 +130,33 @@ namespace Refactoring
             rb = GetComponent<Rigidbody>();
             enemyState = eState.Idle;
             previousState = eState.A;
+
+            if (characterSwapNotifier != null) characterSwapNotifier.OnCharacterSwapped += OnCharacterSwapped;
+        }
+
+        protected virtual void OnDestroy()
+        {
+            if (characterSwapNotifier != null) characterSwapNotifier.OnCharacterSwapped -= OnCharacterSwapped;
+        }
+
+        // 런타임 스폰 개체용: AttributeInjector는 씬 시작 시점 1회만 돌아서 스폰된 개체는 주입을 못 받는다.
+        // 스포너가 자기 몫으로 이미 주입받은 참조를 여기로 넘겨준다.
+        public void InitCharacterRefs(ICurrentCharacterProvider provider, ICharacterSwapNotifier notifier)
+        {
+            currentCharacterProvider = provider;
+
+            if (characterSwapNotifier != null) characterSwapNotifier.OnCharacterSwapped -= OnCharacterSwapped;
+            characterSwapNotifier = notifier;
+            if (characterSwapNotifier != null) characterSwapNotifier.OnCharacterSwapped += OnCharacterSwapped;
+        }
+
+        // 캐릭터 전환 통지: 이미 (발견/피격으로) 타겟을 물고 있는 중이면 그 즉시 현재 캐릭터로 갈아끼운다.
+        private void OnCharacterSwapped()
+        {
+            if (target != null && currentCharacterProvider?.CurrentCharacter != null)
+            {
+                target = currentCharacterProvider.CurrentCharacter.transform;
+            }
         }
 
         protected virtual void Start()
@@ -178,12 +206,6 @@ namespace Refactoring
         #region 시야 체크
         public void InSightTargetCheck()
         {
-            // 타겟이 비활성이면 스왑된 것뿐이다(파괴는 아님). 전투 중이므로 현재 캐릭터로 그대로 이어받는다.
-            if (target != null && !target.gameObject.activeInHierarchy && currentCharacterProvider?.CurrentCharacter != null)
-            {
-                target = currentCharacterProvider.CurrentCharacter.transform;
-            }
-
             if (hasTarget)
             {
                 if (!IsTargetOnSight(target.transform))

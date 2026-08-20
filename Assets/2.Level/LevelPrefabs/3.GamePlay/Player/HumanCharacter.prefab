@@ -8470,7 +8470,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f5a134662728e54190c5b18cf17a814, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.PlayerDamageReceiver
-  _damageCooldown: 2
+  _damageCooldown: 1
 --- !u!1 &2738894523914522254
 GameObject:
   m_ObjectHideFlags: 0
@@ -8733,8 +8733,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4320714341765162423}
+  - component: {fileID: 4998608670856692248}
   m_Layer: 0
-  m_Name: Dsythe_weapon_end
+  m_Name: GhostWeaponForHuman
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8757,6 +8758,19 @@ Transform:
   - {fileID: 5328921186478350509}
   m_Father: {fileID: 4167728077946632412}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4998608670856692248
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2922878181051992274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2808483675f7200458cfbebc6ae3efab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.ToggleTarget
+  key: 201
 --- !u!1 &2985313910221360610
 GameObject:
   m_ObjectHideFlags: 0
@@ -11002,8 +11016,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1393982252169065284}
   - component: {fileID: 581584575774286706}
+  - component: {fileID: 6004366954591202615}
   m_Layer: 12
-  m_Name: brush_low
+  m_Name: HumanWeapon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11089,6 +11104,19 @@ SkinnedMeshRenderer:
     m_Center: {x: -9.857992, y: 0.000015616417, z: -0.000015497208}
     m_Extent: {x: 9.857119, y: 0.71955454, z: 0.719556}
   m_DirtyAABB: 0
+--- !u!114 &6004366954591202615
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3582422492618937977}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2808483675f7200458cfbebc6ae3efab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.ToggleTarget
+  key: 203
 --- !u!1 &3634611000109999442
 GameObject:
   m_ObjectHideFlags: 0
@@ -16627,7 +16655,7 @@ Transform:
   m_GameObject: {fileID: 5923437547674866236}
   serializedVersion: 2
   m_LocalRotation: {x: -0.50000036, y: 0.49999967, z: 0.49999967, w: 0.50000036}
-  m_LocalPosition: {x: 0.0000001354651, y: 8.918729, z: -1.4504087}
+  m_LocalPosition: {x: 0.0000001354651, y: 8.918728, z: -1.4504087}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -18679,8 +18707,9 @@ GameObject:
   - component: {fileID: 8377898349161310280}
   - component: {fileID: 6913864602487851699}
   - component: {fileID: 6795052887672653360}
+  - component: {fileID: 7851240897151280965}
   m_Layer: 12
-  m_Name: ghostMaskOnHumanCharacter
+  m_Name: GhostMaskOnHumanCharacter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -18758,6 +18787,19 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &7851240897151280965
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6945861806842446036}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2808483675f7200458cfbebc6ae3efab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.ToggleTarget
+  key: 200
 --- !u!1 &7038055552624665589
 GameObject:
   m_ObjectHideFlags: 0
@@ -18959,8 +19001,9 @@ GameObject:
   - component: {fileID: 695555865450365730}
   - component: {fileID: 2022388545647496080}
   - component: {fileID: 8959897783407656436}
+  - component: {fileID: 351525117777388852}
   m_Layer: 0
-  m_Name: humanMaskOnCharacter
+  m_Name: HumanMaskOnCharacter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -19038,6 +19081,19 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &351525117777388852
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7224953965266953589}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2808483675f7200458cfbebc6ae3efab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.ToggleTarget
+  key: 202
 --- !u!1 &7256384483324962906
 GameObject:
   m_ObjectHideFlags: 0

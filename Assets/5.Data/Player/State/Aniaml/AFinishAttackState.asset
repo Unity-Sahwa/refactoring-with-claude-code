@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.BaseStateData
   stateType: 5
   isLooping: 0
-  cooldown: 0
+  cooldown: 5
   inputBlock:
   - name: 
     startProgress: 0
@@ -121,10 +121,10 @@ MonoBehaviour:
   cameraZoom:
   - name: 
     startProgress: 0.1
-    distanceScale: 2
+    distanceScale: 1.5
     zoomOutTime: 0.1
-    zoomHoldTime: 1.2
-    zoomDuration: 1.3
+    zoomHoldTime: 1.1
+    zoomInTime: 0.05
   finish:
   - name: 
     startProgress: 0.13

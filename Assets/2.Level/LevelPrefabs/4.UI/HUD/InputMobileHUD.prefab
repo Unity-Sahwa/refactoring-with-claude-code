@@ -753,7 +753,6 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 4246126471916745716}
   - {fileID: 7517216568095723020}
   - {fileID: 2544903823504242866}
   - {fileID: 498488350815863215}
@@ -851,7 +850,7 @@ GameObject:
   - component: {fileID: 4246126471916745716}
   - component: {fileID: 1901272296109695959}
   m_Layer: 0
-  m_Name: InputMobileHUDActivate
+  m_Name: InputJoyStickActivate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -870,7 +869,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 4119374165600470612}
+  m_Father: {fileID: 7517216568095723020}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1901272296109695959
 MonoBehaviour:
@@ -917,7 +916,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.82051283, y: 0.82051283, z: 0.82051283}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 5193947825492219621}
   m_Father: {fileID: 4119374165600470612}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
@@ -1514,6 +1514,7 @@ GameObject:
   - component: {fileID: 1887871166640373078}
   - component: {fileID: 6166128264025234351}
   - component: {fileID: 5495953867856362786}
+  - component: {fileID: 5838076328112294571}
   m_Layer: 5
   m_Name: Button_NormalAttack
   m_TagString: Untagged
@@ -1619,6 +1620,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.MobileInputButton
   _actionType: 1
+--- !u!114 &5838076328112294571
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4379390884685754309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a4ee046c5dcbcc459b631bf1d889370, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.NoClickSound
 --- !u!1 &4548932896183626036
 GameObject:
   m_ObjectHideFlags: 0
@@ -1694,6 +1707,51 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &4561425015784529344
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5193947825492219621}
+  - component: {fileID: 325967215984859385}
+  m_Layer: 0
+  m_Name: InputPauseKeyActivate
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5193947825492219621
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4561425015784529344}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -2271.8206, y: -1267.6865, z: 3.8133714}
+  m_LocalScale: {x: 1.21875, y: 1.21875, z: 1.21875}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 498488350815863215}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &325967215984859385
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4561425015784529344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25d86cb0eb9b864408c64c91671adf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.EventParentActive
+  setActive: 1
 --- !u!1 &4937540217375200739
 GameObject:
   m_ObjectHideFlags: 0
@@ -1996,6 +2054,51 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &5337295783077943588
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7987466096497643995}
+  - component: {fileID: 3202867217600718416}
+  m_Layer: 0
+  m_Name: InputSkillKeyActivate
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7987466096497643995
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5337295783077943588}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -944.0578, y: -540.1531, z: 3.12892}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2544903823504242866}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3202867217600718416
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5337295783077943588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25d86cb0eb9b864408c64c91671adf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.EventParentActive
+  setActive: 1
 --- !u!1 &5415495556439148407
 GameObject:
   m_ObjectHideFlags: 0
@@ -2935,6 +3038,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 7987466096497643995}
   - {fileID: 6285896493722946227}
   - {fileID: 7488107171839836678}
   - {fileID: 115515648136054915}
@@ -3052,6 +3156,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 4246126471916745716}
   - {fileID: 8454229180913726125}
   - {fileID: 3881791789862518060}
   m_Father: {fileID: 4119374165600470612}

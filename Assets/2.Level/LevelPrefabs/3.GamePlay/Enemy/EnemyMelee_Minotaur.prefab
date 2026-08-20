@@ -4417,6 +4417,7 @@ GameObject:
   - component: {fileID: 4189546683668664310}
   - component: {fileID: 1443748258422859476}
   - component: {fileID: 9221827237628256721}
+  - component: {fileID: -5671276713734385834}
   m_Layer: 7
   m_Name: EnemyMelee_Minotaur
   m_TagString: Untagged
@@ -4611,6 +4612,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.CalliSystem
   maxPaintOver: 5
+--- !u!114 &-5671276713734385834
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7067139149765222585}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a31827a6a12b9a4994eb0a55c94cfb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.OutlineHighlight
+  _outlineMaterial: {fileID: 2100000, guid: c2e345f1a205f3643b6231051b20fa44, type: 2}
 --- !u!1 &7166994980649661533
 GameObject:
   m_ObjectHideFlags: 0

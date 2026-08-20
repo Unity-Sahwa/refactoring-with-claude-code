@@ -1,5 +1,7 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.Rendering.DebugUI;
 
 namespace Refactoring
 {
@@ -11,6 +13,7 @@ namespace Refactoring
         private bool _isVertical;
 
         [Inject(true)] private IMouseSettings _mouseSettings;
+        [SerializeField] private TextMeshProUGUI sliderValueText;
 
         private Slider _slider;
 
@@ -28,7 +31,10 @@ namespace Refactoring
             }
 
             // 창을 열 때 현재 값으로 손잡이만 맞춘다(알림은 안 쏘게).
-            _slider.SetValueWithoutNotify(_isVertical ? _mouseSettings.SpeedY : _mouseSettings.SpeedX);
+            float value = _isVertical ? _mouseSettings.SpeedY : _mouseSettings.SpeedX;
+            _slider.SetValueWithoutNotify(value);
+            ChangeValueText(value);
+
         }
 
         private void HandleValueChanged(float value)
@@ -45,6 +51,16 @@ namespace Refactoring
             else
             {
                 _mouseSettings.SpeedX = value;
+            }
+
+            ChangeValueText(value);
+        }
+
+        private void ChangeValueText(float value)
+        {
+            if (sliderValueText != null)
+            {
+                sliderValueText.text = value.ToString("F1");
             }
         }
     }

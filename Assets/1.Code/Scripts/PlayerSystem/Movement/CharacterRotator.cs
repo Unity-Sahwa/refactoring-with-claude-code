@@ -66,6 +66,7 @@ namespace Refactoring
         }
 
         private void HandleRotateOn(IStartData data) => _canRotate = true;
+        
         // End(구간 끝)든 Reset(강제 이탈)이든 회전 허용을 끄는 동작은 같아서 이유는 보지 않는다.
         private void HandleRotateClose(CloseEventType reason) => _canRotate = false;
     }

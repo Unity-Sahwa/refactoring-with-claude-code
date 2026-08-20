@@ -18,6 +18,7 @@ namespace Refactoring
 
         private void Awake()
         {
+            this.gameObject.SetActive(false);
             _canvasGroup = GetComponent<CanvasGroup>();
         }
 

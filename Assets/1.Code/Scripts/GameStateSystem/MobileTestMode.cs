@@ -14,8 +14,9 @@ namespace Refactoring
     [DefaultExecutionOrder(100)] // PlatformController가 Start에서 PC 배치로 맞춘 뒤에 덮어써야 해서 뒤로 미룸
     public class MobileTestMode : MonoBehaviour
     {
+#if UNITY_EDITOR
         [SerializeField] private bool isMobileTest = false;
-        [Inject] private CinemachineInputAxisController cameraAxisController;
+        [Inject(true)] private CinemachineInputAxisController cameraAxisController;
         [Inject(true)] private List<PlatformObject> _platformObjects;
 
         // 온스크린 조이스틱(OnScreenStick)은 드래그를 <Gamepad>/rightStick으로 흉내 내서 보낸다.
@@ -28,7 +29,7 @@ namespace Refactoring
 
         private void Start()
         {
-            if (!isMobileTest)
+            if (!isMobileTest || cameraAxisController == null || _platformObjects == null)
             {
                 return;
             }
@@ -54,7 +55,7 @@ namespace Refactoring
 
         private void LateUpdate()
         {
-            if (!isMobileTest)
+            if (!isMobileTest || cameraAxisController == null || _platformObjects == null)
             {
                 return;
             }
@@ -62,5 +63,6 @@ namespace Refactoring
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
         }
+#endif
     }
 }

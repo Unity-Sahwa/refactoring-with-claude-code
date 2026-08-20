@@ -8,6 +8,10 @@ public class WisuSpawnPhase : MonoBehaviour
 {
     private WisuMainRe wisu;
 
+    // AttributeInjector는 씬 시작 시 1회만 돌아서 런타임 스폰 개체는 못 받는다. 스포너 몫으로 미리 받아서 넘겨준다.
+    [Inject(true)] private ICurrentCharacterProvider _currentCharacterProvider;
+    [Inject(true)] private ICharacterSwapNotifier _swapNotifier;
+
     [HideInInspector] public bool isControllerActive = false;
 
     private List<Enemy> spawnedEnemies = new List<Enemy>();
@@ -41,6 +45,7 @@ public class WisuSpawnPhase : MonoBehaviour
                     if (enemy != null)
                     {
                         enemy.patrolPointA = wisu.target.transform;
+                        enemy.InitCharacterRefs(_currentCharacterProvider, _swapNotifier);
                         spawnedEnemies.Add(enemy);
                     }
 
@@ -66,6 +71,7 @@ public class WisuSpawnPhase : MonoBehaviour
                     if (enemy != null)
                     {
                         enemy.patrolPointA = wisu.target.transform;
+                        enemy.InitCharacterRefs(_currentCharacterProvider, _swapNotifier);
                         spawnedEnemies.Add(enemy);
                     }
 
@@ -90,6 +96,7 @@ public class WisuSpawnPhase : MonoBehaviour
             if (enemy != null)
             {
                 enemy.patrolPointA = wisu.target.transform;
+                enemy.InitCharacterRefs(_currentCharacterProvider, _swapNotifier);
                 spawnedEnemies.Add(enemy);
             }
 

@@ -16,6 +16,7 @@ namespace Refactoring
         private IDisposable _superArmorEventDisposable;
         private bool _invincible;
         private bool _superArmor;
+        private bool _dead;
         private float _lastDamageTime = -999f;
 
         // 사망 순간 딱 한 번 발행. UI 연출/씬 전환 등은 이걸 구독해서 처리(PlayerDeathTrigger 참고).
@@ -41,7 +42,7 @@ namespace Refactoring
         }
         public void ApplyDamage(DamageInfo info) // 적 히트박스가 호출한다.
         {
-            if (_invincible)
+            if (_invincible || _dead)
             {
                 return;
             }
@@ -64,6 +65,7 @@ namespace Refactoring
             {
                 if (remaining <= 0f)
                 {
+                    _dead = true;
                     _triggerRaiser?.RaiseTrigger(StateTriggerType.Died);
                     OnPlayerDied?.Invoke();
                 }

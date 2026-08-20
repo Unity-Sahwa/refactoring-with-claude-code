@@ -327,7 +327,7 @@ PrefabInstance:
     m_TransformParent: {fileID: 3008675111307199767}
     m_Modifications:
     - target: {fileID: 85416014419188031, guid: 994aac27a7d2f684b960872a6ef96fef, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
       objectReference: {fileID: 8922172572578643636}
     - target: {fileID: 1729438200994093655, guid: 994aac27a7d2f684b960872a6ef96fef, type: 3}
@@ -693,7 +693,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.EventSceneLoad
   _nextScene: 1
-  _deleteAllSaves: 0
+  _deleteAllSaves: 1
   _delay: 2
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

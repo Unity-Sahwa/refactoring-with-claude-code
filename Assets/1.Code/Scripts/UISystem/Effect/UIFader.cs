@@ -10,6 +10,12 @@ namespace Refactoring
         [SerializeField]
         private float _fadeTime = 0.3f;
 
+        [Tooltip("조건이 꺼진 뒤에도 최소한 유지되는 시간(초)")]
+        [SerializeField]
+        private float _minHoldTime = 2f;
+
+        private float _hideTimer;
+
         [Inject]
         private ICurrentStateProvider _stateProvider;
 
@@ -26,7 +32,16 @@ namespace Refactoring
 
         private void Update()
         {
-            float targetAlpha = IsShowing() ? 1f : 0f;
+            if (IsShowing())
+            {
+                _hideTimer = _minHoldTime;
+            }
+            else
+            {
+                _hideTimer -= Time.deltaTime;
+            }
+
+            float targetAlpha = _hideTimer > 0f ? 1f : 0f;
 
             // 목표값 쪽으로 매 프레임 조금씩만 이동. 도중에 조건이 뒤집혀도 방향만 바뀌어서 중복 재생 처리가 필요 없다.
             float step = Time.deltaTime / Mathf.Max(_fadeTime, 0.0001f);

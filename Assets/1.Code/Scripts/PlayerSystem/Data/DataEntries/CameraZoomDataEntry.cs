@@ -12,12 +12,12 @@ namespace Refactoring
         [SerializeField] private float distanceScale = 1f;
         [SerializeField] private float zoomOutTime;
         [SerializeField] private float zoomHoldTime;
-        [SerializeField] private float zoomDuration;
+        [SerializeField] private float zoomInTime;
 
         public float StartProgress => startProgress;
         public float DistanceScale => distanceScale;
         public float ZoomOutTime => zoomOutTime;
         public float ZoomHoldTime => zoomHoldTime;
-        public float ZoomDuration => zoomDuration;
+        public float ZoomInTime => zoomInTime;
     }
 }

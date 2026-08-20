@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.BaseStateData
   stateType: 5
   isLooping: 0
-  cooldown: 0
+  cooldown: 5
   inputBlock:
   - name: 
     startProgress: 0
@@ -104,7 +104,7 @@ MonoBehaviour:
     distanceScale: 1.5
     zoomOutTime: 0.1
     zoomHoldTime: 0.9
-    zoomDuration: 1.1
+    zoomInTime: 0.04
   finish:
   - name: 
     startProgress: 0

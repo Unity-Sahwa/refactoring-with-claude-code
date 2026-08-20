@@ -61,20 +61,16 @@ namespace Refactoring
 
         private void OnTriggerStay(Collider other)
         {
-            Debug.Log($"other: {other.name}");
             if (other.gameObject == currentCharacterProvider.CurrentCharacter.gameObject)
             {
-                Debug.Log($"PlayerCharater한테 triggerstay");
-
                 PlayerStateMachine playerStateMachine = currentCharacterProvider.CurrentCharacter.GetComponent<PlayerStateMachine>();
                 PlayerDamageReceiver playerDamageReceiver = currentCharacterProvider.CurrentCharacter.GetComponent<PlayerDamageReceiver>();
                 
                 if(playerStateMachine.CurrentState.StateKey != PlayerStateType.Dead)
                 {
-                    Debug.Log($"PlayerCharater한테 triggerstay 2");
-
                     var message = new DamageInfo();
                     message.Amount = damage;
+                    message.Damager = gameObject;
                     playerDamageReceiver.ApplyDamage(message);
                 };
             }

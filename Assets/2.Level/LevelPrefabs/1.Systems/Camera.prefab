@@ -617,6 +617,9 @@ MonoBehaviour:
   _holeSize: 1.5
   _opacity: 0.049
   _edgeSoftness: 0.473
+  _occluderMask:
+    serializedVersion: 2
+    m_Bits: 2048
 --- !u!114 &2768322672009632731
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -629,7 +632,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11ec2da0318ae2745b9b19dee4ff2797, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.PlayerCameraShake
-  _impulseSource: {fileID: 4561768414220016481}
+  MaxSameStateStack: 3
+  AmplitudeGainPerStack: 0.05
 --- !u!114 &4561768414220016481
 MonoBehaviour:
   m_ObjectHideFlags: 0

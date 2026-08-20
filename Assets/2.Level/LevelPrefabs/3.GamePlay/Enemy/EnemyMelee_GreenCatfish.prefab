@@ -12801,6 +12801,7 @@ GameObject:
   - component: {fileID: 320156054672541660}
   - component: {fileID: 3697283907977926102}
   - component: {fileID: 6850541879664068037}
+  - component: {fileID: 4083016131423194687}
   m_Layer: 7
   m_Name: EnemyMelee_GreenCatfish
   m_TagString: Untagged
@@ -12995,6 +12996,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.CalliSystem
   maxPaintOver: 2
+--- !u!114 &4083016131423194687
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6726792660888042266}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a31827a6a12b9a4994eb0a55c94cfb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Refactoring.OutlineHighlight
+  _outlineMaterial: {fileID: 2100000, guid: c2e345f1a205f3643b6231051b20fa44, type: 2}
 --- !u!1 &7005290177396308235
 GameObject:
   m_ObjectHideFlags: 0

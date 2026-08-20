@@ -10,6 +10,10 @@ namespace Refactoring
         private const string MasterParam = "MasterVolume";
         private const string BgmParam = "BgmVolume";
         private const string SfxParam = "SfxVolume";
+        private const string EnemyParam = "EnemyVolume";
+        private const string PlayerParam = "PlayerVolume";
+        private const string EnvironmentParam = "Environment";
+        private const string UiParam = "UiVolume";
 
         private const float MinDb = -80f; // 믹서 최소값 = 완전 무음
 
@@ -44,6 +48,10 @@ namespace Refactoring
             SetVolume(VolumeCategory.Master, _soundSettings.GetVolume(VolumeCategory.Master));
             SetVolume(VolumeCategory.Bgm, _soundSettings.GetVolume(VolumeCategory.Bgm));
             SetVolume(VolumeCategory.Sfx, _soundSettings.GetVolume(VolumeCategory.Sfx));
+            SetVolume(VolumeCategory.Enemy, _soundSettings.GetVolume(VolumeCategory.Enemy));
+            SetVolume(VolumeCategory.Player, _soundSettings.GetVolume(VolumeCategory.Player));
+            SetVolume(VolumeCategory.Environment, _soundSettings.GetVolume(VolumeCategory.Environment));
+            SetVolume(VolumeCategory.Ui, _soundSettings.GetVolume(VolumeCategory.Ui));
         }
 
         public void SetVolume(VolumeCategory category, float volume01)
@@ -68,6 +76,10 @@ namespace Refactoring
                 case VolumeCategory.Master: return MasterParam;
                 case VolumeCategory.Bgm: return BgmParam;
                 case VolumeCategory.Sfx: return SfxParam;
+                case VolumeCategory.Enemy: return EnemyParam;
+                case VolumeCategory.Player: return PlayerParam;
+                case VolumeCategory.Environment: return EnvironmentParam;
+                case VolumeCategory.Ui: return UiParam;
                 default: return MasterParam;
             }
         }

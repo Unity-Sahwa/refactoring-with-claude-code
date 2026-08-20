@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.BaseStateData
   stateType: 4
   isLooping: 0
-  cooldown: 0
+  cooldown: 3
   inputBlock:
   - name: 
     startProgress: 0

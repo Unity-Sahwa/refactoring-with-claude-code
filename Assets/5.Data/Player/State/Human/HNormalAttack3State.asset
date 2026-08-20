@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.BaseStateData
   stateType: 3
   isLooping: 0
-  cooldown: 0
+  cooldown: 1
   inputBlock:
   - name: 
     startProgress: 0
@@ -37,6 +37,7 @@ MonoBehaviour:
     duration: 1
     untilEnd: 0
   invincible: []
+  cameraLock: []
   skillMove:
   - name: 
     startProgress: 0.28
@@ -73,4 +74,7 @@ MonoBehaviour:
     id: 5
     startProgress: 0.3
     untilFinish: 1
+  cameraShake: []
+  cameraZoom: []
   finish: []
+  objectToggle: []
