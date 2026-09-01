@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -25,7 +26,7 @@ namespace Refactoring
         private static readonly int OpacityId = Shader.PropertyToID("_SeeThroughOpacity");
         private static readonly int EdgeSoftnessId = Shader.PropertyToID("_SeeThroughEdgeSoftness");
 
-        [Inject] private ICurrentCharacterProvider _currentCharacter;
+        [Preserve, Inject] private ICurrentCharacterProvider _currentCharacter;
 
         [Tooltip("구멍 반경")]
         [SerializeField, Range(0f, 3f)]

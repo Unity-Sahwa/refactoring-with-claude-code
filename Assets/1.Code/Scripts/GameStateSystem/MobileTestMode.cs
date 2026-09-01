@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -16,8 +17,8 @@ namespace Refactoring
     {
 #if UNITY_EDITOR
         [SerializeField] private bool isMobileTest = false;
-        [Inject(true)] private CinemachineInputAxisController cameraAxisController;
-        [Inject(true)] private List<PlatformObject> _platformObjects;
+        [Preserve, Inject(true)] private CinemachineInputAxisController cameraAxisController;
+        [Preserve, Inject(true)] private List<PlatformObject> _platformObjects;
 
         // 온스크린 조이스틱(OnScreenStick)은 드래그를 <Gamepad>/rightStick으로 흉내 내서 보낸다.
         // 그런데 에디터에서는 실제 마우스로 그 조이스틱을 드래그하므로, 같은 프레임에

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -8,8 +9,8 @@ namespace Refactoring
     // 일회성 설정이라 상태가 끝나도 되돌리지 않는다 (되돌리려면 다른 상태/타이밍에 별도 항목으로 지정).
     public class PlayerObjectToggleHandler : MonoBehaviour
     {
-        [Inject] private IPlayerStateEventSubscriber _eventSubscriber;
-        [Inject] private List<IToggleTarget> _toggleTargets;
+        [Preserve, Inject] private IPlayerStateEventSubscriber _eventSubscriber;
+        [Preserve, Inject] private List<IToggleTarget> _toggleTargets;
         private readonly Dictionary<ToggleTargetKey, GameObject> _targets = new();
         private IDisposable _toggleEventDisposable;
 

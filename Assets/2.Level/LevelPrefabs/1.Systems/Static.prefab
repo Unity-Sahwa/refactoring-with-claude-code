@@ -213,7 +213,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b88cd65c4cde73c47865e6a46d8260b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.AudioPlayer
-  _sfxGroup: {fileID: 8140940479546855537, guid: 4990067f5205fde4b84c5ff6e158bd4c, type: 2}
   _initialVoices: 8
 --- !u!114 &1603486921556361555
 MonoBehaviour:

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -10,7 +11,7 @@ namespace Refactoring
         [SerializeField]
         private bool _showOnMobile;
 
-        [Inject(true)] private IPlatformSettings _settings;
+        [Preserve, Inject(true)] private IPlatformSettings _settings;
 
         // ponytail: 켜고 끄는 판단을 매 프레임 안 하고 시작할 때 한 번만 한다.
         // 게임 중에 플랫폼을 바꾸는 경우가 생기면 그때 설정 쪽에 값 바뀜 알림을 붙이면 된다.

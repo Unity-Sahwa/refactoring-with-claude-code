@@ -83,11 +83,11 @@ MonoBehaviour:
     Korean: "\uAC8C\uC784 \uD50C\uB808\uC774"
     English: GamePlay
   - Key: UI_Setting_GamePlay_MouseSpeed(UpDown)
-    Korean: "\uB9C8\uC6B0\uC2A4 \uC18D\uB3C4(\uC0C1\uD558)"
-    English: MouseSpeed(Up,Down)
+    Korean: "\uCE74\uBA54\uB77C \uD68C\uC804 \uC18D\uB3C4(\uC0C1\uD558)"
+    English: CameraRotationSpeed(Up,Down)
   - Key: UI_Setting_GamePlay_MouseSpeed(LeftRight)
-    Korean: "\uB9C8\uC6B0\uC2A4 \uC18D\uB3C4(\uC88C\uC6B0)"
-    English: MouseSpeed(Left,Right)
+    Korean: "\uCE74\uBA54\uB77C \uD68C\uC804 \uC18D\uB3C4(\uC88C\uC6B0)"
+    English: CameraRotationSpeed(Left,Right)
   - Key: UI_Setting_GamePlay_Up
     Korean: "\uC704"
     English: Up

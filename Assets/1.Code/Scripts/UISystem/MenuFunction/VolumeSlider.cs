@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Scripting;
 using UnityEngine.UI;
 
 namespace Refactoring
@@ -10,7 +11,7 @@ namespace Refactoring
         [SerializeField]
         private VolumeCategory _volumeType;
 
-        [Inject(true)] private ISoundSettings _soundSettings;
+        [Preserve, Inject(true)] private ISoundSettings _soundSettings;
 
         private Slider _slider;
 

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Scripting;
 using UnityEngine.UI;
 
 namespace Refactoring
@@ -10,10 +11,10 @@ namespace Refactoring
     // 씬에 하나만 놓는다. 둘 이상 놓으면 버튼 하나에 소리가 두 번 붙는다.
     public class ButtonClickSound : MonoBehaviour
     {
-        [Inject] private AudioChannel _audioChannel;
+        [Preserve, Inject] private AudioChannel _audioChannel;
 
         // 주입기가 씬의 MonoBehaviour를 전부 등록해서, 버튼도 이렇게 한꺼번에 받을 수 있다(꺼져 있는 것 포함).
-        [Inject] private List<Button> _buttons;
+        [Preserve, Inject] private List<Button> _buttons;
 
         // Awake가 아니라 Start인 이유: 주입이 Awake에 일어나서, Awake에 읽으면 아직 비어 있다.
         private void Start()

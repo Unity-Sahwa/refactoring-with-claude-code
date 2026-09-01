@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -7,9 +8,9 @@ namespace Refactoring
     // 여러 번 떨어질 수 있으니 붙이는 EnterTrigger의 isLoop를 켜야 한다.
     public class EventFallRespawn : EventData
     {
-        [Inject(true)] private IHealthInfo _health;
-        [Inject(true)] private SaveSlotManager _slots;
-        [Inject(true)] private SlotLoadRunner _runner;
+        [Preserve, Inject(true)] private IHealthInfo _health;
+        [Preserve, Inject(true)] private SaveSlotManager _slots;
+        [Preserve, Inject(true)] private SlotLoadRunner _runner;
 
         public override void Execute()
         {

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -10,7 +11,7 @@ namespace Refactoring
         [SerializeField]
         private bool _isLock = true;
 
-        [Inject(true)]
+        [Preserve, Inject(true)]
         private IGameStateController _gameState;
 
         public override void Execute()

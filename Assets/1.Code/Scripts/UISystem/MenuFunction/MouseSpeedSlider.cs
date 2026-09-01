@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEngine.Rendering.DebugUI;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -12,7 +12,7 @@ namespace Refactoring
         [SerializeField]
         private bool _isVertical;
 
-        [Inject(true)] private IMouseSettings _mouseSettings;
+        [Preserve, Inject(true)] private IMouseSettings _mouseSettings;
         [SerializeField] private TextMeshProUGUI sliderValueText;
 
         private Slider _slider;

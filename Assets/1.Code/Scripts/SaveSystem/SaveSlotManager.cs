@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -13,7 +14,7 @@ namespace Refactoring
         [SerializeField]
         private int _slotCount = 4;
 
-        [Inject(true)] private ISaveService _saveService;
+        [Preserve, Inject(true)] private ISaveService _saveService;
 
         // 지금 놀고 있는 칸. 아직 정해지지 않았으면 -1.
         //

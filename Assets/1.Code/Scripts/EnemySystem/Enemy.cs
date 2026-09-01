@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Scripting;
 using UnityEngine.UI;
 
 namespace Refactoring
@@ -51,8 +52,8 @@ namespace Refactoring
         protected LayerMask targetLayer;
         protected NavMeshAgent navAgent;
         [HideInInspector] public Transform target;
-        [Inject(true)] protected ICurrentCharacterProvider currentCharacterProvider; // 캐릭터 스왑 시 타겟 갈아끼우기용
-        [Inject(true)] protected ICharacterSwapNotifier characterSwapNotifier; // 캐릭터 스왑 통지(이벤트로 즉시 타겟 교체)
+        [Preserve, Inject(true)] protected ICurrentCharacterProvider currentCharacterProvider; // 캐릭터 스왑 시 타겟 갈아끼우기용
+        [Preserve, Inject(true)] protected ICharacterSwapNotifier characterSwapNotifier; // 캐릭터 스왑 통지(이벤트로 즉시 타겟 교체)
         protected Rigidbody rb;
         protected List<IDamageable> lastAttackedTarget = new List<IDamageable>();
         public Animator animator;
@@ -121,6 +122,9 @@ namespace Refactoring
 
         protected bool hasTarget => target != null;
 
+        // Start가 한 번 끝났는지. OnEnable이 Start보다 먼저 도는 첫 활성화에서 코루틴이 겹치는 것을 막는다.
+        protected bool started;
+
         protected virtual void Awake()
         {
             targetLayer = LayerMask.GetMask("Player");
@@ -132,6 +136,16 @@ namespace Refactoring
             previousState = eState.A;
 
             if (characterSwapNotifier != null) characterSwapNotifier.OnCharacterSwapped += OnCharacterSwapped;
+        }
+
+        // SetActive(false)는 코루틴을 전부 끊는데 Start는 다시 안 돌아 상태머신이 죽은 채로 남는다.
+        // 프리로드처럼 껐다 켜는 경우를 위해 이미 초기화가 끝난 개체만 여기서 되살린다.
+        protected virtual void OnEnable()
+        {
+            if (started && !isDead)
+            {
+                StartCoroutine(StateManager());
+            }
         }
 
         protected virtual void OnDestroy()
@@ -173,6 +187,7 @@ namespace Refactoring
 
             attackDistance = Vector3.Distance(transform.position, attackPivot) + autoAttackRange;
             navAgent.stoppingDistance = attackDistance;
+            started = true;
             StartCoroutine(StateManager());
         }
 

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -16,10 +17,10 @@ namespace Refactoring
 
         private float _hideTimer;
 
-        [Inject]
+        [Preserve, Inject]
         private ICurrentStateProvider _stateProvider;
 
-        [Inject]
+        [Preserve, Inject]
         private ILockOnTargetDetector _targetDetector;
 
         private CanvasGroup _canvasGroup;

@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
 public class WisuSuppressionController : Enemy
 {
-    [Inject] private WisuMainRe wisuMain;
-    [Inject] private WisuSpawnPhase wisuSpawnPhase;
+    [Preserve, Inject] private WisuMainRe wisuMain;
+    [Preserve, Inject] private WisuSpawnPhase wisuSpawnPhase;
     public EnemyDataMelee ControllerData;
     public bool isInvincible = false;
     public ParticleSystem hpEffect;

@@ -2,13 +2,14 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Pool;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
     // 역할: HitChannel을 구독해, 타격 신호를 받아 타격 위치에 이펙트를 활성화한다.
     public class HitEffectHandler : MonoBehaviour
     {
-        [Inject] private HitChannel _hitChannel;
+        [Preserve, Inject] private HitChannel _hitChannel;
         [SerializeField] private GameObject _hitEffectPrefab;
         [SerializeField, Min(0f)] private float _duration = 1f;
 

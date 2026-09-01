@@ -1,11 +1,12 @@
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
     public class WisuPhysicsAttack : MonoBehaviour
     {
         
-        [Inject] ICurrentCharacterProvider currentCharacterProvider;
+        [Preserve, Inject] ICurrentCharacterProvider currentCharacterProvider;
         public float damage;
         private void OnTriggerEnter(Collider other)
         {

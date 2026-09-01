@@ -1,15 +1,16 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
     // 역할: 플레이어 이벤트(상태 및 타격 발생)를 받아 오디오 채널에 소리를 요청함.
     public class PlayerAudioHandler : MonoBehaviour
     {
-        [Inject] private IPlayerStateEventSubscriber _eventSubscriber;
-        [Inject] private AudioChannel _audioChannel; //알림시 소리 재생/정지를 요청하기 위함
-        [Inject] private HitChannel _hitChannel; //타격시 이벤트를 받기 위함.
+        [Preserve, Inject] private IPlayerStateEventSubscriber _eventSubscriber;
+        [Preserve, Inject] private AudioChannel _audioChannel; //알림시 소리 재생/정지를 요청하기 위함
+        [Preserve, Inject] private HitChannel _hitChannel; //타격시 이벤트를 받기 위함.
 
         private readonly List<IPlayerAudio> _started = new();
         private IDisposable _audioEventDisposable;

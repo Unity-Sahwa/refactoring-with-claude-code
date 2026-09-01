@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Audio;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -10,8 +10,8 @@ namespace Refactoring
     //       카탈로그에서 소리 정의를 찾을 뿐, 무엇을 언제 왜 트는지는 모른다(요청받을 뿐).
     public class AudioPlayer : MonoBehaviour
     {
-        [Inject] private AudioChannel _audioChannel;
-        [Inject] private AudioCatalog _audioCatalog;
+        [Preserve, Inject] private AudioChannel _audioChannel;
+        [Preserve, Inject] private AudioCatalog _audioCatalog;
         [SerializeField] private int _initialVoices = 8;
 
         private readonly List<AudioSource> _pool = new();    // 사용 가능한 오디오 소스

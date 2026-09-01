@@ -13,7 +13,6 @@ namespace Refactoring
         ICurrentCharacterProvider currentCharacterProvider;
         public Mode pillarMode;
         public float damage = 1;
-        public float lifeTime = 10;
         public float speed = 10;
         
         [HideInInspector]
@@ -21,8 +20,10 @@ namespace Refactoring
         private Rigidbody rb;
         private NavMeshAgent navMeshAgent;
 
-        private void Start()
+        // 풀에서 빌려줄 때마다 불린다. 초기화를 Start에 두면 재사용 때 다시 돌지 않는다.
+        public void Init(ICurrentCharacterProvider provider)
         {
+            currentCharacterProvider = provider;
             navMeshAgent = GetComponent<NavMeshAgent>();
 
             if (pillarMode == Mode.Standing)
@@ -43,24 +44,23 @@ namespace Refactoring
                     navMeshAgent.SetDestination(currentCharacterProvider.CurrentCharacter.transform.position);
                 }
             }
-            Destroy(gameObject, lifeTime);
         }
 
         private void Update()
         {
-            if (pillarMode == Mode.Tracking && navMeshAgent != null)
+            if (pillarMode == Mode.Tracking && navMeshAgent != null && currentCharacterProvider != null)
             {
                 navMeshAgent.SetDestination(currentCharacterProvider.CurrentCharacter.transform.position);
             }
         }
 
-        public void Init(ICurrentCharacterProvider provider)
-        {
-            currentCharacterProvider = provider;
-        }
-
         private void OnTriggerStay(Collider other)
         {
+            if (currentCharacterProvider == null)
+            {
+                return;
+            }
+
             if (other.gameObject == currentCharacterProvider.CurrentCharacter.gameObject)
             {
                 PlayerStateMachine playerStateMachine = currentCharacterProvider.CurrentCharacter.GetComponent<PlayerStateMachine>();

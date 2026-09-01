@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Scripting;
 using UnityEngine.UI;
 
 namespace Refactoring
@@ -10,9 +11,9 @@ namespace Refactoring
     {
         // 목록 창과 이 버튼은 서로 다른 프리팹에 있어서 인스펙터로 이어줄 수 없다.
         // AttributeInjector가 씬 오브젝트를 실제 타입 이름으로도 등록하고 꺼져 있는 것까지 모으니 그걸 쓴다.
-        [Inject(true)] private SlotListWindow _slotList;
+        [Preserve, Inject(true)] private SlotListWindow _slotList;
 
-        [Inject(true)] private ISaveSlots _saveSlots;
+        [Preserve, Inject(true)] private ISaveSlots _saveSlots;
 
         private void Awake()
         {

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -6,7 +7,7 @@ namespace Refactoring
     public class EventPlayerWarp : EventData
     {
         [SerializeField] private Transform _playerTransform;
-        [Inject(true)] private ICurrentCharacterProvider _character;
+        [Preserve, Inject(true)] private ICurrentCharacterProvider _character;
 
         private void Awake()
         {

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -12,7 +13,7 @@ namespace Refactoring
         [SerializeField] private LayerMask _obstacleMask;       // 시야를 막는 벽 레이어
         [SerializeField] private bool _debug;                   // Gizmos 디버그 표시 on/off
 
-        [Inject] private ICurrentCharacterProvider _character;  // 플레이어 위치
+        [Preserve, Inject] private ICurrentCharacterProvider _character;  // 플레이어 위치
 
         public IReadOnlyList<Collider> Candidates => _candidates;
 

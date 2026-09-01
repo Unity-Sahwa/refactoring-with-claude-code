@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -9,7 +10,7 @@ namespace Refactoring
         [SerializeField] private float _radius = 20f;
         [SerializeField] private LayerMask _enemyMask;
 
-        [Inject] private ICurrentCharacterProvider _currentCharacterProvider;
+        [Preserve, Inject] private ICurrentCharacterProvider _currentCharacterProvider;
 
         private readonly Collider[] _overlapHits = new Collider[32];
         private Camera _cam;

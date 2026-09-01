@@ -1,12 +1,13 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
     // 책임: 체력이 바뀌면 하트 아이콘 개수와 숫자 표시를 맞춘다. 값 계산은 Health가 한다.
     public class HealthHUD : MonoBehaviour
     {
-        [Inject] private IHealthInfo _health;
+        [Preserve, Inject] private IHealthInfo _health;
 
         [Tooltip("하트 아이콘들. 순서대로 왼쪽부터 채워진다.")]
         [SerializeField] private GameObject[] _hpIcons;

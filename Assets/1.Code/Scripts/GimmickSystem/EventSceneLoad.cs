@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -22,7 +23,39 @@ namespace Refactoring
         [SerializeField]
         private float _delay;
 
-        [Inject(true)] private SaveSlotManager _slots;
+        [Preserve, Inject(true)] private SaveSlotManager _slots;
+        [Preserve, Inject(true)] private IHealthInfo _health;
+        [Preserve, Inject(true)] private ICurrentCharacterProvider _character;
+
+        // 씬을 넘겨 들고 갈 체력과 캐릭터. 새 씬의 GameStateSaver가 Start에서 꺼내 쓰고 비운다.
+        //
+        // static인 이유:
+        // LoadScene에는 값을 실어 보낼 인자가 없다. 이 오브젝트는 씬과 함께 파괴돼서 보통 필드는 같이 사라진다.
+        // static 필드는 클래스에 붙어 있어 씬이 바뀌어도 남는다. SlotLoadRunner._pending과 같은 방식이다.
+        private static float? _pendingHp;
+        private static PlayerCharacterType? _pendingType;
+
+        // 도메인 리로드를 끄면 지난 판의 값이 딸려 온다. 그래서 시작할 때 손으로 비운다.
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
+        private static void ResetStatic()
+        {
+            _pendingHp = null;
+            _pendingType = null;
+        }
+
+        // 새 씬이 꺼내 간다. 한 번 꺼내면 비워서, 그냥 뜬 다음 씬이 옛 값을 다시 먹지 않게 한다.
+        public static bool TakePending(out float hp, out PlayerCharacterType type)
+        {
+            bool has = _pendingHp.HasValue && _pendingType.HasValue;
+
+            hp = _pendingHp ?? 0f;
+            type = _pendingType ?? default;
+
+            _pendingHp = null;
+            _pendingType = null;
+
+            return has;
+        }
 
         private void Awake()
         {
@@ -59,6 +92,13 @@ namespace Refactoring
 
         private void LoadNow()
         {
+            // 메뉴 버튼에 붙은 경우엔 플레이어가 없어서 둘 다 비어 있다. 그때는 넘길 것도 없다.
+            if (_health != null && _character?.CurrentCharacter != null)
+            {
+                _pendingHp = _health.Current;
+                _pendingType = _character.CurrentCharacter.Type;
+            }
+
             SceneManager.LoadScene(_nextScene);
         }
     }

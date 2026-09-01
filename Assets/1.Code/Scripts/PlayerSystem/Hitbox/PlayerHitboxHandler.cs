@@ -1,15 +1,16 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
     // 역할: 플레이어 상태 이벤트를 알림 받아, overlap 형태로 충돌체 활성화. 충돌된 대상에게 데이터 주입 및 충돌 성공 이벤트 호출
     public class PlayerHitboxHandler : MonoBehaviour
     {
-        [Inject] private IPlayerStateEventSubscriber _eventSubscriber;
-        [Inject] private ICurrentCharacterProvider _currentCharacterProvider;
-        [Inject] private HitChannel hitChannel;
+        [Preserve, Inject] private IPlayerStateEventSubscriber _eventSubscriber;
+        [Preserve, Inject] private ICurrentCharacterProvider _currentCharacterProvider;
+        [Preserve, Inject] private HitChannel hitChannel;
 
         private int _targetMask;
         private readonly List<ActiveHitbox> _actives = new();

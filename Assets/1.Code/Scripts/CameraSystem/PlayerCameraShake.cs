@@ -1,6 +1,7 @@
 using System;
 using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -8,11 +9,11 @@ namespace Refactoring
     //       그 순간 플레이어 상태에 맞는 셰이크 값으로 카메라 임펄스를 쏜다.
     public class PlayerCameraShake : MonoBehaviour
     {
-        [Inject] private CinemachineImpulseSource _impulseSource;
-        [Inject(true)] private PlayerCameraShakeData _shakeData;
-        [Inject(true)] private HitChannel _hitChannel;
-        [Inject(true)] private IStateTriggerSubscriber _triggerSubscriber;
-        [Inject(true)] private ICurrentStateProvider _currentStateProvider;
+        [Preserve, Inject] private CinemachineImpulseSource _impulseSource;
+        [Preserve, Inject(true)] private PlayerCameraShakeData _shakeData;
+        [Preserve, Inject(true)] private HitChannel _hitChannel;
+        [Preserve, Inject(true)] private IStateTriggerSubscriber _triggerSubscriber;
+        [Preserve, Inject(true)] private ICurrentStateProvider _currentStateProvider;
 
         private IDisposable _hitEventDisposable;
 

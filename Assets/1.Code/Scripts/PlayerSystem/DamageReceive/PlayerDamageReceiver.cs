@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -7,9 +8,9 @@ namespace Refactoring
     [RequireComponent(typeof(CharacterController))]
     public class PlayerDamageReceiver : MonoBehaviour, IDamageable, IPlayerDamageable
     {
-        [Inject(true)] private IHealthModifier _health;
-        [Inject(true)] private IStateTriggerRaiser _triggerRaiser;
-        [Inject(true)] private IPlayerStateEventSubscriber _eventSubscriber;
+        [Preserve, Inject(true)] private IHealthModifier _health;
+        [Preserve, Inject(true)] private IStateTriggerRaiser _triggerRaiser;
+        [Preserve, Inject(true)] private IPlayerStateEventSubscriber _eventSubscriber;
         [Tooltip("피격 후 이 시간(초) 동안은 추가 피격을 무시한다. 슈퍼아머 중 다단히트로 순삭당하는 것 방지")]
         [SerializeField] private float _damageCooldown = 0.5f;
         private IDisposable _invincibleEventDisposable;

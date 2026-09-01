@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -8,7 +9,7 @@ namespace Refactoring
     {
         [SerializeField] private EventButtonGuide guide; // 실제 강조는 여기에 그대로 맡김
 
-        [Inject(true)] private IFinishChecker _finishChecker;
+        [Preserve, Inject(true)] private IFinishChecker _finishChecker;
 
         private void Update()
         {

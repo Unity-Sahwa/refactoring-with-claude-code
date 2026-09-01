@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -14,7 +15,7 @@ namespace Refactoring
         [SerializeField]
         private float _power = 10f;
 
-        [Inject]
+        [Preserve, Inject]
         private IHealthInfo _health;
 
         private RectTransform _rect;

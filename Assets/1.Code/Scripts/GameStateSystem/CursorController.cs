@@ -1,11 +1,12 @@
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
     // 게임 모드에 따라 커서를 제어한다. Menu면 표시·잠금 해제, 그 외엔 숨김·중앙 잠금.
     public class CursorController : MonoBehaviour
     {
-        [Inject] private IGameStateProvider _gameState;
+        [Preserve , Inject] private IGameStateProvider _gameState;
 
         private void Start()
         {

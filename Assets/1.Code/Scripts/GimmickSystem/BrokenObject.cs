@@ -48,8 +48,6 @@ public class BrokenObject : Enemy
 
         phaseHPs[phaseHPs.Count - 1] -= damageMessage.Amount;
         lastDamagedTime = Time.time;
-        //Debug.Log($"������Ʈ ü�� : {phaseHPs[phaseHPs.Count - 1]}");
-        //audioSourceHit.PlaySoundEffect(0);
 
         if (shakeTarget != null)
         {

@@ -178,6 +178,7 @@ Material:
     - _UseFresnel: 0
     - _UseShadowThreshold: 0
     - _Usesmoothcorners: 0
+    - _XRMotionVectorsPass: 1
     - _ZTestDepthEqualForOpaque: 3
     - _ZTestTransparent: 4
     - _ZWrite: 1

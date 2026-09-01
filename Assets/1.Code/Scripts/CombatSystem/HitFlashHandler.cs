@@ -2,13 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
     // 역할: HitChannel을 구독해, 맞은 몬스터를 잠깐 빨강으로 점멸시킨다.
     public class HitFlashHandler : MonoBehaviour
     {
-        [Inject] private HitChannel _hitChannel;
+        [Preserve, Inject] private HitChannel _hitChannel;
         [SerializeField] private Color _flashColor = Color.red;
         [SerializeField] private float _duration = 0.3f; // 총 점멸 시간
         [SerializeField] private int _blinkCount = 1;    // 빨강↔원래색 왕복 횟수

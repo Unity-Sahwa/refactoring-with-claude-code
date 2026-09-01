@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -10,10 +11,10 @@ namespace Refactoring
         [SerializeField] private float _stunTime = 7f;   // 스턴(모션 정지) 시간
         [SerializeField] private float _executeHeal = 10f; // 처형 성공 시 회복량
 
-        [Inject] private IPlayerStateEventSubscriber _playerStateEventSubscriber;
-        [Inject] private IFinishTargetProvider _finishTargetProvider;
-        [Inject(true)] private IHealthInfo _healthInfo;
-        [Inject(true)] private IHealthModifier _healthModifier;
+        [Preserve, Inject] private IPlayerStateEventSubscriber _playerStateEventSubscriber;
+        [Preserve, Inject] private IFinishTargetProvider _finishTargetProvider;
+        [Preserve, Inject(true)] private IHealthInfo _healthInfo;
+        [Preserve, Inject(true)] private IHealthModifier _healthModifier;
 
         private IDisposable _finishEventDisposable;
 

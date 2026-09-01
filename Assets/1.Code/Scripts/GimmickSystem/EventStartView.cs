@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -10,7 +11,7 @@ namespace Refactoring
         [SerializeField] private float _horizontal;    // 좌우 각도
         [SerializeField] private float _vertical;      // 상하 각도
 
-        [Inject(true)] private List<CameraRole> _roles;
+        [Preserve, Inject(true)] private List<CameraRole> _roles;
 
         public override void Execute()
         {

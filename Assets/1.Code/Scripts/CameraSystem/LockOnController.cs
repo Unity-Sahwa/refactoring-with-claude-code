@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -7,9 +8,9 @@ namespace Refactoring
     {
         [SerializeField] private float _releaseDistance = 20f;
 
-        [Inject] private IInputPressedProvider _inputPressedProvider;
-        [Inject] private ILockOnTargetDetector _lockOnTargetDetector;
-        [Inject] private ICurrentCharacterProvider _currentCharacterProvider;
+        [Preserve, Inject] private IInputPressedProvider _inputPressedProvider;
+        [Preserve, Inject] private ILockOnTargetDetector _lockOnTargetDetector;
+        [Preserve, Inject] private ICurrentCharacterProvider _currentCharacterProvider;
 
         public bool IsLockOn { get; private set; }
         public Collider LockedTarget { get; private set; }
@@ -49,8 +50,6 @@ namespace Refactoring
             IsLockOn = true;
             SetHighlight(LockedTarget, true);
             OnLockOnChanged?.Invoke();
-
-            Debug.Log($"target: {LockedTarget.gameObject.name}");
         }
 
         private void Update()

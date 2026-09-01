@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
 public class WisuAttackPatternA1 : MonoBehaviour
 {
-    [Inject] ICurrentCharacterProvider currentCharacterProvider;
+    [Preserve, Inject] ICurrentCharacterProvider currentCharacterProvider;
     private WisuMainRe wisu;
 
 
@@ -29,8 +30,7 @@ public class WisuAttackPatternA1 : MonoBehaviour
     {
         var pattern = wisu.pattern_A1;
 
-        List<GameObject> randomFireBoltPrefabs = new List<GameObject>(pattern.A1_prefabs);
-        List<Transform> randomFirePoints = new List<Transform>(pattern.A1_points); 
+        List<Transform> randomFirePoints = new List<Transform>(pattern.A1_points);
 
         System.Random random = new System.Random();
 
@@ -40,39 +40,25 @@ public class WisuAttackPatternA1 : MonoBehaviour
             (randomFirePoints[i], randomFirePoints[j]) = (randomFirePoints[j], randomFirePoints[i]);
         }
 
-        for (int i = randomFireBoltPrefabs.Count - 1; i > 0; i--)
+        GameObject boltPrefab = wisu.skillPool.Prefab(WisuSkill.A1);
+        float scaleFactor = boltPrefab.transform.localScale.x;
+        float speed = boltPrefab.GetComponent<FireBolt>().speed;
+
+        for (int i = 0; i < randomFirePoints.Count; i++)
         {
-            int j = random.Next(0, i + 1);
-            (randomFireBoltPrefabs[i], randomFireBoltPrefabs[j]) = (randomFireBoltPrefabs[j], randomFireBoltPrefabs[i]);
-        }
-
-        var iterationCount = Mathf.Min(randomFirePoints.Count, randomFireBoltPrefabs.Count);
-
-        for (int i = 0; i < iterationCount; i++)
-        {
-            GameObject projectile = Instantiate(randomFireBoltPrefabs[i], randomFirePoints[i].position, randomFireBoltPrefabs[i].transform.rotation);
-
-            FireBolt fireBoltScript = projectile.GetComponent<FireBolt>();
-            if (fireBoltScript == null)
-            {
-                Debug.LogError("FireBolt 스크립트가 발사체 프리팹에 붙지 않음");
-                continue;
-            }
-            fireBoltScript.Init(currentCharacterProvider);
-
-            float speed = fireBoltScript.speed;
             Vector3 targetPosition = wisu.target.transform.position;
+            // 발사체 수명 = 목표 지점까지 걸리는 시간. 이 시간이 곧 반납 시점이자 위험 표시 시간이다.
+            float flightTime = Vector3.Distance(randomFirePoints[i].position, targetPosition) / speed;
+
+            GameObject projectile = wisu.skillPool.Get(WisuSkill.A1, randomFirePoints[i].position, flightTime);
+            projectile.GetComponent<FireBolt>().Init(currentCharacterProvider);
+
             Vector3 direction = (targetPosition - projectile.transform.position).normalized;
             projectile.GetComponent<Rigidbody>().linearVelocity = direction * speed;
 
-            float scaleFactor = randomFireBoltPrefabs[i].transform.localScale.x;
             GameObject dangerZoneInst = Instantiate(wisu.dangerZone_Bolt, targetPosition, Quaternion.identity);
-            dangerZoneInst.transform.localScale *= scaleFactor; 
-
-            DangerZone dangerZoneScript = dangerZoneInst.GetComponent<DangerZone>();
-            dangerZoneScript.scalingTime = Vector3.Distance(randomFirePoints[i].position, targetPosition) / speed;
-
-            fireBoltScript.destroyTime = dangerZoneScript.scalingTime;
+            dangerZoneInst.transform.localScale *= scaleFactor;
+            dangerZoneInst.GetComponent<DangerZone>().scalingTime = flightTime;
 
             float interval = (i < pattern.A1_intervals.Count) ? pattern.A1_intervals[i] : pattern.A1_defaultInterval;
             yield return new WaitForSeconds(interval);

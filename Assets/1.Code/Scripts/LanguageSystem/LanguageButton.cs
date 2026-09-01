@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Scripting;
 using UnityEngine.UI;
 
 namespace Refactoring
@@ -12,7 +13,7 @@ namespace Refactoring
         [SerializeField]
         private Language _target;
 
-        [Inject(true)] private ILanguageSettings _language;
+        [Preserve, Inject(true)] private ILanguageSettings _language;
 
         private void Awake()
         {

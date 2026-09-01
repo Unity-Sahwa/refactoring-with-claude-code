@@ -1,11 +1,11 @@
-using System;
-using System.Collections.Generic;
-using UnityEngine;
+//using System;
+//using System.Collections.Generic;
+//using UnityEngine;
 
-namespace Refactoring
-{
-    public interface IAbstractTypeInjected_old
-    {
-        Dictionary<Type,List<Type>> AbstractTypeMap { get;}
-    }
-}
+//namespace Refactoring
+//{
+//    public interface IAbstractTypeInjected_old
+//    {
+//        Dictionary<Type,List<Type>> AbstractTypeMap { get;}
+//    }
+//}

@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -20,7 +21,7 @@ namespace Refactoring
         [SerializeField] private AudioMixer mixer;
 
         // 설정창이 바꾼 소리 크기를 여기서 읽어서 믹서에 넣는다. 설정 쪽은 믹서를 모른다.
-        [Inject(true)] private ISoundSettings _soundSettings;
+        [Preserve, Inject(true)] private ISoundSettings _soundSettings;
 
         // Awake가 아니라 Start인 이유: 주입이 Awake에 일어나서, Awake에 읽으면 아직 비어 있다.
         private void Start()

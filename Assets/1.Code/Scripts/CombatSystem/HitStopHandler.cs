@@ -2,13 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
     // 역할: HitChannel을 구독해, 타격 성공 순간 때린 놈/맞은 놈의 애니를 잠깐 멈춘다(히트스탑).
     public class HitStopHandler : MonoBehaviour
     {
-        [Inject] private HitChannel _hitChannel;
+        [Preserve, Inject] private HitChannel _hitChannel;
         [SerializeField] private float _attackerFreeze = 0.08f; // 때린 놈(플레이어) 정지 시간
         [SerializeField] private float _targetFreeze = 0.12f;   // 맞은 놈 정지 시간
         private readonly Dictionary<Animator, float> _frozen = new(); // 얼린 애니메이터 → 얼리기 직전 속도

@@ -1,11 +1,12 @@
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
     // 게임 모드가 Menu가 되면 시간을 멈추고, 벗어나면 되돌린다. UI와 분리된 단일 책임.
     public class GamePauseController : MonoBehaviour
     {
-        [Inject] private IGameStateProvider _gameState;
+        [Preserve, Inject] private IGameStateProvider _gameState;
 
         private void Awake()
         {

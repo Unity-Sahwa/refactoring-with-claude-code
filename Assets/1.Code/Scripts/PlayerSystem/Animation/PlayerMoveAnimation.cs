@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -8,10 +9,10 @@ namespace Refactoring
     // 흐름: 상태 이벤트 구독, 사용자 입력 구독 > 파라미터 갱신 활성화 이벤트 받음 > 입력을 받아 파라미터 갱신 > 비활성화 이벤트 받음 > 갱신 중지
     public class PlayerMoveAnimation : MonoBehaviour
     {
-        [Inject] private IInputMoveProvider _inputEventProvider;
-        [Inject(true)] private IPlayerStateEventSubscriber _eventSubscriber;
-        [Inject(true)] private ILockOnState _lockOnState;
-        [Inject(true)] private ICurrentCharacterProvider _currentCharacterProvider;   // 현재 캐릭터의 Animator 조회용
+        [Preserve, Inject] private IInputMoveProvider _inputEventProvider;
+        [Preserve, Inject(true)] private IPlayerStateEventSubscriber _eventSubscriber;
+        [Preserve, Inject(true)] private ILockOnState _lockOnState;
+        [Preserve, Inject(true)] private ICurrentCharacterProvider _currentCharacterProvider;   // 현재 캐릭터의 Animator 조회용
 
         private Animator _animator;
         private Vector2 _playerMoveVector = new Vector2();

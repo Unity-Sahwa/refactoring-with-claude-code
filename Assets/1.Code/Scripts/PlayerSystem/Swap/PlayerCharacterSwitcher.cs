@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
     //역할: (게임에서는 2가지 캐릭터만 사용) 2개의 캐릭터를 스왑한다.
     public class PlayerCharacterSwitcher : MonoBehaviour, ICharacterSwappable, ICharacterSwapNotifier, ICurrentCharacterProvider
     {
-        [Inject] private List<PlayerCharacter> _characters;
+        [Preserve, Inject] private List<PlayerCharacter> _characters;
         public PlayerCharacter CurrentCharacter => _currentCharacter;
         public event Action OnCharacterSwapped;
         private PlayerCharacter _currentCharacter = null;

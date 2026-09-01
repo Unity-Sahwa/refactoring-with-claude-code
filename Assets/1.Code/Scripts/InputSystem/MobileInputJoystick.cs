@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -10,7 +11,7 @@ namespace Refactoring
         [SerializeField] private RectTransform _handle;   // 눈에 보이는 손잡이. 없어도 동작함
         [SerializeField] private float _radius = 80f;     // 손잡이가 움직일 수 있는 반지름(픽셀)
 
-        [Inject(true)] private IInputSender _inputSender;
+        [Preserve, Inject(true)] private IInputSender _inputSender;
 
         private RectTransform _area;
 

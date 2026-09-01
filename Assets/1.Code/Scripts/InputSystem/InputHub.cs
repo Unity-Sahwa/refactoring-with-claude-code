@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -9,10 +10,10 @@ namespace Refactoring
     // 입력이 들어오는 문은 두 개. 키보드/패드는 InputSystem 액션에서, 모바일 UI 버튼은 IInputSender로 들어옴.
     public class InputHub : MonoBehaviour, IInputSender
     {
-        [Inject(true)] private InputActionAsset _actionAsset;
-        [Inject] private List<IDomainInputHandler> _handlers;
-        [Inject(true)] private IGameStateProvider _gameStateProvider;
-        [Inject(true)] private IInputKeySettings _keySettings;
+        [Preserve, Inject(true)] private InputActionAsset _actionAsset;
+        [Preserve, Inject] private List<IDomainInputHandler> _handlers;
+        [Preserve, Inject(true)] private IGameStateProvider _gameStateProvider;
+        [Preserve, Inject(true)] private IInputKeySettings _keySettings;
 
         private readonly InputActionType[] _allActions = (InputActionType[])Enum.GetValues(typeof(InputActionType));
 

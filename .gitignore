@@ -100,3 +100,6 @@ InitTestScene*.unity*
 
 # User-specific files
 /[Gg]ame[Dd]ev0320/
+
+# Unity Profiler captures
+ProfilerCaptures/

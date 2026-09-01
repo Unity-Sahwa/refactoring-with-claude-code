@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -7,7 +8,7 @@ namespace Refactoring
     // 씬을 띄우는 일과 값을 되돌리는 일의 순서만 맡는다. 파일도 플레이어도 직접 안 만진다.
     public class SlotLoadRunner : MonoBehaviour, ISaveSlots
     {
-        [Inject(true)] private SaveSlotManager _slots;
+        [Preserve, Inject(true)] private SaveSlotManager _slots;
 
         // 씬이 다 뜬 뒤에 값을 넣어야 해서, 넣을 데이터를 잠깐 들고 있는다.
         //

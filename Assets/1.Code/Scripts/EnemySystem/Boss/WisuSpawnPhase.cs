@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -9,8 +10,8 @@ public class WisuSpawnPhase : MonoBehaviour
     private WisuMainRe wisu;
 
     // AttributeInjector는 씬 시작 시 1회만 돌아서 런타임 스폰 개체는 못 받는다. 스포너 몫으로 미리 받아서 넘겨준다.
-    [Inject(true)] private ICurrentCharacterProvider _currentCharacterProvider;
-    [Inject(true)] private ICharacterSwapNotifier _swapNotifier;
+    [Preserve, Inject(true)] private ICurrentCharacterProvider _currentCharacterProvider;
+    [Preserve, Inject(true)] private ICharacterSwapNotifier _swapNotifier;
 
     [HideInInspector] public bool isControllerActive = false;
 

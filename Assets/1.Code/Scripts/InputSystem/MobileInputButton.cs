@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -7,7 +8,7 @@ namespace Refactoring
     public class MobileInputButton : MonoBehaviour, IPointerDownHandler
     {
         [SerializeField] private InputActionType _actionType;
-        [Inject(true)] private IInputSender _inputSender;
+        [Preserve , Inject(true)] private IInputSender _inputSender;
 
         public void OnPointerDown(PointerEventData eventData) => _inputSender?.RoutePressed(_actionType);
     }

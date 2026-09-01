@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Scripting;
 using UnityEngine.UI;
 
 namespace Refactoring
@@ -14,11 +15,11 @@ namespace Refactoring
         [SerializeField]
         private Transform _slotParent;
 
-        [Inject(true)] private ISaveSlots _saveSlots;
-        [Inject(true)] private ILanguageSettings _language;
+        [Preserve, Inject(true)] private ISaveSlots _saveSlots;
+        [Preserve, Inject(true)] private ILanguageSettings _language;
 
         // 슬롯 버튼은 창을 열 때 찍어내서 ButtonClickSound의 목록에 안 들어간다. 만들 때 직접 달아준다.
-        [Inject(true)] private ButtonClickSound _clickSound;
+        [Preserve, Inject(true)] private ButtonClickSound _clickSound;
 
         private UIRoot _root;
 

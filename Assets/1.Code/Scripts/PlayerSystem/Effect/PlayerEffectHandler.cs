@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -9,9 +10,9 @@ namespace Refactoring
 
     public class PlayerEffectHandler : MonoBehaviour
     {
-        [Inject] private IPlayerStateEventSubscriber _eventSubscriber;
-        [Inject] private IEffectProvider _provider;
-        [Inject] private List<IEffectAttachPoint> _effectAttachPoints;
+        [Preserve, Inject] private IPlayerStateEventSubscriber _eventSubscriber;
+        [Preserve, Inject] private IEffectProvider _provider;
+        [Preserve, Inject] private List<IEffectAttachPoint> _effectAttachPoints;
         private readonly Dictionary<EffectAttachPointType, Transform> _attachPoints = new();
         private readonly List<ActiveEffect> _actives = new();
         private IDisposable _effectEventDisposable;

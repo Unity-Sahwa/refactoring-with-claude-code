@@ -1,13 +1,14 @@
 using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
     public class CameraDebugHud : MonoBehaviour
     {
-        [Inject(true)] private ILockOnState _lockOn;
-        [Inject(true)] private ILockOnTarget _lockOnTarget;
-        [Inject(true)] private ILockOnTargetDetector _detector;
+        [Preserve, Inject(true)] private ILockOnState _lockOn;
+        [Preserve, Inject(true)] private ILockOnTarget _lockOnTarget;
+        [Preserve, Inject(true)] private ILockOnTargetDetector _detector;
 
         private CinemachineBrain _brain;
         private GUIStyle _style;

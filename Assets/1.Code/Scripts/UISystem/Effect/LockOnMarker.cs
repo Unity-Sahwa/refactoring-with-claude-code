@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -14,7 +15,7 @@ namespace Refactoring
         [SerializeField, Range(0f, 1f)]
         private float _aimAlpha = 0.4f;
 
-        [Inject]
+        [Preserve, Inject]
         private LockOnController _lockOn;
 
         private RectTransform _rect;

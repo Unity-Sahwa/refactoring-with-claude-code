@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -16,12 +17,12 @@ namespace Refactoring
     //   - GroundProbe(캐릭터에 부착)       : 발밑 면 법선을 받아 제공(가파른 경사 판정용).
     public class PlayerCharacterMover : MonoBehaviour
     {
-        [Inject] private ICurrentCharacterProvider _characterProvider;        // 필수: 움직일 대상(현재 캐릭터) 공급
-        [Inject(true)] private IInputMoveProvider _inputEventProvider;        // 옵션: 없으면 걷기, 회전만 빠짐(스킬, 중력은 동작)
-        [Inject(true)] private IPlayerStateEventSubscriber _eventSubscriber;  // 옵션: 없으면 스킬만 작동안함
-        [Inject(true)] private IStateTriggerRaiser _triggerRaiser;           // 옵션: 없으면 이동 시 Locomotion 전환 요청만 빠짐
-        [Inject(true)] private ICharacterSwapNotifier _swapNotifier;          // 옵션: 없으면 스왑 시 재획득 통지에만 사용
-        [Inject(true)] private ILockOnTarget _lockOnTarget;                   // 옵션: 없으면 회전은 항상 이동 방향
+        [Preserve, Inject] private ICurrentCharacterProvider _characterProvider;        // 필수: 움직일 대상(현재 캐릭터) 공급
+        [Preserve, Inject(true)] private IInputMoveProvider _inputEventProvider;        // 옵션: 없으면 걷기, 회전만 빠짐(스킬, 중력은 동작)
+        [Preserve, Inject(true)] private IPlayerStateEventSubscriber _eventSubscriber;  // 옵션: 없으면 스킬만 작동안함
+        [Preserve, Inject(true)] private IStateTriggerRaiser _triggerRaiser;           // 옵션: 없으면 이동 시 Locomotion 전환 요청만 빠짐
+        [Preserve, Inject(true)] private ICharacterSwapNotifier _swapNotifier;          // 옵션: 없으면 스왑 시 재획득 통지에만 사용
+        [Preserve, Inject(true)] private ILockOnTarget _lockOnTarget;                   // 옵션: 없으면 회전은 항상 이동 방향
 
         //대원_TODO: 데이터 SO로 그룹화
         [Header("일반 이동")] 

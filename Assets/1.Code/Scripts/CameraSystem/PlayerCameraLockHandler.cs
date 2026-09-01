@@ -1,6 +1,7 @@
 using System;
 using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -10,7 +11,7 @@ namespace Refactoring
     [RequireComponent(typeof(CinemachineInputAxisController))]
     public class PlayerCameraLockHandler : MonoBehaviour
     {
-        [Inject(true)] private IPlayerStateEventSubscriber _eventSubscriber;
+        [Preserve, Inject(true)] private IPlayerStateEventSubscriber _eventSubscriber;
 
         private CinemachineInputAxisController _controller;
         private IDisposable _eventDisposable;

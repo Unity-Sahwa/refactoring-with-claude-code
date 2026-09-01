@@ -24,6 +24,11 @@ EditorBuildSettings:
     path: Assets/2.Level/Scenes/Scene5_Boss.unity
     guid: 067cd3fa68bb73b45873857b79151853
   m_configObjects:
+    com.unity.adaptivePerformance.basic.provider_settings: {fileID: 11400000, guid: f3acce61efcfa674eae612b45f6e1cd6, type: 2}
+    com.unity.adaptiveperformance.google.android.provider_settings: {fileID: 11400000, guid: 5bbf41974e066ef409170bd75f16b28d, type: 2}
+    com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: ba481dafc983a2146a1a48db1fefd9f0, type: 2}
+    com.unity.adaptiveperformance.samsung.android.provider_settings: {fileID: 11400000, guid: 0c431a3e1d641ac4bab4d9fa15752cc4, type: 2}
+    com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: 7ab67ba90e3eaf44db2a4e01c0492a3f, type: 2}
     com.unity.addressableassets: {fileID: 11400000, guid: be071f7c8f3103549b086467bc0f79c4, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 8db1e1e4544a624479b8a9debc965eef, type: 3}
     com.unity.localization.settings: {fileID: 11400000, guid: 0c5f0ed7b68791941bb08dd7176e7692, type: 2}

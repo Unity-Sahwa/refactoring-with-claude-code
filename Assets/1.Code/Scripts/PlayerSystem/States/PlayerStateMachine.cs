@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -8,9 +9,9 @@ namespace Refactoring
     public class PlayerStateMachine : MonoBehaviour, IDataProvider
     {
         [SerializeField] private List<StateData> _stateDataList = new List<StateData>();
-        [Inject] private IPlayerStateEventRaiser _raiser;
-        [Inject] private IStateTriggerSubscriber _triggerSubscriber;
-        [Inject(true)] private ICurrentStateWriter _currentStateWriter;
+        [Preserve, Inject] private IPlayerStateEventRaiser _raiser;
+        [Preserve, Inject] private IStateTriggerSubscriber _triggerSubscriber;
+        [Preserve, Inject(true)] private ICurrentStateWriter _currentStateWriter;
 
         private readonly Dictionary<PlayerStateType, StateRunner> _states = new Dictionary<PlayerStateType, StateRunner>();
         private readonly Dictionary<PlayerStateType, float> _lastEnterTime = new Dictionary<PlayerStateType, float>();

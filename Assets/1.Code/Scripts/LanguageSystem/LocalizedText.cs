@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -9,7 +10,7 @@ namespace Refactoring
     {
         [TextKey][SerializeField] private string _key;
 
-        [Inject(true)] private ILanguageSettings _language;
+        [Preserve, Inject(true)] private ILanguageSettings _language;
 
         private TextMeshProUGUI _text;
 

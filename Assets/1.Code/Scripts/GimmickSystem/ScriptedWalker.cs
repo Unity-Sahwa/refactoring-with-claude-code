@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -35,7 +36,7 @@ namespace Refactoring
         [SerializeField]
         private float _fadeTime = 0.2f;
 
-        [Inject] private ICurrentCharacterProvider _characterProvider;
+        [Preserve, Inject] private ICurrentCharacterProvider _characterProvider;
 
         private CharacterController _controller;
         private Transform _characterTransform;

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -9,7 +10,7 @@ namespace Refactoring
     {
         [SerializeField] private CameraKind kind = CameraKind.Default;
 
-        [Inject] private List<CameraRole> _roles;
+        [Preserve, Inject] private List<CameraRole> _roles;
 
         public override void Execute()
         {

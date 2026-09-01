@@ -6,23 +6,9 @@ namespace Refactoring
     {
         ICurrentCharacterProvider currentCharacterProvider;
         public float damage;
-        public float lifeTime = 10;
         public float speed;
-        [HideInInspector] public float destroyTime;
-        public Rigidbody rb;
         public GameObject impactEffect;
 
-        private void Start()
-        {
-            rb = GetComponent<Rigidbody>();
-
-            if (destroyTime > 0)
-            {
-                lifeTime = destroyTime;
-            }
-
-            Destroy(gameObject, lifeTime);
-        }
 
         public void Init(ICurrentCharacterProvider provider)
         {
@@ -31,6 +17,11 @@ namespace Refactoring
 
         private void OnTriggerEnter(Collider other)
         {
+            if (currentCharacterProvider == null)
+            {
+                return;
+            }
+
             if (other.gameObject == currentCharacterProvider.CurrentCharacter.gameObject)
             {
                 PlayerStateMachine playerStateMachine = currentCharacterProvider.CurrentCharacter.GetComponent<PlayerStateMachine>();

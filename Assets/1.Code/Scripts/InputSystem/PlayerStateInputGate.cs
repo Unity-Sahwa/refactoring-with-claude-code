@@ -1,18 +1,19 @@
 using System;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
     // 책임: 사용자 입력을 받아 PlayerStateMachine에 규칙에 따라 전달한다. 
     public class PlayerStateInputGate : MonoBehaviour
     {
-        [Inject(true)] private IInputPressedProvider _inputPressedProvider;
-        [Inject(true)] private IPlayerStateEventSubscriber _playerStateEventSubscriber;
-        [Inject(true)] private IStateTriggerRaiser _stateTriggerRaiser;
-        [Inject(true)] private ICharacterSwappable _characterSwitcher;
-        [Inject(true)] private ILockOnState _lockOnState;
-        [Inject(true)] private IFinishChecker _finishChecker;
-        [Inject(true)] private ICurrentStateProvider _currentStateProvider;
+        [Preserve, Inject(true)] private IInputPressedProvider _inputPressedProvider;
+        [Preserve, Inject(true)] private IPlayerStateEventSubscriber _playerStateEventSubscriber;
+        [Preserve, Inject(true)] private IStateTriggerRaiser _stateTriggerRaiser;
+        [Preserve, Inject(true)] private ICharacterSwappable _characterSwitcher;
+        [Preserve, Inject(true)] private ILockOnState _lockOnState;
+        [Preserve, Inject(true)] private IFinishChecker _finishChecker;
+        [Preserve, Inject(true)] private ICurrentStateProvider _currentStateProvider;
 
         private IDisposable _blockEventDisposable;
         private IDisposable _bufferEventDisposable;

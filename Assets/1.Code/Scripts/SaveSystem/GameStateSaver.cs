@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -8,10 +9,31 @@ namespace Refactoring
     // 씬마다 하나씩 있어야 한다. 주입이 씬이 뜰 때 한 번뿐이라 씬을 넘어 살아남으면 안 된다.
     public class GameStateSaver : MonoBehaviour
     {
-        [Inject(true)] private ICurrentCharacterProvider _character;
-        [Inject(true)] private ICharacterSwappable _swapper;
-        [Inject(true)] private IHealthModifier _health;
-        [Inject(true)] private PlayerPartner _partner;
+        [Preserve, Inject(true)] private ICurrentCharacterProvider _character;
+        [Preserve, Inject(true)] private ICharacterSwappable _swapper;
+        [Preserve, Inject(true)] private IHealthModifier _health;
+        [Preserve, Inject(true)] private PlayerPartner _partner;
+
+        // 씬을 그냥 넘어온 경우, EventSceneLoad가 넘겨둔 체력과 캐릭터만 이어받는다. 자리는 새 씬 것을 그대로 쓴다.
+        //
+        // Start인 이유: 씬이 뜨는 차례는 Awake/OnEnable → sceneLoaded → Start다.
+        // 불러오기 복원(SlotLoadRunner)이 sceneLoaded에서 돌기 때문에, Start 시점엔 LoadedFromSlot이 이미 정해져 있다.
+        private void Start()
+        {
+            if (!EventSceneLoad.TakePending(out float hp, out PlayerCharacterType type))
+            {
+                return;
+            }
+
+            // 불러오기로 뜬 씬이면 슬롯에 적힌 값이 맞다. 넘어온 값으로 덮으면 안 된다.
+            if (SlotLoadRunner.LoadedFromSlot)
+            {
+                return;
+            }
+
+            RestoreCharacter(type);
+            _health?.SetCurrent(hp);
+        }
 
         public void Restore(GameSaveData data)
         {

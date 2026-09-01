@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Playables;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -13,8 +14,8 @@ namespace Refactoring
         [SerializeField]
         private PlayableDirector _director;
 
-        [Inject(true)] private IInputPressedProvider _input;
-        [Inject(true)] private IGameStateController _gameState;
+        [Preserve, Inject(true)] private IInputPressedProvider _input;
+        [Preserve, Inject(true)] private IGameStateController _gameState;
 
         private bool _isPlayerInside;
 

@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -15,8 +16,8 @@ namespace Refactoring
         [SerializeField] private float _damage = 999f;
         [SerializeField] private LayerMask _enemyMask;
 
-        [Inject] private IStateTriggerRaiser _triggerRaiser;
-        [Inject(true)] private IPlayerStateEventSubscriber _eventSubscriber;
+        [Preserve, Inject] private IStateTriggerRaiser _triggerRaiser;
+        [Preserve, Inject(true)] private IPlayerStateEventSubscriber _eventSubscriber;
 
         private readonly Collider[] _hits = new Collider[32];
         private IDisposable _finishEventDisposable;

@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Scripting;
 using UnityEngine.UI;
 
 namespace Refactoring
 {
 public class WisuMainRe : Enemy
 {
-    [Inject] ICurrentCharacterProvider currentCharacterProvider;
+    [Preserve, Inject] ICurrentCharacterProvider currentCharacterProvider;
     private WisuSpawnPhase spawnPhase;
     private WisuAttackPatternA1 patternA1;
     private WisuAttackPatternA2 patternA2;
@@ -52,6 +53,7 @@ public class WisuMainRe : Enemy
     
     public float localScaleUp;
 
+    [Inject] public WisuSkillPool skillPool;
     public WisuSuppressionController suppressionController;
     public GameObject phase1Sword;
     public GameObject phase2Sword;
@@ -121,7 +123,6 @@ public class WisuMainRe : Enemy
             }
             return;
         }
-        //Debug.Log(fullHP);
         currentHpValue = Mathf.Lerp(currentHpValue, fullHP, Time.deltaTime * lerpSpeed);
         bossHPSlider.value = currentHpValue;
 
@@ -474,8 +475,6 @@ public class WisuMainRe : Enemy
 
     public override void DieAction()
     {
-        Debug.Log("Wisu Die");
-
         StopAllCoroutines();
         animator.SetBool("GroggyTime", false);
         animator.SetTrigger("Die");
@@ -513,7 +512,6 @@ public class MainState
 [System.Serializable]
 public class Pattern_A1
 {
-    public List<GameObject> A1_prefabs;
     public List<Transform> A1_points;
     public List<float> A1_intervals;
     public float A1_defaultInterval;
@@ -523,7 +521,6 @@ public class Pattern_A1
 [System.Serializable]
 public class Pattern_A2
 {
-    public List<GameObject> A2_prefabs;
     public List<Transform> A2_points;
     public List<float> A2_intervals;
     public float A2_defaultInterval;
@@ -534,19 +531,14 @@ public class Pattern_A2
 public class Pattern_A3
 {
     public List<Transform> A3_area1;
-    public GameObject A3_area1_prefab;
     public float A3_area1_Interval;
     public List<Transform> A3_area2;
-    public GameObject A3_area2_prefab;
     public float A3_area2_Interval;
     public List<Transform> A3_area3;
-    public GameObject A3_area3_prefab;
     public float A3_area3_Interval;
     public List<Transform> A3_area4;
-    public GameObject A3_area4_prefab;
     public float A3_area4_Interval;
     public List<Transform> A3_area5;
-    public GameObject A3_area5_prefab;
     public float A3_area5_Interval;
     public float A3_waitingTime;
 
@@ -556,19 +548,14 @@ public class Pattern_A3
 public class Pattern_B1
 {
     public List<Transform> B1_area1;
-    public GameObject B1_area1_prefab;
     public float B1_area1_Interval;
     public List<Transform> B1_area2;
-    public GameObject B1_area2_prefab;
     public float B1_area2_Interval;
     public List<Transform> B1_area3;
-    public GameObject B1_area3_prefab;
     public float B1_area3_Interval;
     public List<Transform> B1_area4;
-    public GameObject B1_area4_prefab;
     public float B1_area4_Interval;
     public List<Transform> B1_area5;
-    public GameObject B1_area5_prefab;
     public float B1_area5_Interval;
     public float B1_waitingTime;
 }
@@ -577,28 +564,20 @@ public class Pattern_B1
 public class Pattern_B2
 {
     public List<Transform> B2_area1;
-    public GameObject B2_area1_prefab;
     public float B2_area1_Interval;
     public List<Transform> B2_area2;
-    public GameObject B2_area2_prefab;
     public float B2_area2_Interval;
     public List<Transform> B2_area3;
-    public GameObject B2_area3_prefab;
     public float B2_area3_Interval;
     public List<Transform> B2_area4;
-    public GameObject B2_area4_prefab;
     public float B2_area4_Interval;
     public List<Transform> B2_area5;
-    public GameObject B2_area5_prefab;
     public float B2_area5_Interval;
     public List<Transform> B2_area6;
-    public GameObject B2_area6_prefab;
     public float B2_area6_Interval;
     public List<Transform> B2_area7;
-    public GameObject B2_area7_prefab;
     public float B2_area7_Interval;
     public List<Transform> B2_area8;
-    public GameObject B2_area8_prefab;
     public float B2_area8_Interval;
     public float B2_waitingTime;
 }
@@ -607,26 +586,19 @@ public class Pattern_B2
 public class Pattern_B3
 {
     public List<Transform> B3_area1;
-    public GameObject B3_area1_prefab;
     public float B3_area1_Interval;
     public List<Transform> B3_area2;
-    public GameObject B3_area2_prefab;
     public float B3_area2_Interval;
     public List<Transform> B3_area3;
-    public GameObject B3_area3_prefab;
     public float B3_area3_Interval;
     public List<Transform> B3_area4;
-    public GameObject B3_area4_prefab;
     public float B3_area4_Interval;
     public List<Transform> B3_area5;
-    public GameObject B3_area5_prefab;
     public float B3_area5_Interval;
     public float B3_waitingTime;
     public List<Transform> B3_area6;
-    public GameObject B3_area6_prefab;
     public float B3_area6_Interval;
     public List<Transform> B3_area7;
-    public GameObject B3_area7_prefab;
     public float B3_area7_Interval;
 }
 }

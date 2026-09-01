@@ -1,5 +1,6 @@
 using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -12,8 +13,8 @@ namespace Refactoring
         private const string AxisX = "Look Orbit X";
         private const string AxisY = "Look Orbit Y";
 
-        [Inject(true)] private IMouseSettings _mouseSettings;
-        [Inject(true)] private IGameStateProvider _gameState;
+        [Preserve, Inject(true)] private IMouseSettings _mouseSettings;
+        [Preserve, Inject(true)] private IGameStateProvider _gameState;
 
         private CinemachineInputAxisController _controller;
 

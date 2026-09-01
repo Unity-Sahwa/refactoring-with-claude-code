@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Scripting;
 using UnityEngine.UI;
 
 namespace Refactoring
@@ -15,8 +16,8 @@ namespace Refactoring
         [SerializeField]
         private Image _animalImage;
 
-        [Inject] private ICurrentCharacterProvider _characterProvider;
-        [Inject] private ICharacterSwapNotifier _swapNotifier;
+        [Preserve, Inject] private ICurrentCharacterProvider _characterProvider;
+        [Preserve, Inject] private ICharacterSwapNotifier _swapNotifier;
 
         private void Start()
         {

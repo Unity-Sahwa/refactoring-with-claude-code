@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Scripting;
 using UnityEngine.UI;
 
 namespace Refactoring
@@ -27,9 +28,9 @@ namespace Refactoring
         private MovePart _movePart;
 
         // 액션이 들어있는 에셋. SOContainer에 등록해두면 주입된다.
-        [Inject(true)] private InputActionAsset _actionAsset;
+        [Preserve, Inject(true)] private InputActionAsset _actionAsset;
 
-        [Inject(true)] private IInputKeySettings _keySettings;
+        [Preserve, Inject(true)] private IInputKeySettings _keySettings;
 
         private TMP_Text _label;
 

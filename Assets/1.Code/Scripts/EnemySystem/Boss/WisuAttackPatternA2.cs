@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
 public class WisuAttackPatternA2 : MonoBehaviour
 {
-    [Inject] ICurrentCharacterProvider currentCharacterProvider;
+    [Preserve, Inject] ICurrentCharacterProvider currentCharacterProvider;
     private WisuMainRe wisu;
 
     private void Start()
@@ -26,7 +27,6 @@ public class WisuAttackPatternA2 : MonoBehaviour
     {
         var pattern = wisu.pattern_A2;
 
-        List<GameObject> randomizedPrefabs = new List<GameObject>(pattern.A2_prefabs);
         List<Transform> randomizedPoints = new List<Transform>(pattern.A2_points);
 
         System.Random random = new System.Random();
@@ -37,23 +37,15 @@ public class WisuAttackPatternA2 : MonoBehaviour
             (randomizedPoints[i], randomizedPoints[j]) = (randomizedPoints[j], randomizedPoints[i]);
         }
 
-        for (int i = randomizedPrefabs.Count - 1; i > 0; i--)
+        for (int i = 0; i < randomizedPoints.Count; i++)
         {
-            int j = random.Next(0, i + 1);
-            (randomizedPrefabs[i], randomizedPrefabs[j]) = (randomizedPrefabs[j], randomizedPrefabs[i]);
-        }
-
-        var count = Mathf.Min(randomizedPoints.Count, randomizedPrefabs.Count);
-
-        for (int i = 0; i < count; i++)
-        {
-            if (pattern.A2_prefabs[i] == null || randomizedPoints[i] == null)
+            if (randomizedPoints[i] == null)
             {
-                Debug.LogWarning($"�����հ� ��ġ�� ���� {i}");
+                Debug.LogWarning($"발사 위치가 비었음 {i}");
                 continue;
             }
 
-            GameObject projectile = Instantiate(pattern.A2_prefabs[i], randomizedPoints[i].position, pattern.A2_prefabs[i].transform.rotation);
+            GameObject projectile = wisu.skillPool.Get(WisuSkill.A2, randomizedPoints[i].position);
             FirePillar firePillarScript = projectile.GetComponent<FirePillar>();
             firePillarScript.Init(currentCharacterProvider);
             

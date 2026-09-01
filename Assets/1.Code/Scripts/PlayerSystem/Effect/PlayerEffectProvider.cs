@@ -1,14 +1,20 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
     // 역할: 시작 시 카탈로그의 이펙트 프리팹을 미리 복제해두고, 이펙트를 대여/반납 형식으로 제공한다.(활성화 가능한 이펙트만 대여한다.)
-    public class PlayerEffectProvider : MonoBehaviour, IEffectProvider
+    public class PlayerEffectProvider : MonoBehaviour, IEffectProvider, IPreloadTargetProvider
     {
-        [Inject] private EffectCatalog _catalog;
+        [Preserve, Inject] private EffectCatalog _catalog;
         private readonly Dictionary<EffectId, Queue<GameObject>> _available = new();
         private readonly Dictionary<GameObject, EffectId> _keyOfInstance = new(); //이펙트 반납시, 어디로 돌려보낼지를 위한 역맵핑
+        private readonly List<GameObject> _preloadTargets = new();
+
+        // 프리로드가 미리 렌더할 대상. 만들어 둔 풀 인스턴스를 그대로 넘긴다.
+        public IReadOnlyList<GameObject> PreloadTargets => _preloadTargets;
+
         private void Awake()
         {
             BuildPools();
@@ -29,6 +35,7 @@ namespace Refactoring
                     instance.SetActive(false);
                     queue.Enqueue(instance);
                     _keyOfInstance[instance] = entry.Id;
+                    _preloadTargets.Add(instance);
                 }
                 _available[entry.Id] = queue;
             }

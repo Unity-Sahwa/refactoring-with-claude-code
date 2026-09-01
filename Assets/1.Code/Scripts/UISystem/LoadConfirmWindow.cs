@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -8,7 +9,7 @@ namespace Refactoring
         [SerializeField]
         private SlotListWindow _slotList;
 
-        [Inject(true)] private ISaveSlots _saveSlots;
+        [Preserve, Inject(true)] private ISaveSlots _saveSlots;
 
         protected override void RunYes()
         {

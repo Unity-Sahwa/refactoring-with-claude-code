@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -19,7 +20,7 @@ namespace Refactoring
     [RequireComponent(typeof(Animator))]
     public class FootstepEmitter : MonoBehaviour
     {
-        [Inject] private AudioChannel channel;
+        [Preserve, Inject] private AudioChannel channel;
         [SerializeField] private AudioId footstepId;
         [SerializeField] private float moveThreshold = 0.5f; // 이 미만이면 무시
         private Animator _animator;

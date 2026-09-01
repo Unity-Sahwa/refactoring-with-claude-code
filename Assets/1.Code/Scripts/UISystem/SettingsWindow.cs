@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -8,7 +9,7 @@ namespace Refactoring
     public class SettingsWindow : UIWindow
     {
         // 설정값 주인들. 여기선 감도인지 소리인지 모르고 "저장해"만 시킨다.
-        [Inject(true)] private List<ISettingsHolder> _holders;
+        [Preserve, Inject(true)] private List<ISettingsHolder> _holders;
 
         private UIWindow[] _tabs;
 

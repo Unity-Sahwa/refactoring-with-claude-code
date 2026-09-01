@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -11,10 +12,10 @@ namespace Refactoring
         private const int Active = 20;  // 켤 카메라 우선순위
         private const int Idle = 10;    // 나머지 카메라 우선순위
 
-        [Inject] private List<CameraRole> _roles;                  // 씬의 역할표식 카메라들
-        [Inject] private ICharacterSwapNotifier _swapNotifier;
-        [Inject] private ICurrentCharacterProvider _currentCharacter;
-        [Inject] private ILockOnState _lockOn;
+        [Preserve, Inject] private List<CameraRole> _roles;                  // 씬의 역할표식 카메라들
+        [Preserve, Inject] private ICharacterSwapNotifier _swapNotifier;
+        [Preserve, Inject] private ICurrentCharacterProvider _currentCharacter;
+        [Preserve, Inject] private ILockOnState _lockOn;
 
         private readonly Dictionary<CameraKind, CinemachineCamera> _cameras = new();
 

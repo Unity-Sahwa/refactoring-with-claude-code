@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -17,9 +18,9 @@ namespace Refactoring
 
         // 체크하면 플레이어를 기다리지 않고 씬이 시작할 때 바로 저장한다.
 
-        [Inject(true)] private IHealthInfo _health;
-        [Inject(true)] private SaveSlotManager _slots;
-        [Inject(true)] private ICurrentCharacterProvider _character;
+        [Preserve, Inject(true)] private IHealthInfo _health;
+        [Preserve, Inject(true)] private SaveSlotManager _slots;
+        [Preserve, Inject(true)] private ICurrentCharacterProvider _character;
 
 
         public override void Execute()

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -12,10 +13,10 @@ namespace Refactoring
         private WindowId _entryWindow;
 
         // 입력·상태는 인게임에서만 필요하다(메인메뉴는 버튼만 씀). 없어도 되도록 Optional 주입.
-        [Inject(true)] private IInputPressedProvider _gameplayInput;   // 게임플레이 중 입력(메뉴 열기)
-        [Inject(true)] private IMenuInputProvider _menuInput;          // 메뉴 중 입력(닫기)
-        [Inject(true)] private ICutsceneInputProvider _cutsceneInput;  // 컷씬 중 입력(메뉴 열기)
-        [Inject(true)] private IGameStateController _gameState;        // 메뉴 진입/복귀 시 모드 전환
+        [Preserve, Inject(true)] private IInputPressedProvider _gameplayInput;   // 게임플레이 중 입력(메뉴 열기)
+        [Preserve, Inject(true)] private IMenuInputProvider _menuInput;          // 메뉴 중 입력(닫기)
+        [Preserve, Inject(true)] private ICutsceneInputProvider _cutsceneInput;  // 컷씬 중 입력(메뉴 열기)
+        [Preserve, Inject(true)] private IGameStateController _gameState;        // 메뉴 진입/복귀 시 모드 전환
 
         private readonly Dictionary<WindowId, IWindow> _registry = new();
         private readonly UINavigator _navigator = new();

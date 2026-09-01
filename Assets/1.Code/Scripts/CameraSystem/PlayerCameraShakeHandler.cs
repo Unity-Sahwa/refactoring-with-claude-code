@@ -1,6 +1,7 @@
 using System;
 using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -8,8 +9,8 @@ namespace Refactoring
     //       타격/피격 셰이크(PlayerCameraShake)와는 별개 채널 — 이쪽은 상태 진행률에 맞춰 스킬이 직접 지정한 연출.
     public class PlayerCameraShakeHandler : MonoBehaviour
     {
-        [Inject(true)] private CinemachineImpulseSource _impulseSource;
-        [Inject(true)] private IPlayerStateEventSubscriber _eventSubscriber;
+        [Preserve, Inject(true)] private CinemachineImpulseSource _impulseSource;
+        [Preserve, Inject(true)] private IPlayerStateEventSubscriber _eventSubscriber;
 
         private IDisposable _eventDisposable;
 

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -8,7 +9,7 @@ namespace Refactoring
     // EnterTrigger와 동일한 리스트+딜레이 구조를 사망 신호용으로 재사용한 것.
     public class PlayerDeathTrigger : MonoBehaviour
     {
-        [Inject(true)] private List<PlayerDamageReceiver> _receivers;
+        [Preserve, Inject(true)] private List<PlayerDamageReceiver> _receivers;
 
         public List<EventData> deathEvents;
         public List<float> delayTimes;
@@ -53,7 +54,6 @@ namespace Refactoring
         {
             yield return new WaitForSeconds(delay);
             eventData.Execute();
-            Debug.Log($"eventData.name : {eventData.name}");
         }
     }
 }

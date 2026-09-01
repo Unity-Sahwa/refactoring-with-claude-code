@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -10,8 +11,8 @@ namespace Refactoring
     //       "기준 거리 * 배율" setter를 만들어 공용으로 다룬다(FOV 대신 거리를 써서 원근 왜곡을 피함).
     public class PlayerCameraZoomHandler : MonoBehaviour
     {
-        [Inject(true)] private IPlayerStateEventSubscriber _eventSubscriber;
-        [Inject(true)] private ICurrentCameraProvider _currentCameraProvider;
+        [Preserve, Inject(true)] private IPlayerStateEventSubscriber _eventSubscriber;
+        [Preserve, Inject(true)] private ICurrentCameraProvider _currentCameraProvider;
 
         private IDisposable _eventDisposable;
         private Coroutine _zoomRoutine;

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -8,10 +9,10 @@ namespace Refactoring
     //       캐릭터 스왑 시 캐릭터에게 부딪혀 이펙트와 소리를 낸다.
     public class PlayerPartner : MonoBehaviour
     {
-        [Inject]
+        [Preserve, Inject]
         private ICurrentCharacterProvider _characterProvider;
 
-        [Inject]
+        [Preserve, Inject]
         private ICharacterSwapNotifier _swapNotifier;
 
         [Tooltip("부딪힐 때 켤 이펙트. 파트너 자식으로 미리 배치하고 꺼둔다")]

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Refactoring
 {
@@ -8,7 +9,7 @@ namespace Refactoring
     {
         [SerializeField] private float _damage = 3f;
 
-        [Inject(true)] private IPlayerDamageable _damageable;
+        [Preserve, Inject(true)] private IPlayerDamageable _damageable;
 
         public override void Execute()
         {
