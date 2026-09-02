@@ -31,7 +31,7 @@ namespace Refactoring
         // 창을 열 때 찍어내는 버튼(불러오기 슬롯)은 위 목록에 없다. 그쪽에서 이걸 직접 부른다.
         public void PlayClick()
         {
-            _audioChannel.RaisePlay(AudioPlayRequest.Of(AudioId.UIClick));
+            _audioChannel.RaisePlay(AudioPlayRequest.Create(SoundType.UIClick));
         }
     }
 }

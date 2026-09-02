@@ -8,6 +8,6 @@ namespace Refactoring
         public GameObject Attacker;
         public GameObject Target;
         public Vector3 Point;
-        public AudioId Sound;
+        public SoundType Sound;
     }
 }

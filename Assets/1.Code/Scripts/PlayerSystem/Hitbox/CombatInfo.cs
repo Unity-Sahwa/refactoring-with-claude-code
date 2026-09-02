@@ -10,11 +10,11 @@ namespace Refactoring
         [SerializeField] private float damage;
         [SerializeField] private InkColor color;
         [SerializeField] private float inkStack;
-        [SerializeField] private AudioId hitSound;
+        [SerializeField] private SoundType hitSound;
 
         public float Damage => damage;
         public InkColor Color => color;
         public float InkStack => inkStack;
-        public AudioId HitSound => hitSound;
+        public SoundType HitSound => hitSound;
     }
 }

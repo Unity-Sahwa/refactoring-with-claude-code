@@ -39,17 +39,17 @@ namespace Refactoring
         {
             switch (type)
             {
-                case VolumeCategory.Bgm:
+                case VolumeCategory.BgmVolume:
                     return Data.Bgm;
-                case VolumeCategory.Sfx:
+                case VolumeCategory.SfxVolume:
                     return Data.Sfx;
-                case VolumeCategory.Enemy:
+                case VolumeCategory.EnemyVolume:
                     return Data.Enemy;
-                case VolumeCategory.Player:
+                case VolumeCategory.PlayerVolume:
                     return Data.Player;
-                case VolumeCategory.Environment:
+                case VolumeCategory.EnvironmentVolume:
                     return Data.Environment;
-                case VolumeCategory.Ui:
+                case VolumeCategory.UiVolume:
                     return Data.Ui;
                 default:
                     return Data.Master;
@@ -60,22 +60,22 @@ namespace Refactoring
         {
             switch (type)
             {
-                case VolumeCategory.Bgm:
+                case VolumeCategory.BgmVolume:
                     Data.Bgm = value;
                     break;
-                case VolumeCategory.Sfx:
+                case VolumeCategory.SfxVolume:
                     Data.Sfx = value;
                     break;
-                case VolumeCategory.Enemy:
+                case VolumeCategory.EnemyVolume:
                     Data.Enemy = value;
                     break;
-                case VolumeCategory.Player:
+                case VolumeCategory.PlayerVolume:
                     Data.Player = value;
                     break;
-                case VolumeCategory.Environment:
+                case VolumeCategory.EnvironmentVolume:
                     Data.Environment = value;
                     break;
-                case VolumeCategory.Ui:
+                case VolumeCategory.UiVolume:
                     Data.Ui = value;
                     break;
                 default:

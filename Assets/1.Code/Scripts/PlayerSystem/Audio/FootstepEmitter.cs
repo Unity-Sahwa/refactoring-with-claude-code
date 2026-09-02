@@ -21,7 +21,7 @@ namespace Refactoring
     public class FootstepEmitter : MonoBehaviour
     {
         [Preserve, Inject] private AudioChannel channel;
-        [SerializeField] private AudioId footstepId;
+        [SerializeField] private SoundType footstepId;
         [SerializeField] private float moveThreshold = 0.5f; // 이 미만이면 무시
         private Animator _animator;
 
@@ -52,7 +52,7 @@ namespace Refactoring
             if (!TryGetMoveDirection(out WalkType moving)) return; // 정지(입력 ~0)면 방향 없음 → 무시
             if (moving != type) return;                            // 지금 이동 방향 클립의 이벤트만 통과
 
-            channel.RaisePlay(AudioPlayRequest.At(footstepId, transform.position));
+            channel.RaisePlay(AudioPlayRequest.CreateAt(footstepId, transform.position));
         }
 
         // 이동 입력(MoveX/MoveY)이 임계값 이상이면 방향을 돌려준다.

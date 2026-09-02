@@ -8,12 +8,12 @@ namespace Refactoring
     public class AudioDataEntry : IStartData, IPlayerAudio
     {
         [SerializeField] private string name;
-        [SerializeField] private AudioId id;
+        [SerializeField] private SoundType id;
         [SerializeField] [Range(0f, 1f)] private float startProgress;
         [SerializeField] private bool untilFinish; // 상태 전환돼도 안 끊고 끝까지 둘지
 
         public float StartProgress => startProgress;
-        public AudioId Id => id;
+        public SoundType Id => id;
         public bool UntilFinish => untilFinish;
     }
 }

@@ -9,7 +9,7 @@ namespace Refactoring
     {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            var id = property.FindPropertyRelative("id");
+            var id = property.FindPropertyRelative("_id");
             label = new GUIContent(id.enumDisplayNames[id.enumValueIndex]); // id 이름을 헤더로
             EditorGUI.PropertyField(position, property, label, true);
         }

@@ -30,10 +30,10 @@ namespace Refactoring
                 return;
             }
 
-            AudioId id = audio.Id;
-            if (id == AudioId.None) return;
+            SoundType id = audio.Id;
+            if (id == SoundType.None) return;
 
-            _audioChannel.RaisePlay(AudioPlayRequest.Of(id));
+            _audioChannel.RaisePlay(AudioPlayRequest.Create(id));
             _started.Add(audio); // 나중에 오디오 정지하기 위해 시작시 추적.
         }
 
@@ -52,8 +52,8 @@ namespace Refactoring
         // 타격 성공 시 그 지점에서 타격음 재생(한 번 나고 마니 정지 추적 안 함).
         private void HandleHit(HitReport hitReport)
         {
-            if (hitReport.Sound == AudioId.None) return;
-            _audioChannel.RaisePlay(AudioPlayRequest.At(hitReport.Sound, hitReport.Point));
+            if (hitReport.Sound == SoundType.None) return;
+            _audioChannel.RaisePlay(AudioPlayRequest.CreateAt(hitReport.Sound, hitReport.Point));
         }
 
         private void OnDestroy()

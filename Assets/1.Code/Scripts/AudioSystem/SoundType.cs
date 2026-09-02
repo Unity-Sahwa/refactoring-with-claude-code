@@ -1,8 +1,6 @@
-namespace Refactoring
+﻿namespace Refactoring
 {
-    // ID(소리가 쓰이는 곳) 이름표.
-    // 같은 클립이라도 쓰임이 다르면 다른 id를 만든다(예: 약공격 타격음 / 강공격 타격음).
-    public enum AudioId
+    public enum SoundType
     {
         None = 0,
 
@@ -53,5 +51,8 @@ namespace Refactoring
         // UI
         UIClick,
         UIHover,
+
+        // 파트너
+        PlayerPartner,
     }
 }
