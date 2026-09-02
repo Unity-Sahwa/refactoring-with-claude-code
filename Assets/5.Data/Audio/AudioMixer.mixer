@@ -162,7 +162,7 @@ AudioMixerController:
   - guid: 5649faae084a7e848ad597ec2a0c4258
     name: EnemyVolume
   - guid: 312889d012ef706478a3b7b8025a1de0
-    name: Environment
+    name: EnvironmentVolume
   - guid: db05df28d367ebf43b997030145c0c8e
     name: MasterVolume
   - guid: a6fe0df1c937a604b8d7cc0e122062af
