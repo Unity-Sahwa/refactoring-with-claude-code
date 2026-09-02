@@ -11,7 +11,7 @@ namespace Refactoring
     {
         [Preserve, Inject] private AudioChannel _audioChannel;
         [Preserve, Inject] private AudioCatalog _audioCatalog;
-        [SerializeField] private int _initialVoices = 8;
+        private const int _initialVoices = 8;
 
         private readonly List<AudioSource> _pool = new();
 
