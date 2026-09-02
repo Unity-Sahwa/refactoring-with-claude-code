@@ -1,65 +1,78 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Audio;
 
 namespace Refactoring
 {
-    // 역할: 오디오 클립과 수치값을 한곳에 모음
-    [CreateAssetMenu(menuName = "Audio/AudioCatalog")]
+    // 책임: 오디오 클립과 수치값을 한곳에 모아 id로 찾아준다.
+    [CreateAssetMenu(menuName = "Refactoring/Audio/AudioCatalog")]
     public class AudioCatalog : ScriptableObject
     {
-        [SerializeField] private AudioCatalogEntry[] entries;
+        [SerializeField] private AudioCatalogEntry[] _entries;
 
-        private Dictionary<AudioId, AudioCatalogEntry> _map;
+        private Dictionary<SoundType, AudioCatalogEntry> _map;
 
-        public bool TryGet(AudioId id, out AudioCatalogEntry entry)
+        public bool TryGet(SoundType id, out AudioCatalogEntry entry)
         {
-            if (_map == null) BuildMap();
+            if (_map == null)
+            {
+                BuildMap();
+            }
+
             return _map.TryGetValue(id, out entry);
         }
 
-        private void OnEnable() => BuildMap();
-
 #if UNITY_EDITOR
-        private void OnValidate() => BuildMap();
+        // 테스트시 수정되는 값을 바로 반영하기 위함.
+        private void OnValidate()
+        {
+            BuildMap(); 
+            WarnMissingIds();
+        }
+
+        // AudioId에는 있는데 _entries에 안 넣은 id를 찾는다.
+        private void WarnMissingIds()
+        {
+            List<SoundType> missing = new();
+
+            foreach (SoundType id in Enum.GetValues(typeof(SoundType)))
+            {
+                if (id == SoundType.None)
+                {
+                    continue;
+                }
+
+                if (!_map.ContainsKey(id))
+                {
+                    missing.Add(id);
+                }
+            }
+
+            if (missing.Count > 0)
+            {
+                Debug.LogWarning($"[AudioCatalog] _entries에 없는 AudioId: {string.Join(", ", missing)}", this);
+            }
+        }
 #endif
 
         private void BuildMap()
         {
-            _map = new Dictionary<AudioId, AudioCatalogEntry>();
-            if (entries == null) return;
+            _map = new Dictionary<SoundType, AudioCatalogEntry>();
 
-            foreach (AudioCatalogEntry e in entries)
+            if (_entries == null)
             {
-                if (e == null || e.Id == AudioId.None) continue;
-                _map[e.Id] = e; 
+                return;
+            }
+
+            foreach (AudioCatalogEntry entry in _entries)
+            {
+                if (entry == null || entry.Id == SoundType.None)
+                {
+                    continue;
+                }
+
+                _map[entry.Id] = entry;
             }
         }
-    }
-
-    // 대부분 오디오 소스의 정보를 담음. 
-    [Serializable]
-    public class AudioCatalogEntry
-    {
-        [SerializeField] private AudioId id; //외부에서 아이디로 오디오를 요청함. 
-        [SerializeField] private AudioClip[] clips;
-        [SerializeField] [Range(0f, 1f)] private float volume = 1f;
-        [SerializeField] private float pitch = 1f;
-        [SerializeField] [Range(0f, 1f)] private float spatialBlend; // 0=2D, 1=3D
-        [SerializeField] private float minDistance = 1f;
-        [SerializeField] private float maxDistance = 20f;
-        [SerializeField] private bool loop;
-        [SerializeField] private AudioMixerGroup output; // 비워두면 AudioPlayer 기본 그룹 사용
-
-        public AudioId Id => id;
-        public AudioClip[] Clips => clips;
-        public float Volume => volume;
-        public float Pitch => pitch;
-        public float SpatialBlend => spatialBlend;
-        public float MinDistance => minDistance;
-        public float MaxDistance => maxDistance;
-        public bool Loop => loop;
-        public AudioMixerGroup Output => output;
     }
 }
