@@ -27,7 +27,7 @@ namespace Refactoring
         [SerializeField]
         private MovePart _movePart;
 
-        // 액션이 들어있는 에셋. SOContainer에 등록해두면 주입된다.
+        // 액션이 들어있는 에셋. DataContainer에 등록해두면 주입된다.
         [Preserve, Inject(true)] private InputActionAsset _actionAsset;
 
         [Preserve, Inject(true)] private IInputKeySettings _keySettings;

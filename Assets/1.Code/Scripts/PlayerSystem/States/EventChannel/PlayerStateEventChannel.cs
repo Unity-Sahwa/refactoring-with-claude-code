@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Refactoring
 {
     // 역할: 상태가 발행한 기능 이벤트를 구독자에게 전달하는 채널.(발행자와 구독자는 서로를 모르고 채널을 통해서만 소식이 전달됨)
-    // 사용: SOContainer에 데이터를 등록한다.
+    // 사용: DataContainer에 데이터를 등록한다.
     [CreateAssetMenu(menuName = "EventChannel/PlayerStateEventChannel")]
     public class PlayerStateEventChannel : ScriptableObject, IPlayerStateEventRaiser, IPlayerStateEventSubscriber
     {
