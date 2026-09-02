@@ -15,16 +15,15 @@ namespace Refactoring
         [Preserve, Inject]
         private ICharacterSwapNotifier _swapNotifier;
 
+        [Preserve, Inject]
+        private AudioChannel _audioChannel;
+
         [Tooltip("부딪힐 때 켤 이펙트. 파트너 자식으로 미리 배치하고 꺼둔다")]
         [SerializeField]
         private GameObject _swapToHumanEffect;
 
         [SerializeField]
         private GameObject _swapToAnimalEffect;
-
-        [Tooltip("부딪힐 때 낼 소리. 세 경우 모두 같다")]
-        [SerializeField]
-        private AudioSource _collideAudio;
 
         [Tooltip("따라다닐 위치. 캐릭터 기준 로컬 좌표(머리 왼쪽 뒤)")]
         [SerializeField]
@@ -219,7 +218,8 @@ namespace Refactoring
             }
             else
             {
-                _collideAudio?.Play();
+                // 부딪힐 때 낼 소리. 세 경우 모두 같다
+                _audioChannel.RaisePlay(AudioPlayRequest.CreateAt(SoundType.PlayerPartner, transform.position));
             }
 
             if (effect != null)
