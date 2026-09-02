@@ -13807,6 +13807,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5201270864868270269}
     m_Modifications:
+    - target: {fileID: 1201212616018200430, guid: ce027e8f6b2d83d4197059a303c3dbb1, type: 3}
+      propertyPath: _collideAudio
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 1569603832125240546, guid: ce027e8f6b2d83d4197059a303c3dbb1, type: 3}
       propertyPath: m_LocalPosition.x
       value: 39.26
@@ -13856,7 +13860,8 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 5772809828060167667, guid: ce027e8f6b2d83d4197059a303c3dbb1, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ce027e8f6b2d83d4197059a303c3dbb1, type: 3}
