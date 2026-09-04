@@ -70,7 +70,6 @@
 //                 progress = Mathf.Clamp01(info.normalizedTime);
 //             }
             
-//             //대원_STUDY: if문으로 진행할 경우 프레임마다 실행하기 때문에 의도된 결과가 나오지 않음.
 //             while (_readIndex < _sortedEvents.Count
 //                     && progress >= _sortedEvents[_readIndex].Data.StartProgress)
 //             {

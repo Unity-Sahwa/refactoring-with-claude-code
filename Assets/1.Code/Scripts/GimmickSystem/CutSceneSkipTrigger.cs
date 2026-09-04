@@ -1,6 +1,7 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Scripting;
 using UnityEngine.UI;
 
 namespace Refactoring
@@ -22,6 +23,8 @@ namespace Refactoring
         [SerializeField]
         private List<float> _delayTimes;
 
+        [Preserve, Inject(true)] private ICutsceneInputProvider _cutsceneInput;
+
         // 컷씬은 동시에 하나만 재생되므로 지금 스킵을 받을 대상도 항상 하나다.
         public static CutSceneSkipTrigger Active { get; private set; }
 
@@ -31,13 +34,34 @@ namespace Refactoring
             {
                 _skipButton.onClick.AddListener(Skip);
             }
+            if (_cutsceneInput != null)
+            {
+                _cutsceneInput.OnCutscenePressed += HandleCutscenePressed;
+            }
             SetSkippable(false);
+        }
+
+        private void OnDestroy()
+        {
+            if (_cutsceneInput != null)
+            {
+                _cutsceneInput.OnCutscenePressed -= HandleCutscenePressed;
+            }
         }
 
         // 컷씬 오브젝트가 꺼질 때 구간이 켜진 채로 남는 걸 막는다.
         private void OnDisable()
         {
             SetSkippable(false);
+        }
+
+        // 씬에 트리거가 여럿 있어도 지금 건너뛰기 구간인 하나만 반응한다.
+        private void HandleCutscenePressed(InputActionType action)
+        {
+            if (action == InputActionType.Interaction && Active == this)
+            {
+                Skip();
+            }
         }
 
         /// <summary>

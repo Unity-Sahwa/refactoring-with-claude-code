@@ -3,7 +3,7 @@ using UnityEngine.Scripting;
 
 namespace Refactoring
 {
-    // 게임 모드가 Menu가 되면 시간을 멈추고, 벗어나면 되돌린다. UI와 분리된 단일 책임.
+    // 책임: 게임 모드가 Menu가 되면 시간을 멈추고, 벗어나면 되돌린다. UI와 분리된 단일 책임.
     public class GamePauseController : MonoBehaviour
     {
         [Preserve, Inject] private IGameStateProvider _gameState;
@@ -23,7 +23,8 @@ namespace Refactoring
                 _gameState.OnChanged -= HandleStateChanged;
             }
 
-            Time.timeScale = 1f;   // 정지 중 파괴돼도 시간이 멈춘 채 남지 않게
+            // 정지 중 파괴돼도 시간이 멈춘 채 남지 않게
+            Time.timeScale = 1f;
         }
 
         // Menu 모드에선 정지(0), 그 외에는 정상 속도(1).
