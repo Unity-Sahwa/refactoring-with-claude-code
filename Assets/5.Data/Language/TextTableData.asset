@@ -152,8 +152,8 @@ MonoBehaviour:
     Korean: "\uBCF4\uAE30"
     English: View
   - Key: UI_Skip
-    Korean: "\uAC74\uB108\uB6F0\uAE30(ESC)"
-    English: Skip(ESC)
+    Korean: "\uAC74\uB108\uB6F0\uAE30(X)"
+    English: Skip(X)
   - Key: UI_Interaction
     Korean: "\uC0C1\uD638\uC791\uC6A9 (X)"
     English: Interact (X)
