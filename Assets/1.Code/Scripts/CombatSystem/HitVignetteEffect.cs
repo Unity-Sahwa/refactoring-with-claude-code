@@ -9,7 +9,6 @@ namespace Refactoring
     [RequireComponent(typeof(Volume))]
     public class HitVignetteEffect : MonoBehaviour
     {
-        //대원_TODO: HitState(SO 에셋) > Effect > Hit Vignette의 Duration 주의사항. Duration > _fadeInTime + _holdTime + _fadeOutTime
         [SerializeField] private float _maxWeight = 1f;     // 켜졌을 때 최대 weight
         [SerializeField] private float _fadeInTime = 0.05f;  // 0 → max 켜지는 시간
         [SerializeField] private float _holdTime = 0.3f;     // max로 유지하는 시간

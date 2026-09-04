@@ -22,7 +22,6 @@
 //     //   - 캐릭터(H·A) 오브젝트에 CharacterController를 추가하고 Radius/Height/Center를 캡슐에 맞춘다.
 //     //   - 이 컴포넌트는 기존 매니저 오브젝트(PlayerMovement가 있던 곳)에 두면, DI로 입력·상태·현재캐릭터가 주입된다.
 //     //   - 기존 PlayerMovement / PlayerSkillMoveHandler 는 같은 캐릭터를 두 번 움직이지 않도록 꺼두고 테스트한다.
-//     //     대원_TODO: 기존 두 컴포넌트와 동시 작동하지 않게(중복 이동 방지) 씬에서 켜고 끄는 것을 잊지 말 것.
 //     public class CharacterControllerPlayerMover_Test : MonoBehaviour
 //     {
 //         [Inject(true)] private IInputMoveProvider _inputEventProvider;        // 옵션: 없으면 걷기·회전만 빠짐(스킬·중력은 동작)

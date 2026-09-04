@@ -39,7 +39,6 @@ namespace Refactoring
             if (onSteepSlope)
             {
                 // 가파른 경사: 쌓인 중력 속도를 경사면을 따라 흐르게 투영 → 면을 타고 미끄러져 내려간다.
-                //대원_Study: planeNormal이 법선인 평면에 vector를 내린 것
                 return Vector3.ProjectOnPlane(new Vector3(0f, _verticalSpeed, 0f), frame.GroundNormal);
             }
             return new Vector3(0f, _verticalSpeed, 0f);

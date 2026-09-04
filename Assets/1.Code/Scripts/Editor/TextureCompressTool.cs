@@ -68,10 +68,3 @@ namespace Refactoring
     }
 }
 
-// TODO: EditorWindow 형태의 텍스처 관리 툴로 확장
-// - 수집 버튼: 프로젝트 전체 텍스처(또는 씬에서 실제 참조되는 텍스처만) 목록화
-// - 표 형태 표시: 행=텍스처, 열=플랫폼별(Default/Android) MaxSize·Format·Compression
-// - 일괄 적용 버튼: 플랫폼별 설정을 한 번에 적용
-// - 예외 체크박스: 체크된 텍스처는 일괄 적용에서 제외
-//   (예외 목록은 경로가 아닌 GUID로 ScriptableObject에 저장해야 파일 이동에 안 깨짐)
-// - 신규 임포트 텍스처는 툴로 못 잡으므로 AssetPostprocessor 병행 필요

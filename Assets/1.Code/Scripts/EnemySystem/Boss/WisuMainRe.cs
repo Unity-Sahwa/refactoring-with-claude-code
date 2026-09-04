@@ -493,7 +493,6 @@ public class WisuMainRe : Enemy
             KillTrigger.OnEnemyKilled(this);
         }
 
-        //대원_TODO: 보스 죽이면 보스 잡았다는 UI 등장
     }
 }
 

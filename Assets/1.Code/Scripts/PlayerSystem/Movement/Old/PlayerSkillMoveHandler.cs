@@ -63,7 +63,6 @@
 
 //         //호출조건: HandleSkillMove로 `enabled = true` 되면 매 물리프레임 작동
 //         //왜: 수명을 누적·만료 처리하고, 남은 이동이 있으면 물리 이동시킨다
-//         // 대원_TODO: 주변 감지로 이동량 변화 확장 예정.
 //         private void FixedUpdate()
 //         {
 //             if (_actives.Count == 0)
@@ -93,7 +92,6 @@
 
 //             Vector3 worldVelocity = Vector3.zero;
 //             //속도 합산해서 적용
-//             //대원_TODO: 물리이동이 의도한 모양대로 나올까?
 //             foreach (var active in _actives)
 //             {
 //                 //속도가 플레이어 방향으로 회전된 다음 더해줌.

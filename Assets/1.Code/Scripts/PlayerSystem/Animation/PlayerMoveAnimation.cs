@@ -19,7 +19,6 @@ namespace Refactoring
         private IDisposable _moveEventDisposable;
         private bool _canSetParameter;
 
-        // 대원_TODO : 파라미터 이름 플레이어 데이터로 옮기기
         private readonly int _moveXHash = Animator.StringToHash("MoveX");
         private readonly int _moveYHash = Animator.StringToHash("MoveY");
         private float _dampTime = 0.1f;

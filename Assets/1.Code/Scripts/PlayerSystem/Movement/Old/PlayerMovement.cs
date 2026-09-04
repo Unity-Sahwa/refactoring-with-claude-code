@@ -24,7 +24,7 @@
 //         private Quaternion _targetRotation;
 //         private bool _canMove;
 //         private bool _canRotate;
-//         private float _moveRate = 10; //대원_TODO : 플레이어 데이터로 옮기기
+//         private float _moveRate = 10; 
 //         private float _rotateRate = 20;
 
 //         void Awake()

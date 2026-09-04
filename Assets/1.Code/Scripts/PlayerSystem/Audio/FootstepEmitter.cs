@@ -16,7 +16,6 @@ namespace Refactoring
     }
 
     // 걷기 효과음을 재생시키는 Footstep()을 애니메이션 이벤트를 통해 호출.
-    // 대원_TODO: 모바일 이동 입력이 MoveX, MoveY에 어떻게 들어오는지 확인필요
     [RequireComponent(typeof(Animator))]
     public class FootstepEmitter : MonoBehaviour
     {
@@ -64,7 +63,6 @@ namespace Refactoring
             direction = default;
             if (x * x + y * y < moveThreshold * moveThreshold) return false; // 이동 크기가 임계값보다 작으면 false 반환
 
-            // 대원_STUDY: 각도와 라디안 사전지식
             // 둘레/지름이 항상 일정하다는 발견! 둘레/지름 = π 라 지음. 둘레 2πr
             // 호의 길이(s)가 반지름(r)과 똑같아지는 순간의 벌어진 각도 = 1 라디안
             // 그럼 한바퀴을 가정했을 때, 2πr/r = 2π 라디안. 360도를 라디안으로 계산하면 2π 라디안.

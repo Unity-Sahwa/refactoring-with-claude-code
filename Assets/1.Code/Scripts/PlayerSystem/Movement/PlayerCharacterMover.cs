@@ -24,7 +24,6 @@ namespace Refactoring
         [Preserve, Inject(true)] private ICharacterSwapNotifier _swapNotifier;          // 옵션: 없으면 스왑 시 재획득 통지에만 사용
         [Preserve, Inject(true)] private ILockOnTarget _lockOnTarget;                   // 옵션: 없으면 회전은 항상 이동 방향
 
-        //대원_TODO: 데이터 SO로 그룹화
         [Header("일반 이동")] 
         [SerializeField] private float _moveSpeed = 10f;   
         [SerializeField] private float _rotateRate = 20f;  
