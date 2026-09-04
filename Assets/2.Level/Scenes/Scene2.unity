@@ -15528,6 +15528,22 @@ PrefabInstance:
       propertyPath: isMobileTest
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7664395040389418550, guid: be18510bd60a3494494765612e402163, type: 3}
+      propertyPath: _groups.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7664395040389418550, guid: be18510bd60a3494494765612e402163, type: 3}
+      propertyPath: _groups.Array.data[3].Name
+      value: Language
+      objectReference: {fileID: 0}
+    - target: {fileID: 7664395040389418550, guid: be18510bd60a3494494765612e402163, type: 3}
+      propertyPath: _groups.Array.data[3].Assets.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7664395040389418550, guid: be18510bd60a3494494765612e402163, type: 3}
+      propertyPath: '_groups.Array.data[3].Assets.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 6d445127b4a0a0943a6ddaa581320ad6, type: 2}
     - target: {fileID: 7790186032845487929, guid: be18510bd60a3494494765612e402163, type: 3}
       propertyPath: m_Name
       value: Static
