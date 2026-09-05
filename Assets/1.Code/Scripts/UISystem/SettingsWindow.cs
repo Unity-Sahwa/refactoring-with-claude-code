@@ -4,8 +4,7 @@ using UnityEngine.Scripting;
 
 namespace Refactoring
 {
-    // 설정창. 안쪽 탭(게임플레이·소리·언어·플랫폼)은 창 스택에 안 넣고 여기서 하나만 켠다.
-    // 스택에 넣으면 탭을 바꿀 때마다 뒤로가기가 한 겹씩 쌓여서 ESC를 여러 번 눌러야 한다.
+    // 책임: 설정창. 안쪽 탭(게임플레이·소리·언어·플랫폼)은 창 스택에 안 넣고 여기서 하나만 켠다.
     public class SettingsWindow : UIWindow
     {
         // 설정값 주인들. 여기선 감도인지 소리인지 모르고 "저장해"만 시킨다.
@@ -34,8 +33,8 @@ namespace Refactoring
             }
         }
 
-        // 고른 탭만 켜고 나머지는 끈다.
-        public void ShowTab(WindowId id)
+        // 탭을 창 스택에 넣으면 바꿀 때마다 뒤로가기가 한 겹씩 쌓여서, 여기서 직접 하나만 켠다.
+        public void ShowTab(WindowType id)
         {
             foreach (UIWindow tab in _tabs)
             {
