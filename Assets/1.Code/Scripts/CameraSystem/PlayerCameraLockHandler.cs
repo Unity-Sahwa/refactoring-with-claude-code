@@ -5,9 +5,8 @@ using UnityEngine.Scripting;
 
 namespace Refactoring
 {
-    // 역할: 상태 이벤트(CameraLock) 구간 동안 마우스 회전 입력을 꺼서 카메라를 고정한다.
-    //       셰이크·줌(PlayerCameraEffectHandler)과는 별개 채널 — 이쪽은 "구간 동안 고정"만 다룬다.
-    //       LockOnCamera는 원래 자동으로 대상을 보고 마우스 회전 축이 없어 대상이 아니다(DefaultCamera 전용).
+    // 책임: 상태 이벤트(CameraLock) 구간 동안 마우스 회전 입력을 꺼서 카메라를 고정한다.
+    //       (셰이크·줌은 별개 채널, LockOnCamera는 회전 축이 없어 DefaultCamera 전용)
     [RequireComponent(typeof(CinemachineInputAxisController))]
     public class PlayerCameraLockHandler : MonoBehaviour
     {

@@ -4,8 +4,7 @@ using UnityEngine;
 
 namespace Refactoring
 {
-    // 카메라 임펄스 한 번에 쓰이는 수치 묶음.
-    // Velocity는 z를 안 써서 2D 흔들림만 나옴(멀미 방지).
+    // 카메라 임펄스 한 번에 쓰이는 수치 묶음. Velocity는 z를 안 써서 2D 흔들림만 난다(멀미 방지).
     [Serializable]
     public struct ShakeData
     {

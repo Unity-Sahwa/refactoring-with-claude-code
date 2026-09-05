@@ -6,9 +6,8 @@ using UnityEngine.Scripting;
 
 namespace Refactoring
 {
-    // 역할: 상태 이벤트(CameraZoom)를 받아 스킬 연출용 카메라 거리 줌(확 멀어짐→유지→복귀)을 실행한다.
-    //       DefaultCamera(OrbitalFollow, ThreeRing)/LockOnCamera(Follow)는 거리를 다루는 컴포넌트가 달라
-    //       "기준 거리 * 배율" setter를 만들어 공용으로 다룬다(FOV 대신 거리를 써서 원근 왜곡을 피함).
+    // 책임: 상태 이벤트(CameraZoom)를 받아 스킬 연출용 카메라 거리 줌을 실행한다.
+    // 흐름: 이벤트 수신 → 켜진 카메라에 맞는 거리 적용자 생성 → 멀어짐 → 유지 → 복귀
     public class PlayerCameraZoomHandler : MonoBehaviour
     {
         [Preserve, Inject(true)] private IPlayerStateEventSubscriber _eventSubscriber;
@@ -16,7 +15,9 @@ namespace Refactoring
 
         private IDisposable _eventDisposable;
         private Coroutine _zoomRoutine;
-        private Action<float> _zoomSetter; // 진행 중인 줌을 즉시 원복(스케일 1)하기 위해 들고 있음
+
+        // 진행 중인 줌을 즉시 원복(배율 1)하기 위해 들고 있다.
+        private Action<float> _zoomSetter;
 
         private void Awake()
         {
@@ -36,7 +37,7 @@ namespace Refactoring
                 return;
             }
 
-            // DistanceScale이 1이면 변화 없는 항목이므로 생략
+            // 배율이 1이면 변화가 없는 항목이라 건너뛴다.
             if (Mathf.Approximately(zoom.DistanceScale, 1f))
             {
                 return;
@@ -77,8 +78,10 @@ namespace Refactoring
             _zoomSetter = null;
         }
 
-        // 카메라 Body 종류(Orbital/Follow)에 맞는 "거리 배율 적용자"를 만든다. 둘 다 없으면 null.
-        // OrbitalFollow는 OrbitStyle이 ThreeRing이면 단일 Radius가 아니라 Orbits(Top/Center/Bottom)가 실제로 쓰이므로 셋 다 스케일한다.
+        // 카메라 Body 종류에 맞는 거리 배율 적용자를 만든다. 둘 다 없으면 null.
+        // FOV 대신 거리를 바꾸는 이유는 원근 왜곡을 피하기 위해서다.
+        // OrbitalFollow는 OrbitStyle이 ThreeRing이면 단일 Radius가 아니라 Orbits 세 개가 실제로 쓰인다.
+        // static인 이유: 넘겨받은 카메라만으로 끝나는 계산이라 특정 인스턴스에 속하지 않는다.
         private static Action<float> MakeDistanceSetter(CinemachineCamera camera)
         {
             if (camera.TryGetComponent(out CinemachineOrbitalFollow orbital))
@@ -109,11 +112,12 @@ namespace Refactoring
             return null;
         }
 
-        // outTime 동안 목표 배율까지 "확" 도달 → holdTime 동안 유지 → inTime 동안 1배(원래 거리)로 복귀.
         private IEnumerator CoZoom(Action<float> setter, float targetScale, float outTime, float holdTime, float inTime)
         {
             outTime = Mathf.Max(outTime, 0f);
             holdTime = Mathf.Max(holdTime, 0f);
+
+            // 0이면 나눗셈이 무한대가 되므로 최소 시간을 준다.
             float returnTime = Mathf.Max(inTime, 0.01f);
 
             for (float elapsed = 0f; elapsed < outTime; elapsed += Time.deltaTime)
@@ -121,6 +125,7 @@ namespace Refactoring
                 setter(Mathf.Lerp(1f, targetScale, elapsed / outTime));
                 yield return null;
             }
+
             setter(targetScale);
 
             yield return new WaitForSeconds(holdTime);
@@ -130,6 +135,7 @@ namespace Refactoring
                 setter(Mathf.Lerp(targetScale, 1f, elapsed / returnTime));
                 yield return null;
             }
+
             setter(1f);
 
             _zoomRoutine = null;

@@ -5,8 +5,8 @@ using UnityEngine.Scripting;
 
 namespace Refactoring
 {
-    // 역할: 상태 이벤트(CameraShake)를 받아 스킬 연출용 카메라 셰이크를 실행한다.
-    //       타격/피격 셰이크(PlayerCameraShake)와는 별개 채널 — 이쪽은 상태 진행률에 맞춰 스킬이 직접 지정한 연출.
+    // 책임: 상태 이벤트(CameraShake)를 받아 스킬 연출용 카메라 셰이크를 실행한다.
+    //       (타격·피격 셰이크는 PlayerCameraShake 담당이라 별개 채널)
     public class PlayerCameraShakeHandler : MonoBehaviour
     {
         [Preserve, Inject(true)] private CinemachineImpulseSource _impulseSource;

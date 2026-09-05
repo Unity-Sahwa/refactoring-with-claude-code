@@ -19,7 +19,6 @@ namespace Refactoring
         [SerializeField] private LayerMask _obstacleMask;
 
         [Tooltip("탐지 반경과 후보를 Gizmos로 표시")]
-        [FormerlySerializedAs("_debug")]
         [SerializeField] private bool _isDebugDraw;
 
         [Preserve, Inject] private ICurrentCharacterProvider _character;
