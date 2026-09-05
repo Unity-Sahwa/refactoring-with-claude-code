@@ -4,25 +4,31 @@ using UnityEngine.Scripting;
 
 namespace Refactoring
 {
-    // 메뉴 UI 총괄(프런트 데스크). 자식 창들을 이름표로 관리하고, 열기/닫기와 게임 모드 전환을 조율한다.
-    // 인게임: z(Menu)로 열고 닫으며 모드 전환. 메인메뉴: 시작 시 자동으로 열고 z로는 닫지 않음.
+    // 책임: 메뉴 UI 총괄(프런트 데스크). 자식 창들을 이름표로 관리하고, 열기/닫기와 게임 모드 전환을 조율한다.
+    // 흐름: 자식 창 등록 → 입력 받으면 게임 모드 전환 → 창 열기/닫기
     public class UIRoot : MonoBehaviour
     {
         // 처음 여는 기본 창. 인게임 씬=Pause, 메인메뉴 씬=MainMenu로 인스펙터에서 지정.
-        [SerializeField]
-        private WindowId _entryWindow;
+        [SerializeField] private WindowType _entryWindow;
 
         // 입력·상태는 인게임에서만 필요하다(메인메뉴는 버튼만 씀). 없어도 되도록 Optional 주입.
-        [Preserve, Inject(true)] private IInputPressedProvider _gameplayInput;   // 게임플레이 중 입력(메뉴 열기)
-        [Preserve, Inject(true)] private IMenuInputProvider _menuInput;          // 메뉴 중 입력(닫기)
-        [Preserve, Inject(true)] private ICutsceneInputProvider _cutsceneInput;  // 컷씬 중 입력(메뉴 열기)
-        [Preserve, Inject(true)] private IGameStateController _gameState;        // 메뉴 진입/복귀 시 모드 전환
+        // 게임플레이 중 입력(메뉴 열기)
+        [Preserve, Inject(true)] private IInputPressedProvider _gameplayInput;
 
-        private readonly Dictionary<WindowId, IWindow> _registry = new();
+        // 메뉴 중 입력(닫기)
+        [Preserve, Inject(true)] private IMenuInputProvider _menuInput;
+
+        // 컷씬 중 입력(메뉴 열기)
+        [Preserve, Inject(true)] private ICutsceneInputProvider _cutsceneInput;
+
+        // 메뉴 진입/복귀 시 모드 전환
+        [Preserve, Inject(true)] private IGameStateController _gameState;
+
+        private readonly Dictionary<WindowType, IWindow> _registry = new();
         private readonly UINavigator _navigator = new();
 
         // 기본 창이 MainMenu면 메인메뉴 씬으로 본다(시작 시 자동 열기 + z 닫기 금지).
-        private bool IsMainMenuScene => _entryWindow == WindowId.MainMenu;
+        private bool IsMainMenuScene => _entryWindow == WindowType.MainMenu;
 
         private void Awake()
         {
@@ -110,7 +116,7 @@ namespace Refactoring
             CloseTop();
         }
 
-        public void OpenWindow(WindowId id)
+        public void OpenWindow(WindowType id)
         {
             if (_registry.TryGetValue(id, out IWindow window))
             {
