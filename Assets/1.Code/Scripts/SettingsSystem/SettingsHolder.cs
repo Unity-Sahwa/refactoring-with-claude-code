@@ -10,7 +10,7 @@ namespace Refactoring
         public event Action OnChanged; //값이 바뀔 때 호출됨. 외부에서 구독알림받음
 
         // AttributeInjector가 자식 클래스(MouseSettings 등)의 필드를 훑기 때문에, private로 할 경우 안보여서 주입 안됨 
-        [Preserve, Inject(true)] protected ISaveService _saveService;
+        [Preserve, Inject] protected ISaveService _saveService;
 
         private TData _data;
 
@@ -23,22 +23,16 @@ namespace Refactoring
                 //데이터 없으면 불러오거나 새로 생성
                 if (_data == null)
                 {
-                    _data = _saveService?.Load<TData>() ?? new TData();
+                    _data = _saveService.Load<TData>() ?? new TData();
                 }
 
                 return _data;
             }
         }
 
-        private void Awake()
-        {
-            // 씬이 바뀌어도 설정은 남아야 한다.
-            DontDestroyOnLoad(gameObject);
-        }
-
         public void Save()
         {
-            _saveService?.Save(Data);
+            _saveService.Save(Data);
         }
 
         protected void NotifyChanged()
