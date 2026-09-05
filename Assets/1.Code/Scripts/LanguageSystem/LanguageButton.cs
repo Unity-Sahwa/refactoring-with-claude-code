@@ -11,7 +11,7 @@ namespace Refactoring
     {
         // 이 버튼이 맡은 언어.
         [SerializeField]
-        private Language _target;
+        private LanguageType _target;
 
         [Preserve, Inject(true)] private ILanguageSettings _language;
 

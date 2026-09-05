@@ -5,29 +5,11 @@ using UnityEngine;
 
 namespace Refactoring
 {
-    public enum Language
-    {
-        Korean,
-        English,
-    }
-
     // 번역 표. 키 하나에 한국어·영어 문장을 나란히 적어둔다.
     // 언어별 폰트도 여기 둔다. 글자마다 폰트를 꽂으면 배선이 너무 많아진다.
     [CreateAssetMenu(fileName = "TextTableData", menuName = "Refactoring/TextTableData")]
     public class TextTableData : ScriptableObject
     {
-        [Serializable]
-        public class Entry
-        {
-            public string Key;
-
-            [TextArea]
-            public string Korean;
-
-            [TextArea]
-            public string English;
-        }
-
         [SerializeField]
         private List<Entry> _entries = new List<Entry>();
 
@@ -37,12 +19,12 @@ namespace Refactoring
         [SerializeField]
         private TMP_FontAsset _englishFont;
 
-        public List<Entry> Entries => _entries;
-
         // 키로 빨리 찾으려고 한 번만 만들어 두는 색인.
         private Dictionary<string, Entry> _index;
 
-        public string GetText(string key, Language language)
+        public List<Entry> Entries => _entries;
+
+        public string GetText(string key, LanguageType language)
         {
             if (string.IsNullOrEmpty(key))
             {
@@ -57,7 +39,7 @@ namespace Refactoring
                 return key;
             }
 
-            string text = language == Language.English ? entry.English : entry.Korean;
+            string text = language == LanguageType.English ? entry.English : entry.Korean;
 
             if (string.IsNullOrEmpty(text))
             {
@@ -68,9 +50,9 @@ namespace Refactoring
             return text;
         }
 
-        public TMP_FontAsset GetFont(Language language)
+        public TMP_FontAsset GetFont(LanguageType language)
         {
-            return language == Language.English ? _englishFont : _koreanFont;
+            return language == LanguageType.English ? _englishFont : _koreanFont;
         }
 
         // 드롭다운으로 키를 고를 때 쓴다.
@@ -115,6 +97,20 @@ namespace Refactoring
         private void OnValidate()
         {
             ClearIndex();
+        }
+
+        // 표의 한 줄. 이 표에서만 쓴다.
+        [Serializable]
+        public class Entry
+        {
+            // public인 이유: 인스펙터에 그대로 노출되는 직렬화 값이라 프로퍼티로 감싸면 안 보인다.
+            public string Key;
+
+            [TextArea]
+            public string Korean;
+
+            [TextArea]
+            public string English;
         }
     }
 }
