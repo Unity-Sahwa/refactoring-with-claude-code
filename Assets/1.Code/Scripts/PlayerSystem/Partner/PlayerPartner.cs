@@ -5,65 +5,42 @@ using UnityEngine.Scripting;
 
 namespace Refactoring
 {
-    // 역할: 현재 캐릭터의 머리 왼쪽 뒤를 부드럽게 따라다니며 떠 있고,
-    //       캐릭터 스왑 시 캐릭터에게 부딪혀 이펙트와 소리를 낸다.
+    // 책임: 현재 캐릭터를 부드럽게 따라다니고, 스왑 시 캐릭터에게 부딪혀 이펙트와 소리를 낸다.
     public class PlayerPartner : MonoBehaviour
     {
-        [Preserve, Inject]
-        private ICurrentCharacterProvider _characterProvider;
+        [Preserve, Inject] private ICurrentCharacterProvider _characterProvider;
 
-        [Preserve, Inject]
-        private ICharacterSwapNotifier _swapNotifier;
+        [Preserve, Inject] private ICharacterSwapNotifier _swapNotifier;
 
-        [Preserve, Inject]
-        private AudioChannel _audioChannel;
+        [Preserve, Inject] private AudioChannel _audioChannel;
 
         [Tooltip("부딪힐 때 켤 이펙트. 파트너 자식으로 미리 배치하고 꺼둔다")]
-        [SerializeField]
-        private GameObject _swapToHumanEffect;
-
-        [SerializeField]
-        private GameObject _swapToAnimalEffect;
+        [SerializeField] private GameObject _swapToHumanEffect;
+        [SerializeField] private GameObject _swapToAnimalEffect;
 
         [Tooltip("따라다닐 위치. 캐릭터 기준 로컬 좌표(머리 왼쪽 뒤)")]
-        [SerializeField]
-        private Vector3 _followOffset = new Vector3(-0.5f, 1.8f, -0.5f);
+        [SerializeField] private Vector3 _followOffset = new Vector3(-0.5f, 1.8f, -0.5f);
 
         [Tooltip("부딪힐 위치. 캐릭터 기준 로컬 좌표(가슴 앞)")]
-        [SerializeField]
-        private Vector3 _collideOffset = new Vector3(0f, 1.3f, 0.3f);
-
-        [SerializeField]
-        private float _followSmoothTime = 0.35f;
+        [SerializeField] private Vector3 _collideOffset = new Vector3(0f, 1.3f, 0.3f);
+        [SerializeField] private float _followSmoothTime = 0.35f;
 
         [Tooltip("이 거리보다 멀어지면 순간이동으로 따라붙는다")]
-        [SerializeField]
-        private float _warpDistance = 15f;
+        [SerializeField] private float _warpDistance = 15f;
 
         [Tooltip("구체 주위를 도는 마스크들의 부모")]
-        [SerializeField]
-        private Transform _orbitRoot;
-
-        [SerializeField]
-        private Transform[] _masks;
-
-        [SerializeField]
-        private float _orbitSpeed = 40f;
-
-        [SerializeField]
-        private float _floatHeight = 0.15f;
-
-        [SerializeField]
-        private float _floatSpeed = 1.5f;
-
-        [SerializeField]
-        private float _collideSpeed = 12f;
+        [SerializeField] private Transform _orbitRoot;
+        [SerializeField] private Transform[] _masks;
+        [SerializeField] private float _orbitSpeed = 40f;
+        [SerializeField] private float _floatHeight = 0.15f;
+        [SerializeField] private float _floatSpeed = 1.5f;
+        [SerializeField] private float _collideSpeed = 12f;
 
         [Tooltip("부딪힌 뒤 이펙트를 유지하는 시간")]
-        [SerializeField]
-        private float _effectTime = 1f;
+        [SerializeField] private float _effectTime = 1f;
 
-        // 불러오기·낙하 복귀로 캐릭터를 되돌릴 때는 스왑 소리를 내지 않는다. GameStateSaver가 스왑 직전에 켠다.
+        // public인 이유: 다른 시스템(GameStateSaver)이 스왑 직전에 켜야 하는 값이라서.
+        // 불러오기·낙하 복귀로 캐릭터를 되돌릴 때는 스왑 소리를 내지 않는다.
         public bool SkipNextCollideSound;
 
         private float[] _maskBaseHeights;
@@ -158,24 +135,18 @@ namespace Refactoring
 
         private Transform GetCharacterTransform()
         {
-            PlayerCharacter character = _characterProvider?.CurrentCharacter;
-            if (character == null)
-            {
-                return null;
-            }
-
-            return character.transform;
+            return _characterProvider?.GetCurrentComponent<Transform>();
         }
 
         private void HandleCharacterSwapped()
         {
-            PlayerCharacter character = _characterProvider?.CurrentCharacter;
-            if (character == null)
+            PlayerCharacterType? characterType = _characterProvider?.CurrentType;
+            if (characterType == null)
             {
                 return;
             }
 
-            GameObject effect = character.Type == PlayerCharacterType.AnimalCharacter
+            GameObject effect = characterType == PlayerCharacterType.AnimalCharacter
                 ? _swapToAnimalEffect
                 : _swapToHumanEffect;
 

@@ -1,14 +1,14 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Scripting;
 
 namespace Refactoring
 {
-    // 슬롯에 적힌 값을 실제 게임에 되돌린다. 자리 옮기기, 체력 맞추기, 캐릭터 맞추기 셋만 한다.
-    // 파일도 슬롯도 안 만진다. 그건 SaveSlotManager와 SlotLoadRunner가 한다.
-    // 씬마다 하나씩 있어야 한다. 주입이 씬이 뜰 때 한 번뿐이라 씬을 넘어 살아남으면 안 된다.
+    // 책임: 슬롯에 적힌 값을 실제 게임에 되돌린다. (파일과 슬롯은 SaveSlotManager, SlotLoadRunner 담당)
+    // 흐름: 캐릭터 맞추기 → 자리 옮기기 → 체력 맞추기 → 오브젝트 온오프 되돌리기
     public class GameStateSaver : MonoBehaviour
     {
+        // 씬마다 하나씩 있어야 한다. 주입이 씬이 뜰 때 한 번뿐이라 씬을 넘어 살아남으면 안 된다.
         [Preserve, Inject(true)] private ICurrentCharacterProvider _character;
         [Preserve, Inject(true)] private ICharacterSwappable _swapper;
         [Preserve, Inject(true)] private IHealthModifier _health;
@@ -68,12 +68,14 @@ namespace Refactoring
 
         private void RestoreCharacter(PlayerCharacterType type)
         {
-            if (_character?.CurrentCharacter == null || _swapper == null)
+            PlayerCharacterType? currentType = _character?.CurrentType;
+
+            if (currentType == null || _swapper == null)
             {
                 return;
             }
 
-            if (_character.CurrentCharacter.Type != type)
+            if (currentType != type)
             {
                 // 되돌리는 스왑은 플레이어가 한 게 아니라서 스왑 소리를 내지 않는다.
                 if (_partner != null)
@@ -87,25 +89,25 @@ namespace Refactoring
 
         private void RestorePosition(SerializableVector3 position)
         {
-            PlayerCharacter current = _character?.CurrentCharacter;
+            Transform current = _character?.GetCurrentComponent<Transform>();
 
             if (current == null)
             {
                 return;
             }
 
-            CharacterController controller = current.GetCharacterComponent<CharacterController>();
+            CharacterController controller = _character.GetCurrentComponent<CharacterController>();
 
             // CharacterController가 켜져 있으면 자기가 자리를 계속 붙잡아서 position을 넣어도 도로 돌아온다.
             if (controller != null)
             {
                 controller.enabled = false;
-                current.transform.position = position;
+                current.position = position;
                 controller.enabled = true;
                 return;
             }
 
-            current.transform.position = position;
+            current.position = position;
         }
     }
 }

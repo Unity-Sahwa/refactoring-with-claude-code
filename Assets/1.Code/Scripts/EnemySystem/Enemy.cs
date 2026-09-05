@@ -167,9 +167,10 @@ namespace Refactoring
         // 캐릭터 전환 통지: 이미 (발견/피격으로) 타겟을 물고 있는 중이면 그 즉시 현재 캐릭터로 갈아끼운다.
         private void OnCharacterSwapped()
         {
-            if (target != null && currentCharacterProvider?.CurrentCharacter != null)
+            Transform characterTransform = currentCharacterProvider?.GetCurrentComponent<Transform>();
+            if (target != null && characterTransform != null)
             {
-                target = currentCharacterProvider.CurrentCharacter.transform;
+                target = characterTransform;
             }
         }
 

@@ -5,16 +5,23 @@ using UnityEngine.Scripting;
 
 namespace Refactoring
 {
-    //역할: (게임에서는 2가지 캐릭터만 사용) 2개의 캐릭터를 스왑한다.
+    // 책임: 두 캐릭터를 서로 바꾸고, 바뀐 사실을 알린다.
     public class PlayerCharacterSwitcher : MonoBehaviour, ICharacterSwappable, ICharacterSwapNotifier, ICurrentCharacterProvider
     {
         [Preserve, Inject] private List<PlayerCharacter> _characters;
-        public PlayerCharacter CurrentCharacter => _currentCharacter;
-        public event Action OnCharacterSwapped;
-        private PlayerCharacter _currentCharacter = null;
-    
 
-        void Awake()
+        private PlayerCharacter _currentCharacter;
+
+        public PlayerCharacterType? CurrentType => _currentCharacter != null ? _currentCharacter.Type : null;
+
+        public T GetCurrentComponent<T>() where T : Component
+        {
+            return _currentCharacter != null ? _currentCharacter.GetCharacterComponent<T>() : null;
+        }
+
+        public event Action OnCharacterSwapped;
+
+        private void Awake()
         {
             foreach (var character in _characters)
             {
@@ -36,13 +43,13 @@ namespace Refactoring
             }
         }
 
-        public void SwapPlayerCharacter( )
+        public void SwapPlayerCharacter()
         {
             PlayerCharacter nextCharacter = null;
 
             foreach (var character in _characters)
             {
-                if(character.Type != _currentCharacter.Type)
+                if (character.Type != _currentCharacter.Type)
                 {
                     nextCharacter = character;
                     break;

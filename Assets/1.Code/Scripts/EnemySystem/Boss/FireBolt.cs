@@ -22,10 +22,10 @@ namespace Refactoring
                 return;
             }
 
-            if (other.gameObject == currentCharacterProvider.CurrentCharacter.gameObject)
+            if (other.transform == currentCharacterProvider.GetCurrentComponent<Transform>())
             {
-                PlayerStateMachine playerStateMachine = currentCharacterProvider.CurrentCharacter.GetComponent<PlayerStateMachine>();
-                PlayerDamageReceiver playerDamageReceiver = currentCharacterProvider.CurrentCharacter.GetComponent<PlayerDamageReceiver>();
+                PlayerStateMachine playerStateMachine = currentCharacterProvider.GetCurrentComponent<PlayerStateMachine>();
+                PlayerDamageReceiver playerDamageReceiver = currentCharacterProvider.GetCurrentComponent<PlayerDamageReceiver>();
 
                 if(playerStateMachine.CurrentState.StateKey != PlayerStateType.Dead)
                 {

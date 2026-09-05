@@ -93,10 +93,10 @@ namespace Refactoring
         private void LoadNow()
         {
             // 메뉴 버튼에 붙은 경우엔 플레이어가 없어서 둘 다 비어 있다. 그때는 넘길 것도 없다.
-            if (_health != null && _character?.CurrentCharacter != null)
+            if (_health != null && _character?.CurrentType != null)
             {
                 _pendingHp = _health.Current;
-                _pendingType = _character.CurrentCharacter.Type;
+                _pendingType = _character.CurrentType.Value;
             }
 
             SceneManager.LoadScene(_nextScene);

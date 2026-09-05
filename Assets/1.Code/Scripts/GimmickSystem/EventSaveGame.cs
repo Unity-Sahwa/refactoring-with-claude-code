@@ -40,7 +40,7 @@ namespace Refactoring
                 Hp = _health != null ? _health.Current : 0f,
 
                 // 주입이 안 됐으면 사람 캐릭터로 본다. 게임 시작이 사람 캐릭터라서 그게 덜 어긋난다.
-                CharacterType = _character != null ? _character.CurrentCharacter.Type : PlayerCharacterType.HumanCharacter,
+                CharacterType = _character?.CurrentType ?? PlayerCharacterType.HumanCharacter,
                 ObjectStates = BuildObjectStates(),
             };
 

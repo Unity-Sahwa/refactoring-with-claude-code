@@ -4,35 +4,33 @@ using UnityEngine.Scripting;
 
 namespace Refactoring
 {
-    // 역할: 매프레임 플레이어의 Transform 움직임(일반이동, 스킬이동, 넉백, 회전, 중력)을 호출
-    // 기존에 분리되있던 이동을 왜 통합시켰나: 
-    //      - 여러 곳에서 처리하면 꼬일까봐.
-    //      - 이 컴포넌트가 Move의 유일한 호출자이고, "어떤 속도를 낼지"는 각 속도 소스(IVelocitySource)에 위임한다.
-    //      - 이 컴포넌트는 씬의 유일한 DI 진입점이다. 주입받은 의존성을 순수 C# 소스들의 생성자로 넘겨 만들고,
-    //        매 프레임 속도를 합산해 적용하며, 파괴 시 소스들의 구독을 Dispose로 정리한다.
-
-    // 역할 분담:
-    //   - Locomotion/Skill/Gravity Source : 각자 한 종류의 속도를 만든다(이벤트 구독·상태는 각자 관리).
-    //   - CharacterRotator                : 회전(방향)만 담당.
-    //   - GroundProbe(캐릭터에 부착)       : 발밑 면 법선을 받아 제공(가파른 경사 판정용).
+    // 책임: CharacterController.Move의 유일한 호출자. (속도는 각 IVelocitySource가, 회전은 CharacterRotator가 만든다)
+    // 흐름: Awake에서 속도 소스 생성 → 매 프레임 속도 합산·회전 적용 → Move 한 번 호출 → 파괴 시 소스 Dispose
     public class PlayerCharacterMover : MonoBehaviour
     {
-        [Preserve, Inject] private ICurrentCharacterProvider _characterProvider;        // 필수: 움직일 대상(현재 캐릭터) 공급
-        [Preserve, Inject(true)] private IInputMoveProvider _inputEventProvider;        // 옵션: 없으면 걷기, 회전만 빠짐(스킬, 중력은 동작)
-        [Preserve, Inject(true)] private IPlayerStateEventSubscriber _eventSubscriber;  // 옵션: 없으면 스킬만 작동안함
-        [Preserve, Inject(true)] private IStateTriggerRaiser _triggerRaiser;           // 옵션: 없으면 이동 시 Locomotion 전환 요청만 빠짐
-        [Preserve, Inject(true)] private ICharacterSwapNotifier _swapNotifier;          // 옵션: 없으면 스왑 시 재획득 통지에만 사용
-        [Preserve, Inject(true)] private ILockOnTarget _lockOnTarget;                   // 옵션: 없으면 회전은 항상 이동 방향
+        // 필수: 움직일 대상(현재 캐릭터) 공급
+        [Preserve, Inject] private ICurrentCharacterProvider _characterProvider;
+        // 옵션: 없으면 걷기, 회전만 빠짐(스킬, 중력은 동작)
+        [Preserve, Inject(true)] private IInputMoveProvider _inputEventProvider;
+        // 옵션: 없으면 스킬만 작동안함
+        [Preserve, Inject(true)] private IPlayerStateEventSubscriber _eventSubscriber;
+        // 옵션: 없으면 이동 시 Locomotion 전환 요청만 빠짐
+        [Preserve, Inject(true)] private IStateTriggerRaiser _triggerRaiser;
+        // 옵션: 없으면 스왑 시 재획득 통지에만 사용
+        [Preserve, Inject(true)] private ICharacterSwapNotifier _swapNotifier;
+        // 옵션: 없으면 회전은 항상 이동 방향
+        [Preserve, Inject(true)] private ILockOnTarget _lockOnTarget;
 
-        [Header("일반 이동")] 
-        [SerializeField] private float _moveSpeed = 10f;   
-        [SerializeField] private float _rotateRate = 20f;  
-        
+        [Header("일반 이동")]
+        [SerializeField] private float _moveSpeed = 10f;
+        [SerializeField] private float _rotateRate = 20f;
+
         [Header("추락(중력)")]
-        [SerializeField] private float _gravity = -25f;    
+        [SerializeField] private float _gravity = -25f;
         [SerializeField] private float _maxFallSpeed = -50f;
-        [SerializeField] private float _groundedStick = -2f;  // 착지 시 바닥에 캐릭터를 살짝 눌러 붙이는 용도
-        
+        [Tooltip("착지 시 바닥에 캐릭터를 살짝 눌러 붙이는 속도")]
+        [SerializeField] private float _groundedStick = -2f;
+
         private readonly List<IVelocitySource> _velocitySources = new();
         private CharacterRotator _rotator;
         private CharacterController _controller;
@@ -106,7 +104,7 @@ namespace Refactoring
             UpdateInputMoveDirection();
 
             Vector3 groundNormal = _groundProbe != null ? _groundProbe.GroundNormal : Vector3.up;
-            var frame = new MoveParams(Time.deltaTime, _characterTransform, _controller, groundNormal, _moveDirection);
+            MoveParams frame = new MoveParams(Time.deltaTime, _characterTransform, _controller, groundNormal, _moveDirection);
 
             Vector3 velocity = Vector3.zero;
             for (int i = 0; i < _velocitySources.Count; i++)
@@ -124,20 +122,19 @@ namespace Refactoring
             _inputVector = vector2;
         }
 
-
         private void SetupCurrentCharacter()
         {
-            PlayerCharacter character = _characterProvider.CurrentCharacter;
-            if (character == null)
+            _characterTransform = _characterProvider.GetCurrentComponent<Transform>();
+            if (_characterTransform == null)
             {
                 Debug.LogError("[PlayerCharacterMover] 현재 캐릭터가 없습니다. Provider 설정을 확인하세요.");
                 return;
             }
 
-            _controller = character.GetCharacterComponent<CharacterController>();
-            _characterTransform = character.transform;
-            _groundProbe = character.GetCharacterComponent<GroundProbe>();
-            _animator = character.GetComponentInChildren<Animator>(); // 히트스탑 판정용(HitStopHandler와 같은 탐색 방식)
+            _controller = _characterProvider.GetCurrentComponent<CharacterController>();
+            _groundProbe = _characterProvider.GetCurrentComponent<GroundProbe>();
+            // 히트스탑 판정용(HitStopHandler와 같은 탐색 방식)
+            _animator = _characterTransform.GetComponentInChildren<Animator>();
 
             // 캐릭터가 바뀌었으니 소스들의 누적 상태(예: 낙하속도)를 초기화한다.
             for (int i = 0; i < _velocitySources.Count; i++)

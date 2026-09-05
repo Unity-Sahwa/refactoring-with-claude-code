@@ -101,7 +101,7 @@ public class WisuMainRe : Enemy
         patternB3 = GetComponent<WisuAttackPatternB3>();
         spawnPhase = GetComponent<WisuSpawnPhase>();
 
-        target = currentCharacterProvider.CurrentCharacter.transform;
+        target = currentCharacterProvider.GetCurrentComponent<Transform>();
         animator = GetComponent<Animator>();
         boxCollider = GetComponent<BoxCollider>();
         boxCollider.enabled = false;

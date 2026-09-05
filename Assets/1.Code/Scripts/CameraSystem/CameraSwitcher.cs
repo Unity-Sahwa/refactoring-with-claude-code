@@ -5,21 +5,23 @@ using UnityEngine.Scripting;
 
 namespace Refactoring
 {
-    // 역할: 구독 이벤트의 알람을 받고 카메라를 전환시킨다.(셋팅 정보 포함)
-    // 우선순위: 타임라인,컷씬 카메라 > 락온 카메라 > 디폴트 카메라. (타임라인, 컷씬 카메라는 다루지 않지만 우선순위 존재)
+    // 책임: 캐릭터 교체·락온 알림을 받아 켤 카메라를 고르고 따라갈 대상을 연결한다.
+    // 흐름: 알림 수신 → 켤 종류 결정 → 우선순위 부여 → 추적 대상 연결
     public class CameraSwitcher : MonoBehaviour, ICurrentCameraProvider
     {
-        private const int Active = 20;  // 켤 카메라 우선순위
-        private const int Idle = 10;    // 나머지 카메라 우선순위
+        // 타임라인·컷씬 카메라는 이 둘보다 높은 우선순위를 자기가 직접 올려 쓴다.
+        private const int Active = 20;
+        private const int Idle = 10;
 
-        [Preserve, Inject] private List<CameraRole> _roles;                  // 씬의 역할표식 카메라들
+        // 씬에 있는 역할 표식 카메라 전부.
+        [Preserve, Inject] private List<CameraRole> _roles;
         [Preserve, Inject] private ICharacterSwapNotifier _swapNotifier;
         [Preserve, Inject] private ICurrentCharacterProvider _currentCharacter;
         [Preserve, Inject] private ILockOnState _lockOn;
 
         private readonly Dictionary<CameraKind, CinemachineCamera> _cameras = new();
 
-        // ICurrentCameraProvider: 지금 켜진(Priority == Active) 가상 카메라. 카메라 연출(줌)이 이걸 대상으로 삼는다.
+        // 지금 켜진(Priority == Active) 가상 카메라. 카메라 연출(줌)이 이걸 대상으로 삼는다.
         public CinemachineCamera ActiveCamera { get; private set; }
 
         private void Awake()
@@ -35,50 +37,64 @@ namespace Refactoring
                 }
             }
 
-            if (_swapNotifier != null) _swapNotifier.OnCharacterSwapped += OnChanged;
-            if (_lockOn != null) _lockOn.OnLockOnChanged += OnChanged;
+            if (_swapNotifier != null)
+            {
+                _swapNotifier.OnCharacterSwapped += HandleChanged;
+            }
+
+            if (_lockOn != null)
+            {
+                _lockOn.OnLockOnChanged += HandleChanged;
+            }
+        }
+
+        private void Start()
+        {
+            Refresh();
         }
 
         private void OnDestroy()
         {
-            if (_swapNotifier != null) _swapNotifier.OnCharacterSwapped -= OnChanged;
-            if (_lockOn != null) _lockOn.OnLockOnChanged -= OnChanged;
+            if (_swapNotifier != null)
+            {
+                _swapNotifier.OnCharacterSwapped -= HandleChanged;
+            }
+
+            if (_lockOn != null)
+            {
+                _lockOn.OnLockOnChanged -= HandleChanged;
+            }
         }
 
-        private void Start() => Refresh();
+        private void HandleChanged()
+        {
+            Refresh();
+        }
 
-        private void OnChanged() => Refresh();
-
-        // 락온이면 락온 카메라, 아니면 디폴트를 켜고 따라갈 대상을 연결한다.
         private void Refresh()
         {
-            bool lockOn = _lockOn != null && _lockOn.IsLockOn && _cameras.ContainsKey(CameraKind.LockOn);
-            CameraKind chosen = lockOn ? CameraKind.LockOn : CameraKind.Default;
+            bool isLockOn = _lockOn != null && _lockOn.IsLockOn && _cameras.ContainsKey(CameraKind.LockOn);
+            CameraKind chosen = isLockOn ? CameraKind.LockOn : CameraKind.Default;
 
             foreach (KeyValuePair<CameraKind, CinemachineCamera> entry in _cameras)
             {
                 entry.Value.Priority.Value = entry.Key == chosen ? Active : Idle;
             }
+
             _cameras.TryGetValue(chosen, out CinemachineCamera activeCamera);
             ActiveCamera = activeCamera;
 
-            PlayerCharacter character = _currentCharacter?.CurrentCharacter;
-
-            // 디폴트(=보스룸) 카메라는 현재 캐릭터를 따라간다.
-            if (character != null && _cameras.TryGetValue(CameraKind.Default, out CinemachineCamera defaultCam))
+            Transform characterTransform = _currentCharacter?.GetCurrentComponent<Transform>();
+            if (characterTransform == null)
             {
-                defaultCam.Target.TrackingTarget = character.transform;
-                defaultCam.Target.LookAtTarget = character.transform;
+                return;
             }
 
-            // 락온 카메라는 현재 캐릭터를 따라가고 또 바라본다(적이 아니라 플레이어).
-            if (_cameras.TryGetValue(CameraKind.LockOn, out CinemachineCamera lockOnCam))
+            // 락온 카메라도 적이 아니라 플레이어를 따라가고 바라본다.
+            foreach (KeyValuePair<CameraKind, CinemachineCamera> entry in _cameras)
             {
-                if (character != null)
-                {
-                    lockOnCam.Target.TrackingTarget = character.transform;
-                    lockOnCam.Target.LookAtTarget = character.transform;
-                }
+                entry.Value.Target.TrackingTarget = characterTransform;
+                entry.Value.Target.LookAtTarget = characterTransform;
             }
         }
     }

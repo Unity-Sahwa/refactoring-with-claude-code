@@ -53,23 +53,24 @@ namespace Refactoring
         private void OnMove(Vector2 vector2) => _playerMoveVector = vector2;
         private void HandleOn(IStartData data)
         {
-            SetAnimator(_currentCharacterProvider?.CurrentCharacter);
+            SetAnimator();
             _canSetParameter = true;
         }
         
         private void HandleClose(CloseEventType reason)
         {
             _canSetParameter = false;
-            if (reason == CloseEventType.End)
+            if (reason == CloseEventType.End && _animator != null)
             {
                 _animator.SetFloat(_moveYHash, 0f);
             }
         }
-        private void SetAnimator(PlayerCharacter source)
+        private void SetAnimator()
         {
-            if (source != null)
+            _animator = _currentCharacterProvider?.GetCurrentComponent<Animator>();
+            if (_animator == null)
             {
-                _animator = source.GetCharacterComponent<Animator>();
+                Debug.LogError($"[{nameof(PlayerMoveAnimation)}] 현재 캐릭터의 Animator를 찾지 못해 이동 애니메이션이 갱신되지 않는다.", this);
             }
         }
         private void SetParameter()

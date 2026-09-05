@@ -70,16 +70,16 @@ namespace Refactoring
         // 타임라인 Signal에서 호출. 지금 조작 중인 캐릭터를 잡아 목표 지점으로 걷기 시작한다.
         public void StartWalk()
         {
-            PlayerCharacter character = _characterProvider?.CurrentCharacter;
-            if (character == null || _goalPoint == null)
+            Transform characterTransform = _characterProvider?.GetCurrentComponent<Transform>();
+            if (characterTransform == null || _goalPoint == null)
             {
                 Debug.LogError("[ScriptedWalker] 현재 캐릭터 또는 목표 지점이 없습니다.");
                 return;
             }
 
-            _characterTransform = character.transform;
-            _controller = character.GetCharacterComponent<CharacterController>();
-            _animator = character.GetCharacterComponent<Animator>();
+            _characterTransform = characterTransform;
+            _controller = _characterProvider.GetCurrentComponent<CharacterController>();
+            _animator = _characterProvider.GetCurrentComponent<Animator>();
             _isWalking = true;
             // 상태머신 전이를 거치지 않고 연출용 스테이트를 바로 재생한다(입력 기반 이동 애니와 섞이지 않게).
             _animator?.CrossFade(_walkStateName, _fadeTime);

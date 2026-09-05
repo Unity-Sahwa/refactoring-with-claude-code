@@ -16,14 +16,14 @@ namespace Refactoring
 
         public override void Execute()
         {
-            PlayerCharacter current = _character?.CurrentCharacter;
+            Transform current = _character?.GetCurrentComponent<Transform>();
 
             if (current == null)
             {
                 return;
             }
 
-            CharacterController controller = current.GetCharacterComponent<CharacterController>();
+            CharacterController controller = _character.GetCurrentComponent<CharacterController>();
 
             // CharacterController가 켜져 있으면 자기가 자리를 계속 붙잡아서 position을 넣어도 도로 돌아온다.
             if (controller != null)
@@ -32,8 +32,8 @@ namespace Refactoring
             }
 
 
-            current.transform.position = _playerTransform.position;
-            current.transform.rotation = Quaternion.Euler(0f, _playerTransform.eulerAngles.y, 0f);
+            current.position = _playerTransform.position;
+            current.rotation = Quaternion.Euler(0f, _playerTransform.eulerAngles.y, 0f);
 
             if (controller != null)
             {

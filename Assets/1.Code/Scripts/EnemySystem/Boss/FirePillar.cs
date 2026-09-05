@@ -41,7 +41,7 @@ namespace Refactoring
                 {
                     navMeshAgent.enabled = true;
                     navMeshAgent.speed = speed;
-                    navMeshAgent.SetDestination(currentCharacterProvider.CurrentCharacter.transform.position);
+                    navMeshAgent.SetDestination(currentCharacterProvider.GetCurrentComponent<Transform>().position);
                 }
             }
         }
@@ -50,7 +50,7 @@ namespace Refactoring
         {
             if (pillarMode == Mode.Tracking && navMeshAgent != null && currentCharacterProvider != null)
             {
-                navMeshAgent.SetDestination(currentCharacterProvider.CurrentCharacter.transform.position);
+                navMeshAgent.SetDestination(currentCharacterProvider.GetCurrentComponent<Transform>().position);
             }
         }
 
@@ -61,10 +61,10 @@ namespace Refactoring
                 return;
             }
 
-            if (other.gameObject == currentCharacterProvider.CurrentCharacter.gameObject)
+            if (other.transform == currentCharacterProvider.GetCurrentComponent<Transform>())
             {
-                PlayerStateMachine playerStateMachine = currentCharacterProvider.CurrentCharacter.GetComponent<PlayerStateMachine>();
-                PlayerDamageReceiver playerDamageReceiver = currentCharacterProvider.CurrentCharacter.GetComponent<PlayerDamageReceiver>();
+                PlayerStateMachine playerStateMachine = currentCharacterProvider.GetCurrentComponent<PlayerStateMachine>();
+                PlayerDamageReceiver playerDamageReceiver = currentCharacterProvider.GetCurrentComponent<PlayerDamageReceiver>();
                 
                 if(playerStateMachine.CurrentState.StateKey != PlayerStateType.Dead)
                 {
