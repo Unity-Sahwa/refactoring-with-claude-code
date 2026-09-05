@@ -3,23 +3,20 @@ using UnityEngine.UI;
 
 namespace Refactoring
 {
-    // 버튼마다 붙는 부품. 인스펙터에서 동작을 고르고, 눌리면 UIRoot에 요청만 넘긴다.
-    // 확인이 필요한 버튼은 그냥 해당 확인창을 여는 것으로 끝난다(확인창이 자기 일을 안다).
+    // 책임: 인스펙터에서 고른 동작을 UIRoot에 요청만 넘긴다. (확인이 필요한 버튼은 확인창을 여는 것으로 끝난다)
     [RequireComponent(typeof(Button))]
     public class MenuButton : MonoBehaviour
     {
-        public enum ButtonAction
+        public enum ButtonActionType
         {
             OpenWindow,
             Close,
         }
 
-        [SerializeField]
-        private ButtonAction _action;
+        [SerializeField] private ButtonActionType _action;
 
         // _action이 OpenWindow일 때만 사용하는 열 대상
-        [SerializeField]
-        private WindowId _targetWindow;
+        [SerializeField] private WindowType _targetWindow;
 
         private UIRoot _root;
 
@@ -32,7 +29,7 @@ namespace Refactoring
 
         private void HandleClicked()
         {
-            if (_action == ButtonAction.OpenWindow)
+            if (_action == ButtonActionType.OpenWindow)
             {
                 _root.OpenWindow(_targetWindow);
             }
