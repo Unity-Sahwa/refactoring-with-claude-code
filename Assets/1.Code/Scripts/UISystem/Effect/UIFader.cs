@@ -3,25 +3,21 @@ using UnityEngine.Scripting;
 
 namespace Refactoring
 {
-    // 역할: 전투 중이거나 화면에 적이 보이면 이 UI를 서서히 띄우고, 아니면 서서히 지운다.
+    // 책임: 전투 중이거나 화면에 적이 보이면 이 UI를 서서히 띄우고, 아니면 서서히 지운다.
     [RequireComponent(typeof(CanvasGroup))]
     public class UIFader : MonoBehaviour
     {
         [Tooltip("완전히 나타나거나 사라지는 데 걸리는 시간(초)")]
-        [SerializeField]
-        private float _fadeTime = 0.3f;
+        [SerializeField] private float _fadeTime = 0.3f;
 
         [Tooltip("조건이 꺼진 뒤에도 최소한 유지되는 시간(초)")]
-        [SerializeField]
-        private float _minHoldTime = 2f;
+        [SerializeField] private float _minHoldTime = 2f;
 
         private float _hideTimer;
 
-        [Preserve, Inject]
-        private ICurrentStateProvider _stateProvider;
+        [Preserve, Inject] private ICurrentStateProvider _stateProvider;
 
-        [Preserve, Inject]
-        private ILockOnTargetDetector _targetDetector;
+        [Preserve, Inject] private ILockOnTargetDetector _targetDetector;
 
         private CanvasGroup _canvasGroup;
 

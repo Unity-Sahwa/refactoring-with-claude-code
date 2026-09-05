@@ -3,20 +3,17 @@ using UnityEngine.Scripting;
 
 namespace Refactoring
 {
-    // 역할: 플레이어 체력이 깎이면 이 UI를 잠깐 흔들고 제자리로 되돌린다.
+    // 책임: 플레이어 체력이 깎이면 이 UI를 잠깐 흔들고 제자리로 되돌린다.
     [RequireComponent(typeof(RectTransform))]
     public class UIShake : MonoBehaviour
     {
         [Tooltip("흔들리는 시간(초)")]
-        [SerializeField]
-        private float _shakeTime = 0.2f;
+        [SerializeField] private float _shakeTime = 0.2f;
 
         [Tooltip("흔들리는 크기(픽셀)")]
-        [SerializeField]
-        private float _power = 10f;
+        [SerializeField] private float _power = 10f;
 
-        [Preserve, Inject]
-        private IHealthInfo _health;
+        [Preserve, Inject] private IHealthInfo _health;
 
         private RectTransform _rect;
         private Vector2 _startPosition;

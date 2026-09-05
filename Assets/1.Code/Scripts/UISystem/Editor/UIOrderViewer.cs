@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Refactoring
 {
-    // 역할: 씬에 배치된 Canvas의 order를 볼 수 있다.(보기만 가능)
+    // 책임: 씬에 배치된 Canvas의 order를 볼 수 있다.(보기만 가능)
     // 흐름: 계층 바뀜 감지 → Collect(캔버스 모으고 정렬키 만들기) → OnGUI(그려지는 순서대로 위에서 아래로 표시)
     public class UIOrderViewer : EditorWindow
     {
@@ -47,7 +47,8 @@ namespace Refactoring
         {
             _entries.Clear();
 
-            foreach (Canvas canvas in FindObjectsByType<Canvas>(FindObjectsInactive.Include, FindObjectsSortMode.None)) //비활성화 오브젝트 포함
+            // 꺼져 있는 캔버스도 순서에 끼어들 수 있어서 비활성 오브젝트까지 모은다.
+            foreach (Canvas canvas in FindObjectsByType<Canvas>(FindObjectsInactive.Include, FindObjectsSortMode.None))
             {
                 Canvas owner = SortingOwner(canvas);
 

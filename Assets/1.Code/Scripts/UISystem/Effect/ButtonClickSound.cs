@@ -5,10 +5,7 @@ using UnityEngine.UI;
 
 namespace Refactoring
 {
-    // 씬에 있는 버튼 전부에 같은 클릭 소리를 달아준다.
-    // 버튼마다 부품을 붙이면 버튼 수만큼 손이 가고, 하나 빠뜨려도 티가 안 나서 한 곳에서 단다.
-    //
-    // 씬에 하나만 놓는다. 둘 이상 놓으면 버튼 하나에 소리가 두 번 붙는다.
+    // 책임: 씬에 있는 버튼 전부에 같은 클릭 소리를 달아준다. (씬에 하나만 놓는다. 둘이면 소리가 두 번 붙는다)
     public class ButtonClickSound : MonoBehaviour
     {
         [Preserve, Inject] private AudioChannel _audioChannel;
@@ -22,7 +19,10 @@ namespace Refactoring
             foreach (Button button in _buttons)
             {
                 // NoClickSound가 붙은 버튼(예: 모바일 공격 버튼)은 제외한다.
-                if (button.GetComponent<NoClickSound>() != null) continue;
+                if (button.GetComponent<NoClickSound>() != null)
+                {
+                    continue;
+                }
 
                 button.onClick.AddListener(PlayClick);
             }

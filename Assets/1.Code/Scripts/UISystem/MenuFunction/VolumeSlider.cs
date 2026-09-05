@@ -4,12 +4,11 @@ using UnityEngine.UI;
 
 namespace Refactoring
 {
-    // 소리 슬라이더 하나. 어떤 소리인지만 고르고, 값은 소리 주인에게 쓴다.
+    // 책임: 소리 슬라이더 하나. 어떤 소리인지만 고르고, 값은 소리 주인에게 쓴다.
     [RequireComponent(typeof(Slider))]
     public class VolumeSlider : MonoBehaviour
     {
-        [SerializeField]
-        private VolumeCategory _volumeType;
+        [SerializeField] private VolumeCategory _volumeType;
 
         [Preserve, Inject(true)] private ISoundSettings _soundSettings;
 

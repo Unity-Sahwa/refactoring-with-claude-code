@@ -9,7 +9,7 @@ namespace Refactoring
         public bool IsEmpty;
     }
 
-    // 세이브 시스템에 부탁하는 창구. UI는 파일이 몇 개인지, 어떤 형식인지 모른다.
+    // 책임: 세이브 시스템에 부탁하는 창구. UI는 파일이 몇 개인지, 어떤 형식인지 모른다.
     public interface ISaveSlots
     {
         // 저장 시각 최신순으로 준다. UI는 받은 순서대로 찍기만 한다.

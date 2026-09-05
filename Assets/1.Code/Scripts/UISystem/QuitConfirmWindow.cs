@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Refactoring
 {
-    // "게임을 끌까요?" 창.
+    // 책임: "게임을 끌까요?" 창.
     public class QuitConfirmWindow : ConfirmWindow
     {
         protected override void RunYes()

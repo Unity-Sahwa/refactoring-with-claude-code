@@ -18,7 +18,10 @@ namespace Refactoring
         // Awake가 아니라 Start인 이유: Health.Awake에서 발동한 OnChanged를 놓치므로 여기서 현재값으로 한 번 맞춘다.
         private void Start()
         {
-            if (_health == null) return;
+            if (_health == null)
+            {
+                return;
+            }
 
             _health.OnChanged += Refresh;
             Refresh(_health.Current);
@@ -26,7 +29,10 @@ namespace Refactoring
 
         private void OnDestroy()
         {
-            if (_health != null) _health.OnChanged -= Refresh;
+            if (_health != null)
+            {
+                _health.OnChanged -= Refresh;
+            }
         }
 
         private void Refresh(float current)
@@ -36,7 +42,10 @@ namespace Refactoring
                 _hpIcons[i].SetActive(i < current);
             }
 
-            if (_text != null) _text.text = $"{current:0}/{_health.Max:0}";
+            if (_text != null)
+            {
+                _text.text = $"{current:0}/{_health.Max:0}";
+            }
         }
     }
 }

@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace Refactoring
 {
-    // 게임을 끄는 버튼. 종료 안내창의 "예" 버튼에 붙인다.
+    // 책임: 게임을 끄는 버튼. 종료 안내창의 "예" 버튼에 붙인다.
     [RequireComponent(typeof(Button))]
     public class QuitGameButton : MonoBehaviour
     {

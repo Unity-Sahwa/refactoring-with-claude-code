@@ -3,20 +3,17 @@ using UnityEngine.Scripting;
 
 namespace Refactoring
 {
-    // 역할: 지금 조준 중인 적 머리 위에 마커를 띄운다. 락온 전이면 반투명, 락온되면 선명하게.
+    // 책임: 지금 조준 중인 적 머리 위에 마커를 띄운다. 락온 전이면 반투명, 락온되면 선명하게.
     [RequireComponent(typeof(CanvasGroup))]
     public class LockOnMarker : MonoBehaviour
     {
         [Tooltip("적 머리끝에서 얼마나 더 위에 띄울지(월드 단위)")]
-        [SerializeField]
-        private float _heightOffset = 0.3f;
+        [SerializeField] private float _heightOffset = 0.3f;
 
         [Tooltip("락온 전(후보일 때) 투명도")]
-        [SerializeField, Range(0f, 1f)]
-        private float _aimAlpha = 0.4f;
+        [SerializeField, Range(0f, 1f)] private float _aimAlpha = 0.4f;
 
-        [Preserve, Inject]
-        private LockOnController _lockOn;
+        [Preserve, Inject] private LockOnController _lockOn;
 
         private RectTransform _rect;
         private CanvasGroup _canvasGroup;

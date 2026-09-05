@@ -4,8 +4,7 @@ using UnityEngine.UI;
 
 namespace Refactoring
 {
-    // 고른 슬롯을 불러오는 버튼. 불러오기 안내창의 "예" 버튼에 붙인다.
-    // 어느 슬롯인지는 목록 창이 들고 있다.
+    // 책임: 고른 슬롯을 불러오는 버튼. 불러오기 안내창의 "예" 버튼에 붙인다.
     [RequireComponent(typeof(Button))]
     public class LoadSlotButton : MonoBehaviour
     {

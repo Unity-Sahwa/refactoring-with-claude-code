@@ -1,19 +1,20 @@
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.Scripting;
+using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 namespace Refactoring
 {
-    // 마우스 감도 슬라이더 하나. 상하인지 좌우인지만 고르고, 값은 감도 주인에게 쓴다.
+    // 책임: 마우스 감도 슬라이더 하나. 상하인지 좌우인지만 고르고, 값은 감도 주인에게 쓴다.
     [RequireComponent(typeof(Slider))]
     public class MouseSpeedSlider : MonoBehaviour
     {
-        [SerializeField]
-        private bool _isVertical;
+        [SerializeField] private bool _isVertical;
+
+        [SerializeField] private TextMeshProUGUI _sliderValueText;
 
         [Preserve, Inject(true)] private IMouseSettings _mouseSettings;
-        [SerializeField] private TextMeshProUGUI sliderValueText;
 
         private Slider _slider;
 
@@ -34,7 +35,6 @@ namespace Refactoring
             float value = _isVertical ? _mouseSettings.SpeedY : _mouseSettings.SpeedX;
             _slider.SetValueWithoutNotify(value);
             ChangeValueText(value);
-
         }
 
         private void HandleValueChanged(float value)
@@ -58,9 +58,9 @@ namespace Refactoring
 
         private void ChangeValueText(float value)
         {
-            if (sliderValueText != null)
+            if (_sliderValueText != null)
             {
-                sliderValueText.text = value.ToString("F1");
+                _sliderValueText.text = value.ToString("F1");
             }
         }
     }

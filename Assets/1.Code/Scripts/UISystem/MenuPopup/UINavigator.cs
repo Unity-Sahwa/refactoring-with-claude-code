@@ -2,6 +2,7 @@ using System.Collections.Generic;
 
 namespace Refactoring
 {
+    // 책임: 열린 창을 쌓아두고 맨 위부터 닫는다. (어떤 창을 열지는 UIRoot가 정한다)
     public class UINavigator
     {
         private readonly Stack<IWindow> _windows = new Stack<IWindow>();
