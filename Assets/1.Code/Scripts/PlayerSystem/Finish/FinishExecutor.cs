@@ -1,15 +1,18 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Scripting;
 
 namespace Refactoring
 {
-    // 역할: 처형 상태의 진행률 타이밍 이벤트를 받아 액션을 취한다(스턴, 처형)
+    // 책임: 처형 상태의 진행률 타이밍 이벤트를 받아 스턴·처형을 실행한다. (대상 수집은 FinishTargetScanner 담당)
     [RequireComponent(typeof(FinishTargetScanner))]
     public class FinishExecutor : MonoBehaviour
     {
-        [SerializeField] private float _stunTime = 7f;   // 스턴(모션 정지) 시간
-        [SerializeField] private float _executeHeal = 10f; // 처형 성공 시 회복량
+        [Tooltip("스턴(모션 정지) 시간")]
+        [SerializeField] private float _stunTime = 7f;
+        [Tooltip("처형 성공 시 회복량")]
+        [SerializeField] private float _executeHeal = 10f;
 
         [Preserve, Inject] private IPlayerStateEventSubscriber _playerStateEventSubscriber;
         [Preserve, Inject] private IFinishTargetProvider _finishTargetProvider;
@@ -31,7 +34,10 @@ namespace Refactoring
 
         private void HandleFinish(IStartData data)
         {
-            if (data is not FinishDataEntry entry) return;
+            if (data is not FinishDataEntry entry)
+            {
+                return;
+            }
 
             switch (entry.Action)
             {
@@ -43,21 +49,30 @@ namespace Refactoring
         // 현재 범위 내 스턴 대상 전부를 모션 정지.
         private void Stun()
         {
-            var targets = _finishTargetProvider?.GatherStunTargets();
-            if (targets == null) return;
+            IReadOnlyList<Enemy> targets = _finishTargetProvider?.GatherStunTargets();
+            if (targets == null)
+            {
+                return;
+            }
 
             for (int i = 0; i < targets.Count; i++)
             {
                 Enemy enemy = targets[i];
-                if (enemy != null && !enemy.isDead) enemy.MotionStop(_stunTime);
+                if (enemy != null && !enemy.isDead)
+                {
+                    enemy.MotionStop(_stunTime);
+                }
             }
         }
 
         // 현재 범위 내 대상 전부를 처형.
         private void Execute()
         {
-            var targets = _finishTargetProvider?.GatherExecuteTargets();
-            if (targets == null) return;
+            IReadOnlyList<Enemy> targets = _finishTargetProvider?.GatherExecuteTargets();
+            if (targets == null)
+            {
+                return;
+            }
 
             for (int i = 0; i < targets.Count; i++)
             {
@@ -74,7 +89,10 @@ namespace Refactoring
         // 처형 성공 1회당 소량 회복.
         private void Heal(float amount)
         {
-            if (_healthInfo == null || _healthModifier == null || amount <= 0f) return;
+            if (_healthInfo == null || _healthModifier == null || amount <= 0f)
+            {
+                return;
+            }
             _healthModifier.SetCurrent(_healthInfo.Current + amount);
         }
     }

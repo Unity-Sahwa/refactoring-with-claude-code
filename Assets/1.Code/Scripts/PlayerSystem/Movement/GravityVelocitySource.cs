@@ -2,9 +2,8 @@ using UnityEngine;
 
 namespace Refactoring
 {
-    // 무엇: 중력을 담당. 급경사일 경우 중력으로 플레이어가 미끄러지게 만듬
-    // 왜 직접 미끄러뜨리나: CharacterController는 Slope Limit 초과 경사에서 "올라가기"만 막을 뿐 미끄러뜨리진 않는다.
-    //                       그래서 발밑 면이 한계각보다 가파르면 쌓인 중력 속도를 그 면을 따라 흐르게 투영해 직접 미끄러뜨린다.
+    // 책임: 중력 속도를 만들고, 한계각보다 가파른 경사에서는 직접 미끄러뜨린다.
+    //       (CharacterController는 한계각 초과 경사에서 "올라가기"만 막을 뿐 미끄러뜨리지 않는다)
     public class GravityVelocitySource : IVelocitySource
     {
         private readonly float _gravity;        // 직접 내려주는 중력 가속도(음수)

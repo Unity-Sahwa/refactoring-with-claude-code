@@ -27,7 +27,7 @@ namespace Refactoring
         {
             gameObject.layer = LayerMask.NameToLayer("Player");
 
-            if (_eventSubscriber == null) 
+            if (_eventSubscriber == null)
             {
                 return;
             }
@@ -36,12 +36,15 @@ namespace Refactoring
             _invincibleEventDisposable = _eventSubscriber.Register(StateEventCategory.Invincible, HandleInvincibleOn, HandleInvincibleClose);
             _superArmorEventDisposable = _eventSubscriber.Register(StateEventCategory.SuperArmor, HandleSuperArmorOn, HandleSuperArmorClose);
         }
+
         private void OnDestroy()
         {
             _invincibleEventDisposable?.Dispose();
             _superArmorEventDisposable?.Dispose();
         }
-        public void ApplyDamage(DamageInfo info) // 적 히트박스가 호출한다.
+
+        // 적 히트박스가 호출한다.
+        public void ApplyDamage(DamageInfo info)
         {
             if (_invincible || _dead)
             {
@@ -80,6 +83,7 @@ namespace Refactoring
                 }
             }
         }
+
         // 수평 성분만 사용한다(위/아래에서 맞아도 캐릭터가 눕지 않게).
         private void LookAtDamager(GameObject damager)
         {

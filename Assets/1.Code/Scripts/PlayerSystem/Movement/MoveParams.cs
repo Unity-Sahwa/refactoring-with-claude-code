@@ -2,8 +2,7 @@ using UnityEngine;
 
 namespace Refactoring
 {
-    // 역할: 한 프레임에서 이동 계산에 필요한 읽기용 데이터 묶음
-    // 왜 존재? : 속도 소스(IVelocitySource)와 회전기(CharacterRotator)에게 전달하여 참고하도록 하기 위함
+    // 책임: 한 프레임의 이동 계산에 필요한 읽기용 데이터 묶음. (속도 소스와 회전기에게 전달된다)
     public readonly struct MoveParams
     {
         public readonly float DeltaTime;

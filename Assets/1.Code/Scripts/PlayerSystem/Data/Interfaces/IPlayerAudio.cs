@@ -1,9 +1,11 @@
 namespace Refactoring
 {
-    // PlayerAudioHandler가 상태 이벤트로부터 받을 데이터 타입
+    // 책임: PlayerAudioHandler가 소리를 켜는 데 필요한 정보 계약.
     public interface IPlayerAudio
     {
-        SoundType Id { get; }        // 재생할 소리 선택
-        bool UntilFinish { get; }  // 상태 전환되도 끝까지 재생
+        // 재생할 소리 선택
+        SoundType Id { get; }
+        // 상태 전환되도 끝까지 재생
+        bool UntilFinish { get; }
     }
 }

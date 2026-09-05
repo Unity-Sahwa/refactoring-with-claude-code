@@ -4,8 +4,7 @@ using UnityEngine;
 namespace Refactoring
 {
     // 책임: 플레이어 체력의 단일 출처. 증감만 담당하고, 값이 바뀌면 알린다(UI 등이 구독).
-    public class PlayerHealth
-        : MonoBehaviour, IHealthInfo, IHealthModifier
+    public class PlayerHealth : MonoBehaviour, IHealthInfo, IHealthModifier
     {
         [Tooltip("시작 최대 체력")]
         [SerializeField] private float _maxHealth = 20f;
@@ -54,7 +53,10 @@ namespace Refactoring
 
         public float Decrease(float amount)
         {
-            if (amount <= 0f) return Current;
+            if (amount <= 0f)
+            {
+                return Current;
+            }
 
             Current = Mathf.Max(0f, Current - amount);
             OnChanged?.Invoke(Current);

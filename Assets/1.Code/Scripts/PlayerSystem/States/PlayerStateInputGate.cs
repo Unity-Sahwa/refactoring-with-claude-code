@@ -68,7 +68,10 @@ namespace Refactoring
         // 저장된 버퍼 입력을 발사한다.
         private void SendBufferedInput()
         {
-            if (!_hasBuffered) return;
+            if (!_hasBuffered)
+            {
+                return;
+            }
             _hasBuffered = false;
             SendInput(_bufferedAction);
         }

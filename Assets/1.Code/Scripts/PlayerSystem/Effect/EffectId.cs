@@ -22,7 +22,7 @@ namespace Refactoring
         AnimalSpecialAttackSlash,
 
 
-        //처형 공통
+        // 처형 공통
         FinishAttackDome,
         FinishAttackSlash,
 

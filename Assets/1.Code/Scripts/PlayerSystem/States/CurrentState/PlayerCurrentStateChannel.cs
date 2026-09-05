@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Refactoring
 {
-    // 역할: 현재 상태를 담아 두는 공유 SO. 쓰는 쪽과 읽는 쪽이 서로를 모르고 이 SO만 공유한다.
+    // 책임: 현재 상태를 담아 두는 공유 SO. 쓰는 쪽과 읽는 쪽이 서로를 모르고 이 SO만 공유한다.
     [CreateAssetMenu(menuName = "EventChannel/PlayerCurrentStateChannel")]
     public class PlayerCurrentStateChannel : ScriptableObject, ICurrentStateWriter, ICurrentStateProvider
     {

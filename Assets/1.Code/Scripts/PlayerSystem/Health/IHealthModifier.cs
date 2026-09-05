@@ -1,5 +1,6 @@
 namespace Refactoring
 {
+    // 책임: 체력을 바꾸는 계약. 읽기는 IHealthInfo가 담당한다.
     public interface IHealthModifier
     {
         // 체력을 깎고 적용 후 남은 체력을 돌려준다.

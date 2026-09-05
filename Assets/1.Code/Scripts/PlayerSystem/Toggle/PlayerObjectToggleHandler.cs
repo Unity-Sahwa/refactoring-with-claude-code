@@ -5,8 +5,7 @@ using UnityEngine.Scripting;
 
 namespace Refactoring
 {
-    // 역할: 상태 이벤트의 진행률 시점에 맞춰, 씬에 미리 등록된 IToggleTarget 오브젝트를 켜거나 끈다.
-    // 일회성 설정이라 상태가 끝나도 되돌리지 않는다 (되돌리려면 다른 상태/타이밍에 별도 항목으로 지정).
+    // 책임: 진행률 시점에 맞춰 씬에 등록된 IToggleTarget 오브젝트를 켜거나 끈다. (일회성이라 되돌리지 않는다)
     public class PlayerObjectToggleHandler : MonoBehaviour
     {
         [Preserve, Inject] private IPlayerStateEventSubscriber _eventSubscriber;

@@ -2,21 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Scripting;
+using UnityEngine.Serialization;
 
 namespace Refactoring
 {
-    // 역할: 플레이어 사망(OnPlayerDied) 신호를 받아 EventData 목록을 각자 delay만큼 기다렸다 실행.
-    // EnterTrigger와 동일한 리스트+딜레이 구조를 사망 신호용으로 재사용한 것.
+    // 책임: 플레이어 사망 신호를 받아 EventData 목록을 각자 지연시간만큼 기다렸다 실행한다. (EnterTrigger와 같은 구조)
     public class PlayerDeathTrigger : MonoBehaviour
     {
         [Preserve, Inject(true)] private List<PlayerDamageReceiver> _receivers;
 
-        public List<EventData> deathEvents;
-        public List<float> delayTimes;
+        [SerializeField] private List<EventData> _deathEvents;
+        [Tooltip("각 이벤트를 실행하기 전 기다릴 시간(초). 모자라면 0으로 채운다")]
+        [SerializeField] private List<float> _delayTimes;
 
         private void OnEnable()
         {
-            if (_receivers == null) return;
+            if (_receivers == null)
+            {
+                return;
+            }
 
             foreach (var receiver in _receivers)
             {
@@ -26,7 +30,10 @@ namespace Refactoring
 
         private void OnDisable()
         {
-            if (_receivers == null) return;
+            if (_receivers == null)
+            {
+                return;
+            }
 
             foreach (var receiver in _receivers)
             {
@@ -36,21 +43,21 @@ namespace Refactoring
 
         private void HandleDied()
         {
-            while (delayTimes.Count < deathEvents.Count)
+            while (_delayTimes.Count < _deathEvents.Count)
             {
-                delayTimes.Add(0f);
+                _delayTimes.Add(0f);
             }
 
-            for (int i = 0; i < deathEvents.Count; i++)
+            for (int i = 0; i < _deathEvents.Count; i++)
             {
-                if (deathEvents[i] != null)
+                if (_deathEvents[i] != null)
                 {
-                    StartCoroutine(ExecuteEventWithDelay(deathEvents[i], delayTimes[i]));
+                    StartCoroutine(CoExecuteEventWithDelay(_deathEvents[i], _delayTimes[i]));
                 }
             }
         }
 
-        private IEnumerator ExecuteEventWithDelay(EventData eventData, float delay)
+        private IEnumerator CoExecuteEventWithDelay(EventData eventData, float delay)
         {
             yield return new WaitForSeconds(delay);
             eventData.Execute();

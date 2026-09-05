@@ -1,29 +1,31 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Refactoring
 {
     [Serializable]
     public class HitboxDataEntry : IStartData, IPlayerHitbox
     {
-        [SerializeField] private string name;
-        [SerializeField] private Vector3 position;
-        [SerializeField] private Vector3 rotation;
-        [SerializeField] private HitboxShape shape;
-        [SerializeField] private Vector3 shapeScalescale = Vector3.one;      // HitboxShape.cs 주석 참고
-        [SerializeField] [Range(0,1)] private float startProgress;
-        [SerializeField] private float duration;
-        [SerializeField] private CombatInfo combat;
+        [SerializeField] private string _name;
+        [SerializeField] private Vector3 _position;
+        [SerializeField] private Vector3 _rotation;
+        [SerializeField] private HitboxShape _shape;
+        [Tooltip("HitboxShape.cs 주석 참고")]
+        [SerializeField] private Vector3 _shapeScale = Vector3.one;
+        [SerializeField] [Range(0,1)] private float _startProgress;
+        [SerializeField] private float _duration;
+        [SerializeField] private CombatInfo _combat;
 
-        //IStartData
-        public float StartProgress => startProgress;
+        // IStartData
+        public float StartProgress => _startProgress;
 
-        //IPlayerHitbox
-        public float Duration => duration;
-        public Vector3 Position => position;
-        public Vector3 Rotation => rotation;
-        public HitboxShape Shape => shape;
-        public Vector3 ShapeScale => shapeScalescale;
-        public CombatInfo Combat => combat;
+        // IPlayerHitbox
+        public float Duration => _duration;
+        public Vector3 Position => _position;
+        public Vector3 Rotation => _rotation;
+        public HitboxShape Shape => _shape;
+        public Vector3 ShapeScale => _shapeScale;
+        public CombatInfo Combat => _combat;
     }
 }

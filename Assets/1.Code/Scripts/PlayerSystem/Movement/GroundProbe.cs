@@ -2,9 +2,8 @@ using UnityEngine;
 
 namespace Refactoring
 {
-    // 무엇: CharacterController에서 바닥과 충돌한 정보를 PlayerCharacterMover에게 전달 
-    // 왜 별도 컴포넌트(캐릭터에 부착)인가: OnControllerColliderHit은 "CharacterController가 붙은 바로 그 GameObject의 스크립트"에서만 호출된다.
-    // 왜 매 프레임 잘 갱신되나: 중력이 매 프레임 아래로 Move를 일으켜 경사면에 계속 닿으므로, 정지처럼 보여도 콜백이 호출된다.
+    // 책임: 발밑 면의 법선을 기록해 Mover에게 알린다.
+    //       (OnControllerColliderHit은 CharacterController가 붙은 그 GameObject에서만 호출돼 별도 컴포넌트로 둔다)
     [RequireComponent(typeof(CharacterController))]
     public class GroundProbe : MonoBehaviour
     {

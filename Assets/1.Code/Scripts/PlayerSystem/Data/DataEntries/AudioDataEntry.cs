@@ -1,19 +1,21 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Refactoring
 {
-    //StateRunner에서 PlayerAudioHandler에게 전달되는 이벤트에서 사용되는 데이터 형태
+    // 책임: StateRunner가 PlayerAudioHandler에게 실어 보내는 소리 데이터.
     [Serializable]
     public class AudioDataEntry : IStartData, IPlayerAudio
     {
-        [SerializeField] private string name;
-        [SerializeField] private SoundType id;
-        [SerializeField] [Range(0f, 1f)] private float startProgress;
-        [SerializeField] private bool untilFinish; // 상태 전환돼도 안 끊고 끝까지 둘지
+        [SerializeField] private string _name;
+        [SerializeField] private SoundType _id;
+        [SerializeField] [Range(0f, 1f)] private float _startProgress;
+        [Tooltip("상태 전환돼도 안 끊고 끝까지 둘지")]
+        [SerializeField] private bool _untilFinish;
 
-        public float StartProgress => startProgress;
-        public SoundType Id => id;
-        public bool UntilFinish => untilFinish;
+        public float StartProgress => _startProgress;
+        public SoundType Id => _id;
+        public bool UntilFinish => _untilFinish;
     }
 }

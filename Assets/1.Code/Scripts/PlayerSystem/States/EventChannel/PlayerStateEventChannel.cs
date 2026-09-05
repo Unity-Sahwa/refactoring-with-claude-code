@@ -4,8 +4,7 @@ using UnityEngine;
 
 namespace Refactoring
 {
-    // 역할: 상태가 발행한 기능 이벤트를 구독자에게 전달하는 채널.(발행자와 구독자는 서로를 모르고 채널을 통해서만 소식이 전달됨)
-    // 사용: DataContainer에 데이터를 등록한다.
+    // 책임: 상태가 발행한 기능 이벤트를 구독자에게 전달한다. (발행자와 구독자는 서로를 모르고 이 채널만 공유한다)
     [CreateAssetMenu(menuName = "EventChannel/PlayerStateEventChannel")]
     public class PlayerStateEventChannel : ScriptableObject, IPlayerStateEventRaiser, IPlayerStateEventSubscriber
     {
@@ -67,8 +66,7 @@ namespace Refactoring
             }
         }
 
-        // 구독자가 어떤 종류의 이벤트 알림을 받기 위한 용도. 
-        // 동시에 알람 취소를 간단히 할 수 있게 IDisposable 반환
+        // 구독 해제를 간단히 하려고 IDisposable을 돌려준다.
         public IDisposable Register(StateEventCategory category, Action<IStartData> open, Action<CloseEventType> close = null)
         {
             StateEvent eventSwitch = new StateEvent { Open = open, Close = close };
@@ -87,12 +85,12 @@ namespace Refactoring
         {
             private Action _dispose;
 
-            // 대리자를 실행하는 것 외에는 아는 것이 없도록 함. 그저 대리자 실행만 할 뿐
             public DisposeAction(Action dispose) => _dispose = dispose;
 
             public void Dispose()
             {
-                _dispose?.Invoke(); //list.Remove(eventSwitch) 실행됨. 더이상 알람 받지 않음.
+                // 등록 해제 대리자를 실행해 더 이상 알림을 받지 않는다.
+                _dispose?.Invoke();
                 _dispose = null;
             }
         }

@@ -5,7 +5,8 @@ using UnityEngine.Scripting;
 
 namespace Refactoring
 {
-    // 책임: 캐릭터에 붙어서 한 번에 하나의 상태만 진행되도록 관리. 규칙에 따른 상태 직접 전환
+    // 책임: 한 번에 하나의 상태만 진행되게 관리하고, 트리거에 따라 상태를 전환한다.
+    // 흐름: Awake에서 StateData로 StateRunner 생성 → 트리거 수신 → 전환 규칙 조회 → Exit·Enter
     public class PlayerStateMachine : MonoBehaviour, IDataProvider
     {
         [SerializeField] private List<StateData> _stateDataList = new List<StateData>();
@@ -126,7 +127,8 @@ namespace Refactoring
         {
             if (CurrentState != null && CurrentState.StateKey == next)
             {
-                return; // 같은 상태로의 재진입은 무시(루프 유지·연타로 같은 상태 재시작 방지)
+                // 같은 상태로의 재진입은 무시(루프 유지·연타로 같은 상태 재시작 방지)
+                return;
             }
             if (!_states.TryGetValue(next, out StateRunner nextState))
             {

@@ -1,88 +1,92 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Refactoring
 {
-    //역할: 플레이어 상태 이벤트의 구독자에게 전달될 데이터. 필요한 데이터를 찾아서 얻을 수 있다.
-    //데이터를 왜 한 곳에 모았는가?: 테스트시, 상태마다 연출 조정하기 쉬우려고
-    //많으면 복잡하지 않는가?: 없는 변수들을 Inspector에서 가려지도록 Editor에서 처리함. 복잡해 보이는 것은 실제로 변수들이 많기 때문이고, Editor로 원하는 것만 보이도록 구현가능
-
+    // 책임: 상태 이벤트 구독자에게 전달될 데이터를 한곳에 모아 카테고리별로 꺼내준다.
+    //       (한곳에 모은 이유는 상태마다 연출을 조정하기 쉬우려고. 안 쓰는 항목은 Editor에서 가린다)
     [CreateAssetMenu(fileName = "StateData", menuName = "Data/StateData")]
     public class StateData : ScriptableObject
     {
-        [SerializeField] private PlayerStateType stateType;   // 상태 정체성. 자식 클래스 override 대신 인스펙터에서 지정
-        [SerializeField] private bool isLooping;
+        [Tooltip("상태 정체성. 자식 클래스 override 대신 인스펙터에서 지정")]
+        [SerializeField] private PlayerStateType _stateType;
+        [SerializeField] private bool _isLooping;
         [Tooltip("이 상태를 다시 사용하려면 마지막 진입 후 최소 이 시간(초)이 지나야 한다. 스킬 연타 방지용")]
-        [SerializeField] private float cooldown;
+        [SerializeField] private float _cooldown;
 
         [Space(10f)]
-        [SerializeField] private IntervalDataEntry[] inputBlock;
-        [SerializeField] private IntervalDataEntry[] inputBuffer;
-        [SerializeField] private IntervalDataEntry[] moveControl;
-        [SerializeField] private IntervalDataEntry[] rotateControl;
-        [SerializeField] private IntervalDataEntry[] superArmor;
-        [SerializeField] private IntervalDataEntry[] invincible;
-        [SerializeField] private IntervalDataEntry[] cameraLock;
-        [SerializeField] private SkillMoveDataEntry[] skillMove;
-        
-        [SerializeField] private SkillEffectDataEntry[] effect;
-        [SerializeField] private HitboxDataEntry[] hitbox;
-        [SerializeField] private AudioDataEntry[] audio;
-        [SerializeField] private CameraShakeDataEntry[] cameraShake;
-        [SerializeField] private CameraZoomDataEntry[] cameraZoom;
-        [SerializeField] private FinishDataEntry[] finish;
-        [SerializeField] private ObjectToggleDataEntry[] objectToggle;
+        [SerializeField] private IntervalDataEntry[] _inputBlock;
+        [SerializeField] private IntervalDataEntry[] _inputBuffer;
+        [SerializeField] private IntervalDataEntry[] _moveControl;
+        [SerializeField] private IntervalDataEntry[] _rotateControl;
+        [SerializeField] private IntervalDataEntry[] _superArmor;
+        [SerializeField] private IntervalDataEntry[] _invincible;
+        [SerializeField] private IntervalDataEntry[] _cameraLock;
+        [SerializeField] private SkillMoveDataEntry[] _skillMove;
 
-        
-        public PlayerStateType StateType => stateType;
-        public bool IsLooping => isLooping;
-        public float Cooldown => cooldown;
+        [SerializeField] private SkillEffectDataEntry[] _effect;
+        [SerializeField] private HitboxDataEntry[] _hitbox;
+        [SerializeField] private AudioDataEntry[] _audio;
+        [SerializeField] private CameraShakeDataEntry[] _cameraShake;
+        [SerializeField] private CameraZoomDataEntry[] _cameraZoom;
+        [SerializeField] private FinishDataEntry[] _finish;
+        [SerializeField] private ObjectToggleDataEntry[] _objectToggle;
+
         private Dictionary<StateEventCategory, Array> _dataMap;
+
+        public PlayerStateType StateType => _stateType;
+        public bool IsLooping => _isLooping;
+        public float Cooldown => _cooldown;
 
         private void OnEnable() => BuildDataMap();
 
 #if UNITY_EDITOR
         private void OnValidate() => BuildDataMap();
 #endif
-        
-        //왜 이렇게 구현? : 2군데서 호출하기에 메서드로 만듬. 
-        //                  (OnEnable 이전에 GetData가 호출되면 맵이 형성이 안되어 있기 때문에 GetData에서도 BuildDataMap 호출하도록 구성)
+
+        // OnEnable보다 GetData가 먼저 불릴 수 있어 두 곳에서 호출한다.
         private void BuildDataMap()
         {
             _dataMap = new()
             {
-                [StateEventCategory.InputBlock] = inputBlock,
-                [StateEventCategory.InputBuffer] = inputBuffer,
-                [StateEventCategory.SkillMove] = skillMove,
-                [StateEventCategory.MoveControl] = moveControl,
-                [StateEventCategory.RotateControl] = rotateControl,
-                [StateEventCategory.Effect] = effect,
-                [StateEventCategory.Hitbox] = hitbox,
-                [StateEventCategory.Audio] = audio,
-                [StateEventCategory.CameraShake] = cameraShake,
-                [StateEventCategory.CameraZoom] = cameraZoom,
-                [StateEventCategory.SuperArmor] = superArmor,
-                [StateEventCategory.Invincible] = invincible,
-                [StateEventCategory.CameraLock] = cameraLock,
-                [StateEventCategory.Finish] = finish,
-                [StateEventCategory.ObjectToggle] = objectToggle,
+                [StateEventCategory.InputBlock] = _inputBlock,
+                [StateEventCategory.InputBuffer] = _inputBuffer,
+                [StateEventCategory.SkillMove] = _skillMove,
+                [StateEventCategory.MoveControl] = _moveControl,
+                [StateEventCategory.RotateControl] = _rotateControl,
+                [StateEventCategory.Effect] = _effect,
+                [StateEventCategory.Hitbox] = _hitbox,
+                [StateEventCategory.Audio] = _audio,
+                [StateEventCategory.CameraShake] = _cameraShake,
+                [StateEventCategory.CameraZoom] = _cameraZoom,
+                [StateEventCategory.SuperArmor] = _superArmor,
+                [StateEventCategory.Invincible] = _invincible,
+                [StateEventCategory.CameraLock] = _cameraLock,
+                [StateEventCategory.Finish] = _finish,
+                [StateEventCategory.ObjectToggle] = _objectToggle,
             };
         }
-        
-        // 왜구현? : StateData에서 구현된 데이터 중에 원하는 데이터만 가져다가 쓰기 위함.
-        public Dictionary<StateEventCategory,T[]> GetData<T>()
+
+        public Dictionary<StateEventCategory, T[]> GetData<T>()
         {
-            // OnEnable() 문제가 생길경우 _dataMap이 누락될 경우 방지
-            if(_dataMap == null) BuildDataMap();
+            // OnEnable이 아직 안 불렸을 때를 대비한다.
+            if (_dataMap == null)
+            {
+                BuildDataMap();
+            }
 
             var result = new Dictionary<StateEventCategory, T[]>();
-            
+
             foreach (var (category, array) in _dataMap)
             {
-                if (array == null || array.Length == 0) continue;
-                
-                if(array is T[] typed)
+                if (array == null || array.Length == 0)
+                {
+                    continue;
+                }
+
+                if (array is T[] typed)
                 {
                     result[category] = typed;
                 }

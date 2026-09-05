@@ -6,8 +6,7 @@ using UnityEngine.Scripting;
 
 namespace Refactoring
 {
-    // 역할: 상태 이벤트의 알림과 함께 전달받은 데이터(위치, 시간범위 등)로 IEffectProvider으로부터 제공된 이펙트를 활성화시킨다.
-
+    // 책임: 상태 이벤트로 받은 데이터(위치·시간)대로 IEffectProvider가 준 이펙트를 켠다.
     public class PlayerEffectHandler : MonoBehaviour
     {
         [Preserve, Inject] private IPlayerStateEventSubscriber _eventSubscriber;
@@ -19,12 +18,12 @@ namespace Refactoring
 
         private class ActiveEffect
         {
-            public GameObject instance;
-            public Coroutine routine;
-            public bool untilFinish;
+            public GameObject Instance;
+            public Coroutine Routine;
+            public bool UntilFinish;
         }
 
-        void Awake()
+        private void Awake()
         {
             _effectEventDisposable = _eventSubscriber.Register(StateEventCategory.Effect, HandleEffect, HandleReset);
 
@@ -43,25 +42,34 @@ namespace Refactoring
             }
 
             var instance = _provider.Rent(effect.EffectId);
-            if (instance == null) return;
-        
+            if (instance == null)
+            {
+                return;
+            }
+
             if (!_attachPoints.TryGetValue(effect.AttachKey, out var parent))
             {
                 _provider.Return(instance);
                 return;
             }
 
-            var t = instance.transform;
-            t.SetParent(parent, false);
-            t.localPosition = effect.Position;
-            t.localRotation = Quaternion.Euler(effect.Rotation);
-            if (effect.Scale == Vector3.zero) t.localScale = Vector3.one;
-            else t.localScale = effect.Scale;
-            
+            Transform effectTransform = instance.transform;
+            effectTransform.SetParent(parent, false);
+            effectTransform.localPosition = effect.Position;
+            effectTransform.localRotation = Quaternion.Euler(effect.Rotation);
+            if (effect.Scale == Vector3.zero)
+            {
+                effectTransform.localScale = Vector3.one;
+            }
+            else
+            {
+                effectTransform.localScale = effect.Scale;
+            }
+
             instance.SetActive(true);
 
-            var active = new ActiveEffect { instance = instance, untilFinish = effect.UntilFinish };
-            active.routine = StartCoroutine(CoRunEffect(active, effect));
+            var active = new ActiveEffect { Instance = instance, UntilFinish = effect.UntilFinish };
+            active.Routine = StartCoroutine(CoRunEffect(active, effect));
             _actives.Add(active);
         }
 
@@ -71,7 +79,7 @@ namespace Refactoring
             {
                 float stopTime = Mathf.Clamp(effect.StopTime, 0f, effect.Duration);
                 yield return new WaitForSeconds(stopTime);
-                active.instance.transform.SetParent(null, true);
+                active.Instance.transform.SetParent(null, true);
                 yield return new WaitForSeconds(effect.Duration - stopTime);
             }
             else
@@ -89,14 +97,17 @@ namespace Refactoring
             for (int i = _actives.Count - 1; i >= 0; i--)
             {
                 var active = _actives[i];
-                if (active.untilFinish)
+                if (active.UntilFinish)
                 {
-                    active.instance.transform.SetParent(null, true);
+                    active.Instance.transform.SetParent(null, true);
                     continue;
                 }
 
-                if (active.routine != null) StopCoroutine(active.routine);
-                active.instance.SetActive(false);
+                if (active.Routine != null)
+                {
+                    StopCoroutine(active.Routine);
+                }
+                active.Instance.SetActive(false);
                 FinishEffect(active);
             }
         }
@@ -104,7 +115,7 @@ namespace Refactoring
         private void FinishEffect(ActiveEffect active)
         {
             _actives.Remove(active);
-            _provider.Return(active.instance);
+            _provider.Return(active.Instance);
         }
 
         private void OnDestroy()
@@ -113,7 +124,10 @@ namespace Refactoring
 
             foreach (var active in _actives)
             {
-                if (active.routine != null) StopCoroutine(active.routine);
+                if (active.Routine != null)
+                {
+                    StopCoroutine(active.Routine);
+                }
             }
             _actives.Clear();
         }
