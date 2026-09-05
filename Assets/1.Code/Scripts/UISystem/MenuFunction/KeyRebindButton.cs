@@ -6,13 +6,13 @@ using UnityEngine.UI;
 
 namespace Refactoring
 {
-    // 조작키 버튼 하나. 어떤 액션인지만 들고 있고, 누르면 다음에 누른 키로 바꾼다.
-    // 이동처럼 키 네 개가 묶인 액션은 버튼도 네 개 두고 방향을 각각 고른다.
+    // 책임: 조작키 버튼 하나. 어떤 액션인지만 들고 있고, 누르면 다음에 누른 키로 바꾼다.
+    // 흐름: 버튼 누름 → 액션 끄기 → 다음에 누른 키로 교체 → 액션 켜고 저장
     [RequireComponent(typeof(Button))]
     public class KeyRebindButton : MonoBehaviour
     {
         // 이동 액션 안에서 어느 방향 키인지. 이동이 아닌 액션은 None으로 둔다.
-        public enum MovePart
+        public enum MovePartType
         {
             None,
             Up,
@@ -21,11 +21,9 @@ namespace Refactoring
             Right,
         }
 
-        [SerializeField]
-        private InputActionType _actionType;
+        [SerializeField] private InputActionType _actionType;
 
-        [SerializeField]
-        private MovePart _movePart;
+        [SerializeField] private MovePartType _movePart;
 
         // 액션이 들어있는 에셋. DataContainer에 등록해두면 주입된다.
         [Preserve, Inject(true)] private InputActionAsset _actionAsset;
@@ -99,7 +97,7 @@ namespace Refactoring
         // 방향이 None이면 조각이 없는 보통 액션이라 첫 번째 것을 쓴다.
         private int FindBindingIndex(InputAction action)
         {
-            if (_movePart == MovePart.None)
+            if (_movePart == MovePartType.None)
             {
                 return 0;
             }
