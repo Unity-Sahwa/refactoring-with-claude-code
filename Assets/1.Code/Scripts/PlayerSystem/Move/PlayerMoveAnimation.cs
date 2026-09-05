@@ -7,7 +7,7 @@ namespace Refactoring
     // 책임: 구독중인 이벤트 호출시 일정시간 동안 방향키 입력을 애니메이션 파라미터로 반영한다.
     // 왜 이렇게 구현? : PlayerMovement와 동일하게 플레이어 상태 시스템과 분리. 이벤트로 On/Off만 받는다.
     // 흐름: 상태 이벤트 구독, 사용자 입력 구독 > 파라미터 갱신 활성화 이벤트 받음 > 입력을 받아 파라미터 갱신 > 비활성화 이벤트 받음 > 갱신 중지
-    public class PlayerMoveAnimation : MonoBehaviour
+    public class PlayerMoveAnimation : MonoBehaviour, IMoveDirectionProvider
     {
         [Preserve, Inject] private IInputMoveProvider _inputEventProvider;
         [Preserve, Inject(true)] private IPlayerStateEventSubscriber _eventSubscriber;
@@ -22,6 +22,24 @@ namespace Refactoring
         private readonly int _moveXHash = Animator.StringToHash("MoveX");
         private readonly int _moveYHash = Animator.StringToHash("MoveY");
         private float _dampTime = 0.1f;
+
+        // 애니 파라미터에 넣는 것과 같은 값을 밖에도 값으로 내준다. 이동 갱신이 꺼져 있으면 방향 없음.
+        public Vector2 MoveDirection
+        {
+            get
+            {
+                if (!_canSetParameter)
+                {
+                    return Vector2.zero;
+                }
+                if (_lockOnState != null && _lockOnState.IsLockOn)
+                {
+                    return _playerMoveVector;
+                }
+                // 비락온: 진행 속력만 쓰는 SetParameter와 동일하게 맞춘다.
+                return new Vector2(0f, _playerMoveVector.magnitude);
+            }
+        }
 
         void Awake()
         {
