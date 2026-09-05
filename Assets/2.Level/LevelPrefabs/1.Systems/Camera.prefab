@@ -430,7 +430,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f650122c540e74a459dd8c32cde153b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.CameraRole
-  kind: 0
+  _kind: 0
 --- !u!114 &5675885051064571763
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -730,7 +730,7 @@ MonoBehaviour:
   _obstacleMask:
     serializedVersion: 2
     m_Bits: 512
-  _debug: 0
+  _isDebugDraw: 0
 --- !u!114 &3339010353417437025
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -761,8 +761,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11ec2da0318ae2745b9b19dee4ff2797, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.PlayerCameraShake
-  MaxSameStateStack: 1
-  AmplitudeGainPerStack: 0
+  _maxSameStateStack: 3
+  _amplitudeGainPerStack: 0.05
 --- !u!114 &4561768414220016481
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1043,4 +1043,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f650122c540e74a459dd8c32cde153b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.CameraRole
-  kind: 1
+  _kind: 1
