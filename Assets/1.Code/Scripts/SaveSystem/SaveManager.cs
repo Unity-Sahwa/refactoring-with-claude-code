@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Refactoring
 {
+    // 책임: 저장 데이터를 json으로 바꿔 파일에 읽고 쓴다. (파일 입출력 자체는 LocalSaveFileHandler 담당)
     public class SaveManager : MonoBehaviour, ISaveService
     {
         private ISaveFileHandler _fileHandler;

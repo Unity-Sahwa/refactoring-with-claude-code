@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Refactoring
 {
+    // 책임: 저장 폴더 안의 json 파일 하나를 읽고 쓰고 지운다.
     public class LocalSaveFileHandler : ISaveFileHandler
     {
         private readonly string _directory;
@@ -22,6 +23,7 @@ namespace Refactoring
             string filePath = GetFilePath(fileName);
             string tempPath = filePath + ".tmp";
 
+            // 쓰는 도중에 게임이 꺼져도 원본이 반토막 나지 않도록, 임시 파일에 다 쓴 뒤 이름만 바꾼다.
             try
             {
                 File.WriteAllText(tempPath, data);

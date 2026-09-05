@@ -4,8 +4,8 @@ using UnityEngine.Scripting;
 
 namespace Refactoring
 {
-    // 불러오기 창의 창구. 슬롯 목록을 넘겨주고, 고른 칸으로 게임을 시작시킨다.
-    // 씬을 띄우는 일과 값을 되돌리는 일의 순서만 맡는다. 파일도 플레이어도 직접 안 만진다.
+    // 책임: 불러오기 창의 창구. 고른 칸으로 게임을 다시 시작시킨다. (파일은 SaveSlotManager, 값 되돌리기는 GameStateSaver 담당)
+    // 흐름: 칸 고르기 → 데이터 맡아두기 → 씬 띄우기 → 씬이 다 뜨면 GameStateSaver에 되돌리기 시킴
     public class SlotLoadRunner : MonoBehaviour, ISaveSlots
     {
         [Preserve, Inject(true)] private SaveSlotManager _slots;

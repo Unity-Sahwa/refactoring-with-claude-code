@@ -12,14 +12,14 @@ namespace Refactoring
         public string Path;
         public bool Active;
 
-        public static string GetPath(Transform t)
+        public static string GetPath(Transform target)
         {
-            string path = t.name;
+            string path = target.name;
 
-            while (t.parent != null)
+            while (target.parent != null)
             {
-                t = t.parent;
-                path = t.name + "/" + path;
+                target = target.parent;
+                path = target.name + "/" + path;
             }
 
             return path;
@@ -30,11 +30,11 @@ namespace Refactoring
         {
             Transform[] all = UnityEngine.Object.FindObjectsByType<Transform>(FindObjectsInactive.Include, FindObjectsSortMode.None);
 
-            foreach (Transform t in all)
+            foreach (Transform target in all)
             {
-                if (GetPath(t) == path)
+                if (GetPath(target) == path)
                 {
-                    return t;
+                    return target;
                 }
             }
 

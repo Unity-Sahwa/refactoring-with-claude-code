@@ -4,15 +4,14 @@ using UnityEngine.Scripting;
 
 namespace Refactoring
 {
-    // 세이브 슬롯 n개를 맡는다. 어느 칸에 쓸지 고르고, 목록을 최신순으로 주고, 전부 지운다.
-    // 파일과 칸만 안다. 씬을 띄우고 값을 되돌리는 일은 SlotLoadRunner가 한다.
+    // 책임: 세이브 슬롯 n개를 맡아 쓸 칸을 고르고, 목록을 최신순으로 준다. (씬 띄우기와 값 되돌리기는 SlotLoadRunner 담당)
+    // 흐름: 쓸 칸 고르기 → 저장 → 그 칸을 현재 칸으로 기억
     public class SaveSlotManager : MonoBehaviour
     {
         // 저장 시각을 적는 모양. 앞자리가 큰 단위라 글자끼리 비교해도 시간순이 된다.
         private const string TimeFormat = "yyyy-MM-dd HH:mm:ss";
 
-        [SerializeField]
-        private int _slotCount = 4;
+        [SerializeField] private int _slotCount = 4;
 
         [Preserve, Inject(true)] private ISaveService _saveService;
 
