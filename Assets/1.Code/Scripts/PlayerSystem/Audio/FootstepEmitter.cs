@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Scripting;
+using UnityEngine.Serialization;
 
 namespace Refactoring
 {
@@ -15,17 +16,16 @@ namespace Refactoring
         FrontRight,
     }
 
-    // 걷기 효과음을 재생시키는 Footstep()을 애니메이션 이벤트를 통해 호출.
+    // 책임: 걷기 애니메이션 이벤트가 부른 방향과 실제 이동 방향이 같을 때만 발소리를 재생한다.
     [RequireComponent(typeof(Animator))]
     public class FootstepEmitter : MonoBehaviour
     {
-        [Preserve, Inject] private AudioChannel channel;
-        [SerializeField] private SoundType footstepId;
-        [SerializeField] private float moveThreshold = 0.5f; // 이 미만이면 무시
-        private Animator _animator;
-
-        private static readonly int MoveXHash = Animator.StringToHash("MoveX");
-        private static readonly int MoveYHash = Animator.StringToHash("MoveY");
+        [Preserve, Inject] private AudioChannel _channel;
+        // 이동 방향은 Animator 파라미터를 훔쳐보지 않고 값으로 받는다.
+        [Preserve, Inject] private IMoveDirectionProvider _moveDirectionProvider;
+        [SerializeField] private SoundType _footstepId;
+        [Tooltip("이동 입력 크기가 이 값 미만이면 발소리를 내지 않는다")]
+        [SerializeField] private float _minMoveInput = 0.5f;
 
         private static readonly WalkType[] OctantToType =
         {
@@ -39,39 +39,59 @@ namespace Refactoring
             WalkType.FrontLeft,  // 315° (-1, +1) 앞왼
         };
 
-        private void Awake() 
+        // 매 호출마다 조용히 참지 않고, 시작할 때 한 번 알리고 꺼진다.
+        private void Awake()
         {
-            _animator = GetComponent<Animator>();
+            if (_channel == null || _moveDirectionProvider == null)
+            {
+                Debug.LogError($"[{nameof(FootstepEmitter)}] AudioChannel 또는 IMoveDirectionProvider가 없어 발소리를 끈다.", this);
+                enabled = false;
+            }
         }
 
         // 각 방향 클립의 발 이벤트가 자기 WalkType을 담아 호출한다.
         public void Footstep(WalkType type)
         {
-            if (channel == null || _animator == null) return;
-            if (!TryGetMoveDirection(out WalkType moving)) return; // 정지(입력 ~0)면 방향 없음 → 무시
-            if (moving != type) return;                            // 지금 이동 방향 클립의 이벤트만 통과
+            // 애니메이션 이벤트는 컴포넌트가 꺼져 있어도 들어오므로 여기서 막는다.
+            if (!enabled)
+            {
+                return;
+            }
+            // 정지(입력 ~0)면 방향 없음 → 무시
+            if (!TryGetMoveDirection(out WalkType moving))
+            {
+                return;
+            }
+            // 지금 이동 방향 클립의 이벤트만 통과
+            if (moving != type)
+            {
+                return;
+            }
 
-            channel.RaisePlay(AudioPlayRequest.CreateAt(footstepId, transform.position));
+            _channel.RaisePlay(AudioPlayRequest.CreateAt(_footstepId, transform.position));
         }
 
-        // 이동 입력(MoveX/MoveY)이 임계값 이상이면 방향을 돌려준다.
+        // 이동 방향 크기가 임계값 이상이면 8방향 중 하나를 돌려준다.
         private bool TryGetMoveDirection(out WalkType direction)
         {
-            float x = _animator.GetFloat(MoveXHash);
-            float y = _animator.GetFloat(MoveYHash);
+            Vector2 move = _moveDirectionProvider.MoveDirection;
+            float x = move.x;
+            float y = move.y;
 
             direction = default;
-            if (x * x + y * y < moveThreshold * moveThreshold) return false; // 이동 크기가 임계값보다 작으면 false 반환
+            if (x * x + y * y < _minMoveInput * _minMoveInput)
+            {
+                return false;
+            }
 
-            // 둘레/지름이 항상 일정하다는 발견! 둘레/지름 = π 라 지음. 둘레 2πr
-            // 호의 길이(s)가 반지름(r)과 똑같아지는 순간의 벌어진 각도 = 1 라디안
-            // 그럼 한바퀴을 가정했을 때, 2πr/r = 2π 라디안. 360도를 라디안으로 계산하면 2π 라디안.
-            
-            // Atan2는 라디안을 반환하고, 거기에 180 / π 라디안을 곱해주어 각도로 변환시킴
-            // 8방향으로 걷기 애니메이션이 존재하기에 좌표보다는 각도로 구분
+            // 8방향 걷기 애니메이션이라 좌표가 아니라 각도로 구분한다.
             float angle = Mathf.Atan2(x, y) * Mathf.Rad2Deg; 
-            if (angle < 0f) angle += 360f;
-            direction = OctantToType[Mathf.RoundToInt(angle / 45f) % 8]; //반올림해서 나온 int가 방향 enum을 가리킴
+            if (angle < 0f)
+            {
+                angle += 360f;
+            }
+            // 반올림해서 나온 int가 8방향 enum의 인덱스가 된다.
+            direction = OctantToType[Mathf.RoundToInt(angle / 45f) % 8];
             return true;
         }
     }
