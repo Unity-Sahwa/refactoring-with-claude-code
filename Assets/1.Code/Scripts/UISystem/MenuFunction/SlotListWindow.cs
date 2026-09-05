@@ -4,16 +4,14 @@ using UnityEngine.UI;
 
 namespace Refactoring
 {
-    // 저장된 슬롯 목록을 보여주는 창. 슬롯 개수가 정해져 있지 않아서 열 때마다 버튼을 찍어낸다.
-    // 게임 중 자동저장으로 목록이 바뀌어도 다시 열면 최신이라 이벤트를 안 듣는다.
+    // 책임: 저장된 슬롯 목록을 보여주는 창. 슬롯 개수가 정해져 있지 않아서 열 때마다 버튼을 찍어낸다.
+    // 흐름: 창 열림 → 기존 버튼 지우기 → 슬롯 수만큼 버튼 생성 → 누르면 확인창 열기
     public class SlotListWindow : UIWindow
     {
-        [SerializeField]
-        private GameObject _slotButtonPrefab;
+        [SerializeField] private GameObject _slotButtonPrefab;
 
         // 찍어낸 버튼이 들어갈 부모(세로 목록 오브젝트).
-        [SerializeField]
-        private Transform _slotParent;
+        [SerializeField] private Transform _slotParent;
 
         [Preserve, Inject(true)] private ISaveSlots _saveSlots;
         [Preserve, Inject(true)] private ILanguageSettings _language;
@@ -31,6 +29,7 @@ namespace Refactoring
             _root = GetComponentInParent<UIRoot>(true);
         }
 
+        // 자동저장으로 목록이 바뀌어도 다시 열면 최신이라 변경 이벤트를 안 듣는다.
         private void OnEnable()
         {
             BuildSlots();
@@ -80,7 +79,7 @@ namespace Refactoring
         private void HandleSlotClicked(int index)
         {
             SelectedIndex = index;
-            _root.OpenWindow(WindowId.LoadConfirm);
+            _root.OpenWindow(WindowType.LoadConfirm);
         }
     }
 }
