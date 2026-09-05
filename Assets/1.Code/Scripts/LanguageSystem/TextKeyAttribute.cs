@@ -8,6 +8,8 @@ namespace Refactoring
     {
         // 이 글자가 들어간 키만 드롭다운에 보인다. 안 넘기면 전부 보인다.
         // 키가 늘수록 목록이 길어져서, 쓰는 자리마다 볼 것만 걸러 쓰라고 둔다.
+        //
+        // public인 이유: 어트리뷰트 값은 드로어(TextKeyDrawer)가 밖에서 읽어야 쓸모가 있다.
         public readonly string Filter;
 
         public TextKeyAttribute(string filter = null)
