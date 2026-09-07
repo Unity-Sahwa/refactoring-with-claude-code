@@ -21,6 +21,10 @@ namespace Refactoring
 
         [SerializeField] private int mobileTargetFPS = 60;
         [SerializeField] private int windowTargetFPS = 60;
+
+        // 렌더 부하는 종횡비가 아니라 픽셀 수를 따라가므로 1280*720만큼의 픽셀만 예산으로 준다.
+        [SerializeField] private int mobilePixelBudget = 921600;
+
         private const string LookAction = "Look";
         private const string MousePath = "<Mouse>/delta";
 
@@ -35,6 +39,11 @@ namespace Refactoring
             bool isMobile = Application.isMobilePlatform;
 
             Application.targetFrameRate = isMobile ? mobileTargetFPS : windowTargetFPS;
+
+            if (isMobile)
+            {
+                ApplyPixelBudget();
+            }
 
             ApplyLookBinding(isMobile);
 
@@ -58,6 +67,24 @@ namespace Refactoring
             {
                 obj.gameObject.SetActive(obj.IsMobileOnly == isMobile);
             }
+        }
+
+        // 종횡비는 기기 것을 그대로 두고 픽셀 수만 예산에 맞춘다.
+        private void ApplyPixelBudget()
+        {
+            int width = Screen.width;
+            int height = Screen.height;
+
+            // 이미 예산보다 적게 쓰는 기기까지 맞추면 없던 해상도를 만들어 부하만 올린다.
+            if (width * height <= mobilePixelBudget)
+            {
+                return;
+            }
+
+            float aspect = (float)width / height;
+            int targetWidth = Mathf.RoundToInt(Mathf.Sqrt(mobilePixelBudget * aspect));
+
+            Screen.SetResolution(targetWidth, Mathf.RoundToInt(targetWidth / aspect), true);
         }
 
         // 빈 문자열이면 그 바인딩이 꺼지고, null이면 원래 경로로 되돌아간다.
