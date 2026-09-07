@@ -583,3 +583,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Refactoring.PlatformController
   mobileTargetFPS: 60
   windowTargetFPS: 60
+  mobilePixelBudget: 921600
