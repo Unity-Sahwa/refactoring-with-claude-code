@@ -1,12 +1,31 @@
 ---
-description: 이 프로젝트의 C#/Unity 코드 컨벤션. 코드 작성·검사 시 이 규칙을 따른다.
+description: C#/Unity 코드 컨벤션. 코드 작성 시 이 규칙을 따르고, 검사 시 위반을 표로 보고한다.
 ---
 
 # 코드 컨벤션
 
 > 기준: Unity 공식 e-book ("Create a C# Style Guide") + 커뮤니티 관행 절충
-> private 필드는 `_camelCase` (커뮤니티 관행 채택)
-> `Old/` 폴더와 실험용(`_Test`) 코드는 이 컨벤션 검사 대상에서 제외한다(삭제 예정 레거시).
+> `Old/` 폴더와 실험용(`_Test`) 코드는 검사 대상에서 제외한다(삭제 예정 레거시).
+> 주석 규칙은 이 문서가 아니라 `comment-convention`이 담당한다.
+> 수치를 SO에 둘지 `[SerializeField]`에 둘지는 `Docs/SystemUsageGuide.md`의 ‘수치를 어디 둘 것인가’를 따른다.
+
+---
+
+## 0. 검사·보고 절차
+
+1. 대상 `.cs` 파일을 직접 읽는다. 추측하지 않는다.
+2. 아래 1~7절과 대조해 위반을 찾는다.
+3. **코드를 수정하지 않는다. 보고만 한다.**
+4. 아래 형식의 표로 출력한다.
+
+| 파일:줄 | 규칙 | 현재 | 제안 |
+|---|---|---|---|
+| PlayerController.cs:42 | 1절 약어 금지 | `int idx` | `int index` |
+
+- 위반이 없으면 `위반 없음` 한 줄만 출력한다.
+- 규칙 칸에는 반드시 절 번호를 적는다.
+- `[SerializeField]`·public 멤버의 rename 제안에는 비고로 `FormerlySerializedAs 필요`를 붙인다.
+  (유니티는 필드명으로 값을 저장하므로 이름만 바꾸면 인스펙터 값이 사라진다.)
 
 ---
 
@@ -20,20 +39,19 @@ public enum MaskType { Human, Animal, Ghost }
 ```
 - PascalCase
 - 역할을 명확히 드러내는 이름 (`Manager`, `Controller`, `Handler`, `Data` 등)
-- MonoBehaviour가 있는 파일은 파일명과 클래스명이 반드시 일치해야 함
-- 파일 하나당 MonoBehaviour는 하나만 존재해야 함
+- **파일 하나당 public 타입은 하나만.** 파일명과 그 타입명이 반드시 일치해야 함
+  (클래스든 구조체든 열거형이든 동일)
+- 예외: 그 타입만 쓰는 전용 enum·struct는 같은 파일 안에 둘 수 있음
+- 구조체: 명사 (`DamageMessage`, `PlayerStats`)
+- 열거형: **무엇의 종류인지 접미사 필수** — `~Type`, `~Mode`, `~State`
 
 ### ScriptableObject
 ```csharp
-// 클래스명: Data 접미사
 public class HumanMaskData : ScriptableObject { }
 public class InputData : ScriptableObject { }
-public class SoundData : ScriptableObject { }
-
-// 에셋 파일명도 동일하게: HumanMaskData, InputData ...
 ```
 - 데이터만 담는 ScriptableObject는 `Data` 접미사로 통일
-- MonoBehaviour와 구분은 `: ScriptableObject` 상속으로 판단
+- 에셋 파일명도 클래스명과 동일하게
 
 ### 인터페이스
 ```csharp
@@ -42,6 +60,7 @@ public interface IPlayerInput { }
 ```
 - `I` 접두사 + PascalCase
 - 기능을 묘사하는 형용사 사용 권장
+- 이름은 쉬운 단어로 (이 절 마지막 '쉬운 단어로 이름 짓기' 적용)
 
 ### 메서드
 ```csharp
@@ -61,56 +80,85 @@ public bool HasStartedTurn() { }
 
 ### 필드
 ```csharp
-// public 인스턴스 필드 — 사용 금지 (10절 참고, SerializeField로 대체)
-
-// 모든 멤버 필드(private / protected / [SerializeField] private / [Inject]) — _camelCase (줄 분리)
-[SerializeField]
-private Rigidbody _rigidbody;
-
-[SerializeField, Range(0f, 100f)]
-private float _moveSpeed;
-
-[Inject]
-private AudioChannel _audioChannel;
+// 멤버 필드(private / protected / [SerializeField] / [Inject]) — _camelCase
+// 어트리뷰트는 같은 줄에 붙여 쓴다 (프로젝트 규칙)
+[Inject] private AudioChannel _audioChannel;
+[SerializeField] private Rigidbody _rigidbody;
+[SerializeField, Range(0f, 100f)] private float _moveSpeed;
 
 private int _currentHealth;
 protected bool _isGrounded;
 
 // 상수 — PascalCase (예외)
 private const int MaxSlotCount = 5;
-public const string SavePath = "SaveData";
-
-// static readonly — PascalCase (예외)
-private static readonly WaitForSeconds WaitOneSecond = new WaitForSeconds(1f);
+private const string RunParam = "IsRunning";
 ```
+
+**직렬화 필드 rename 규칙:**
+- 대상: `public` 필드 / `[SerializeField]` 필드 / `[field: SerializeField]` 프로퍼티
+- 유니티는 **필드명을 키로** 값을 저장한다. 이름만 바꾸면 씬·프리팹·에셋에 저장된 값과 오브젝트 참조가 전부 날아간다.
+- 이름을 바꿀 때는 `[FormerlySerializedAs("이전이름")]`을 붙인다. (`using UnityEngine.Serialization;`)
+- 해당 에셋을 모두 열어 재저장(마이그레이션)한 뒤에는 어트리뷰트를 제거한다. 남겨두면 영구 부채가 된다.
+
+```csharp
+[FormerlySerializedAs("_speed")]
+[SerializeField] private float _moveSpeed;
+```
+
+**참조 획득 규칙:**
+
+| 대상 | 방법 |
+|---|---|
+| 외부 시스템·서비스 참조 | `[Inject]` |
+| 자기 GameObject의 컴포넌트 (`Rigidbody`, `Animator` 등) | `[SerializeField]` 또는 `Awake`의 `GetComponent` |
+| 인스펙터에서 개별 조정할 값 / 테스트용 값 | `[SerializeField]` |
+| 값이 묶음으로 존재하는 시스템 데이터 | ScriptableObject(`~Data`)로 그룹화 |
+
+**한정자 규칙:**
+
+> 대원칙: 한정자는 **정의대로만** 쓴다. 부가효과는 사용 이유가 될 수 없다.
+> - `static` = 타입에 속함(인스턴스마다가 아니라 타입당 하나). "멤버 변수를 안 써서"는 사유 불가
+> - `readonly` = 불변 의도. "지금 안 바꿔서"는 사유 불가
+> - `private` = 캡슐화 의도. "밖에서 안 써서"는 사유 불가
+> - `sealed` = 상속 금지 의도. "자식 클래스가 없어서"는 사유 불가
+>
+> 이유 주석에는 **정의에 해당하는 이유**를 적는다. 부가효과를 적으면 위반으로 본다.
+
+- `public` 인스턴스 필드: 원칙 금지. 쓴다면 **왜 public이어야 하는지 주석 필수.** 이유 없으면 삭제
+- `const`: 허용·권장 (매직넘버·매직스트링 제거 용도)
+- `static`, `static readonly`: **왜 타입에 속해야 하는지 주석 필수.** 이유 없으면 삭제
 
 **변수 네이밍 원칙:**
 - 명사를 사용 (bool 제외)
 - bool은 동사 접두사: `isDead`, `isWalking`, `hasDamageMultiplier`
-- 의미 있는 이름 사용 — 약어 금지 (루프/수식 제외)
-  ```csharp
-  // X
-  int hp;
-  string tName;
-
-  // O
-  int healthPoints;
-  string teamName;
-  ```
-- 변수 하나당 선언 한 줄 (가독성 우선)
+- 변수 하나당 선언 한 줄
 - 클래스명이 `Player`면 멤버 변수에 `PlayerScore` 대신 `Score` 사용 (중복 금지)
+
+**약어 규칙:**
+- 아래 화이트리스트만 허용. 목록 밖 약어는 금지
+  `id`, `ui`, `hp`, `mp`, `bgm`, `sfx`, `fx`, `hud`, `ai`, `db`, `url`
+- 새 약어가 필요하면 이 목록에 먼저 추가한다
+- 표기: 3글자 이상 약어는 첫 글자만 대문자 — `_bgmVolume`, `PlayBgm()`, `HudPanel`
+- 그 외 예외: 루프 카운터(`i`, `j`), 수식 변수(`x`, `y`, 보간 비율 `t`)
+
+```csharp
+// X
+RectTransform rt;
+int idx;
+
+// O
+RectTransform panelRect;
+int index;
+```
 
 ### 프로퍼티
 ```csharp
-// 단순 읽기 전용 — expression-bodied
 public int CurrentHealth { get; private set; }
 public bool IsAlive => CurrentHealth > 0;
 
-// backing field가 있는 경우
-private int _maxHealth;
 public int MaxHealth => _maxHealth;
+private int _maxHealth;
 
-// getter/setter 모두 필요한 경우
 public int MaxHealth
 {
     get => _maxHealth;
@@ -126,13 +174,6 @@ public int MaxHealth
 // 선언 — On + 과거형 또는 동사원형
 public event Action OnDied;
 public event Action<int> OnHealthChanged;
-public event Action<bool> OnControlDisabled;
-
-// 이벤트 발생(subject) — On 접두사 메서드
-public void OnDoorOpened()
-{
-    DoorOpened?.Invoke();
-}
 
 // 구독(observer) — Handle + 이벤트명
 private void HandleDied() { }
@@ -141,7 +182,7 @@ private void HandleHealthChanged(int value) { }
 
 ### 열거형 (Enum)
 ```csharp
-// 단수 명사 사용
+// 단수 명사 + 종류 접미사
 public enum WeaponType
 {
     Knife,
@@ -149,27 +190,17 @@ public enum WeaponType
     RocketLauncher,
 }
 
-public enum FireMode
-{
-    None = 0,
-    Single = 5,
-    Burst = 7,
-    Auto = 8,
-}
-
 // 비트와이즈 enum은 복수형 (Flags 어트리뷰트 사용 시)
 [Flags]
 public enum AttackModes
 {
-    None    = 0,  // 000000
-    Melee   = 1,  // 000001
-    Ranged  = 2,  // 000010
-    Special = 4,  // 000100
+    None    = 0,
+    Melee   = 1,
+    Ranged  = 2,
+    Special = 4,
     MeleeAndSpecial = Melee | Special
 }
 ```
-- 일반 enum: 단수 명사 + PascalCase
-- `[Flags]` enum: 복수형
 
 ### 지역 변수 / 매개변수
 ```csharp
@@ -180,23 +211,7 @@ void ApplyDamage(int damageAmount)
 }
 ```
 - camelCase
-- **약어·줄임말 금지 (필드와 동일 규칙 적용)**
-  ```csharp
-  // X — 타입 첫글자만 딴 이름, 무슨 뜻인지 읽는 사람이 추측해야 함
-  RectTransform rt;
-  Transform t;
-  var go = gameObject;
-  int idx;
-
-  // O — 사전에 있는 단어를 그대로 씀
-  RectTransform panelRect;
-  Transform targetTransform;
-  GameObject spawnedObject;
-  int index;
-  ```
-- 예외: 루프 카운터(`i`, `j`), 수식 변수(`x`, `y`, 보간 비율 `t`)만 허용
-- 이유: 줄임말은 읽는 사람이 원래 단어를 **추측**해야 함. 추측이 필요 없는 이름이 좋은 이름임.
-  (13절 '불가사의한 네이밍' 스멜)
+- 약어 규칙은 필드와 동일 (위 화이트리스트 적용)
 
 ### 쉬운 단어로 이름 짓기 (클래스 / 메서드 / 변수 전부 해당)
 
@@ -207,55 +222,54 @@ void ApplyDamage(int damageAmount)
 // X — 뜻은 정확하지만 사전을 찾아야 하는 단어
 public void InstantiateProjectileEntity() { }
 private bool _isTraversalOccluded;
-int accumulatedAttenuation;
 
 // O — 같은 뜻, 쉬운 단어
 public void SpawnBullet() { }
 private bool _isPathBlocked;
-int totalDamageReduce;
 ```
 
-- 어려운 단어 대신 쓸 쉬운 말 예시
-  | 어려운 말 | 쉬운 말 |
-  |---|---|
-  | Instantiate / Initiate | Create, Spawn, Start |
-  | Terminate / Dispose | Stop, Clear, Remove |
-  | Retrieve / Acquire | Get, Find |
-  | Validate / Verify | Check, IsValid |
-  | Propagate | Send, Notify |
-  | Accumulate | AddUp, Total |
-  | Occlude | Block, Hide |
-  | Threshold | Limit, MinValue, MaxValue |
+| 어려운 말 | 쉬운 말 |
+|---|---|
+| Instantiate / Initiate | Create, Spawn, Start |
+| Terminate / Dispose | Stop, Clear, Remove |
+| Retrieve / Acquire | Get, Find |
+| Validate / Verify | Check, IsValid |
+| Propagate | Send, Notify |
+| Accumulate | AddUp, Total |
+| Occlude | Block, Hide |
+| Threshold | Limit, MinValue, MaxValue |
+
 - 단, Unity·C#이 이미 쓰는 이름(`Instantiate`, `Dispose`, `Serialize` 등)은 그대로 둔다.
-  엔진이 정한 이름을 억지로 바꾸면 오히려 헷갈림.
-- 도메인 용어(게임 기획서에 나오는 말: `Mask`, `Stagger`, `Hitbox` 등)도 그대로 둔다.
-  팀이 이미 공유하는 말이면 어려워 보여도 쉬운 말임.
+- 도메인 용어(기획서에 나오는 말: `Mask`, `Trigger`, `Hitbox` 등)도 그대로 둔다.
 
 ---
 
 ## 2. 파일 구조 (클래스 내부 순서)
 
+> 근거: Unity 공식 e-book 동반 예제 StyleExample.cs
+> "Organize your class in the following order: Fields, Properties, Events,
+> Monobehaviour methods, public methods, private methods, other Classes."
+
 ```csharp
 public class PlayerController : MonoBehaviour
 {
-    // 1. 이벤트
-    public event Action OnDied;
-
-    // 2. 상수
+    // 1. 상수
     private const float DefaultSpeed = 5f;
 
-    // 3. SerializeField (Inspector 노출)
-    [SerializeField]
-    private Rigidbody _rigidbody;
+    // 2. 필드 — SerializeField / Inject 먼저, 그다음 순수 private
+    [SerializeField] private Rigidbody _rigidbody;
+    [Inject] private AudioChannel _audioChannel;
 
-    // 4. private 필드
     private int _currentHealth;
     private bool _isGrounded;
 
-    // 5. 프로퍼티
+    // 3. 프로퍼티
     public int CurrentHealth { get; private set; }
 
-    // 6. Unity 라이프사이클 (순서 준수)
+    // 4. 이벤트
+    public event Action OnDied;
+
+    // 5. MonoBehaviour 메서드 (실행 순서대로)
     private void Awake() { }
     private void OnEnable() { }
     private void Start() { }
@@ -265,17 +279,15 @@ public class PlayerController : MonoBehaviour
     private void OnDisable() { }
     private void OnDestroy() { }
 
-    // 7. public 메서드
+    // 6. public 메서드
     public void TakeDamage(int amount) { }
 
-    // 8. private 메서드
+    // 7. private 메서드 (이벤트 핸들러·코루틴 포함)
     private void Die() { }
-
-    // 9. 이벤트 핸들러
     private void HandleMaskChanged(MaskType mask) { }
-
-    // 10. 코루틴
     private IEnumerator CoDie() { }
+
+    // 8. 이 타입 전용 중첩 타입
 }
 ```
 
@@ -284,13 +296,13 @@ public class PlayerController : MonoBehaviour
 ## 3. 접근 제한자
 
 ```csharp
-// 항상 명시 — 생략 금지
 private void Update() { }      // O
-void Update() { }               // X
+void Update() { }              // X
 
-private int _health;            // O
-int _health;                    // X
+private int _health;           // O
+int _health;                   // X
 ```
+- 항상 명시. 생략 금지
 
 ---
 
@@ -312,15 +324,6 @@ if (isGrounded)
 if (isGrounded) {
     Jump();
 }
-
-// 중첩도 반드시 중괄호
-for (int i = 0; i < 10; i++)
-{
-    for (int j = 0; j < 10; j++)
-    {
-        ExampleAction();
-    }
-}
 ```
 
 ### Switch 문
@@ -333,10 +336,6 @@ switch (someExpression)
     case 1:
         DoSomethingElse();
         break;
-    case 2:
-        int n = 1;
-        DoAnotherThing(n);
-        break;
 }
 ```
 - `case`는 `switch`에서 한 단계 들여쓰기
@@ -347,222 +346,36 @@ switch (someExpression)
 
 ### 수평 간격
 ```csharp
-// O — 쉼표 뒤 공백
-CollectItem(myObject, 0, 1);
+CollectItem(myObject, 0, 1);   // O — 쉼표 뒤 공백
+CollectItem(myObject,0,1);     // X
 
-// X
-CollectItem(myObject,0,1);
+DropPowerUp(myPrefab, 0, 1);   // O — 괄호 안쪽 공백 없음
+DropPowerUp( myPrefab, 0, 1 ); // X
 
-// O — 괄호 안쪽 공백 없음
-DropPowerUp(myPrefab, 0, 1);
+DoSomething();                 // O — 함수명과 괄호 사이 공백 없음
+DoSomething ();                // X
 
-// X
-DropPowerUp( myPrefab, 0, 1 );
-
-// O — 함수명과 괄호 사이 공백 없음
-DoSomething();
-
-// X
-DoSomething ();
-
-// O — 배열 인덱스 안쪽 공백 없음
-x = dataArray[index];
-
-// O — 조건문/비교 연산자 앞뒤 공백
-while (x == y) { }
-if (x == y) { }
+x = dataArray[index];          // O — 배열 인덱스 안쪽 공백 없음
+if (x == y) { }                // O — 비교 연산자 앞뒤 공백
 ```
 
 ### 수직 간격
-- 관련 메서드끼리 묶기 (같은 기능 담당 메서드는 인접 배치)
+- 관련 메서드끼리 묶기
 - 변수 선언부와 메서드 사이 빈 줄 하나
 - 클래스/인터페이스 사이 빈 줄 두 개
-- 가독성에 도움이 될 때만 if-else 블록 사이 빈 줄 추가
 - 한 줄 최대 길이: 120자 권장
 
----
-
-## 6. var 사용
-
-타입이 오른쪽에서 명확히 보일 때만 허용
-```csharp
-var player = new Player();                    // O — 타입 보임
-var rigidbody = GetComponent<Rigidbody>();    // O — 타입 보임
-var powerUps = new List<PowerUps>();          // O — 타입 보임
-
-var data = LoadData();                        // X — 타입 불명확
-var result = _saveManager.GetSlotInfo(0);    // X — 타입 불명확
-```
-
----
-
-## 7. null 체크
-
-```csharp
-// null 조건 연산자 허용
-_animator?.SetBool("IsRunning", true);
-OnDied?.Invoke();
-
-// 단, 복잡한 체이닝은 가독성 위해 분리
-if (_animator == null)
-{
-    return;
-}
-```
-
----
-
-## 8. #region
+## 6. #region
 
 사용 비권장.
 클래스가 region으로 나눠야 할 만큼 크다면 클래스를 분리해야 한다는 신호.
 
----
+## 7. 네임스페이스
 
-## 9. 주석
-
-```csharp
-// 한국어 혼용 허용 (이 프로젝트 규칙)
-
-// 나쁜 주석 — 코드 반복
-_health -= amount; // 체력을 amount만큼 감소시킨다
-
-// 좋은 주석 — 이유 설명
-// 슈퍼아머 상태에서는 경직이 없으므로 피격 애니메이션만 재생
-if (_playerState.HasSuperArmor)
-{
-    PlayHitAnimation();
-}
-```
-
-**주석 규칙:**
-- `//` 뒤에 공백 하나 (` // 내용`)
-- 가능하면 코드 줄 끝이 아닌 별도 줄에 작성
-- 코드 자체가 설명이 되면 주석 생략 (잘 지은 이름이 최고의 주석)
-- 주석 처리된 코드는 제거 (버전 관리로 복원 가능)
-- TODO 주석은 완료 시 즉시 제거
-
-**주석 밀도 규칙:**
-- 메서드마다 그 위에 한 줄 요약을 단다. 단, 이름만으로 자명한 메서드
-  (Awake의 단순 참조 연결, 단순 위임 등)는 생략한다.
-- 비직관적 로직 라인(트릭, 수식, 한눈에 안 들어오는 API)엔 그 줄 위에 설명을 단다.
-- "왜 이렇게 구현했나"는 선택이 비직관적일 때만 단다.
-  (모든 메서드에 이유를 달면 13절 '과도한 주석' 스멜이 된다.)
-
-```csharp
-// XML summary — public 메서드에 사용 가능 (IntelliSense 지원)
-/// <summary>
-/// 플레이어에게 데미지를 입힌다.
-/// </summary>
-public void TakeDamage(int amount) { }
-
-// SerializeField 설명은 Tooltip으로 대체
-[Tooltip("이동 속도 (m/s)")]
-[SerializeField]
-private float _moveSpeed;
-```
-
----
-
-## 10. SerializeField vs public
-
-```csharp
-// O — SerializeField로 Inspector 노출, 외부 접근 차단
-[SerializeField]
-private Transform _target;
-
-// O — Range로 Inspector 슬라이더 표시
-[SerializeField, Range(0f, 100f)]
-private float _health;
-
-// O — Serializable 구조체로 Inspector 그룹화
-[Serializable]
-public struct PlayerStats
-{
-    public int MovementSpeed;
-    public int HitPoints;
-    public bool HasHealthPotion;
-}
-
-[SerializeField]
-private PlayerStats _stats;
-
-// X — 불필요한 public 노출
-public Transform target;
-```
-
----
-
-## 11. 메서드 원칙
-
-- **인자 수 최소화**: 인자가 많을수록 복잡도 증가. 인자 수를 줄여 가독성과 테스트 용이성 확보
-- **사이드 이펙트 금지**: 메서드 이름에 명시된 동작만 수행. 외부 상태를 예상 밖으로 변경하지 않음
-- **flag 대신 별도 메서드**: bool 플래그로 두 가지 모드를 처리하지 말고, 이름이 명확한 두 메서드로 분리
-  ```csharp
-  // X
-  float GetAngle(bool inDegrees) { }
-
-  // O
-  float GetAngleInDegrees() { }
-  float GetAngleInRadians() { }
-  ```
-- **DRY (Don't Repeat Yourself)**: 중복 로직은 공통 메서드로 추출
-  ```csharp
-  // X — 로직 중복
-  private void PlayExplosionA(Vector3 pos) { ... }
-  private void PlayExplosionB(Vector3 pos) { ... }
-
-  // O — 공통 추출
-  private void PlayFXWithSound(ParticleSystem particle, AudioClip clip, Vector3 pos) { ... }
-  ```
-- **expression-bodied(`=>`) 사용 조건**: 본문이 한 문장이고 한 줄에 들어갈 때만 쓴다.
-  분기·반복이 있거나 여러 문장이면 중괄호 블록으로 쓴다.
-  (근거: Microsoft C# 가이드, C# Coding Guidelines AV2410)
-- **Extension 메서드**: Unity API 확장 시 static 클래스에 정의
-  ```csharp
-  public static class TransformExtensions
-  {
-      public static void ResetTransformation(this Transform transform)
-      {
-          transform.position = Vector3.zero;
-          transform.localRotation = Quaternion.identity;
-          transform.localScale = Vector3.one;
-      }
-  }
-  ```
-
----
-
-## 12. 네임스페이스
-
+이 프로젝트의 네임스페이스는 `Refactoring` 하나로 고정한다.
 ```csharp
 namespace Refactoring
 {
     public class GameManager : MonoBehaviour { }
 }
-
-namespace Refactoring
-{
-    public class HpHUD : MonoBehaviour { }
-}
 ```
-- PascalCase, 특수문자/언더스코어 없음
-- 서드파티 충돌 방지를 위해 프로젝트 전체에 일관된 네임스페이스 적용
-- 서브 네임스페이스: `Sahwa.Core`, `Sahwa.UI`, `Sahwa.AI` 등 점(`.`)으로 계층화
-- 파일 상단 `using` 지시어로 반복 타이핑 방지
-
----
-
-## 13. 코드 스멜 (Common Pitfalls)
-
-코드 스멜은 문제 있는 코드가 숨어있을 수 있다는 징후다. 아래 증상이 보이면 리팩토링을 고려해라.
-
-| 스멜 | 설명 |
-|------|------|
-| **불가사의한 네이밍** | 클래스, 메서드, 변수명이 의도를 드러내지 않는다. |
-| **불필요한 복잡성** | 모든 가능성을 예측하려 과도하게 설계한다. 긴 메서드, 모든 걸 하는 God 클래스. |
-| **경직성** | 작은 변경이 여러 곳의 수정을 요구한다. 단일 책임 원칙 위반 신호. |
-| **취약성** | 사소한 변경으로 관계없는 곳이 깨진다. |
-| **이동 불가능성** | 코드를 다른 곳에 재사용하려면 의존성이 너무 많이 따라온다. |
-| **중복 코드** | 복사-붙여넣기한 로직이 보인다. 공통 메서드로 추출해라. |
-| **과도한 주석** | 모든 줄에 주석이 달려있다. 잘 지어진 이름이 최고의 주석이다. |
