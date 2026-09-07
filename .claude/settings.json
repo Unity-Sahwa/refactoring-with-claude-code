@@ -1,27 +1,38 @@
 {
-  "permissions": {
-    "read": "ask",
-    "write": "ask",
-    "edit": "ask",
-    "glob": "ask",
-    "grep": "ask",
-    "bash": "ask"
-  },
   "hooks": {
     "Stop": [
       {
-        "matcher": "",
+        "matcher": "", 
         "hooks": [
           {
-            "type": "command",
+            "type": "command", 
             "command": "powershell -c \"Add-Type -AssemblyName presentationCore; \\$mp = New-Object System.Windows.Media.MediaPlayer; \\$mp.Open([uri]'C:\\Windows\\Media\\notification_dogsound_claude.mp3'); \\$mp.Play(); Start-Sleep 2\""
           }
         ]
       }
+    ], 
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write", 
+        "hooks": [
+          {
+            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File .claude/hooks/rule-change-log.ps1", 
+            "type": "command"
+          }
+        ]
+      }
     ]
-  },
-  "spinnerTipsEnabled": false,
+  }, 
+  "spinnerTipsEnabled": false, 
   "enabledPlugins": {
     "ponytail@ponytail": true
+  }, 
+  "permissions": {
+    "grep": "ask", 
+    "read": "ask", 
+    "glob": "ask", 
+    "write": "ask", 
+    "edit": "ask", 
+    "bash": "ask"
   }
 }
