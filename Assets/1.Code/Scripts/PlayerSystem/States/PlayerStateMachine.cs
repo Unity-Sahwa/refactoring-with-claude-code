@@ -80,6 +80,7 @@ namespace Refactoring
         }
 
         // 왜: "어떤 상태에서 어떤 입력이 들어왔을 때 어떤 상태가 된다"를 나타냄. 전환 규칙을 한눈에 파악하기 위해 하드코딩으로 작성
+        //     상태 자체는 SO로 뺐지만 전환만 코드에 남긴 이유: 콤보·스왑 같은 예외 규칙이 있어 표로는 표현되지 않음
         private PlayerStateType? TryGetNextState(PlayerStateType state, StateTriggerType trigger)
         {
             return (state, trigger) switch
