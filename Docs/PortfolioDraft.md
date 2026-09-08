@@ -263,142 +263,24 @@
 ## [제외]
 - 셰이더 Variant WarmUp(미사용), Gimmick·Enemy 코드
 
----
-
-# [리팩토링 근거 — 플레이어 시스템 (레거시 대비 실측)]
-
-비교 대상
-- before: `Unitysahwa-refactoring-with-claudecode(before)/Assets/Scripts/Player` (36파일)
-- after: `Unitysahwa-refactoring/Assets/1.Code/Scripts/PlayerSystem` (81파일)
-- 범위: 플레이어 한정. 다른 시스템은 미조사.
-
-## 총량 지표 (실측)
-| 지표 | before | after |
-|---|---|---|
-| 총 줄 수 | 8,854 | 4,387 |
-| 최대 단일 파일 | `AnimalMaskSkill` 1,154줄 | `PlayerPartner` 212줄 |
-| 싱글톤 `.Instance` 호출 | 47 | 0 (남은 4건은 풀링 객체 참조 `active.Instance`, 싱글톤 아님) |
-| `GetComponent` 계열 | 59 | 10 |
-| `interface` 정의 | 0 | 26 |
-| `StartCoroutine` | 87 | 4 |
-| 캐릭터 타입을 직접 아는 파일 | 25 (분기 150건 이상) | 4 (각 1건) |
-
-주의: after는 스킬 수치가 SO로 빠져 코드 줄에 잡히지 않음. "코드량만의 비교"임을 명시할 것.
-주의: float 리터럴 총량은 118 → 94로 대비가 약함. 지표로 쓰지 말 것.
-
-## 중복 실측
-- `CoFirstAttack`: Animal·Human 양쪽 모두 **111줄로 길이 동일**, 약 70% 동일
-- `CoDash`: 128줄 / 121줄, 약 84% 동일
-- 동일 이름·동일 역할 메서드 12개가 두 클래스에 중복
-
-## 기능별 구조 대비
-
-### 콤보 공격
-| 축 | before `CoFirstAttack` | after `StateRunner` |
-|---|---|---|
-| 규모 | 111줄 × 6벌 (3콤보 × 2캐릭터) | 100줄 1개가 상태 16종 처리 |
-| 직접 참조 | 컴포넌트 9개 | 인터페이스 1개 (`IPlayerStateEventRaiser`) |
-| 1회 실행 보장 | `activeXxxOnce` 불리언 6개 수동 | 정렬 이벤트 목록 + 커서 `_readIndex` 1개 |
-| 타이밍 기준 | 절대 초 `Time.time + waitTime` | 애니 진행률 0~1 |
-| 중단 처리 | 애니 해시 분기 + `yield break` 산재 | `Exit()` → `RaiseReset()` 1곳 |
-
-핵심: 줄 수가 아니라 책임 위치. before는 "언제·무엇을·어떻게"를 한 메서드가 전부 앎.
-after는 언제=진행률(`StateRunner`), 무엇=`StateData` SO, 어떻게=구독자로 분리.
-
-### 이동
-| 축 | before | after |
-|---|---|---|
-| 이동 원인 실행 | 각 스킬 코루틴이 `playerSkillMove.StartCoroutine(SkillMove(...))` 직접 호출 | `IVelocitySource.Evaluate`가 속도만 반환 (Walk/Skill/Gravity 3종) |
-| 합산 지점 | 없음 (원인끼리 서로 모름) | `PlayerCharacterMover` 1곳 |
-| 방향 확장 | bool 4개 + Vector3 4개 필드 세트 추가 | 구현 클래스 1개 추가, Mover 무변경 |
-| 의존 방향 | `PlayerSkillMove`가 `HumanMaskSkill`을 `SerializeField` 역참조 | Mover → 인터페이스만 |
-
-### 히트박스
-| 축 | before | after |
-|---|---|---|
-| 히트박스 실체 | 씬에 배치한 GameObject 배열, 수동 배선 | 없음. `Physics.Overlap*NonAlloc`으로 그 순간만 판정 |
-| 대상 선택 | `SelectHitBox`의 하드코딩 switch 6 case | `HitboxDataEntry`가 위치·회전·형태를 SO에 기술 |
-| 판정 코드 | `OnCollisionEnter` 단일 메서드 244줄 (41~284행, 사이에 다른 메서드 없음 확인) | `TryHit` 39줄 + `IDamageable` 계약 |
-| 직접 참조 | `PlayerHitBoxCollider`가 컴포넌트 7개 `SerializeField` | 주입 3개, 전부 인터페이스/채널 |
-| 중복 타격 방지 | 없음 (`HashSet`/`List`/`Contains`/카운트 0건 확인. 파일에 "타격 횟수 추가해야함" 미구현 주석 존재) | `HashSet<IDamageable> AlreadyHit` |
-
-콤보 1타 추가 비용: before는 씬 오브젝트 + 배선 + switch case + enum(3파일 이상) / after는 SO 배열 항목 1개.
-
-### 피격 반응
-- before: `OnCollisionEnter` 244줄이 `switch (playerCurrentSubState)`로 공격 종류를 분기하고,
-  각 case마다 이펙트·타임스케일·카메라쉐이크·사운드 4줄을 통째로 복제. 확인된 것만 Human 4종 + Animal 4종 = 8벌
-- before: 값이 `humanData.firstNormalAttackHitEffect` 식으로 공격별 필드 4개씩 존재
-  (`PlayerHumanMaskData` 102필드 / `PlayerAnimalMaskData` 103필드 / `PlayerGhostMaskData` 42 / `PlayerCommonData` 47의 정체)
-- after: 히트박스 데이터가 `CombatInfo`를 실어 보내고 `HitEffectHandler`·`HitStopHandler`·`HitFlashHandler`·`HitVignetteEffect`가 각자 구독. 분기 0, 복제 0
-- 스킬 1개 추가 비용: before = enum + Data 필드 4개 + case 1개 + 반응 4줄 복제 / after = SO 항목 1개
-
-### 캐릭터 스왑
-| 축 | before `MaskChange` (269줄) | after `PlayerCharacterSwitcher` (74줄) |
-|---|---|---|
-| 참조 컴포넌트 | `SerializeField` 9개 + `CameraController.instance` 직접 호출 | 주입 1개 (`List<PlayerCharacter>`) |
-| 캐릭터별 필드 | Human/Animal 각각 GameObject·Animator·Rigidbody 3세트 9필드 + Current 3필드 | 없음. `PlayerCharacter.GetCharacterComponent<T>()`로 조회 |
-| 전환 시 하는 일 | 위치·회전 복사, current 3개 갱신, `humanSkill.InitializeSkill()` 직접 호출, `SetActive`, 카메라 락온 조회해 `isFocused` 세팅, `skillHUD.ChangeIcon`, 마스크 오브젝트 4개 토글 | 위치·회전 복사, `SetActive`, `OnCharacterSwapped` 발행 |
-| 전환 후속 처리 | 스왑 클래스가 직접 호출 | 구독자가 각자 처리. 구독처 23곳 |
-| 결합 방향 | 다른 21개 파일이 `MaskChange.instance` / `maskChange.` 로 역참조 | 인터페이스 3종만 노출 (`ICharacterSwappable`, `ICharacterSwapNotifier`, `ICurrentCharacterProvider`) |
-
-핵심: before는 스왑 클래스가 후속 처리 전부를 알아야 함. after는 "바꿨다"만 알림.
-
-### 이펙트 수명
-- before: `Instantiate` 0건. 씬에 미리 배치한 `GameObject[]` 슬롯 16개를 인스펙터에 수동 배선하고 코루틴이 `SetActive` 토글. 풀 고갈 개념 없음
-- before `Destroy` 6건은 전부 `else if (instance != this) Destroy(gameObject)` — 싱글톤 중복 제거용. Player 폴더에만 싱글톤 클래스 6개
-- after: `EffectCatalog`(SO)에 id·프리팹·풀 크기 등록 → `PlayerEffectProvider`가 풀 자동 생성, `Rent`/`Return`. 프리로드 대상도 자동 제공. 풀 고갈 시 경고
-- 차이의 본질: 양쪽 다 미리 만듦. **관리 주체가 사람(인스펙터) → 코드(카탈로그)로 이동**
-
-## 서술 시 주의 (감사 지적 사항)
-- `PlayerCharacterSwitcher.SwapPlayerCharacter`는 "타입이 다른 첫 번째"를 고르는 2종 전제 구현.
-  기획상 캐릭터 2종이 확정 사항이므로 결함이 아니라 범위 결정. "코드 0줄"이 아니라 "확정된 2종 범위 안에서 데이터만으로 대응"으로 쓸 것
-- 초안에 적힌 "상태 클래스 상속 구조를 폐기"는 레거시 실물과 다름. 실제 before는 상속이 아니라
-  **캐릭터별 거대 스킬 클래스 복제**(`AnimalMaskSkill`/`HumanMaskSkill`/`GhostMaskSkill`). 서술 수정 필요
-- 초안의 "대쉬 중 공격 시 대쉬 이동이 스킬에 적용되던 버그"는 리팩토링 이후 코드에서 난 것.
-  레거시 비교 근거로 연결하지 말 것
-- `_Refactoring/Prototype/Player/States`(BaseState + 파생 8개)는 테스트용이며 before가 아님
 
 ---
 
-# [미평가 — 평가 후 삭제할 것]
+## 리팩토링 근거 문서 (레거시 대비 실측)
+비교 대상 레거시: `Unitysahwa-refactoring-with-claudecode(before)` (Unity 2022 LTS, 134파일)
+Enemy·Gimmick은 본인 작업 범위가 아니므로 비교에서 제외함.
 
-## 1. 기능 동등성 증명
-구조를 바꿨는데 같은 게임이 돌아간다는 증거가 필요함. 없으면 "코드를 줄인 게 아니라 기능이 빠진 것"으로 읽힘.
+### 주요 활동
+| 문서 | 주제 | 대표 수치 |
+|---|---|---|
+| [Evidence_Player.md](Evidence_Player.md) | 코드에 박혀 있던 상태를 데이터로 옮기기 | 8,854 → 4,387줄 / 최대 파일 1,154 → 212줄 / 순환 참조 6쌍 → 0 |
+| [Evidence_Overall.md](Evidence_Overall.md) | 이름 공간과 시스템 경계 만들기 | `namespace` 0/134 → 270/274 / 인터페이스 2 → 53파일 |
+| [Evidence_DI.md](Evidence_DI.md) | 전역 접근을 명시적 계약으로 | 싱글톤 26개·접근 230회 → 0 / 주입 146개 중 계약 73% |
+| [Evidence_AI.md](Evidence_AI.md) | AI를 도구가 아니라 관리 대상으로 | 규칙 문서 11개 1,296줄 / 폐기 기록 5건 |
 
-확인된 사실 (본인 답변)
-- 레거시 프로젝트는 실행 가능한 상태로 남아 있음
-- 기능은 동일. 차이는 연출과 공격 사이 히트박스 몇 부분이 추가된 정도
-- `CheatMode`: 에디터 전용이라 제외
-- `TimelineHelper`: 결합 덩어리라 전부 분리함
-- `PlayerWaypoints`: 기믹 시스템으로 대체 (SavePoint 계열 클래스로 추정 — 확인 필요)
-
-해야 할 것
-- [ ] 기능 대조표 작성 — 레거시 클래스별 기능 ↔ 현재 대응 클래스 매핑. 옮겨간 자리를 보여 누락 없음을 증명
-- [ ] 녹화 3종 확보: 에디터 플레이 / APK 실기기 / AAB(Play 배포본) 실기기. 각각 같은 구간
-- [ ] 레거시 쪽도 동일 구간 녹화. 캡션에 측정 조건(에디터인지 실기기인지) 명시
-- [ ] 추가된 히트박스·연출 부분은 "동등"이 아니라 "추가"로 따로 표기
-
-## 2. 왜 그 설계였나
-결과만 있고 선택 근거가 없음. 면접에서 "왜 상속이 아니라 데이터 조합인가"를 반드시 물음.
-- 필요한 것: 검토했던 대안과 기각 사유 (상속 기반 State / 기존 구조 부분 개선 / 외부 FSM 에셋 등)
-- 필요한 것: 진행률 기반 이벤트를 택한 이유 — 절대 초 방식의 어떤 실패를 겪었는지
-- 미확인: 이 결정들이 기록으로 남아 있는지 (이슈·커밋·문서)
-
-## 3. 성능 영향 — 비교 불가로 확정 (측정하지 않음)
-레거시는 Unity 2022 LTS, 현재는 Unity 6. 메이저 2단계 차이라 URP 개편·GC·컴파일러가 모두 다름.
-어떤 수치가 나와도 코드 기여분과 엔진 기여분을 분리할 수 없음. 실기기 측정은 발열·백그라운드 편차까지 더해짐.
-after 단독 수치는 비교 대상이 없어 리팩토링 성과와 연결되지 않으므로 쓰지 않음.
-
-"구조를 늘렸는데 느려지지 않았냐"는 질문에는 아래 정적 사실로 답함.
-- before는 `StartCoroutine` 87건. 각 스킬 코루틴이 `while` + `yield return null`로 매 프레임 돌며
-  `activeXxxOnce` 플래그 6개를 계속 검사함. `Update` 수(3개)가 적은 게 프레임당 작업이 적다는 뜻이 아님
-- after는 `StartCoroutine` 4건. `StateRunner`가 정렬된 이벤트 목록을 커서 `_readIndex`로 진행률 도달분만 발행
-- 정적 지표 대비(참고): `Update`/`FixedUpdate`/`LateUpdate` 3/1/0 → 7/1/1, `foreach` 3 → 16, `new Dictionary` 0 → 4
-
-남은 개선 여지 (스스로 확인한 것)
-- `StateRunner.Enter`의 `StateKey.ToString()` 2건이 상태 진입마다 문자열 할당. 해시 캐시로 제거 가능
-
-## 4. 그 외 미확인
-- 리팩토링에 든 기간·커밋 수를 플레이어 시스템 한정으로 분리 가능한지
-- 리팩토링으로 새로 생긴 문제(회귀 버그)가 있었는지, 있었다면 어떻게 잡았는지
-- 플레이어 외 시스템(카메라·입력·오디오·UI·저장) 레거시 대비 미조사
+### 그 외 활동
+| 문서 | 주제 | 대표 수치 |
+|---|---|---|
+| [Evidence_UI.md](Evidence_UI.md) | 판단 코드를 자료구조로 대체 | `MenuUI` 814줄·if 5단 중첩 → 스택 + 창 계약 |
+| [Evidence_Input.md](Evidence_Input.md) | 폴링 가드 조건 → 상태 기반 도메인 분배 | `Input.Get*` 40회/7파일 → 0 / `Time.timeScale` 9곳 → 1곳 |
+| [Evidence_Tools.md](Evidence_Tools.md) | 수작업을 도구로, 데이터화를 편집 가능하게 | 에디터 확장 0 → 15개 1,256줄 |
