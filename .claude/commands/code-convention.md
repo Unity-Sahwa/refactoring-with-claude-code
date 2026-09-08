@@ -5,8 +5,7 @@ description: C#/Unity 코드 컨벤션. 코드 작성 시 이 규칙을 따르�
 # 코드 컨벤션
 
 > 기준: Unity 공식 e-book ("Create a C# Style Guide") + 커뮤니티 관행 절충
-> `Old/` 폴더와 실험용(`_Test`) 코드는 검사 대상에서 제외한다(삭제 예정 레거시).
-> 주석 규칙은 이 문서가 아니라 `comment-convention`이 담당한다.
+> 주석 규칙은 `comment-convention`에서 담당한다.
 > 수치를 SO에 둘지 `[SerializeField]`에 둘지는 `Docs/SystemUsageGuide.md`의 ‘수치를 어디 둘 것인가’를 따른다.
 
 ---
