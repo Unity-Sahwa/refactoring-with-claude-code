@@ -1,0 +1,445 @@
+<title>PlayerSystem 흐름도</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    --bg:#eceef2; --surface:#ffffff; --surface-2:#f5f6f9; --band:#e3e6ec;
+    --ink:#161a21; --ink-2:#4c5563; --ink-3:#7c8595;
+    --line:#d2d7df; --wire:#8b95a3;
+    --c-in:#7c8595; --c-wall:#c03a44; --c-core:#1f6feb; --c-sub:#1f8a5f; --c-supp:#6f5aa8;
+    --hot:#c03a44;
+    --font-sans:"IBM Plex Sans KR",ui-sans-serif,system-ui,"Malgun Gothic",sans-serif;
+    --font-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme:dark;
+      --bg:#0d1015; --surface:#171c24; --surface-2:#1b2029; --band:#141920;
+      --ink:#e7ebf2; --ink-2:#a6b0bf; --ink-3:#798494;
+      --line:#2b323c; --wire:#6b7686;
+      --c-in:#8c97a6; --c-wall:#e2727c; --c-core:#5c9dff; --c-sub:#4cc38a; --c-supp:#a98fdd;
+      --hot:#ff8d96;
+    }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font-family:var(--font-sans); font-size:14px; }
+  .wrap { max-width:1780px; margin:0 auto; padding:16px 16px 28px; }
+  h1 { font-size:19px; margin:0 0 2px; font-weight:700; }
+  .sub { color:var(--ink-2); font-size:12.5px; margin:0 0 11px; }
+  .sub b { color:var(--ink); }
+
+  .bar { display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin-bottom:9px; }
+  .chip { font:inherit; font-size:12.5px; padding:5px 13px; border-radius:999px; cursor:pointer;
+          border:1px solid var(--line); background:var(--surface); color:var(--ink-2); }
+  .chip:hover { border-color:var(--ink-3); }
+  .chip.on { background:var(--ink); color:var(--bg); border-color:var(--ink); font-weight:600; }
+  .chip.play { border-color:var(--c-wall); color:var(--c-wall); font-weight:600; }
+  .hint { font-size:11.5px; color:var(--ink-3); margin-left:4px; }
+
+  .stage { position:relative; background:var(--surface); border:1px solid var(--line); border-radius:12px; }
+  svg.map { display:block; width:100%; height:auto; }
+  text { font-family:var(--font-sans); }
+  .n-box { cursor:pointer; }
+
+  .cap { margin-top:10px; background:var(--surface); border:1px solid var(--line); border-radius:10px;
+         padding:11px 14px; min-height:60px; display:flex; gap:13px; align-items:flex-start; }
+  .cap .no { font-family:var(--font-mono); font-size:11px; color:var(--bg); background:var(--ink);
+             border-radius:5px; padding:3px 7px; flex:none; margin-top:1px; }
+  .cap h3 { margin:0 0 3px; font-size:14px; font-weight:700; }
+  .cap p { margin:0; color:var(--ink-2); font-size:12.5px; line-height:1.55; }
+  .cap code { font-family:var(--font-mono); font-size:11.5px; background:var(--surface-2);
+              padding:1px 4px; border-radius:3px; color:var(--ink); }
+</style>
+
+<div class="wrap">
+  <h1>PlayerSystem — 무엇이 무엇을 굴리는가</h1>
+  <p class="sub">
+    세로로 선 두 개의 <b>붉은 벽이 채널(ScriptableObject)</b>임. 벽 왼쪽과 오른쪽은 서로의 이름을 모름.
+    그래서 오른쪽 12개는 <b>지워도 왼쪽이 그대로 돔</b> — 이게 메인/서브를 가르는 유일한 기준임.
+  </p>
+
+  <div class="bar">
+    <button class="chip play" id="play">▶ 공격 1회 재생</button>
+    <button class="chip" id="prev">◀</button>
+    <button class="chip" id="next">▶</button>
+    <button class="chip" id="reset">전체 보기</button>
+    <span class="hint">박스에 마우스 올리면 그 박스 설명 · 재생하면 실제 호출 순서대로 흐름</span>
+  </div>
+
+  <div class="stage"><svg class="map" id="map" role="img" aria-label="PlayerSystem 흐름도"></svg></div>
+
+  <div class="cap" id="cap"></div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ══ 데이터 ═══════════════════════════════════════════════════════════
+     좌표는 하나도 안 적는다. 아래 배치기가 밴드 순서와 카드 개수로 계산한다. */
+
+  var BANDS = [
+    { id:"in",   kind:"col",  title:"① 입력",         pat:"Adapter",              col:"var(--c-in)",   cols:1,
+      items:[
+        { id:"input", name:"외부 입력",           sub:"InputSystem",
+          d:"버튼 눌림과 이동 벡터만 넘어온다. PlayerSystem은 키 배치도 장치도 모른다." },
+        { id:"gate",  name:"PlayerStateInputGate", sub:"입력 → 트리거 번역",
+          d:"입력 차단(InputBlock)·선입력 저장(InputBuffer) 구간을 지킨 뒤, 액션을 StateTriggerType으로 바꿔 쏜다. 상태 머신을 직접 모른다." }
+      ] },
+
+    { id:"w1",   kind:"wall", title:"PlayerStateTriggerChannel", pat:"Event Channel (SO)",
+      d:"상태를 바꿔달라는 신호만 흐르는 관. 쏘는 쪽은 IStateTriggerRaiser, 받는 쪽은 IStateTriggerSubscriber만 안다. 서로를 모른다." },
+
+    { id:"core", kind:"col",  title:"② 상태 결정 · 실행", pat:"State Machine + 데이터 주도", col:"var(--c-core)", cols:1,
+      items:[
+        { id:"machine", name:"PlayerStateMachine", sub:"전환 규칙 · 쿨타임",
+          d:"(현재 상태, 트리거) → 다음 상태. switch 하나에 규칙을 몰아 한눈에 보이게 했다. 같은 상태 재진입과 쿨타임 중 전환은 버린다." },
+        { id:"runner",  name:"StateRunner",        sub:"진행률 타임라인 실행기",
+          d:"Enter에서 애니를 틀고 StateData의 이벤트를 진행률순으로 정렬. Update마다 도달한 것부터 발행한다. 기능은 하나도 모른다." },
+        { id:"tracker", name:"AnimationTracker",   sub:"애니 진행률 0~1",
+          d:"지금 애니가 어디까지 갔나만 본다. 다른 클립으로 넘어갔으면 종료로 친다." },
+        { id:"sdata",   name:"StateData",          sub:"ScriptableObject · 상태 대본",
+          d:"상태 하나가 몇 %에서 무엇을 켜고 끌지 적힌 표. 코드가 아니라 이 에셋을 고쳐 연출을 바꾼다 — 설계의 핵심." },
+        { id:"curch",   name:"PlayerCurrentStateChannel", sub:"현재 상태 공유 SO",
+          d:"지금 무슨 상태인지만 담아 둔다. 쓰는 쪽(머신)과 읽는 쪽(UI·카메라·Gate)이 서로를 모른다." }
+      ] },
+
+    { id:"w2",   kind:"wall", title:"PlayerStateEventChannel", pat:"Publish / Subscribe",
+      d:"이 설계의 심장. 상태는 '카테고리 + 데이터'만 던지고 누가 듣는지 모른다. 켜진 구독자만 골라 닫아서 끄기 누락이 구조적으로 불가능하다." },
+
+    { id:"sub",  kind:"col",  title:"③ 기능 구독자 (서브)", pat:"카테고리 1개 = 구독자 1개", col:"var(--c-sub)", cols:2,
+      items:[
+        { id:"hitbox",  name:"PlayerHitboxHandler", sub:"Hitbox",        d:"히트박스를 켜고 겹친 적에게 데미지. 성공 사실은 HitChannel로 흘린다." },
+        { id:"effect",  name:"PlayerEffectHandler", sub:"Effect",        d:"지정된 부착점에 이펙트를 켠다. 인스턴스는 풀에서 빌린다." },
+        { id:"audio",   name:"PlayerAudioHandler",  sub:"Audio",         d:"상태 소리와 타격음을 AudioChannel에 요청한다." },
+        { id:"skillv",  name:"SkillVelocitySource", sub:"SkillMove",     d:"데이터의 방향·속도·시간대로 캐릭터를 민다. 앞에 적이 있으면 수평만 죽인다." },
+        { id:"walk",    name:"WalkVelocitySource",  sub:"MoveControl",   d:"허용 구간에만 입력 이동. 실제로 움직였으면 Locomotion 전환을 되쏜다." },
+        { id:"rotator", name:"CharacterRotator",    sub:"RotateControl", d:"허용 구간에만 회전. 락온이면 적을, 아니면 이동 방향을 본다." },
+        { id:"anim",    name:"PlayerMoveAnimation", sub:"MoveControl",   d:"이동 입력을 Animator 파라미터로 넘긴다. 방향은 IMoveDirectionProvider로 노출." },
+        { id:"dmg",     name:"PlayerDamageReceiver", sub:"SuperArmor · Invincible", d:"구간을 게이트로 등록해 무적·슈퍼아머를 받는다. 맞으면 트리거를 되쏜다." },
+        { id:"finish",  name:"FinishExecutor",      sub:"Finish",        d:"처형 타이밍에 스턴·처형 실행. 대상 수집은 Scanner가 따로." },
+        { id:"toggle",  name:"PlayerObjectToggleHandler", sub:"ObjectToggle", d:"씬 오브젝트를 켜고 끈다. 일회성이라 되돌리지 않는다." },
+        { id:"camsub",  name:"Camera 핸들러 3종",   sub:"Shake · Zoom · Lock · 외부", d:"CameraSystem이 같은 채널에 붙는다. 벽 오른쪽이면 시스템이 달라도 동급이다." },
+        { id:"gatesub", name:"↩ InputGate",         sub:"InputBlock · InputBuffer", d:"입력 입구도 이 채널의 구독자다. 상태가 자기를 부르는 문을 잠근다." }
+      ] },
+
+    { id:"supp", kind:"col",  title:"④ 지원",        pat:"단일 출처 · Object Pool", col:"var(--c-supp)", cols:1,
+      items:[
+        { id:"mover",    name:"PlayerCharacterMover", sub:"Move의 유일한 호출자",
+          d:"속도 소스 3종을 전부 더해 CharacterController.Move를 딱 한 번 부른다. 새 이동 요인은 IVelocitySource 하나 더." },
+        { id:"switcher", name:"PlayerCharacterSwitcher", sub:"캐릭터 교체·통지·조회",
+          d:"두 캐릭터를 바꾸고 알린다. 교체/통지/조회 3개 인터페이스로 갈라 필요한 쪽만 보게 한다." },
+        { id:"health",   name:"PlayerHealth",        sub:"체력 단일 출처",
+          d:"읽기(IHealthInfo)와 쓰기(IHealthModifier)를 갈라 노출. 값이 바뀌면 알린다." },
+        { id:"provider", name:"PlayerEffectProvider", sub:"이펙트 풀",
+          d:"카탈로그대로 미리 복제해두고 대여·반납. 런타임 Instantiate를 없앤다." },
+        { id:"scanner",  name:"FinishTargetScanner", sub:"처형 대상 스캔",
+          d:"요청 시점마다 범위를 훑는다. 대상이 없으면 Gate가 처형 입력 자체를 버린다." }
+      ] }
+  ];
+
+  /* 밴드 사이 굵은 줄기. from/to 는 밴드 id */
+  var TRUNK = [
+    { f:"in",   t:"w1",   l:"StateTriggerType" },
+    { f:"w1",   t:"core", l:"구독자에게 전달" },
+    { f:"core", t:"w2",   l:"카테고리 + IStartData" },
+    { f:"w2",   t:"sub",  l:"열기 / 닫기" },
+    { f:"sub",  t:"supp", l:"실제 자원 사용" }
+  ];
+
+  /* 오른쪽에서 왼쪽으로 되돌아오는 화살표 */
+  var BACK = [
+    { f:"dmg",  t:"w1", l:"피격 → Damaged / Died 트리거" },
+    { f:"walk", t:"w1", l:"이동함 → Locomotion 트리거" }
+  ];
+
+  /* 공격 버튼 한 번. 실제 호출 순서 그대로 */
+  var STEPS = [
+    { n:["input","gate"], b:["in"], t:"공격 버튼이 눌린다",
+      d:"InputSystem이 <code>OnInputPressed(NormalAttack)</code>만 넘긴다. Gate는 지금이 입력 차단 구간인지, 선입력 저장 구간인지부터 본다." },
+    { n:["gate"], b:["in"], t:"입력을 트리거로 번역한다",
+      d:"<code>ToTrigger()</code>가 NormalAttack → <code>StateTriggerType.Attack</code>으로 바꾼다. 여기서 처형 가능 여부·NormalAttack3 콤보 분기 같은 예외도 걸러진다." },
+    { n:["gate"], b:["w1"], t:"트리거 채널에 쏜다",
+      d:"Gate는 <code>IStateTriggerRaiser</code>만 안다. 누가 받는지 모른 채 SO에 던진다 — 여기가 첫 번째 벽." },
+    { n:["machine"], b:["w1","core"], t:"상태 머신이 규칙을 조회한다",
+      d:"<code>(현재 상태, Attack)</code> → <code>NormalAttack1</code>. 쿨타임이 안 지났거나 같은 상태면 그냥 버린다." },
+    { n:["machine","curch"], b:["core"], t:"이전 상태를 닫고 새 상태를 연다",
+      d:"<code>CurrentState.Exit()</code> → 열려 있던 이벤트 전부 Reset으로 닫힘 → 새 Runner <code>Enter()</code>. 현재 상태는 공유 SO에 기록해 외부가 읽게 한다." },
+    { n:["runner","sdata","tracker"], b:["core"], t:"대본을 진행률순으로 줄 세운다",
+      d:"<code>Animator.CrossFade(\"NormalAttack1\")</code>을 틀고, StateData에 적힌 항목들을 시작 진행률 순으로 정렬한다. 구간형은 끝 시점 이벤트도 같이 만든다." },
+    { n:["tracker","runner"], b:["core"], t:"진행률이 흐른다",
+      d:"AnimationTracker가 0 → 1로 올라가고, Runner는 도달한 항목부터 하나씩 발행한다. 상태는 지금 무엇이 켜지는지 알지도 못한다." },
+    { n:["runner"], b:["core","w2"], t:"이벤트 채널에 발행한다",
+      d:"<code>Raise(Hitbox, data)</code>. 카테고리와 데이터만 던진다 — 두 번째 벽. 여기서부터 오른쪽은 전부 갈아끼울 수 있다." },
+    { n:["hitbox","effect","audio","camsub"], b:["w2","sub"], t:"등록된 구독자가 동시에 깨어난다",
+      d:"같은 시점에 히트박스·이펙트·소리·카메라 셰이크가 각자 자기 일을 한다. 서로를 모르고, 하나가 빠져도 나머지는 그대로 돈다." },
+    { n:["hitbox"], b:["sub","supp"], t:"히트박스가 실제로 때린다",
+      d:"FixedUpdate 겹침 검사 → <code>IDamageable.ApplyDamage</code>. 성공 사실만 HitChannel로 흘려서 타격음·히트스탑은 구독자가 알아서 낸다." },
+    { n:["runner","hitbox"], b:["core","w2","sub"], t:"구간이 끝나면 켜진 것만 닫는다",
+      d:"<code>RaiseEnd(Hitbox)</code>. 채널이 <b>열려 있던</b> 구독자만 골라 닫는다. 끄기를 빼먹어서 히트박스가 영구히 켜지는 버그가 구조적으로 불가능하다." },
+    { n:["dmg","walk"], b:["sub","w1"], t:"되먹임 — 서브가 코어로 되쏜다",
+      d:"맞으면 DamageReceiver가 <code>Damaged</code>를, 실제로 움직였으면 WalkVelocitySource가 <code>Locomotion</code>을 같은 트리거 채널에 던진다. 서브도 상태를 바꿀 수 있지만, 문은 벽 하나뿐이다." },
+    { n:["tracker","machine"], b:["core"], t:"애니가 끝나면 스스로 전환한다",
+      d:"Tracker가 종료를 알리면 머신이 <code>AnimationFinished</code>를 자기 자신에게 쏜다 → Locomotion 복귀. Exit이 남은 이벤트를 전부 Reset으로 닫는다." }
+  ];
+
+  /* ══ 배치 ═══════════════════════════════════════════════════════════ */
+  var CW = 208, CH = 50, CGAP = 11, CGAPX = 12;      // 카드
+  var BPAD = 14, BTITLE = 34, BGAP = 40;             // 밴드
+  var WALLW = 56;                                    // 벽 두께
+  var TOP = 16, BACKH = 78;                          // 위 여백 / 아래 되돌이 영역
+
+  var byId = {}, bandOf = {};
+  BANDS.forEach(function (b) {
+    (b.items || []).forEach(function (n) { byId[n.id] = n; bandOf[n.id] = b.id; });
+  });
+
+  // 가장 높은 밴드에 맞춰 전부 세로 가운데 정렬 → 줄기 화살표가 수평 한 줄로 떨어진다.
+  var bodyH = 0;
+  BANDS.forEach(function (b) {
+    if (b.kind !== "col") return;
+    b.rows = Math.ceil(b.items.length / b.cols);
+    b.bw = b.cols * CW + (b.cols - 1) * CGAPX + BPAD * 2;
+    b.bh = BTITLE + b.rows * CH + (b.rows - 1) * CGAP + BPAD;
+    bodyH = Math.max(bodyH, b.bh);
+  });
+
+  var x = BPAD;
+  BANDS.forEach(function (b) {
+    if (b.kind === "wall") {
+      b.bw = WALLW; b.bh = bodyH;
+    }
+    b.x = x; b.y = TOP + (bodyH - b.bh) / 2;
+    if (b.kind === "col") {
+      b.items.forEach(function (n, i) {
+        n.w = CW; n.h = CH;
+        n.x = b.x + BPAD + (i % b.cols) * (CW + CGAPX);
+        n.y = b.y + BTITLE + Math.floor(i / b.cols) * (CH + CGAP);
+      });
+    }
+    x += b.bw + BGAP;
+  });
+  var W = x - BGAP + BPAD, H = TOP + bodyH + BACKH;
+  var MIDY = TOP + bodyH / 2;
+  var bandById = {}; BANDS.forEach(function (b) { bandById[b.id] = b; });
+
+  /* ══ SVG ═════════════════════════════════════════════════════════════ */
+  var NS = "http://www.w3.org/2000/svg";
+  function el(t, a, txt) {
+    var e = document.createElementNS(NS, t);
+    for (var k in a) if (a.hasOwnProperty(k)) e.setAttribute(k, a[k]);
+    if (txt != null) e.textContent = txt;
+    return e;
+  }
+  // 긴 이름은 잘라서 카드 밖으로 안 삐져나가게
+  function clip(str, max) { return str.length > max ? str.slice(0, max - 1) + "…" : str; }
+
+  var svg = document.getElementById("map");
+  svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+
+  var defs = el("defs");
+  [["ah", "var(--wire)"], ["ah-hot", "var(--hot)"]].forEach(function (p) {
+    var m = el("marker", { id:p[0], viewBox:"0 0 10 10", refX:"9", refY:"5",
+      markerWidth:"7", markerHeight:"7", orient:"auto-start-reverse" });
+    m.appendChild(el("path", { d:"M0,1 L9,5 L0,9 z", fill:p[1] }));
+    defs.appendChild(m);
+  });
+  svg.appendChild(defs);
+
+  var gBand = el("g"), gWire = el("g"), gNode = el("g");
+  svg.appendChild(gBand); svg.appendChild(gWire); svg.appendChild(gNode);
+
+  /* 밴드 바닥 + 제목 */
+  BANDS.forEach(function (b) {
+    var g = el("g", { "data-band":b.id, class:"b-" + b.id });
+    if (b.kind === "wall") {
+      g.appendChild(el("rect", { x:b.x, y:b.y, width:b.bw, height:b.bh, rx:12,
+        fill:"var(--c-wall)", "fill-opacity":"0.11", stroke:"var(--c-wall)", "stroke-width":"1.6" }));
+      // 세로로 세운 벽 이름
+      var tx = b.x + b.bw / 2, ty = b.y + b.bh / 2;
+      var t1 = el("text", { x:tx, y:ty, "text-anchor":"middle", "font-size":"14.5", "font-weight":"700",
+        fill:"var(--c-wall)", transform:"rotate(-90 " + tx + " " + ty + ")" }, b.title);
+      g.appendChild(t1);
+      var t2 = el("text", { x:tx + 17, y:ty, "text-anchor":"middle", "font-size":"10.5", "font-weight":"600",
+        fill:"var(--c-wall)", "fill-opacity":"0.85",
+        transform:"rotate(-90 " + (tx + 17) + " " + ty + ")" }, b.pat);
+      g.appendChild(t2);
+    } else {
+      g.appendChild(el("rect", { x:b.x, y:b.y, width:b.bw, height:b.bh, rx:12,
+        fill:"var(--band)", stroke:"var(--line)" }));
+      g.appendChild(el("text", { x:b.x + BPAD, y:b.y + 19, "font-size":"13", "font-weight":"700",
+        fill:b.col }, b.title));
+      g.appendChild(el("text", { x:b.x + BPAD, y:b.y + 30, "font-size":"10.5", "font-weight":"500",
+        fill:"var(--ink-3)" }, b.pat));
+    }
+    gBand.appendChild(g);
+  });
+
+  /* 밴드 사이 굵은 줄기 */
+  TRUNK.forEach(function (k) {
+    var a = bandById[k.f], b = bandById[k.t];
+    var x1 = a.x + a.bw + 3, x2 = b.x - 4;
+    var g = el("g", { "data-trunk":k.f + ">" + k.t });
+    g.appendChild(el("line", { x1:x1, y1:MIDY, x2:x2, y2:MIDY, stroke:"var(--wire)",
+      "stroke-width":"2.4", "marker-end":"url(#ah)" }));
+    g.appendChild(el("text", { x:(x1 + x2) / 2, y:MIDY - 8, "text-anchor":"middle",
+      "font-size":"10.5", fill:"var(--ink-3)" }, k.l));
+    gWire.appendChild(g);
+  });
+
+  /* 벽에서 카드로 퍼지는 부챗살 — 채널 하나가 12곳으로 갈라진다는 그림 */
+  (function () {
+    var w2 = bandById.w2, sb = bandById.sub;
+    sb.items.forEach(function (n) {
+      if (n.x !== sb.x + BPAD) return;             // 왼쪽 열까지만 그린다(오른쪽 열은 가려서 안 보임)
+      var x1 = w2.x + w2.bw, y1 = MIDY, x2 = n.x - 3, y2 = n.y + n.h / 2;
+      var mx = (x1 + x2) / 2;
+      gWire.appendChild(el("path", { d:"M" + x1 + "," + y1 + " C" + mx + "," + y1 + " " + mx + "," + y2 + " " + x2 + "," + y2,
+        fill:"none", stroke:"var(--wire)", "stroke-opacity":"0.4", "stroke-width":"1.1",
+        "data-fan":n.id }));
+    });
+  })();
+
+  /* 되먹임: 아래로 크게 돌아 트리거 채널로 */
+  BACK.forEach(function (k, i) {
+    var n = byId[k.f], w = bandById[k.t];
+    var y = TOP + bodyH + 26 + i * 26;
+    var x1 = n.x + n.w / 2, x2 = w.x + w.bw / 2;
+    var g = el("g", { "data-back":k.f });
+    g.appendChild(el("path", { d:"M" + x1 + "," + (n.y + n.h) + " V" + y + " H" + x2 + " V" + (w.y + w.bh + 3),
+      fill:"none", stroke:"var(--wire)", "stroke-width":"1.6", "stroke-dasharray":"6 4",
+      "marker-end":"url(#ah)" }));
+    g.appendChild(el("text", { x:x2 + 14, y:y - 5, "font-size":"10.5", fill:"var(--ink-3)" }, k.l));
+    gWire.appendChild(g);
+  });
+
+  /* 카드 */
+  BANDS.forEach(function (b) {
+    if (b.kind !== "col") return;
+    b.items.forEach(function (n) {
+      var g = el("g", { class:"n-box", "data-node":n.id });
+      g.appendChild(el("rect", { x:n.x, y:n.y, width:n.w, height:n.h, rx:8,
+        fill:"var(--surface)", stroke:b.col, "stroke-width":"1.3" }));
+      g.appendChild(el("rect", { x:n.x, y:n.y, width:3.5, height:n.h, rx:1.8, fill:b.col }));
+      g.appendChild(el("text", { x:n.x + 12, y:n.y + 21, "font-size":"12.5", "font-weight":"600",
+        fill:"var(--ink)" }, clip(n.name, 24)));
+      g.appendChild(el("text", { x:n.x + 12, y:n.y + 37, "font-size":"10.5", fill:"var(--ink-3)" },
+        clip(n.sub, 30)));
+      gNode.appendChild(g);
+    });
+  });
+
+  /* ══ 강조 ════════════════════════════════════════════════════════════ */
+  var cap = document.getElementById("cap");
+
+  function dim(on) {
+    gNode.querySelectorAll("[data-node]").forEach(function (g) {
+      g.style.opacity = on ? "0.22" : "1";
+    });
+    gWire.querySelectorAll("g,path").forEach(function (g) {
+      g.style.opacity = on ? "0.13" : "1";
+    });
+    gBand.querySelectorAll("[data-band]").forEach(function (g) {
+      g.style.opacity = on ? "0.4" : "1";
+    });
+  }
+  function light(nodeIds, bandIds) {
+    nodeIds.forEach(function (id) {
+      var g = gNode.querySelector('[data-node="' + id + '"]');
+      if (!g) return;
+      g.style.opacity = "1";
+      g.querySelector("rect").setAttribute("stroke-width", "2.6");
+    });
+    (bandIds || []).forEach(function (id) {
+      var g = gBand.querySelector('[data-band="' + id + '"]');
+      if (g) g.style.opacity = "1";
+    });
+  }
+  function clearStroke() {
+    gNode.querySelectorAll("[data-node] rect").forEach(function (r) {
+      if (r.getAttribute("width") > 10) r.setAttribute("stroke-width", "1.3");
+    });
+  }
+
+  function showAll() {
+    step = -1;
+    dim(false); clearStroke();
+    cap.innerHTML = '<div class="no">읽는 법</div><div><h3>왼쪽 → 오른쪽이 한 번의 입력이 흘러가는 순서</h3>' +
+      '<p>붉은 세로 벽 두 개가 <code>ScriptableObject</code> 채널임. 벽을 넘는 순간 양쪽은 서로의 타입을 모르게 됨. ' +
+      '그래서 <b>② 상태 코어</b>는 히트박스가 있는지조차 모르고, <b>③ 구독자</b>는 어느 상태가 자기를 켰는지 모름. ' +
+      '점선 두 개는 서브가 코어로 되돌려 쏘는 유일한 통로임.</p></div>';
+  }
+
+  function showNode(id) {
+    var n = byId[id];
+    if (!n) return;
+    cap.innerHTML = '<div class="no">' + (bandById[bandOf[id]].kind === "wall" ? "벽" : "박스") + '</div>' +
+      '<div><h3>' + n.name + ' <span style="color:var(--ink-3);font-weight:500;font-size:12px">· ' + n.sub + '</span></h3>' +
+      '<p>' + n.d + '</p></div>';
+  }
+
+  var step = -1;
+  function goto(i) {
+    if (i < 0 || i >= STEPS.length) return;
+    step = i;
+    var s = STEPS[i];
+    dim(true); clearStroke(); light(s.n, s.b);
+    // 강조된 밴드를 잇는 줄기도 같이 살린다
+    gWire.querySelectorAll("[data-trunk]").forEach(function (g) {
+      var p = g.getAttribute("data-trunk").split(">");
+      if (s.b.indexOf(p[0]) >= 0 && s.b.indexOf(p[1]) >= 0) {
+        g.style.opacity = "1";
+        g.querySelector("line").setAttribute("stroke", "var(--hot)");
+        g.querySelector("line").setAttribute("marker-end", "url(#ah-hot)");
+      } else {
+        g.querySelector("line").setAttribute("stroke", "var(--wire)");
+        g.querySelector("line").setAttribute("marker-end", "url(#ah)");
+      }
+    });
+    gWire.querySelectorAll("[data-back]").forEach(function (g) {
+      g.style.opacity = s.n.indexOf(g.getAttribute("data-back")) >= 0 ? "1" : "0.13";
+    });
+    cap.innerHTML = '<div class="no">' + (i + 1) + " / " + STEPS.length + '</div>' +
+      '<div><h3>' + s.t + '</h3><p>' + s.d + '</p></div>';
+  }
+
+  gNode.addEventListener("mouseover", function (e) {
+    var g = e.target.closest("[data-node]");
+    if (g) showNode(g.getAttribute("data-node"));
+  });
+  gNode.addEventListener("click", function (e) {
+    var g = e.target.closest("[data-node]");
+    if (g) showNode(g.getAttribute("data-node"));
+  });
+  gBand.addEventListener("click", function (e) {
+    var g = e.target.closest("[data-band]");
+    if (!g) return;
+    var b = bandById[g.getAttribute("data-band")];
+    if (b && b.kind === "wall") {
+      cap.innerHTML = '<div class="no">벽</div><div><h3>' + b.title +
+        ' <span style="color:var(--ink-3);font-weight:500;font-size:12px">· ' + b.pat + '</span></h3><p>' + b.d + '</p></div>';
+    }
+  });
+
+  var timer = null;
+  document.getElementById("play").addEventListener("click", function () {
+    if (timer) { clearInterval(timer); timer = null; this.textContent = "▶ 공격 1회 재생"; return; }
+    var self = this;
+    self.textContent = "■ 정지";
+    goto(0);
+    timer = setInterval(function () {
+      if (step + 1 >= STEPS.length) {
+        clearInterval(timer); timer = null; self.textContent = "▶ 공격 1회 재생";
+        return;
+      }
+      goto(step + 1);
+    }, 2600);
+  });
+  document.getElementById("next").addEventListener("click", function () { goto(step + 1); });
+  document.getElementById("prev").addEventListener("click", function () { goto(step - 1); });
+  document.getElementById("reset").addEventListener("click", showAll);
+
+  showAll();
+})();
+</script>

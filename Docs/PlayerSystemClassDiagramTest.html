@@ -1,0 +1,1146 @@
+<title>PlayerSystem 클래스 다이어그램</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    --bg:#edeff3; --surface:#ffffff; --surface-2:#f5f6f9;
+    --ink:#161a21; --ink-2:#4c5563; --ink-3:#7c8595;
+    --line:#d2d7df; --line-soft:#e5e8ee; --wire:#39414d;
+    --sys-core:#c03a44; --sys-data:#c2680f; --sys-sub:#1f6feb; --sys-move:#1f8a5f; --sys-supp:#6f5aa8; --sys-ext:#7c8595; --sys-old:#9aa3b0;
+    --k-gen:#c03a44; --k-real:#1f6feb; --k-comp:#6f5aa8; --k-inject:#c2680f;
+    --k-assoc:#1f8a5f; --k-evt:#b3308c; --k-dep:#7c8595;
+    --font-sans:"IBM Plex Sans KR",ui-sans-serif,system-ui,"Malgun Gothic",sans-serif;
+    --font-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme:dark;
+      --bg:#0d1015; --surface:#161b22; --surface-2:#1b2029;
+      --ink:#e7ebf2; --ink-2:#a6b0bf; --ink-3:#6f7a8a;
+      --line:#2b323c; --line-soft:#222932; --wire:#98a3b3;
+      --sys-core:#e2727c; --sys-data:#e0a04a; --sys-sub:#5c9dff; --sys-move:#4cc38a; --sys-supp:#a98fdd; --sys-ext:#8c97a6; --sys-old:#5c6672;
+      --k-gen:#e2727c; --k-real:#5c9dff; --k-comp:#a98fdd; --k-inject:#e0a04a;
+      --k-assoc:#4cc38a; --k-evt:#e07ac4; --k-dep:#8c97a6;
+    }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font-family:var(--font-sans); font-size:14px; }
+  .wrap { max-width:1720px; margin:0 auto; padding:20px 18px 50px; }
+  h1 { font-size:20px; margin:0 0 3px; font-weight:700; }
+  .sub { color:var(--ink-2); font-size:12.5px; margin:0 0 13px; }
+
+  .bar { display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin-bottom:10px; }
+  .chip { font:inherit; font-size:12.5px; padding:5px 12px; border-radius:999px; cursor:pointer;
+          border:1px solid var(--line); background:var(--surface); color:var(--ink-2); }
+  .chip:hover { border-color:var(--ink-3); }
+  .chip[aria-pressed="true"] { background:var(--ink); color:var(--bg); border-color:var(--ink); font-weight:600; }
+  .sep { width:1px; height:20px; background:var(--line); margin:0 5px; }
+  .hint { font-size:11.5px; color:var(--ink-3); }
+
+  .cols { display:grid; grid-template-columns:minmax(0,1fr) 306px; gap:14px; align-items:start; }
+  @media (max-width:1180px) { .cols { grid-template-columns:1fr; } }
+  .stage { position:relative; background:var(--surface); border:1px solid var(--line);
+           border-radius:12px; overflow:hidden; }
+  svg.map { display:block; width:100%; height:760px; touch-action:none; cursor:grab; }
+  svg.map.dragging { cursor:grabbing; }
+
+  aside { display:flex; flex-direction:column; gap:12px; position:sticky; top:14px; }
+  .panel { background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:13px 15px;
+           max-height:760px; overflow-y:auto; }
+  .panel h2 { margin:0 0 3px; font-size:15px; font-weight:700; word-break:break-all; }
+  .sysname { font-size:11.5px; font-weight:600; margin-bottom:9px; }
+  .grouphead { font-size:11.5px; font-weight:600; color:var(--ink-3); margin:12px 0 5px; }
+  ul.deps { list-style:none; margin:0; padding:0; }
+  ul.deps li { padding:6px 0; border-bottom:1px solid var(--line-soft); }
+  ul.deps li:last-child { border-bottom:0; }
+  .to { font-weight:600; font-size:13px; }
+  .via { color:var(--ink-2); font-size:12.5px; }
+  .mem { font-family:var(--font-mono); font-size:10.5px; color:var(--ink-3); margin-top:2px; }
+  .kind { font-family:var(--font-mono); font-size:10.5px; padding:0 4px; border-radius:3px;
+          background:var(--surface-2); color:var(--ink-2); }
+  .none { color:var(--ink-3); font-size:12.5px; margin:0; }
+  a.lnk { color:inherit; text-decoration:none; border-bottom:1px dotted currentColor; cursor:pointer; }
+
+  .legend { display:flex; flex-wrap:wrap; gap:8px 16px; margin-bottom:9px; padding:9px 12px;
+            background:var(--surface); border:1px solid var(--line); border-radius:9px; }
+  .lg { display:flex; align-items:center; gap:6px; font-size:11.5px; color:var(--ink-2); }
+  .n-box { cursor:pointer; }
+  text { font-family:var(--font-sans); }
+</style>
+
+<div class="wrap">
+  <h1>PlayerSystem — 메인 / 서브 구분도</h1>
+  <p class="sub">입력 한 번이 상태를 바꾸고, 상태가 이벤트를 쏘고, 기능들이 그걸 받아 일하는 흐름 전체. <b>메인</b>은 이 흐름이 성립하려면 반드시 있어야 하는 것, <b>서브</b>는 IPlayerStateEventSubscriber에 붙어 있을 뿐 지워도 흐름이 도는 것.</p>
+
+  <div class="bar">
+    <button class="chip" data-flow="all" aria-pressed="true">전체 보기</button>
+    <button class="chip" data-flow="input">① 입력 → 상태 전환</button>
+    <button class="chip" data-flow="run">② 상태 실행 → 이벤트 발행</button>
+    <button class="chip" data-flow="sub">③ 서브가 받아 일함</button>
+    <button class="chip" data-flow="move">④ 이동</button>
+    <button class="chip" data-flow="back">⑤ 되먹임</button>
+    <span class="sep"></span>
+    <span class="sep"></span>
+    <button class="chip" id="zoom-in">＋</button>
+    <button class="chip" id="zoom-out">－</button>
+    <button class="chip" id="zoom-fit">맞춤</button>
+    <span class="hint">휠=확대 · 드래그=이동 · 박스 클릭=이어진 것만 밝게</span>
+  </div>
+
+  <div class="legend" id="legend"></div>
+
+  <div class="cols">
+    <div class="stage"><svg class="map" id="map" role="img" aria-label="PlayerSystem 클래스 다이어그램"></svg></div>
+    <aside><div class="panel" id="detail"></div></aside>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ── 데이터 ───────────────────────────────────────────────────────────────
+     node.members : 바깥과 엮이는 것만. 내부 전용 메서드는 안 담는다.
+     edge.via     : [출발 멤버, 도착 멤버] 쌍. null 이면 박스 자체.
+     좌표는 없다. 아래 배치기가 계산한다. */
+
+  var SYS = {
+    ext:    { name:"외부 시스템",               color:"var(--sys-ext)" },
+    core:   { name:"메인 — 상태 코어",          color:"var(--sys-core)" },
+    data:   { name:"메인 — 상태 데이터",        color:"var(--sys-data)" },
+    sub:    { name:"서브 — 이벤트 구독 핸들러",  color:"var(--sys-sub)" },
+    move:   { name:"서브 — 이동",               color:"var(--sys-move)" },
+    supp:   { name:"지원 — 캐릭터·자원",        color:"var(--sys-supp)" },
+  };
+
+  var NODES = [
+    /* ── 외부 ─────────────────────────────────────────────── */
+    { id:"input", name:"외부 입력", sys:"ext", kind:"interface", stereo:"InputSystem",
+      members:[ { mid:"any", sig:"버튼 눌림 · 이동 벡터", role:"event" } ],
+      desc:"InputSystem이 주는 값. PlayerSystem은 키 배치도 장치도 모른다 — 인터페이스 너머라 여기선 더 볼 게 없다." },
+
+    { id:"camsub", name:"Camera 핸들러 3종", sys:"ext", kind:"class", stereo:"CameraSystem",
+      members:[ { mid:"Register", sig:"- Shake / Zoom / Lock Handler", role:"method" } ],
+      desc:"PlayerCameraShake·Zoom·LockHandler. 같은 이벤트 채널을 구독하는 외부 구독자. 채널이 곧 시스템 경계다." },
+
+    { id:"audioch", name:"AudioChannel", sys:"ext", kind:"class", stereo:"AudioSystem",
+      members:[ { mid:"Play", sig:"+ Play(sound, pos)", role:"method" } ],
+      desc:"소리 재생 요청 창구." },
+
+    { id:"hitch", name:"HitChannel", sys:"ext", kind:"class", stereo:"CombatSystem",
+      members:[
+        { mid:"Raise",    sig:"+ Raise(HitReport)", role:"method" },
+        { mid:"Register", sig:"+ Register(handler)", role:"method" }
+      ],
+      desc:"타격 성공 사실만 흘린다. 히트스탑·타격음은 구독자 몫." },
+
+    { id:"idmg", name:"IDamageable", sys:"ext", kind:"interface",
+      members:[ { mid:"ApplyDamage", sig:"+ ApplyDamage(DamageInfo)", role:"method" } ],
+      desc:"때리는 쪽과 맞는 쪽의 공통 창구. 적도 플레이어도 이걸 구현한다." },
+
+    /* ── 메인: 상태 코어 ──────────────────────────────────── */
+    { id:"gate", name:"PlayerStateInputGate", sys:"core", kind:"class",
+      members:[
+        { mid:"OnPressed",    sig:"- OnPressed(action)", role:"method" },
+        { mid:"SendInput",    sig:"- SendInput(action)", role:"method" },
+        { mid:"ToTrigger",    sig:"- ToTrigger(action)", role:"method" },
+        { mid:"HandleBlock",  sig:"- HandleBlockOn / Close",  role:"method" },
+        { mid:"HandleBuffer", sig:"- HandleBufferOn / Close", role:"method" }
+      ],
+      desc:"메인 입구. 입력을 트리거로 번역하고 차단·선입력 구간을 지킨다. 상태 머신을 직접 모른다." },
+
+    { id:"itrigraise", name:"IStateTriggerRaiser", sys:"core", kind:"interface",
+      members:[ { mid:"RaiseTrigger", sig:"+ RaiseTrigger(trigger)", role:"method" } ],
+      desc:"상태를 바꿔달라고 쏘는 창구. 쏘는 쪽은 머신을 모른다." },
+
+    { id:"itrigsub", name:"IStateTriggerSubscriber", sys:"core", kind:"interface",
+      members:[ { mid:"SubscribeTrigger", sig:"+ SubscribeTrigger(listener)", role:"method" } ],
+      desc:"트리거를 받는 창구." },
+
+    { id:"trigch", name:"PlayerStateTriggerChannel", sys:"core", kind:"class", stereo:"ScriptableObject",
+      members:[ { mid:"_onTrigger", sig:"- _onTrigger : Action", role:"field" } ],
+      desc:"트리거 전용 채널 SO. 쏘는 쪽과 받는 쪽이 서로를 모른다." },
+
+    { id:"machine", name:"PlayerStateMachine", sys:"core", kind:"class",
+      members:[
+        { mid:"CurrentState",    sig:"+ CurrentState : StateRunner", role:"prop" },
+        { mid:"_stateDataList",  sig:"- _stateDataList : List", role:"field" },
+        { mid:"SendTrigger",     sig:"+ SendTrigger(trigger)", role:"method" },
+        { mid:"TryGetNextState", sig:"- TryGetNextState(state, trigger)", role:"method" },
+        { mid:"TransitionTo",    sig:"- TransitionTo(next)", role:"method" },
+        { mid:"BuildStates",     sig:"- BuildStates()", role:"method" },
+        { mid:"Update",          sig:"- Update()", role:"method" }
+      ],
+      desc:"메인 축. 전환 규칙(switch)을 들고 한 번에 한 상태만 돌린다. 쿨타임·재진입 무시도 여기." },
+
+    { id:"runner", name:"StateRunner", sys:"core", kind:"class",
+      members:[
+        { mid:"StateKey",            sig:"+ StateKey : PlayerStateType", role:"prop" },
+        { mid:"IsAnimationFinished", sig:"+ IsAnimationFinished : bool", role:"prop" },
+        { mid:"Initialize",          sig:"+ Initialize(character, raiser, data)", role:"method" },
+        { mid:"Enter",               sig:"+ Enter()",  role:"method" },
+        { mid:"Update",              sig:"+ Update()", role:"method" },
+        { mid:"Exit",                sig:"+ Exit()",   role:"method" },
+        { mid:"SortEvents",          sig:"- SortEvents(data)", role:"method" },
+        { mid:"RaiseEvent",          sig:"- RaiseEvent(progress)", role:"method" }
+      ],
+      desc:"상태 하나의 실행기. 애니 진행률을 보고 그 시점 이벤트를 순서대로 쏜다. 기능은 하나도 모른다." },
+
+    { id:"tracker", name:"AnimationTracker", sys:"core", kind:"class",
+      members:[
+        { mid:"Progress",   sig:"+ Progress : float",  role:"prop" },
+        { mid:"IsFinished", sig:"+ IsFinished : bool", role:"prop" },
+        { mid:"Update",     sig:"+ Update()",          role:"method" }
+      ],
+      desc:"애니가 어디까지 갔나만 본다. 전환 중이거나 다른 클립이면 종료 판정." },
+
+    { id:"iraiser", name:"IPlayerStateEventRaiser", sys:"core", kind:"interface",
+      members:[
+        { mid:"Raise",      sig:"+ Raise(category, data)", role:"method" },
+        { mid:"RaiseEnd",   sig:"+ RaiseEnd(category)",    role:"method" },
+        { mid:"RaiseReset", sig:"+ RaiseReset()",          role:"method" }
+      ],
+      desc:"기능 이벤트를 쏘는 창구. 상태는 누가 듣는지 모른다." },
+
+    { id:"isub", name:"IPlayerStateEventSubscriber", sys:"core", kind:"interface",
+      members:[ { mid:"Register", sig:"+ Register(category, open, close)", role:"method" } ],
+      desc:"서브 시스템이 붙는 유일한 자리. 여기 아래는 전부 갈아끼우거나 지울 수 있다." },
+
+    { id:"evtch", name:"PlayerStateEventChannel", sys:"core", kind:"class", stereo:"ScriptableObject",
+      members:[
+        { mid:"_switchEventMap", sig:"- _switchEventMap : Dictionary", role:"field" },
+        { mid:"CloseOpened",     sig:"- CloseOpened(events, reason)",  role:"method" }
+      ],
+      desc:"메인과 서브의 경계선. 켜진 것만 골라 닫아 끄기 누락을 구조로 막는다." },
+
+    { id:"icurw", name:"ICurrentStateWriter", sys:"core", kind:"interface",
+      members:[ { mid:"SetCurrentState", sig:"+ SetCurrentState(state)", role:"method" } ],
+      desc:"현재 상태 쓰기 전용." },
+
+    { id:"icurp", name:"ICurrentStateProvider", sys:"core", kind:"interface",
+      members:[
+        { mid:"CurrentState", sig:"+ CurrentState : PlayerStateType", role:"prop" },
+        { mid:"StateChanged", sig:"+ StateChanged : event Action",    role:"event" }
+      ],
+      desc:"현재 상태 읽기 전용. UI·카메라 등 외부가 이걸로 상태를 본다." },
+
+    { id:"curch", name:"PlayerCurrentStateChannel", sys:"core", kind:"class", stereo:"ScriptableObject",
+      members:[ { mid:"CurrentState", sig:"+ CurrentState : PlayerStateType", role:"prop" } ],
+      desc:"현재 상태를 담아두는 공유 SO. 읽는 쪽과 쓰는 쪽이 서로를 모른다." },
+
+    /* ── 메인: 상태 데이터 ────────────────────────────────── */
+    { id:"sdata", name:"StateData", sys:"data", kind:"class", stereo:"ScriptableObject",
+      members:[
+        { mid:"StateType", sig:"+ StateType : PlayerStateType", role:"prop" },
+        { mid:"IsLooping", sig:"+ IsLooping : bool", role:"prop" },
+        { mid:"Cooldown",  sig:"+ Cooldown : float", role:"prop" },
+        { mid:"GetData",   sig:"+ GetData() : Dictionary", role:"method" }
+      ],
+      desc:"상태 하나의 대본. 카테고리별 항목 배열을 담고 꺼내준다. 코드 대신 여기를 고쳐 연출을 바꾼다." },
+
+    { id:"istart", name:"IStartData", sys:"data", kind:"interface",
+      members:[ { mid:"StartProgress", sig:"+ StartProgress : float", role:"prop" } ],
+      desc:"모든 항목의 공통점 — 언제 시작하나. 채널은 이 타입으로만 데이터를 나른다." },
+
+    { id:"imotion", name:"IMotionControl", sys:"data", kind:"interface",
+      members:[
+        { mid:"Duration", sig:"+ Duration : float", role:"prop" },
+        { mid:"UntilEnd", sig:"+ UntilEnd : bool",  role:"prop" }
+      ],
+      desc:"구간형 항목. 이걸 구현하면 끝 시점(End)도 자동으로 발행된다." },
+
+    { id:"entries", name:"…DataEntry 8종", sys:"data", kind:"class", stereo:"Serializable",
+      members:[ { mid:"kinds", sig:"Interval / SkillMove / Hitbox / Audio / Effect / Shake / Zoom / Toggle / Finish", role:"field" } ],
+      desc:"인스펙터에 찍는 실제 값들. 각자 IPlayerHitbox·IPlayerAudio 같은 읽기 인터페이스도 구현한다." },
+
+    /* ── 서브: 이벤트 구독 핸들러 ─────────────────────────── */
+    { id:"hitbox", name:"PlayerHitboxHandler", sys:"sub", kind:"class",
+      members:[
+        { mid:"HandleHitbox", sig:"- HandleHitbox(data)", role:"method" },
+        { mid:"FixedUpdate",  sig:"- FixedUpdate()", role:"method" },
+        { mid:"TryHit",       sig:"- TryHit(...)",  role:"method" }
+      ],
+      desc:"서브. 히트박스를 켜고 겹친 대상을 때린다. 지워도 상태 머신은 그대로 돈다." },
+
+    { id:"effect", name:"PlayerEffectHandler", sys:"sub", kind:"class",
+      members:[
+        { mid:"HandleEffect", sig:"- HandleEffect(data)", role:"method" },
+        { mid:"HandleReset",  sig:"- HandleReset(reason)", role:"method" }
+      ],
+      desc:"서브. 데이터가 시킨 위치·시간대로 이펙트를 켠다." },
+
+    { id:"audio", name:"PlayerAudioHandler", sys:"sub", kind:"class",
+      members:[
+        { mid:"HandlePlay", sig:"- HandlePlay(data)", role:"method" },
+        { mid:"HandleHit",  sig:"- HandleHit(report)", role:"method" }
+      ],
+      desc:"서브. 상태 이벤트와 타격 이벤트를 받아 소리를 요청한다." },
+
+    { id:"toggle", name:"PlayerObjectToggleHandler", sys:"sub", kind:"class",
+      members:[ { mid:"HandleToggle", sig:"- HandleToggle(data)", role:"method" } ],
+      desc:"서브. 씬 오브젝트를 켜고 끈다. 일회성이라 되돌리지 않는다." },
+
+    { id:"finish", name:"FinishExecutor", sys:"sub", kind:"class",
+      members:[
+        { mid:"HandleFinish", sig:"- HandleFinish(data)", role:"method" },
+        { mid:"Heal",         sig:"- Heal(amount)", role:"method" }
+      ],
+      desc:"서브. 처형 타이밍에 스턴·처형을 실행한다. 대상 수집은 Scanner가 따로 맡는다." },
+
+    { id:"dmg", name:"PlayerDamageReceiver", sys:"sub", kind:"class",
+      members:[
+        { mid:"ApplyDamage",      sig:"+ ApplyDamage(info)", role:"method" },
+        { mid:"OnPlayerDied",     sig:"+ OnPlayerDied : event Action", role:"event" },
+        { mid:"HandleInvincible", sig:"- HandleInvincible / SuperArmor", role:"method" }
+      ],
+      desc:"서브이면서 또 하나의 입구. 맞으면 체력을 깎고 Damaged/Died를 되쏜다 — 흐름이 코어로 되돌아간다." },
+
+    { id:"anim", name:"PlayerMoveAnimation", sys:"sub", kind:"class",
+      members:[
+        { mid:"SetParameter", sig:"- SetParameter()", role:"method" },
+        { mid:"HandleOn",     sig:"- HandleOn / Close", role:"method" }
+      ],
+      desc:"서브. MoveControl 구간에만 이동 입력을 Animator 파라미터로 넘긴다." },
+
+    /* ── 서브: 이동 ──────────────────────────────────────── */
+    { id:"mover", name:"PlayerCharacterMover", sys:"move", kind:"class",
+      members:[
+        { mid:"Update", sig:"- Update()", role:"method" },
+        { mid:"Awake",  sig:"- Awake()",  role:"method" },
+        { mid:"SetupCurrentCharacter", sig:"- SetupCurrentCharacter()", role:"method" }
+      ],
+      desc:"CharacterController.Move의 유일한 호출자. 속도 소스를 다 더해 한 번만 움직인다." },
+
+    { id:"ivel", name:"IVelocitySource", sys:"move", kind:"interface",
+      members:[
+        { mid:"Evaluate",           sig:"+ Evaluate(in MoveParams)", role:"method" },
+        { mid:"OnCharacterChanged", sig:"+ OnCharacterChanged()",    role:"method" }
+      ],
+      desc:"속도를 만드는 요인의 계약. Mover는 구체 요인을 모르고 합산만 한다 — 새 요인은 여기 하나 더." },
+
+    { id:"walk", name:"WalkVelocitySource", sys:"move", kind:"class",
+      members:[ { mid:"Evaluate", sig:"+ Evaluate(in MoveParams)", role:"method" } ],
+      desc:"입력 이동. MoveControl 구간에서만 속도가 나가고, 움직였으면 Locomotion 전환을 요청한다." },
+
+    { id:"skillv", name:"SkillVelocitySource", sys:"move", kind:"class",
+      members:[
+        { mid:"HandleSkillMove", sig:"- HandleSkillMove(data)", role:"method" },
+        { mid:"Evaluate",        sig:"+ Evaluate(in MoveParams)", role:"method" }
+      ],
+      desc:"스킬 이동. 데이터의 방향·속도·시간대로 밀고, 앞에 적이 있으면 수평 성분만 죽인다." },
+
+    { id:"grav", name:"GravityVelocitySource", sys:"move", kind:"class",
+      members:[ { mid:"Evaluate", sig:"+ Evaluate(in MoveParams)", role:"method" } ],
+      desc:"중력과 가파른 경사 미끄러짐. 상태 시스템과 무관하게 항상 돈다." },
+
+    { id:"rotator", name:"CharacterRotator", sys:"move", kind:"class",
+      members:[
+        { mid:"Apply",        sig:"+ Apply(in MoveParams)", role:"method" },
+        { mid:"HandleRotate", sig:"- HandleRotateOn / Close", role:"method" }
+      ],
+      desc:"RotateControl 구간에만 회전. 락온이면 적을, 아니면 이동 방향을 본다." },
+
+    { id:"probe", name:"GroundProbe", sys:"move", kind:"class",
+      members:[ { mid:"GroundNormal", sig:"+ GroundNormal : Vector3", role:"prop" } ],
+      desc:"발밑 면의 법선만 기록. 콜백이 Controller 붙은 오브젝트에서만 와서 따로 뗐다." },
+
+    /* ── 지원 ────────────────────────────────────────────── */
+    { id:"pchar", name:"PlayerCharacter", sys:"supp", kind:"class",
+      members:[
+        { mid:"Type", sig:"+ Type : PlayerCharacterType", role:"prop" },
+        { mid:"GetCharacterComponent", sig:"+ GetCharacterComponent() : T", role:"method" }
+      ],
+      desc:"캐릭터 몸통. 자기 컴포넌트를 캐시해 돌려준다." },
+
+    { id:"switcher", name:"PlayerCharacterSwitcher", sys:"supp", kind:"class",
+      members:[
+        { mid:"SwapPlayerCharacter", sig:"+ SwapPlayerCharacter()", role:"method" },
+        { mid:"CurrentCharacter",    sig:"+ CurrentCharacter : PlayerCharacter", role:"prop" },
+        { mid:"OnCharacterSwapped",  sig:"+ OnCharacterSwapped : event Action", role:"event" }
+      ],
+      desc:"두 캐릭터를 바꾸고 알린다. 교체·통지·조회 3개 인터페이스로 쪼개 노출." },
+
+    { id:"health", name:"PlayerHealth", sys:"supp", kind:"class",
+      members:[
+        { mid:"Decrease",  sig:"+ Decrease(amount) : float", role:"method" },
+        { mid:"Increase",  sig:"+ Increase(amount)", role:"method" },
+        { mid:"OnChanged", sig:"+ OnChanged : event Action", role:"event" }
+      ],
+      desc:"체력의 단일 출처. IHealthInfo(읽기)와 IHealthModifier(쓰기)로 갈라 노출." },
+
+    { id:"scanner", name:"FinishTargetScanner", sys:"supp", kind:"class",
+      members:[
+        { mid:"CanFinish",            sig:"+ CanFinish() : bool", role:"method" },
+        { mid:"GatherStunTargets",    sig:"+ GatherStunTargets()", role:"method" },
+        { mid:"GatherExecuteTargets", sig:"+ GatherExecuteTargets()", role:"method" }
+      ],
+      desc:"요청 시점마다 범위를 훑어 처형 대상을 알려준다. 입력 판정(IFinishChecker)도 겸한다." },
+
+    { id:"provider", name:"PlayerEffectProvider", sys:"supp", kind:"class",
+      members:[
+        { mid:"Rent",   sig:"+ Rent(id) : GameObject", role:"method" },
+        { mid:"Return", sig:"+ Return(instance)", role:"method" }
+      ],
+      desc:"이펙트 풀. 카탈로그대로 미리 복제해두고 대여·반납한다." },
+
+    { id:"partner", name:"PlayerPartner", sys:"supp", kind:"class",
+      members:[ { mid:"HandleCharacterSwapped", sig:"- HandleCharacterSwapped()", role:"method" } ],
+      desc:"현재 캐릭터를 따라다니고 스왑 때 부딪혀 연출한다. 상태 시스템과 무관." },
+
+    { id:"death", name:"PlayerDeathTrigger", sys:"supp", kind:"class",
+      members:[ { mid:"HandleDied", sig:"- HandleDied()", role:"method" } ],
+      desc:"사망 신호를 받아 EventData 목록을 각자 지연시간만큼 기다렸다 실행한다." },
+
+    { id:"foot", name:"FootstepEmitter", sys:"supp", kind:"class",
+      members:[ { mid:"Footstep", sig:"+ Footstep(WalkType)", role:"method" } ],
+      desc:"애니메이션 이벤트가 직접 부른다. 상태 채널을 안 거치는 유일한 소리." }
+  ];
+
+  /* k : gen 상속 / real 구현 / comp 소유 / assoc 참조 / dep 잠깐씀 / evt 이벤트 / inject DI주입 */
+  var EDGES = [
+    /* ① 입력 → 상태 전환 */
+    { s:"input",  t:"gate",       k:"evt",    v:"버튼이 눌렸다고 알린다", via:[["any","OnPressed"]] },
+    { s:"gate",   t:"icurp",      k:"inject", v:"NormalAttack3 콤보 분기를 위해 현재 상태를 조회", via:[["SendInput","CurrentState"]] },
+    { s:"gate",   t:"itrigraise", k:"dep",    v:"번역한 트리거를 쏜다", via:[["SendInput","RaiseTrigger"]] },
+    { s:"trigch", t:"itrigraise", k:"real",   v:"구현", via:[[null,null]] },
+    { s:"trigch", t:"itrigsub",   k:"real",   v:"구현", via:[[null,null]] },
+    { s:"itrigsub", t:"machine",  k:"evt",    v:"구독자에게 트리거를 흘린다", via:[["SubscribeTrigger","SendTrigger"]] },
+    { s:"machine", t:"itrigsub",  k:"inject", v:"OnEnable에 구독, OnDisable에 해제", via:[[null,"SubscribeTrigger"]] },
+    { s:"machine", t:"icurw",     k:"inject", v:"전환이 실제로 일어날 때만 기록", via:[["TransitionTo","SetCurrentState"]] },
+    { s:"curch",  t:"icurw",      k:"real",   v:"구현", via:[[null,null]] },
+    { s:"curch",  t:"icurp",      k:"real",   v:"구현", via:[[null,null]] },
+    { s:"icurp",  t:"camsub",     k:"evt",    v:"StateChanged — 외부 시스템도 이걸로 상태를 본다", via:[["StateChanged",null]] },
+
+    /* ② 상태 실행 → 이벤트 발행 */
+    { s:"machine", t:"sdata",   k:"comp",   v:"인스펙터에 꽂은 상태 대본 목록", via:[["_stateDataList","StateType"]] },
+    { s:"machine", t:"runner",  k:"comp",   v:"대본 하나당 실행기 하나를 만들어 들고 있다", via:[["BuildStates","Initialize"],["CurrentState",null]] },
+    { s:"machine", t:"runner",  k:"dep",    v:"매 프레임 돌리고, 애니가 끝나면 스스로 트리거를 쏜다", via:[["Update","Update"],["Update","IsAnimationFinished"]] },
+    { s:"machine", t:"runner",  k:"dep",    v:"전환 규칙이 뱉은 상태로 갈아탄다. 같은 상태면 무시", via:[["TryGetNextState","StateKey"],["TransitionTo","Exit"],["TransitionTo","Enter"]] },
+    { s:"runner",  t:"tracker", k:"comp",   v:"진행률·종료 판정을 맡긴다", via:[["Update","Update"],["IsAnimationFinished","IsFinished"]] },
+    { s:"runner",  t:"sdata",   k:"assoc",  v:"자기 상태의 대본을 계속 들고 있다", via:[["SortEvents","GetData"]] },
+    { s:"runner",  t:"iraiser", k:"inject", v:"진행률에 도달한 이벤트를 여기로 쏜다", via:[["RaiseEvent","Raise"],["Exit","RaiseReset"]] },
+    { s:"sdata",   t:"entries", k:"comp",   v:"인스펙터 배열 15칸", via:[["GetData","kinds"]] },
+    { s:"entries", t:"istart",  k:"real",   v:"모두 시작 진행률을 갖는다", via:[["kinds","StartProgress"]] },
+    { s:"imotion", t:"istart",  k:"gen",    v:"구간형은 여기서 갈라진다", via:[[null,"StartProgress"]] },
+    { s:"runner",  t:"imotion", k:"dep",    v:"구간형이면 끝 시점 이벤트도 같이 만들어 둔다", via:[["SortEvents","Duration"],["SortEvents","UntilEnd"]] },
+
+    /* ③ 채널 = 메인/서브 경계 */
+    { s:"evtch", t:"iraiser", k:"real", v:"구현", via:[[null,null]] },
+    { s:"evtch", t:"isub",    k:"real", v:"구현", via:[[null,null]] },
+    { s:"isub",  t:"hitbox",  k:"evt",  v:"Hitbox 카테고리", via:[["Register","HandleHitbox"]] },
+    { s:"isub",  t:"effect",  k:"evt",  v:"Effect 카테고리", via:[["Register","HandleEffect"]] },
+    { s:"isub",  t:"audio",   k:"evt",  v:"Audio 카테고리", via:[["Register","HandlePlay"]] },
+    { s:"isub",  t:"toggle",  k:"evt",  v:"ObjectToggle 카테고리", via:[["Register","HandleToggle"]] },
+    { s:"isub",  t:"finish",  k:"evt",  v:"Finish 카테고리(원샷, close 없음)", via:[["Register","HandleFinish"]] },
+    { s:"isub",  t:"dmg",     k:"evt",  v:"SuperArmor·Invincible 구간", via:[["Register","HandleInvincible"]] },
+    { s:"isub",  t:"anim",    k:"evt",  v:"MoveControl 구간", via:[["Register","HandleOn"]] },
+    { s:"isub",  t:"walk",    k:"evt",  v:"MoveControl 구간", via:[["Register","Evaluate"]] },
+    { s:"isub",  t:"skillv",  k:"evt",  v:"SkillMove 구간", via:[["Register","HandleSkillMove"]] },
+    { s:"isub",  t:"rotator", k:"evt",  v:"RotateControl 구간", via:[["Register","HandleRotate"]] },
+    { s:"isub",  t:"gate",    k:"evt",  v:"InputBlock·InputBuffer 구간이 입구를 되잠근다", via:[["Register","HandleBlock"],["Register","HandleBuffer"]] },
+    { s:"isub",  t:"camsub",  k:"evt",  v:"CameraShake·Zoom·Lock — 외부 시스템도 같은 자리에 붙는다", via:[["Register","Register"]] },
+
+    /* ④ 서브 시스템의 실제 일 */
+    { s:"hitbox", t:"idmg",     k:"dep",    v:"겹친 대상에게 데미지를 준다", via:[["TryHit","ApplyDamage"]] },
+    { s:"hitbox", t:"hitch",    k:"dep",    v:"타격 성공 사실만 발행", via:[["TryHit","Raise"]] },
+    { s:"hitch",  t:"audio",    k:"evt",    v:"타격음은 구독해서 낸다", via:[["Register","HandleHit"]] },
+    { s:"audio",  t:"audioch",  k:"dep",    v:"소리 재생 요청", via:[["HandlePlay","Play"]] },
+    { s:"foot",   t:"audioch",  k:"dep",    v:"애니 이벤트가 직접 부른다 — 채널을 안 거친다", via:[["Footstep","Play"]] },
+    { s:"effect", t:"provider", k:"inject", v:"풀에서 빌리고 돌려준다", via:[["HandleEffect","Rent"],["HandleReset","Return"]] },
+    { s:"finish", t:"scanner",  k:"inject", v:"스턴·처형 대상 목록을 받는다", via:[["HandleFinish","GatherStunTargets"],["HandleFinish","GatherExecuteTargets"]] },
+    { s:"finish", t:"health",   k:"inject", v:"처형 성공 1회당 소량 회복", via:[["Heal","Increase"]] },
+    { s:"gate",   t:"scanner",  k:"inject", v:"처형 가능한 대상이 없으면 입력 자체를 버린다", via:[["SendInput","CanFinish"]] },
+    { s:"dmg",    t:"idmg",     k:"real",   v:"구현 — 적 히트박스가 여기를 부른다", via:[["ApplyDamage",null]] },
+    { s:"dmg",    t:"health",   k:"inject", v:"체력을 깎는다", via:[["ApplyDamage","Decrease"]] },
+    { s:"dmg",    t:"itrigraise", k:"dep",  v:"되먹임 — Damaged/Died 트리거를 코어로 되쏜다", via:[["ApplyDamage","RaiseTrigger"]] },
+    { s:"dmg",    t:"death",    k:"evt",    v:"OnPlayerDied", via:[["OnPlayerDied","HandleDied"]] },
+    { s:"anim",   t:"pchar",    k:"dep",    v:"현재 캐릭터의 Animator에 파라미터를 쓴다", via:[["SetParameter","GetCharacterComponent"]] },
+
+    /* ⑤ 이동 */
+    { s:"input",  t:"mover",   k:"evt",   v:"이동 입력", via:[["any","Update"]] },
+    { s:"mover",  t:"ivel",    k:"comp",  v:"Awake에서 3종을 만들어 들고, 파괴 시 Dispose", via:[["Awake","Evaluate"]] },
+    { s:"mover",  t:"ivel",    k:"dep",   v:"매 프레임 전부 더해 Move 한 번", via:[["Update","Evaluate"]] },
+    { s:"walk",   t:"ivel",    k:"real",  v:"구현", via:[["Evaluate","Evaluate"]] },
+    { s:"skillv", t:"ivel",    k:"real",  v:"구현", via:[["Evaluate","Evaluate"]] },
+    { s:"grav",   t:"ivel",    k:"real",  v:"구현", via:[["Evaluate","Evaluate"]] },
+    { s:"mover",  t:"rotator", k:"comp",  v:"회전은 속도가 아니라 따로 적용", via:[["Update","Apply"]] },
+    { s:"mover",  t:"probe",   k:"assoc", v:"발밑 법선을 읽어 프레임 묶음에 넣는다", via:[["Update","GroundNormal"]] },
+    { s:"walk",   t:"itrigraise", k:"dep", v:"되먹임 — 실제로 움직였으면 Locomotion 전환 요청", via:[["Evaluate","RaiseTrigger"]] },
+    { s:"skillv", t:"entries", k:"dep",   v:"ISkillMove 데이터의 방향·속도·시간 그대로", via:[["HandleSkillMove","kinds"]] },
+
+    /* ⑥ 캐릭터 스왑 */
+    { s:"gate",     t:"switcher", k:"inject", v:"NormalAttack3에서 기본공격 입력 → 스왑 후 특수공격", via:[["SendInput","SwapPlayerCharacter"]] },
+    { s:"switcher", t:"pchar",    k:"comp",   v:"두 캐릭터를 들고 하나만 켠다", via:[["SwapPlayerCharacter","Type"]] },
+    { s:"mover",    t:"switcher", k:"inject", v:"바뀐 캐릭터의 Controller를 다시 잡는다", via:[["SetupCurrentCharacter","CurrentCharacter"],["SetupCurrentCharacter","OnCharacterSwapped"]] },
+    { s:"mover",    t:"ivel",     k:"dep",    v:"스왑 시 누적 상태(낙하속도 등)를 지운다", via:[["SetupCurrentCharacter","OnCharacterChanged"]] },
+    { s:"partner",  t:"switcher", k:"inject", v:"따라다닐 대상 조회 + 스왑 순간 연출", via:[["HandleCharacterSwapped","OnCharacterSwapped"]] },
+    { s:"hitbox",   t:"switcher", k:"inject", v:"현재 캐릭터 기준으로 히트박스 위치를 잡는다", via:[["FixedUpdate","CurrentCharacter"]] },
+    { s:"runner",   t:"pchar",    k:"dep",    v:"Animator를 캐릭터에서 꺼낸다", via:[["Initialize","GetCharacterComponent"]] }
+  ];
+
+  var FLOWS = {
+    all: null,
+    input: ["input","gate","icurp","itrigraise","trigch","itrigsub","machine","icurw","curch","scanner","switcher"],
+    run:   ["machine","runner","tracker","sdata","entries","istart","imotion","iraiser","evtch","isub"],
+    sub:   ["isub","evtch","hitbox","effect","audio","toggle","finish","dmg","anim","walk","skillv","rotator","gate","camsub","provider","scanner","health","audioch","hitch","idmg","death","pchar"],
+    move:  ["mover","ivel","walk","skillv","grav","rotator","probe","input","isub","itrigraise","switcher","entries"],
+    back:  ["dmg","idmg","health","itrigraise","trigch","itrigsub","machine","walk","gate","isub","death"]
+  };
+
+  // rank = 범례를 늘어놓는 순서. 강한 관계부터 위에 온다.
+  var KIND = {
+    gen:    { name:"일반화", rank:6, dash:null,  head:"tri",  tail:null,      note:"상속" },
+    real:   { name:"실체화", rank:5, dash:"6 5", head:"tri",  tail:null,      note:"인터페이스 구현" },
+    comp:   { name:"합성",   rank:4, dash:null,  head:"open", tail:"diamond", note:"내가 만들고 같이 죽음" },
+    inject: { name:"주입",   rank:3, dash:"9 4", head:"open", tail:null,      note:"[Inject] — DI가 런타임에 꽂아줌" },
+    assoc:  { name:"연관",   rank:2, dash:null,  head:"open", tail:null,      note:"필드로 계속 들고 있음" },
+    evt:    { name:"이벤트", rank:1, dash:"2 4", head:"open", tail:null,      note:"구독자에게 알림 (UML 밖)" },
+    dep:    { name:"의존",   rank:0, dash:"5 4", head:"open", tail:null,      note:"호출·파라미터로 잠깐 씀" }
+  };
+
+  var byId = {};
+  NODES.forEach(function (n) { byId[n.id] = n; });
+
+  /* ── 크기 ────────────────────────────────────────────────────────────── */
+  var LH = 16, HEADH = 21, STEREOH = 12, WMIN = 116, WMAX = 250;
+
+  // 선에 한 번도 안 쓰이는 멤버는 그리지 않는다. 아무 데도 안 닿는 줄은 읽을 게 없다.
+  (function () {
+    var used = {};
+    EDGES.forEach(function (e) {
+      e.via.forEach(function (v) {
+        if (v[0]) used[e.s + "." + v[0]] = 1;
+        if (v[1]) used[e.t + "." + v[1]] = 1;
+      });
+    });
+    NODES.forEach(function (n) {
+      n.members = n.members.filter(function (m) { return used[n.id + "." + m.mid]; });
+    });
+  })();
+
+  // 폭은 글자 수로 어림잡는다. 다 같은 폭으로 맞추면 짧은 박스가 공백만 커진다.
+  function sizeNodes() {
+    NODES.forEach(function (n) {
+      n.hHead = HEADH + (n.stereo || n.kind !== "class" ? STEREOH : 0);
+      n.rows = n.members;
+      var w = n.name.length * 7.2 + 20;
+      n.rows.forEach(function (m) { w = Math.max(w, m.sig.length * 5.95 + 16); });
+      n.w = Math.round(Math.max(WMIN, Math.min(WMAX, w)));
+      n.h = n.hHead + n.rows.length * LH;
+    });
+  }
+
+  // 멤버 칸의 한가운데 (박스 안쪽 기준). 안 보이면 박스 한가운데.
+  function memY(n, mid) {
+    if (!mid) return n.h / 2;
+    for (var i = 0; i < n.rows.length; i++) {
+      if (n.rows[i].mid === mid) return n.hHead + i * LH + LH / 2;
+    }
+    return n.h / 2;
+  }
+
+  /* ── 배치 ────────────────────────────────────────────────────────────────
+     계층 배치. 화살표를 따라 한 칸씩 오른쪽으로 민다.
+     순환이 있어도 도는 횟수를 노드 수로 막아 멈춘다. */
+  function layer(ids, edges) {
+    var inSet = {}, lv = {};
+    ids.forEach(function (id) { inSet[id] = 1; lv[id] = 0; });
+    var es = edges.filter(function (e) { return inSet[e.s] && inSet[e.t] && e.s !== e.t; });
+    for (var i = 0; i < ids.length; i++) {
+      var moved = false;
+      es.forEach(function (e) {
+        if (lv[e.t] < lv[e.s] + 1) { lv[e.t] = lv[e.s] + 1; moved = true; }
+      });
+      if (!moved) break;
+    }
+    return lv;
+  }
+
+  /* 시스템 하나는 세로 한 줄. 화면이 가로로 기니까 시스템을 옆으로 늘어놓는 게 낫다.
+     줄 안의 순서는 화살표를 따라 정한다 — 위에서 아래로 흐르게. */
+  var GAPY = 48;
+  function stack(ids, edges, ox, oy) {
+    var lv = layer(ids, edges);
+    var order = ids.slice().sort(function (a, b) { return lv[a] - lv[b]; });
+    var w = Math.max.apply(null, order.map(function (id) { return byId[id].w; }));
+    var y = 0;
+    order.forEach(function (id) {
+      var n = byId[id];
+      n.x = ox + (w - n.w) / 2;   // 줄 가운데 정렬
+      n.y = oy + y;
+      y += n.h + GAPY;
+    });
+    return { w: w, h: y - GAPY };
+  }
+
+  /* 전체 배치: 시스템끼리 먼저 줄을 세우고, 각 시스템 안에서 클래스를 또 줄 세운다.
+     이렇게 하면 시스템 영역이 서로 겹치지 않는다. */
+  var CPAD = 22, CTITLE = 20, CGAPX = 150, CGAPY = 84;
+  var clusters = [];
+
+  function layoutAll() {
+    sizeNodes();
+    var sysIds = Object.keys(SYS).filter(function (s) {
+      return NODES.some(function (n) { return n.sys === s; });
+    });
+    // 열은 고정한다. 화살표로 자동 계층화하면 서브가 코어 왼쪽에 와서 메인/서브가 안 갈린다.
+    // 왼→오: 외부 입구 → 메인 → 서브 → 지원.
+    var COL = { ext:0, core:1, data:1, sub:2, move:2, supp:3 };
+    var byLv = {};
+    sysIds.forEach(function (s) { var c = COL[s] || 0; (byLv[c] = byLv[c] || []).push(s); });
+    var lvs = Object.keys(byLv).map(Number).sort(function (a, b) { return a - b; });
+
+    clusters = [];
+    var x = CPAD;
+    lvs.forEach(function (L) {
+      var y = CPAD, colW = 0;
+      byLv[L].forEach(function (s) {
+        var ids = NODES.filter(function (n) { return n.sys === s; }).map(function (n) { return n.id; });
+        var box = stack(ids, EDGES, x + CPAD, y + CPAD + CTITLE);
+        var cw = box.w + CPAD * 2, ch = box.h + CPAD * 2 + CTITLE;
+        clusters.push({ sys:s, x:x, y:y, w:cw, h:ch });
+        colW = Math.max(colW, cw);
+        y += ch + CGAPY;
+      });
+      x += colW + CGAPX;
+    });
+  }
+
+  /* ── 관계별 색 ────────────────────────────────────────────────────────── */
+  var KCOL = {
+    gen:"var(--k-gen)", real:"var(--k-real)", comp:"var(--k-comp)",
+    inject:"var(--k-inject)", assoc:"var(--k-assoc)", evt:"var(--k-evt)", dep:"var(--k-dep)"
+  };
+  var KTAG = { gen:"상속", real:"구현", comp:"소유", inject:"주입", assoc:"참조", evt:"알림", dep:"사용" };
+
+  /* ── SVG ─────────────────────────────────────────────────────────────── */
+  var SVGNS = "http://www.w3.org/2000/svg";
+  function el(t, a, txt) {
+    var e = document.createElementNS(SVGNS, t);
+    for (var k in a) if (a.hasOwnProperty(k)) e.setAttribute(k, a[k]);
+    if (txt != null) e.textContent = txt;
+    return e;
+  }
+
+  var svg = document.getElementById("map");
+  var defs = el("defs");
+  // 화살촉은 선 색을 따라간다. 그래서 관계 종류마다 한 벌씩 만든다.
+  Object.keys(KCOL).forEach(function (k) {
+    var kd = KIND[k];
+    var m = el("marker", { id:"mk-" + k, viewBox:"0 0 12 12", refX:"11", refY:"6",
+      markerWidth:"14", markerHeight:"14", markerUnits:"userSpaceOnUse", orient:"auto-start-reverse" });
+    m.appendChild(el("path", { d: kd.head === "tri" ? "M0.5 0.5 L11.5 6 L0.5 11.5 Z" : "M1 1 L11.5 6 L1 11 Z",
+      fill: kd.head === "tri" ? "var(--surface)" : KCOL[k], stroke:KCOL[k],
+      "stroke-width":"1.4", "stroke-linejoin":"miter" }));
+    defs.appendChild(m);
+    if (kd.tail === "diamond") {
+      var d2 = el("marker", { id:"mk-" + k + "-tail", viewBox:"0 0 16 10", refX:"1", refY:"5",
+        markerWidth:"17", markerHeight:"11", markerUnits:"userSpaceOnUse", orient:"auto-start-reverse" });
+      d2.appendChild(el("path", { d:"M0 5 L8 0 L16 5 L8 10 Z", fill:KCOL[k], stroke:KCOL[k] }));
+      defs.appendChild(d2);
+    }
+  });
+  svg.appendChild(defs);
+
+  var gGroup = el("g"), gEdge = el("g"), gNode = el("g");
+  [gGroup, gEdge, gNode].forEach(function (g) { svg.appendChild(g); });
+
+  /* ── 선 긋기 ─────────────────────────────────────────────────────────────
+     시스템 맵에서 쓰던 규칙을 그대로 가져왔다.
+     ① 같은 면을 쓰는 선은 면 위에 나란히 줄을 세운다 (한 점에 몰리지 않게)
+     ② 박스에서 STUB 만큼은 곧게 빠져나온다
+     ③ 박스 사이 빈 띠를 타고 건너가되, 이미 깔린 선과 구간이 겹치면 옆 칸으로 비킨다 */
+  var STUB = 30, MINRUN = 12, LANEW = 11;
+  var laneUse = {};
+
+  /* 한 통로를 지나는 선은 무조건 서로 다른 차선을 쓴다. 구간이 안 겹쳐도 같이 안 쓴다 —
+     색이 다른 선이 한 줄에 포개지면 무슨 관계인지 못 읽기 때문이다.
+     후보를 대 보는 동안은 자리를 잡지 않고(laneOff), 채택할 때만 잡는다(laneTake). */
+  function laneOff(i, dir) {
+    var off = (i % 2 ? -1 : 1) * Math.ceil(i / 2) * LANEW;
+    return dir > 0 ? off : -off;
+  }
+  function laneTake(key, i) { laneUse[key] = Math.max(laneUse[key] || 0, i + 1); }
+
+  /* 두 박스 사이에 다른 박스가 끼어 있나. ax 0 = 가로로 마주 봄, 1 = 세로로 마주 봄.
+     끼어 있으면 마주 보는 면끼리 이어 봐야 그 박스를 뚫고 지나갈 수밖에 없다. */
+  function between(a, b, ax) {
+    function rg(n, k) { return k ? [n.y, n.y + n.h] : [n.x, n.x + n.w]; }
+    var A = rg(a, ax), B = rg(b, ax), lo = Math.min(A[1], B[1]), hi = Math.max(A[0], B[0]);
+    var C = rg(a, 1 - ax), D = rg(b, 1 - ax);
+    var o0 = Math.min(C[0], D[0]) - 6, o1 = Math.max(C[1], D[1]) + 6;
+    return NODES.some(function (n) {
+      if (n === a || n === b) return false;
+      var N = rg(n, ax), M = rg(n, 1 - ax);
+      return N[0] < hi && N[1] > lo && M[0] < o1 && M[1] > o0;
+    });
+  }
+
+  /* 드나드는 면은 넷 다 쓴다. 사이가 뻥 뚫려 있을 때만 마주 보는 면끼리 잇고,
+     뭔가 끼어 있으면 같은 쪽 옆면으로 나가 줄 바깥으로 돌아 나간다. */
+  function sidesOf(a, b, mem) {
+    if (b.x >= a.x + a.w + 40) return ["r", "l"];
+    if (a.x >= b.x + b.w + 40) return ["l", "r"];
+    // mem 이면 멤버 줄에 꽂아야 하니 위아래 면은 안 쓴다
+    if (!mem && b.y >= a.y + a.h + 40 && !between(a, b, 1)) return ["b", "t"];
+    if (!mem && a.y >= b.y + b.h + 40 && !between(a, b, 1)) return ["t", "b"];
+    // 바깥으로 도는 쪽은 빈 자리가 더 넓은 쪽으로 고른다
+    var l = Math.min(a.x, b.x), r = Math.max(a.x + a.w, b.x + b.w);
+    var lo = Math.min(a.y, b.y) - 6, hi = Math.max(a.y + a.h, b.y + b.h) + 6;
+    var freeL = l - (function () {
+      var m = -1e9;
+      NODES.forEach(function (n) {
+        if (n !== a && n !== b && n.y + n.h > lo && n.y < hi && n.x + n.w <= l) m = Math.max(m, n.x + n.w);
+      });
+      return m;
+    })();
+    var freeR = (function () {
+      var m = 1e9;
+      NODES.forEach(function (n) {
+        if (n !== a && n !== b && n.y + n.h > lo && n.y < hi && n.x >= r) m = Math.min(m, n.x);
+      });
+      return m;
+    })() - r;
+    // 아무것도 없는 쪽은 여유가 무한대가 되니 잘라 준다. 둘 다 넉넉하면 읽는 방향인 오른쪽.
+    return Math.min(freeR, 240) >= Math.min(freeL, 240) ? ["r", "r"] : ["l", "l"];
+  }
+
+  /* 경로가 몇 번 걸리나. 남의 박스를 뚫으면 1점, 볼일 없는 시스템 영역을 가로지르면 3점.
+     양 끝 박스와 그 둘이 사는 시스템은 당연히 지나가야 하니 빼고 센다. */
+  function crossings(pts, a, b) {
+    var n, c, i, j, sc = 0;
+    for (i = 1; i < pts.length; i++) {
+      var x0 = Math.min(pts[i - 1][0], pts[i][0]), x1 = Math.max(pts[i - 1][0], pts[i][0]);
+      var y0 = Math.min(pts[i - 1][1], pts[i][1]), y1 = Math.max(pts[i - 1][1], pts[i][1]);
+      for (j = 0; j < NODES.length; j++) {
+        n = NODES[j];   // 끝점 박스도 센다. 면 앞을 지나 제 박스를 뚫고 꽂히는 길이 나오기 때문이다.
+        if (x0 < n.x + n.w + 2 && x1 > n.x - 2 && y0 < n.y + n.h + 2 && y1 > n.y - 2) sc += 1;
+      }
+      for (j = 0; j < clusters.length; j++) {
+        c = clusters[j];
+        if (c.sys === a.sys || c.sys === b.sys) continue;
+        if (x0 < c.x + c.w - 1 && x1 > c.x + 1 && y0 < c.y + c.h - 1 && y1 > c.y + 1) sc += 6;
+      }
+    }
+    return sc;
+  }
+
+  /* 통로 후보 — 빈 띠의 한가운데. ax 0 이면 세로 통로(x 값), 1 이면 가로 통로(y 값).
+     선이 실제로 지나갈 구간(lo~hi)에 걸치는 박스만 따진다. 저 멀리 있는 박스 때문에
+     통로가 통째로 막힌 것처럼 보이면, 바로 옆에 빈 자리를 두고도 멀리 돌게 된다. */
+  function corridors(ax, lo, hi) {
+    var iv = NODES.filter(function (n) {
+      var q0 = ax ? n.x : n.y, q1 = ax ? n.x + n.w : n.y + n.h;
+      return q1 > lo - 4 && q0 < hi + 4;
+    }).map(function (n) {
+      return ax ? [n.y - 10, n.y + n.h + 10] : [n.x - 10, n.x + n.w + 10];
+    }).sort(function (p, q) { return p[0] - q[0]; });
+    if (!iv.length) return [(lo + hi) / 2];
+    var merged = [], cur = null;
+    iv.forEach(function (r) {
+      if (!cur || r[0] > cur[1]) { cur = r.slice(); merged.push(cur); } else cur[1] = Math.max(cur[1], r[1]);
+    });
+    var out = [merged[0][0] - 26];
+    for (var i = 1; i < merged.length; i++) out.push((merged[i - 1][1] + merged[i][0]) / 2);
+    out.push(merged[merged.length - 1][1] + 26);
+    return out;
+  }
+
+  // 길이 0짜리 마디는 버린다. 놔두면 화살촉이 엉뚱한 쪽을 보거나 아예 안 그려진다.
+  function poly(pts) {
+    var out = [];
+    pts.forEach(function (q) {
+      var l = out[out.length - 1];
+      if (!l || Math.abs(l[0] - q[0]) > 0.4 || Math.abs(l[1] - q[1]) > 0.4) out.push(q);
+    });
+    return out;
+  }
+
+  /* 선은 「어느 멤버에서 어느 멤버로」 한 쌍마다 하나씩 긋는다.
+     관계를 두 박스 사이 한 줄로 합쳐 버리면, 남은 멤버 대부분이 아무 선도 안 닿은 채 남는다. */
+  var WIRES = (function () {
+    var out = [];
+    EDGES.forEach(function (e) {
+      (e.via.length ? e.via : [[null, null]]).forEach(function (v) {
+        out.push({ s:e.s, t:e.t, k:e.k, e:e, va:v[0] || null, vb:v[1] || null });
+      });
+    });
+    return out;
+  })();
+
+  /* 이미 깔린 마디와 한 줄에 포개지나. 통로 차선만으로는 면에서 빠져나오는 짧은 마디까지
+     못 챙긴다. 포개진 선은 색이 달라도 한 줄로 보이니 값에 넣어 피하게 한다. */
+  var placed = [];
+  function segsOf(pts) {
+    var out = [];
+    for (var i = 1; i < pts.length; i++) out.push([pts[i - 1], pts[i]]);
+    return out;
+  }
+  function stacked(pts) {
+    var mine = segsOf(pts), n = 0;
+    mine.forEach(function (A) {
+      var ah = Math.abs(A[0][1] - A[1][1]) < 0.01, ax = ah ? 1 : 0;
+      placed.forEach(function (B) {
+        var bh = Math.abs(B[0][1] - B[1][1]) < 0.01;
+        if (ah !== bh || Math.abs(A[0][ax] - B[0][ax]) > 1.5) return;
+        var al = Math.min(A[0][1 - ax], A[1][1 - ax]), ar = Math.max(A[0][1 - ax], A[1][1 - ax]);
+        var bl = Math.min(B[0][1 - ax], B[1][1 - ax]), br = Math.max(B[0][1 - ax], B[1][1 - ax]);
+        if (al < br - 8 && ar > bl + 8) n++;
+      });
+    });
+    return n;
+  }
+
+  function buildRoutes() {
+    laneUse = {};
+    placed = [];
+    // ⓪ 자리가 정해진 다음에 드나들 면을 고른다
+    WIRES.forEach(function (w) {
+      var sd = sidesOf(byId[w.s], byId[w.t], !!(w.va || w.vb));
+      w.sa = sd[0]; w.sb = sd[1];
+    });
+    // ① 면마다 상대 위치 순으로 줄 세우기
+    var sides = {};
+    WIRES.forEach(function (w) {
+      (sides[w.s + w.sa] = sides[w.s + w.sa] || []).push({ w:w, end:"a" });
+      (sides[w.t + w.sb] = sides[w.t + w.sb] || []).push({ w:w, end:"b" });
+    });
+    Object.keys(sides).forEach(function (key) {
+      var list = sides[key], horiz = /[tb]$/.test(key);
+      list.sort(function (u, v) {
+        var p = byId[u.end === "a" ? u.w.t : u.w.s], q = byId[v.end === "a" ? v.w.t : v.w.s];
+        return horiz ? (p.x - q.x) : (p.y - q.y);
+      });
+      list.forEach(function (o, i) {
+        if (o.end === "a") { o.w.ok = i; o.w.on = list.length; }
+        else { o.w.ik = i; o.w.in = list.length; }
+      });
+    });
+
+    // ② 면 위의 점. 좌우 면이고 멤버를 알면 그 줄 높이에 꽂는다.
+    function anchor(n, side, mid, k, N) {
+      var t = (k + 1) / (N + 1);
+      if (side === "t") return [n.x + n.w * t, n.y];
+      if (side === "b") return [n.x + n.w * t, n.y + n.h];
+      var y = mid ? n.y + memY(n, mid) : n.y + n.h * t;
+      return [side === "l" ? n.x : n.x + n.w, y];
+    }
+
+    WIRES.forEach(function (w) {
+      var a = byId[w.s], b = byId[w.t];
+      var p1 = anchor(a, w.sa, w.va, w.ok, w.on);
+      var p2 = anchor(b, w.sb, w.vb, w.ik, w.in);
+      var pts;
+      var vert = (w.sa === "l" || w.sa === "r");   // 좌우 면 = 세로 통로, 위아래 면 = 가로 통로
+      var ax = vert ? 0 : 1;                      // 통로가 놓이는 축
+      var d1 = (w.sa === "r" || w.sa === "b") ? 1 : -1;   // a 에서 나가는 쪽
+      var d2 = (w.sb === "r" || w.sb === "b") ? 1 : -1;   // b 로 들어가는 쪽
+
+      // 통로 좌표 c 로 꺾어 가는 경로. 세로 통로면 x 를, 가로 통로면 y 를 c 로 잡는다.
+      function route(c) {
+        return vert ? poly([p1, [c, p1[1]], [c, p2[1]], p2])
+                    : poly([p1, [p1[0], c], [p2[0], c], p2]);
+      }
+
+      /* 두 끝 사이 한가운데에서 가까운 통로부터 대 본다.
+         면에서 나가는 방향으로 STUB 만큼은 떨어져야 곧게 빠져나온 뒤에 꺾인다.
+         한 통로 안에서는 차선을 밀어 보고, 아무 데도 안 걸리는 첫 자리를 잡는다. */
+      var mid = (p1[ax] + p2[ax]) / 2;
+      var span = [Math.min(p1[1 - ax], p2[1 - ax]), Math.max(p1[1 - ax], p2[1 - ax])];
+      var cands = corridors(ax, span[0], span[1]).sort(function (u, z) {
+        return Math.abs(u - mid) - Math.abs(z - mid);
+      });
+      var best = null;
+      for (var ci = 0; ci < cands.length && (!best || best.sc > 0); ci++) {
+        var c0 = cands[ci], key = (vert ? "V" : "H") + Math.round(c0), start = laneUse[key] || 0;
+        for (var t = 0; t < 6; t++) {
+          var cc = c0 + laneOff(start + t, d1);
+          if ((cc - p1[ax]) * d1 < MINRUN || (cc - p2[ax]) * d2 < MINRUN) continue;
+          var cand = route(cc), sc = crossings(cand, a, b) + 2 * stacked(cand);
+          if (!best || sc < best.sc) best = { pts:cand, sc:sc, key:key, lane:start + t };
+          if (sc === 0) break;
+        }
+      }
+      /* 3마디로는 어디로 가도 걸릴 때 — 면에서 조금 나온 뒤 반대 축 통로를 타고 크게 돌아간다.
+         남의 시스템을 가로지르느니 위아래로 우회하는 편이 낫다. */
+      if (!best || best.sc > 0) {
+        // 두 면 바로 바깥. 같은 면을 쓰는 선끼리 이 마디가 포개지지 않게 순서만큼 벌린다.
+        var q1 = p1[ax] + d1 * (STUB + w.ok * 7), q2 = p2[ax] + d2 * (STUB + w.ik * 7);
+        var m2 = (p1[1 - ax] + p2[1 - ax]) / 2;
+        var alt = corridors(1 - ax, Math.min(q1, q2), Math.max(q1, q2)).sort(function (u, z) {
+          return Math.abs(u - m2) - Math.abs(z - m2);
+        });
+        for (var ai = 0; ai < alt.length; ai++) {
+          var a0 = alt[ai], k2 = (vert ? "H" : "V") + Math.round(a0), s2 = laneUse[k2] || 0;
+          for (var at = 0; at < 4; at++) {
+            var c2 = a0 + laneOff(s2 + at, 1);
+            var det = vert ? poly([p1, [q1, p1[1]], [q1, c2], [q2, c2], [q2, p2[1]], p2])
+                           : poly([p1, [p1[0], q1], [c2, q1], [c2, q2], [p2[0], q2], p2]);
+            var sc2 = crossings(det, a, b) + 2 * stacked(det);
+            if (!best || sc2 < best.sc) best = { pts:det, sc:sc2, key:k2, lane:s2 + at };
+            if (best.sc === 0) break;
+          }
+          if (best.sc === 0) break;
+        }
+      }
+      if (!best) best = { pts:route(mid), sc:0, key:(vert ? "V" : "H") + Math.round(mid), lane:0 };
+      laneTake(best.key, best.lane);
+      pts = best.pts;
+      segsOf(pts).forEach(function (sg) { placed.push(sg); });
+
+      w.pts = pts;
+      w.d = pts.map(function (q, i) { return (i ? "L" : "M") + q[0].toFixed(1) + " " + q[1].toFixed(1); }).join(" ");
+    });
+  }
+
+  /* ── 그리기 (한 번만) ────────────────────────────────────────────────── */
+  function strip(s) { return s.replace(/&lt;/g, "<").replace(/&gt;/g, ">"); }
+  function esc(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+
+  function draw() {
+    gGroup.textContent = ""; gEdge.textContent = ""; gNode.textContent = "";
+
+    clusters.forEach(function (c) {
+      var col = SYS[c.sys].color, g = el("g");
+      g.appendChild(el("rect", { x:c.x, y:c.y, width:c.w, height:c.h, rx:11,
+        fill:col, "fill-opacity":"0.05", stroke:col, "stroke-opacity":"0.3", "stroke-dasharray":"5 4" }));
+      g.appendChild(el("text", { x:c.x + 11, y:c.y + 15, "font-size":"11", "font-weight":"700",
+        fill:col, "fill-opacity":"0.9" }, SYS[c.sys].name));
+      gGroup.appendChild(g);
+    });
+
+    WIRES.forEach(function (w) {
+      var a = byId[w.s], b = byId[w.t], kd = KIND[w.k], g = el("g", { style:"cursor:pointer" });
+      var p = el("path", { d:w.d, fill:"none", stroke:KCOL[w.k], "stroke-width":"1.6",
+        "marker-end":"url(#mk-" + w.k + ")" });
+      if (kd.dash) p.setAttribute("stroke-dasharray", kd.dash);
+      if (kd.tail === "diamond") p.setAttribute("marker-start", "url(#mk-" + w.k + "-tail)");
+      p.appendChild(el("title", null, a.name + (w.va ? "." + w.va : "") + " → " +
+        b.name + (w.vb ? "." + w.vb : "") + "  [" + kd.name + "] " + strip(w.e.v)));
+      g.appendChild(p);
+      var hit = el("path", { d:w.d, fill:"none", stroke:"transparent", "stroke-width":"13" });
+      hit.addEventListener("click", function (ev) { ev.stopPropagation(); if (!moved) showWire(w); });
+      g.appendChild(hit);
+      w.dom = g; w.line = p;
+      gEdge.appendChild(g);
+    });
+
+    NODES.forEach(function (n) {
+      var col = SYS[n.sys].color;
+      var g = el("g", { class:"n-box", transform:"translate(" + n.x + "," + n.y + ")", tabindex:"0", role:"button" });
+      var box = el("rect", { width:n.w, height:n.h, rx:3, fill:"var(--surface)", stroke:col, "stroke-width":"1.5" });
+      g.appendChild(box);
+      g.appendChild(el("rect", { width:n.w, height:n.hHead, fill:col, "fill-opacity":"0.13" }));
+
+      var ty = 16, st = n.stereo || (n.kind !== "class" ? n.kind : null);
+      if (st) {
+        g.appendChild(el("text", { x:n.w / 2, y:ty, "text-anchor":"middle", "font-size":"9.5",
+          "font-family":"var(--font-mono)", fill:"var(--ink-3)" }, "«" + st + "»"));
+        ty += STEREOH;
+      }
+      g.appendChild(el("text", { x:n.w / 2, y:ty + 1, "text-anchor":"middle", "font-size":"12.5",
+        "font-weight":"700", fill:"var(--ink)",
+        "font-style": n.kind === "abstract" ? "italic" : "normal" }, n.name));
+
+      // 멤버는 한 줄이 한 칸이다. 칸마다 선으로 나눠 어디에 화살표가 꽂혔는지 보이게 한다.
+      n.rows.forEach(function (m, i) {
+        var top = n.hHead + i * LH;
+        g.appendChild(el("line", { x1:0, y1:top, x2:n.w, y2:top, stroke:col,
+          "stroke-width": i ? "0.8" : "1.4", "stroke-opacity": i ? "0.35" : "0.7" }));
+        g.appendChild(el("text", { x:9, y:top + LH / 2 + 3.5, "font-size":"10",
+          "font-family":"var(--font-mono)", fill:"var(--ink-2)" }, m.sig));
+      });
+      g.addEventListener("click", function (ev) { ev.stopPropagation(); if (!moved) select(n.id); });
+      g.addEventListener("keydown", function (ev) {
+        if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); select(n.id); }
+      });
+      n.dom = g; n.box = box;
+      gNode.appendChild(g);
+    });
+  }
+
+  /* ── 강조 (자리는 절대 안 움직인다) ──────────────────────────────────── */
+  var sel = null, flow = "all";
+
+  // 고른 것과 선으로 바로 이어진 것까지. 그 너머는 안 따라간다.
+  function reach(id) {
+    var s = {}; s[id] = 1;
+    EDGES.forEach(function (e) { if (e.s === id) s[e.t] = 1; if (e.t === id) s[e.s] = 1; });
+    return s;
+  }
+
+  function liveSet() {
+    if (sel) return reach(sel);
+    if (flow === "all") return null;
+    var f = {};
+    FLOWS[flow].forEach(function (id) { f[id] = 1; });
+    return f;
+  }
+
+  function update() {
+    var live = liveSet();
+    NODES.forEach(function (n) {
+      var on = !live || live[n.id];
+      n.dom.setAttribute("opacity", on ? "1" : "0.12");
+      n.dom.setAttribute("pointer-events", on ? "auto" : "none");
+      n.box.setAttribute("stroke-width", n.id === sel ? "2.8" : "1.5");
+    });
+    WIRES.forEach(function (w) {
+      var touch = sel && (w.s === sel || w.t === sel);
+      // 고른 박스에 직접 닿는 선만 살린다. 이웃끼리 이어진 선까지 밝히면 뭐가 주인공인지 흐려진다.
+      var on = sel ? touch : (!live || (live[w.s] && live[w.t]));
+      w.dom.setAttribute("opacity", on ? "1" : "0.05");
+      w.dom.setAttribute("pointer-events", on ? "auto" : "none");
+      w.line.setAttribute("stroke-width", touch ? "2.6" : "1.6");
+    });
+    Array.prototype.forEach.call(document.querySelectorAll(".chip[data-flow]"), function (b) {
+      b.setAttribute("aria-pressed", (!sel && b.getAttribute("data-flow") === flow) ? "true" : "false");
+    });
+    panel();
+  }
+
+  /* ── 확대·이동 ──────────────────────────────────────────────────────── */
+  var vb = { x:0, y:0, w:1000, h:760 };
+  function applyVB() { svg.setAttribute("viewBox", vb.x + " " + vb.y + " " + vb.w + " " + vb.h); }
+  function bounds() {
+    var x1 = 1e9, y1 = 1e9, x2 = -1e9, y2 = -1e9;
+    NODES.forEach(function (n) {
+      x1 = Math.min(x1, n.x); y1 = Math.min(y1, n.y);
+      x2 = Math.max(x2, n.x + n.w); y2 = Math.max(y2, n.y + n.h);
+    });
+    clusters.forEach(function (c) {
+      x1 = Math.min(x1, c.x); y1 = Math.min(y1, c.y);
+      x2 = Math.max(x2, c.x + c.w); y2 = Math.max(y2, c.y + c.h);
+    });
+    return { x:x1 - 26, y:y1 - 26, w:x2 - x1 + 52, h:y2 - y1 + 52 };
+  }
+  function fit() {
+    var b = bounds(), r = svg.clientHeight / Math.max(1, svg.clientWidth);
+    if (b.h / b.w < r) { var nh = b.w * r; b.y -= (nh - b.h) / 2; b.h = nh; }
+    else { var nw = b.h / r; b.x -= (nw - b.w) / 2; b.w = nw; }
+    vb = b; applyVB();
+  }
+  function zoom(f, cx, cy) {
+    var nw = vb.w * f, nh = vb.h * f;
+    if (nw < 200 || nw > 24000) return;
+    vb.x += (vb.w - nw) * ((cx - vb.x) / vb.w);
+    vb.y += (vb.h - nh) * ((cy - vb.y) / vb.h);
+    vb.w = nw; vb.h = nh; applyVB();
+  }
+  function toSvg(ev) {
+    var r = svg.getBoundingClientRect();
+    return [vb.x + (ev.clientX - r.left) / r.width * vb.w, vb.y + (ev.clientY - r.top) / r.height * vb.h];
+  }
+  svg.addEventListener("wheel", function (ev) {
+    ev.preventDefault();
+    var p = toSvg(ev);
+    zoom(ev.deltaY > 0 ? 1.12 : 0.89, p[0], p[1]);
+  }, { passive:false });
+  /* 화면 끌기. 포인터를 가로채면(setPointerCapture) 박스 위에서 뗀 클릭까지 svg 가 먹어버려
+     박스 고르기가 아예 안 먹는다. 그래서 가로채지 않고 document 로 듣는다.
+     대신 끌고 나서 나는 클릭은 고르기로 치지 않는다. */
+  var drag = null, moved = false;
+  svg.addEventListener("pointerdown", function (ev) {
+    if (ev.button !== 0) return;
+    drag = { p:toSvg(ev) }; moved = false; svg.classList.add("dragging");
+  });
+  document.addEventListener("pointermove", function (ev) {
+    if (!drag) return;
+    var p = toSvg(ev);
+    if (Math.abs(p[0] - drag.p[0]) + Math.abs(p[1] - drag.p[1]) > 3) moved = true;
+    vb.x -= p[0] - drag.p[0]; vb.y -= p[1] - drag.p[1];
+    applyVB();
+  });
+  ["pointerup", "pointercancel"].forEach(function (t) {
+    document.addEventListener(t, function () { drag = null; svg.classList.remove("dragging"); });
+  });
+  document.getElementById("zoom-in").addEventListener("click", function () { zoom(0.8, vb.x + vb.w / 2, vb.y + vb.h / 2); });
+  document.getElementById("zoom-out").addEventListener("click", function () { zoom(1.25, vb.x + vb.w / 2, vb.y + vb.h / 2); });
+  document.getElementById("zoom-fit").addEventListener("click", fit);
+
+  /* ── 오른쪽 패널 ────────────────────────────────────────────────────── */
+  var detail = document.getElementById("detail");
+  function viaText(e) {
+    return e.via.map(function (v) {
+      if (!v[0] && !v[1]) return null;
+      return (v[0] || "") + (v[1] ? " → " + v[1] : "");
+    }).filter(Boolean).join(" · ");
+  }
+  function relLine(otherId, e, dir) {
+    var o = byId[otherId], vt = viaText(e);
+    return '<li><div class="to" style="color:' + SYS[o.sys].color + '">' +
+      (dir === "out" ? "→ " : "← ") + '<a class="lnk" data-go="' + o.id + '">' + esc(o.name) + '</a> ' +
+      '<span class="kind" style="color:' + KCOL[e.k] + '">' + KIND[e.k].name + '</span></div>' +
+      '<div class="via">' + e.v + '</div>' +
+      (vt ? '<div class="mem">' + esc(vt) + '</div>' : '') + '</li>';
+  }
+  function bindGo() {
+    Array.prototype.forEach.call(detail.querySelectorAll("[data-go]"), function (a) {
+      a.addEventListener("click", function () { sel = a.getAttribute("data-go"); update(); });
+    });
+    var c = detail.querySelector("#clr");
+    if (c) c.addEventListener("click", function () { sel = null; update(); });
+  }
+  function showWire(w) {
+    var a = byId[w.s], b = byId[w.t];
+    detail.innerHTML = '<h2>' + esc(a.name) + (w.va ? '.' + esc(w.va) : '') + ' → ' +
+      esc(b.name) + (w.vb ? '.' + esc(w.vb) : '') + '</h2>' +
+      '<ul class="deps">' + relLine(b.id, w.e, "out") + '</ul>';
+    bindGo();
+  }
+  function panel() {
+    if (!sel) {
+      detail.innerHTML = '<h2>흐름 고르기</h2>' +
+        '<div class="sysname" style="color:var(--ink-3)">' +
+        (flow === "all" ? "전체를 보는 중" : "고른 흐름만 밝게") + '</div>' +
+        '<p class="via">① 슬라이더가 값을 쓴다 → ② 알림을 받은 오디오가 믹서에 반영한다 → ③ 창이 꺼질 때 파일로 저장한다.</p>' +
+        '<p class="via">자리는 어떤 버튼을 눌러도 그대로다. 밝기만 바뀐다.</p>' +
+        '<p class="via">박스를 누르면 이어진 선과 박스만 밝아짐. 선은 「어느 멤버에서 어느 멤버로」 한 쌍마다 하나씩 그린다.</p>';
+      return;
+    }
+    var n = byId[sel];
+    var out = EDGES.filter(function (e) { return e.s === sel; });
+    var inc = EDGES.filter(function (e) { return e.t === sel; });
+    detail.innerHTML = '<h2>' + esc(n.name) + '</h2>' +
+      '<div class="sysname" style="color:' + SYS[n.sys].color + '">' + SYS[n.sys].name + ' · ' + n.kind + '</div>' +
+      '<p class="via">' + n.desc + '</p>' +
+      '<div class="grouphead">이것이 쓰는 것 (' + out.length + ')</div>' +
+      (out.length ? '<ul class="deps">' + out.map(function (e) { return relLine(e.t, e, "out"); }).join("") + '</ul>' : '<p class="none">없음</p>') +
+      '<div class="grouphead">이것을 쓰는 것 (' + inc.length + ')</div>' +
+      (inc.length ? '<ul class="deps">' + inc.map(function (e) { return relLine(e.s, e, "in"); }).join("") + '</ul>' : '<p class="none">없음</p>') +
+      '<div class="grouphead"><a class="lnk" id="clr">선택 해제</a></div>';
+    bindGo();
+  }
+
+  /* ── 범례 ────────────────────────────────────────────────────────────── */
+  var legend = document.getElementById("legend");
+  Object.keys(KIND).sort(function (a, b) { return KIND[b].rank - KIND[a].rank; }).forEach(function (k) {
+    var kd = KIND[k];
+    var s = document.createElementNS(SVGNS, "svg");
+    s.setAttribute("width", "56"); s.setAttribute("height", "13"); s.setAttribute("viewBox", "0 0 56 13");
+    var p = el("path", { d:"M4 6.5 L46 6.5", stroke:KCOL[k], "stroke-width":"1.6", fill:"none",
+      "marker-end":"url(#mk-" + k + ")" });
+    if (kd.dash) p.setAttribute("stroke-dasharray", kd.dash);
+    if (kd.tail === "diamond") p.setAttribute("marker-start", "url(#mk-" + k + "-tail)");
+    s.appendChild(p);
+    var w = document.createElement("span");
+    w.className = "lg";
+    w.appendChild(s);
+    var t = document.createElement("span");
+    t.innerHTML = '<b style="color:' + KCOL[k] + '">' + kd.name + '</b> — ' + kd.note;
+    w.appendChild(t);
+    legend.appendChild(w);
+  });
+
+  /* ── 조작 ────────────────────────────────────────────────────────────── */
+  function select(id) { sel = (sel === id) ? null : id; update(); }
+  Array.prototype.forEach.call(document.querySelectorAll(".chip[data-flow]"), function (b) {
+    b.addEventListener("click", function () { sel = null; flow = b.getAttribute("data-flow"); update(); });
+  });
+  svg.addEventListener("click", function (ev) { if (ev.target === svg && sel && !moved) { sel = null; update(); } });
+
+  layoutAll(); buildRoutes(); draw(); fit(); update();
+})();
+</script>

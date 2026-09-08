@@ -1,0 +1,799 @@
+<title>Unitysahwa 시스템 맵</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    --bg:        #edeff3;
+    --surface:   #ffffff;
+    --surface-2: #f5f6f9;
+    --ink:       #161a21;
+    --ink-2:     #4c5563;
+    --ink-3:     #7c8595;
+    --line:      #d2d7df;
+    --line-soft: #e5e8ee;
+
+    --uses:      #1f6feb;
+    --usedby:    #c2680f;
+    --cycle:     #c03a44;
+    --idle:      #9aa3b2;
+    --sel-fill:  #e8f0fe;
+    --di:        #6f5aa8;
+
+    --font-sans: "IBM Plex Sans KR", ui-sans-serif, system-ui, "Malgun Gothic", sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #0d1015; --surface: #161b22; --surface-2: #1b2029;
+      --ink: #e7ebf2; --ink-2: #a6b0bf; --ink-3: #6f7a8a;
+      --line: #2b323c; --line-soft: #222932;
+      --uses: #5c9dff; --usedby: #e0a04a; --cycle: #e2727c;
+      --idle: #57606e; --sel-fill: #17253c; --di: #a98fdd;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #0d1015; --surface: #161b22; --surface-2: #1b2029;
+    --ink: #e7ebf2; --ink-2: #a6b0bf; --ink-3: #6f7a8a;
+    --line: #2b323c; --line-soft: #222932;
+    --uses: #5c9dff; --usedby: #e0a04a; --cycle: #e2727c;
+    --idle: #57606e; --sel-fill: #17253c; --di: #a98fdd;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: var(--font-sans); font-size: 14px; line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1480px; margin: 0 auto; padding: 24px 22px 48px; display: flex; flex-direction: column; gap: 16px; }
+  h1 { margin: 0; font-size: 21px; font-weight: 700; letter-spacing: -0.01em; }
+
+  .bar {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+    padding: 9px 12px; background: var(--surface);
+    border: 1px solid var(--line); border-radius: 8px;
+  }
+  .chip {
+    font: inherit; font-size: 13px; padding: 4px 11px; border-radius: 999px;
+    border: 1px solid var(--line); background: var(--surface-2); color: var(--ink-2); cursor: pointer;
+  }
+  .chip:hover { border-color: var(--ink-3); color: var(--ink); }
+  .chip[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--surface); font-weight: 600; }
+  .chip:focus-visible, .sysbtn:focus-visible { outline: 2px solid var(--uses); outline-offset: 2px; }
+  .keyline { display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--ink-2); }
+  .keyline i { width: 18px; border-top-width: 2.5px; border-top-style: solid; display: inline-block; }
+
+  .cols { display: grid; grid-template-columns: minmax(0,1fr) 330px; gap: 18px; align-items: start; }
+  @media (max-width: 1060px) { .cols { grid-template-columns: minmax(0,1fr); } aside { position: static !important; } }
+
+  .stage { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 6px; overflow-x: auto; }
+  svg.map { display: block; width: 100%; min-width: 840px; height: auto; }
+
+  .sysbtn { cursor: pointer; }
+  .sysbox { fill: var(--surface); stroke: var(--line); stroke-width: 1.4; transition: opacity .15s, stroke-width .15s, fill .15s; }
+  .sysname { font-family: var(--font-sans); font-size: 13px; font-weight: 600; fill: var(--ink); }
+  .sysbtn.sel .sysbox { stroke: var(--ink); stroke-width: 2.6; fill: var(--sel-fill); }
+  .sysbtn.uses .sysbox { stroke: var(--uses); stroke-width: 2.2; }
+  .sysbtn.usedby .sysbox { stroke: var(--usedby); stroke-width: 2.2; }
+  .sysbtn.faint { opacity: .28; }
+  .sysbtn.isdi .sysbox { stroke: var(--di); stroke-dasharray: 5 4; }
+  .sysbtn.isdi .sysname { fill: var(--di); }
+
+  .edge { fill: none; stroke-width: 1.8; stroke-linejoin: round; transition: opacity .15s, stroke-width .15s; }
+  .edge.idle { stroke: var(--idle); opacity: .38; }
+  .edge.dieidle { stroke: var(--di); opacity: .13; }
+  .edge.hide { opacity: 0; }
+  .edge.uses { stroke: var(--uses); stroke-width: 2.6; }
+  .edge.usedby { stroke: var(--usedby); stroke-width: 2.6; }
+  .edge.cycsel { stroke: var(--cycle); stroke-width: 2.6; }
+  .edge.cyc { stroke-dasharray: 6 4; }
+
+
+  aside { display: flex; flex-direction: column; gap: 12px; position: sticky; top: 16px; }
+  .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 13px 15px; }
+  .panel h2 { margin: 0 0 8px; font-size: 15px; font-weight: 700; }
+
+  .grouphead { font-size: 11.5px; font-weight: 600; margin: 13px 0 5px; display: flex; align-items: center; gap: 7px; }
+  .grouphead .dot { width: 9px; height: 9px; border-radius: 2px; flex: none; }
+  ul.deps { list-style: none; margin: 0; padding: 0; }
+  ul.deps li { padding: 5px 0; border-bottom: 1px solid var(--line-soft); }
+  ul.deps li:last-child { border-bottom: 0; }
+  .row1 { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+  .to { font-weight: 600; white-space: nowrap; }
+  .via { color: var(--ink-2); font-size: 12.5px; }
+  .types { font-family: var(--font-mono); font-size: 11px; color: var(--ink-3); word-break: break-word; margin-top: 1px; }
+  .flag { color: var(--cycle); font-size: 11px; font-weight: 600; white-space: nowrap; }
+  .none { color: var(--ink-3); font-size: 12.5px; margin: 0; }
+  code { font-family: var(--font-mono); font-size: 12px; background: var(--surface-2); padding: 1px 4px; border-radius: 3px; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <h1>Unitysahwa 시스템 맵</h1>
+
+  <div class="bar">
+    <button class="chip" id="chip-all" aria-pressed="false">전체 보기</button>
+    <button class="chip" id="chip-auto">자동 배치</button>
+    <button class="chip" id="chip-reset">자리 초기화</button>
+    <span class="keyline"><i style="border-color:var(--uses)"></i> 이 시스템이 남을 씀</span>
+    <span class="keyline"><i style="border-color:var(--usedby)"></i> 남이 이 시스템을 씀</span>
+    <span class="keyline"><i style="border-color:var(--cycle);border-top-style:dashed"></i> 서로 씀</span>
+  </div>
+
+  <div class="cols">
+    <div class="stage">
+      <svg class="map" id="map" role="img" aria-label="시스템 참조 관계도"></svg>
+    </div>
+
+    <aside>
+      <div class="panel" id="detail"></div>
+    </aside>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var NODES = [
+    { id: "di",        name: "DISystem" },
+    { id: "ui",        name: "UISystem" },
+    { id: "gimmick",   name: "GimmickSystem" },
+    { id: "enemy",     name: "EnemySystem" },
+    { id: "combat",    name: "CombatSystem" },
+    { id: "lang",      name: "LanguageSystem" },
+    { id: "camera",    name: "CameraSystem" },
+    { id: "player",    name: "PlayerSystem" },
+    { id: "audio",     name: "AudioSystem" },
+    { id: "input",     name: "InputSystem" },
+    { id: "settings",  name: "SettingsSystem" },
+    { id: "gamestate", name: "GameStateSystem" },
+    { id: "save",      name: "SaveSystem" }
+  ];
+
+  // v = 왜 필요한지, k = 어떤 타입으로 주고받는지, cls = 인터페이스가 아니라 클래스를 직접 잡은 곳
+  var EDGES = [
+    { s: "ui", t: "gamestate", v: "메뉴를 열면 게임을 메뉴 상태로 바꾼다", k: "IGameStateController" },
+    { s: "ui", t: "input",     v: "메뉴 여닫는 키를 받는다", k: "IInputPressedProvider, IMenuInputProvider, ICutsceneInputProvider" },
+    { s: "ui", t: "player",    v: "체력을 읽어 화면에 그린다", k: "IHealthInfo, ICurrentCharacterProvider, ICharacterSwapNotifier" },
+    { s: "ui", t: "settings",  v: "설정값을 읽고 바꾼다", k: "ISettingsHolder, ISoundSettings, IMouseSettings, IPlatformSettings" },
+    { s: "ui", t: "audio",     v: "버튼 누르는 소리를 낸다", k: "AudioChannel (SO 채널)" },
+    { s: "ui", t: "lang",      v: "화면에 쓸 언어를 읽는다", k: "ILanguageSettings" },
+    { s: "ui", t: "camera",    v: "락온 표식을 화면에 띄운다", k: "LockOnController", cls: 1 },
+    { s: "gimmick", t: "gamestate", v: "컷씬 동안 조작을 막는다", k: "IGameStateController" },
+    { s: "gimmick", t: "camera",    v: "컷씬용 카메라로 바꾼다", k: "List<CameraRole>", cls: 1 },
+    { s: "gimmick", t: "player",    v: "함정·낙사에서 체력과 위치를 건드린다", k: "IPlayerDamageable, IHealthInfo, ICurrentCharacterProvider, IFinishChecker" },
+    { s: "gimmick", t: "save",      v: "세이브 지점에서 저장하고 불러온다", k: "SaveSlotManager, SlotLoadRunner", cls: 1 },
+    { s: "gimmick", t: "input",     v: "컷씬 건너뛰기 키를 받는다", k: "ICutsceneInputProvider, IInputPressedProvider" },
+    { s: "enemy",  t: "player", v: "쫓아갈 대상이 누구인지 안다", k: "ICurrentCharacterProvider, ICharacterSwapNotifier" },
+    { s: "combat", t: "player", v: "때린 순간을 받아 연출을 낸다", k: "HitChannel (SO 채널)" },
+    { s: "lang",   t: "settings", v: "언어값도 같은 방식으로 저장한다", k: "SettingsHolder 상속" },
+    { s: "camera", t: "player",    v: "따라다닐 캐릭터 위치를 안다", k: "ICurrentCharacterProvider, IPlayerStateEventSubscriber, ICurrentStateProvider, HitChannel" },
+    { s: "camera", t: "input",     v: "락온 키를 받는다", k: "IInputPressedProvider" },
+    { s: "camera", t: "settings",  v: "마우스 감도를 읽는다", k: "IMouseSettings" },
+    { s: "camera", t: "gamestate", v: "컷씬이면 마우스 조작을 끈다", k: "IGameStateProvider" },
+    { s: "player", t: "camera", v: "락온한 적 쪽으로 몸을 돌린다", k: "ILockOnState, ILockOnTarget" },
+    { s: "player", t: "input",  v: "이동·행동 입력을 받는다", k: "IInputMoveProvider, IInputPressedProvider" },
+    { s: "player", t: "audio",  v: "발소리·타격음을 낸다", k: "AudioChannel (SO 채널)" },
+    { s: "audio",  t: "settings", v: "볼륨값을 읽어 소리 크기를 맞춘다", k: "ISoundSettings" },
+    { s: "input",  t: "settings",  v: "플레이어가 바꾼 조작키를 읽는다", k: "IInputKeySettings" },
+    { s: "input",  t: "gamestate", v: "지금 모드에 맞는 입력만 통과시킨다", k: "IGameStateProvider" },
+    { s: "settings", t: "save", v: "설정을 파일로 저장한다", k: "ISaveService" },
+    { s: "save",  t: "player", v: "저장할 체력·캐릭터 상태를 읽는다", k: "ICurrentCharacterProvider, ICharacterSwappable, IHealthModifier, PlayerPartner", cls: 1 }
+  ];
+
+  // DISystem은 씬의 모든 시스템을 훑어서 위 연결을 실제로 꽂는다.
+  NODES.forEach(function (n) {
+    if (n.id === "di") return;
+    EDGES.push({ s: "di", t: n.id, v: "게임 시작할 때 이 시스템의 참조를 꽂아준다", k: "[Inject] 필드 리플렉션 주입", di: 1 });
+  });
+
+  var byId = {};
+  NODES.forEach(function (n) { byId[n.id] = n; });
+
+  var outs = {}, ins = {}, indeg = {};
+  NODES.forEach(function (n) { outs[n.id] = []; ins[n.id] = []; indeg[n.id] = 0; });
+  EDGES.forEach(function (e) { outs[e.s].push(e); ins[e.t].push(e); indeg[e.t]++; });
+
+  /* 자리는 5열 7행 테두리(20칸)를 돌며 잡는다. 단계·깊이 같은 건 따지지 않는다.
+     처음엔 고르게 흩어 놓고, 두 칸씩 맞바꿔 보며 연결된 것끼리 가까워지는 배치를 찾는다.
+     가운데(4행 3열)는 DISystem 자리로 비워 둔다. */
+  var COLS = 5, ROWS = 7, RING = [];
+  for (var c = 0; c < COLS; c++) RING.push([0, c]);
+  for (var r = 1; r < ROWS - 1; r++) RING.push([r, COLS - 1]);
+  for (var c2 = COLS - 1; c2 >= 0; c2--) RING.push([ROWS - 1, c2]);
+  for (var r2 = ROWS - 2; r2 >= 1; r2--) RING.push([r2, 0]);
+
+  // 서로가 서로를 쓰는 짝만 "서로 씀"으로 본다.
+  EDGES.forEach(function (e) {
+    e.back = outs[e.t].some(function (x) { return x.t === e.s; });
+  });
+  var REAL = EDGES.filter(function (e) { return !e.di; });
+
+  var occ = {};
+  function buildOcc() { occ = {}; NODES.forEach(function (n) { occ[n.row + "," + n.col] = n; }); }
+  function rowClear(r, c1, c2) {                        // 두 열 사이(양끝 제외)가 비었나
+    for (var c = Math.min(c1, c2) + 1; c <= Math.max(c1, c2) - 1; c++) if (occ[r + "," + c]) return false;
+    return true;
+  }
+  function colClear(c, r1, r2) {
+    for (var r = Math.min(r1, r2) + 1; r <= Math.max(r1, r2) - 1; r++) if (occ[r + "," + c]) return false;
+    return true;
+  }
+  function straightOrL(a, b) {                          // 돌아가지 않고 갈 수 있는 사이인가
+    if (a.row === b.row) return rowClear(a.row, a.col, b.col);
+    if (a.col === b.col) return colClear(a.col, a.row, b.row);
+    return (rowClear(a.row, a.col, b.col) && !occ[a.row + "," + b.col] && colClear(b.col, a.row, b.row)) ||
+           (colClear(a.col, a.row, b.row) && !occ[b.row + "," + a.col] && rowClear(b.row, a.col, b.col));
+  }
+
+  // 가운데 자리는 실선 연결이 가장 많은 노드에게 준다. 사방으로 뻗는 게 제일 짧아진다.
+  var CENTER = NODES.map(function (n) { return n.id; }).reduce(function (best, id) {
+    function deg(x) { return REAL.filter(function (e) { return e.s === x || e.t === x; }).length; }
+    return deg(id) > deg(best) ? id : best;
+  });
+
+  var slots = [];
+  function seedRing() {                                 // 테두리에 고르게 흩어 놓는다
+    slots = RING.map(function () { return null; });
+    var ringNodes = NODES.filter(function (n) { return n.id !== CENTER; });
+    ringNodes.forEach(function (n, i) { slots[Math.round(i * RING.length / ringNodes.length)] = n; });
+    byId[CENTER].row = 3; byId[CENTER].col = 2;
+  }
+
+  function place() {
+    slots.forEach(function (n, i) { if (n) { n.row = RING[i][0]; n.col = RING[i][1]; } });
+    buildOcc();
+  }
+  // 값이 작을수록 좋은 배치다. 멀수록, 꺾일수록, 돌아가야 할수록 벌점을 준다.
+  function cost() {
+    place();
+    return REAL.reduce(function (t, e) {
+      var a = byId[e.s], b = byId[e.t];
+      var dr = Math.abs(a.row - b.row), dc = Math.abs(a.col - b.col);
+      return t + dr + dc + (dr && dc ? 1 : 0) + (straightOrL(a, b) ? 0 : 4);
+    }, 0);
+  }
+  function autoPlace() {                                // 두 칸씩 맞바꿔 보며 비용이 줄면 채택한다
+    seedRing();
+    var best = cost(), moved = true, guard = 0;
+    while (moved && guard++ < 30) {
+      moved = false;
+      for (var i = 0; i < slots.length; i++) {
+        for (var j = i + 1; j < slots.length; j++) {
+          if (!slots[i] && !slots[j]) continue;
+          var tmp = slots[i]; slots[i] = slots[j]; slots[j] = tmp;
+          var c3 = cost();
+          if (c3 < best) { best = c3; moved = true; }
+          else { tmp = slots[i]; slots[i] = slots[j]; slots[j] = tmp; }
+        }
+      }
+    }
+    place();
+    USEDR = compact("row"); USEDC = compact("col");
+    buildOcc();
+  }
+
+  // 자리를 옮기다 보면 빈 행·열이 생긴다. 그만큼 당겨서 여백을 없앤다.
+  function compact(key) {
+    var used = NODES.map(function (n) { return n[key]; });
+    var lo = Math.min.apply(null, used), hi = Math.max.apply(null, used), gap = 0, map = {};
+    for (var v = lo; v <= hi; v++) {
+      if (NODES.some(function (n) { return n[key] === v; })) map[v] = v - lo - gap; else gap++;
+    }
+    NODES.forEach(function (n) { n[key] = map[n[key]]; });
+    return hi - lo - gap + 1;
+  }
+  var USEDR = 0, USEDC = 0;
+
+  var NW = 172, NH = 44, GAPX = 44, STEPH = 168, PADL = 40, PADT = 18;
+  var COLW = NW + GAPX;
+  var W = 0, H = 0;
+
+  // 행·열 번호를 실제 좌표로 옮기고 캔버스 크기를 다시 잡는다.
+  function applyXY() {
+    W = PADL + USEDC * COLW - GAPX + 44;
+    H = PADT + (USEDR - 1) * STEPH + NH + 80;
+    NODES.forEach(function (n) { n.x = PADL + n.col * COLW; n.y = PADT + n.row * STEPH; });
+  }
+
+  // 손으로 옮긴 자리는 브라우저에 저장해 둔다. 형식이 안 맞으면 무시하고 자동 배치한다.
+  var STORE = "systemmap.layout.v1";
+  function saveLayout() {
+    var o = {};
+    NODES.forEach(function (n) { o[n.id] = [n.row, n.col]; });
+    try { localStorage.setItem(STORE, JSON.stringify(o)); } catch (err) { /* 무시 */ }
+  }
+  function loadLayout() {
+    var raw;
+    try { raw = localStorage.getItem(STORE); } catch (err) { return false; }
+    if (!raw) return false;
+    var o;
+    try { o = JSON.parse(raw); } catch (err) { return false; }
+    if (!NODES.every(function (n) { return o[n.id] && o[n.id].length === 2; })) return false;
+    NODES.forEach(function (n) { n.row = o[n.id][0]; n.col = o[n.id][1]; });
+    USEDR = Math.max.apply(null, NODES.map(function (n) { return n.row; })) + 1;
+    USEDC = Math.max.apply(null, NODES.map(function (n) { return n.col; })) + 1;
+    buildOcc();
+    return true;
+  }
+
+  var SVGNS = "http://www.w3.org/2000/svg";
+  function el(t, a, txt) {
+    var e = document.createElementNS(SVGNS, t);
+    for (var k in a) if (a.hasOwnProperty(k)) e.setAttribute(k, a[k]);
+    if (txt != null) e.textContent = txt;
+    return e;
+  }
+
+  var svg = document.getElementById("map");
+  svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+
+  var defs = el("defs");
+  [["idle", "var(--idle)"], ["uses", "var(--uses)"], ["usedby", "var(--usedby)"],
+   ["cyc", "var(--cycle)"], ["di", "var(--di)"]].forEach(function (p) {
+    var m = el("marker", { id: "m-" + p[0], viewBox: "0 0 10 10", refX: "8.5", refY: "5",
+      markerWidth: "5.5", markerHeight: "5.5", orient: "auto-start-reverse" });
+    m.appendChild(el("path", { d: "M0 0 L10 5 L0 10 z", fill: p[1] }));
+    defs.appendChild(m);
+  });
+  svg.appendChild(defs);
+
+  // 박스를 먼저, 선을 나중에 그린다. 흐려진 박스 위를 지나가도 선이 위에 보이게.
+  var gNode = el("g"), gEdge = el("g");
+  [gNode, gEdge].forEach(function (g) { svg.appendChild(g); });
+  /* 경로는 두 벌이다.
+     전체 보기 — 어떤 박스도 지나지 않는 격자 경로.
+     하나를 골랐을 때 — 흐려진 박스 위는 가로지르되, 진하게 남은 박스는 여전히 피하는 직행 경로.
+     드나드는 면은 상하좌우 넷 다 쓰고, 한 면을 여러 선이 쓰면 상대 위치 순으로 줄을 세워 서로 안 꼬이게 한다. */
+  var GUTN = 8, GUTGAP = 5, CORROFF = [0, -14, 14, -7, 7, -20, 20, -11], STUB = NH;   // 꽂히기 전 곧게 오는 길이 = 박스 높이
+  var gutUse = {}, corrUse = {};   // 여백·통로에 이미 깔린 선 (다시 그릴 때마다 비운다)
+
+  // 이미 깔린 선과 구간이 겹치지 않는 첫 칸을 준다. 다 차면 마지막 칸을 같이 쓴다.
+  function slot(use, key, a, b) {
+    var lanes = use[key] || (use[key] = []);
+    var lo = Math.min(a, b), hi = Math.max(a, b);
+    for (var k = 0; k < GUTN; k++) {
+      lanes[k] = lanes[k] || [];
+      var free = lanes[k].every(function (iv) { return hi <= iv[0] + 2 || lo >= iv[1] - 2; });
+      if (free) { lanes[k].push([lo, hi]); return k; }
+    }
+    lanes[GUTN - 1].push([lo, hi]);
+    return GUTN - 1;
+  }
+  /* g번 행과 g+1번 행 사이 여백. 위아래 어느 쪽 박스로 꽂히든 STUB만큼은 곧게 들어오도록
+     여백의 위아래 끝에서 STUB씩 떼고 그 안쪽에만 선을 깐다. */
+  function gutY(g, x0, x1) {
+    return PADT + g * STEPH + NH + STUB + slot(gutUse, g, x0, x1) * GUTGAP;
+  }
+  function corrX(mid, y0, y1) {                         // mid에 가장 가까운 열 사이 통로
+    var c = Math.round((mid - PADL + GAPX / 2) / COLW);
+    if (c < 0) c = 0; else if (c > USEDC) c = USEDC;
+    return PADL + c * COLW - GAPX / 2 + CORROFF[slot(corrUse, c, y0, y1)];
+  }
+  function anc(n, side, k, N) {                         // 면 위의 지점 (t 위, b 아래, l 왼쪽, r 오른쪽)
+    var t = (k + 1) / (N + 1);
+    if (side === "t") return [n.x + NW * t, n.y];
+    if (side === "b") return [n.x + NW * t, n.y + NH];
+    if (side === "l") return [n.x, n.y + NH * t];
+    return [n.x + NW, n.y + NH * t];
+  }
+  function stub(q, side, len) {                         // 면에서 수직으로 조금 빠져나온 지점
+    var d = len || STUB;
+    if (side === "t") return [q[0], q[1] - d];
+    if (side === "b") return [q[0], q[1] + d];
+    if (side === "l") return [q[0] - d, q[1]];
+    return [q[0] + d, q[1]];
+  }
+  /* 겹치는 구간 한가운데에서 레인만큼 비꺼 놓은 좌표. 면 안쪽에 못 들어오면 null (=곱게 못 긋는다) */
+  function clampMid(mid, pl, gap, lo, hi) {
+    if (mid === null) return null;
+    var v = mid + (pl.oK - (pl.oN - 1) / 2) * gap;
+    return (v > lo + 4 && v < hi - 4) ? v : null;
+  }
+  // 두 번만 꺾는 Z 경로. 박스를 지나면 null.
+  function zigzag(p1, sa, p2, sb) {
+    var s1 = stub(p1, sa), s2 = stub(p2, sb);
+    var cands = [[p1, s1, [s2[0], s1[1]], s2, p2], [p1, s1, [s1[0], s2[1]], s2, p2]];
+    for (var i = 0; i < cands.length; i++) if (!hits(cands[i], NODES)) return cands[i];
+    return null;
+  }
+  function poly(pts) {                                  // 길이 0짜리 마디는 버린다 (화살촉이 엉뚱한 데를 보는 원인)
+    var out = [];
+    pts.forEach(function (q) {
+      var last = out[out.length - 1];
+      if (!last || Math.abs(last[0] - q[0]) > 0.05 || Math.abs(last[1] - q[1]) > 0.05) out.push(q);
+    });
+    return out.map(function (q, i) {
+      return (i ? "L" : "M") + q[0].toFixed(1) + " " + q[1].toFixed(1);
+    }).join(" ");
+  }
+  function pointsOf(d) {                                // "M.. L.." 문자열을 점 목록으로
+    return d.trim().split(/[ML]\s*/).filter(Boolean).map(function (t) {
+      return t.trim().split(/\s+/).map(Number);
+    });
+  }
+  function hits(pts, boxes) {                           // 경로가 박스를 지나가나
+    for (var i = 1; i < pts.length; i++) {
+      var x0 = Math.min(pts[i - 1][0], pts[i][0]), x1 = Math.max(pts[i - 1][0], pts[i][0]);
+      var y0 = Math.min(pts[i - 1][1], pts[i][1]), y1 = Math.max(pts[i - 1][1], pts[i][1]);
+      for (var j = 0; j < boxes.length; j++) {
+        var n = boxes[j];
+        if (x0 < n.x + NW - 0.5 && x1 > n.x + 0.5 && y0 < n.y + NH - 0.5 && y1 > n.y + 0.5) return true;
+      }
+    }
+    return false;
+  }
+
+  // 선 요소는 한 번만 만든다. 자리를 옮기면 경로(d)만 다시 계산해 갈아 끼운다.
+  var edgeEls = EDGES.map(function (e) {
+    var cls = "edge " + (e.di ? "dieidle" : "idle") + (e.back ? " cyc" : "");
+    var pathEl = el("path", { class: cls, d: "", "marker-end": "url(#m-" + (e.di ? "di" : "idle") + ")" });
+    gEdge.appendChild(pathEl);
+    return { e: e, p: pathEl, free: {} };
+  });
+
+  function buildRoutes() {
+  gutUse = {}; corrUse = {};
+  buildOcc();
+
+  // 1단계 — 자리만 보고 드나들 면과 경로 모양을 정한다.
+  var plans = EDGES.map(function (e) {
+    var a = byId[e.s], b = byId[e.t];
+    var right = b.col > a.col, down = b.row > a.row;
+    var kind, sa, sb;
+    if (a.row === b.row && rowClear(a.row, a.col, b.col)) { kind = "H"; sa = right ? "r" : "l"; sb = right ? "l" : "r"; }
+    else if (a.col === b.col && colClear(a.col, a.row, b.row)) { kind = "V"; sa = down ? "b" : "t"; sb = down ? "t" : "b"; }
+    else if (a.row !== b.row && a.col !== b.col &&
+             rowClear(a.row, a.col, b.col) && !occ[a.row + "," + b.col] && colClear(b.col, a.row, b.row)) {
+      kind = "HV"; sa = right ? "r" : "l"; sb = down ? "t" : "b";
+    } else if (a.row !== b.row && a.col !== b.col &&
+             colClear(a.col, a.row, b.row) && !occ[b.row + "," + a.col] && rowClear(b.row, a.col, b.col)) {
+      kind = "VH"; sa = down ? "b" : "t"; sb = right ? "l" : "r";
+    } else if (b.row > a.row) { kind = "DOWN"; sa = "b"; sb = "t"; }
+    else if (b.row < a.row) { kind = "UP"; sa = "t"; sb = "b"; }
+    else { kind = "SAME"; sa = "b"; sb = "b"; }
+    return { e: e, a: a, b: b, kind: kind, sa: sa, sb: sb };
+  });
+
+  // 2단계 — 같은 면을 쓰는 선들을 상대 위치 순으로 줄 세운다. 이래야 면 앞에서 서로 꼬이지 않는다.
+  var sides = {};
+  plans.forEach(function (pl) {
+    (sides[pl.a.id + pl.sa] = sides[pl.a.id + pl.sa] || []).push({ pl: pl, end: "a" });
+    (sides[pl.b.id + pl.sb] = sides[pl.b.id + pl.sb] || []).push({ pl: pl, end: "b" });
+  });
+  Object.keys(sides).forEach(function (key) {
+    var list = sides[key], horiz = key.slice(-1) === "t" || key.slice(-1) === "b";
+    function other(o) { return o.end === "a" ? o.pl.b : o.pl.a; }
+    list.sort(function (u, v) {
+      var pu = other(u), qv = other(v);
+      return horiz ? (pu.col - qv.col || pu.row - qv.row) : (pu.row - qv.row || pu.col - qv.col);
+    });
+    list.forEach(function (o, i) {
+      if (o.end === "a") { o.pl.oK = i; o.pl.oN = list.length; }
+      else { o.pl.iK = i; o.pl.iN = list.length; }
+    });
+  });
+
+  // 3단계 — 실제 좌표로 편다.
+  plans.forEach(function (pl, idx) {
+    var o = edgeEls[idx], e = pl.e, a = pl.a, b = pl.b;
+    o.pl = pl;
+    var p1 = anc(a, pl.sa, pl.oK, pl.oN), p2 = anc(b, pl.sb, pl.iK, pl.iN);
+    var pts, mx, my, cx, y1, y2;
+
+    if (pl.kind === "H") {                              // 옆으로 — 세로로 겹치면 높이를 맞춰 한 줄로 곱게 긋는다
+      my = clampMid(overlapMid(a.y, a.y + NH, b.y, b.y + NH), pl, 9, Math.max(a.y, b.y), Math.min(a.y, b.y) + NH);
+      if (my !== null) {
+        p1 = [pl.sa === "r" ? a.x + NW : a.x, my]; p2 = [pl.sb === "r" ? b.x + NW : b.x, my];
+        pts = [p1, p2];
+      } else {
+        mx = p1[0] + (p2[0] > p1[0] ? 1 : -1) * Math.min(STUB, Math.abs(p2[0] - p1[0]) / 2);
+        pts = [p1, [mx, p1[1]], [mx, p2[1]], p2];
+      }
+    } else if (pl.kind === "V") {
+      mx = clampMid(overlapMid(a.x, a.x + NW, b.x, b.x + NW), pl, 11, Math.max(a.x, b.x), Math.min(a.x, b.x) + NW);
+      if (mx !== null) {
+        p1 = [mx, pl.sa === "b" ? a.y + NH : a.y]; p2 = [mx, pl.sb === "b" ? b.y + NH : b.y];
+        pts = [p1, p2];
+      } else {
+        my = p1[1] + (p2[1] > p1[1] ? 1 : -1) * Math.min(STUB, Math.abs(p2[1] - p1[1]) / 2);
+        pts = [p1, [p1[0], my], [p2[0], my], p2];
+      }
+    } else if (pl.kind === "HV") {
+      pts = [p1, [p2[0], p1[1]], p2];
+    } else if (pl.kind === "VH") {
+      pts = [p1, [p1[0], p2[1]], p2];
+    } else if (pl.kind === "DOWN" || pl.kind === "UP") {
+      // 먼저 두 번만 꺾는 Z를 대 본다. 아무 박스도 지나지 않으면 그걸 쓴다.
+      pts = zigzag(p1, pl.sa, p2, pl.sb);
+      if (!pts) {                                       // 막힘 — 행 사이 여백과 열 사이 통로로 돌아간다
+        var up = pl.kind === "UP";
+        cx = corrX((p1[0] + p2[0]) / 2, up ? b.y + NH : a.y + NH, up ? a.y : b.y);
+        y1 = gutY(up ? a.row - 1 : a.row, p1[0], cx); y2 = gutY(up ? b.row : b.row - 1, cx, p2[0]);
+        pts = [p1, [p1[0], y1], [cx, y1], [cx, y2], [p2[0], y2], p2];
+      }
+    } else {
+      y1 = gutY(a.row, p1[0], p2[0]);
+      pts = [p1, [p1[0], y1], [p2[0], y1], p2];
+    }
+
+    o.dGrid = poly(pts); o.p1 = p1; o.p2 = p2; o.free = {};
+  });
+
+  /* 고른 시스템별 직행 경로를 미리 계산해 둔다.
+     그때 진하게 남는 박스(고른 것과 그 이웃)만 피하면 되고, 흐려진 박스는 지나가도 된다.
+     같은 색(같은 방향)끼리는 겹쳐도 상관없으니 한 자리를 같이 쓰고, 색이 다르면 자리를 나눈다.
+     박스에 꽂히기 직전 STUB만큼은 반드시 곧게 들어온다. 다 막히면 격자 경로를 그대로 쓴다. */
+  function overlapMid(lo1, hi1, lo2, hi2) {             // 겹치는 구간의 한가운데, 안 겹치면 null
+    var lo = Math.max(lo1, lo2), hi = Math.min(hi1, hi2);
+    return hi - lo >= 8 ? (lo + hi) / 2 : null;
+  }
+  var COLORS = ["uses", "usedby", "cyc"];
+  NODES.forEach(function (n) {
+    var live = {}; live[n.id] = 1;
+    outs[n.id].forEach(function (e) { live[e.t] = 1; });
+    ins[n.id].forEach(function (e) { live[e.s] = 1; });
+    var boxes = NODES.filter(function (m) { return live[m.id]; });
+    var inc = edgeEls.filter(function (o) { return o.e.s === n.id || o.e.t === n.id; });
+
+    // 면마다 어떤 색이 오는지 모아 둔다. 색 개수만큼만 자리를 나누면 된다.
+    var used = {};
+    inc.forEach(function (o) {
+      o.col = o.e.back ? "cyc" : (o.e.s === n.id ? "uses" : "usedby");
+      [o.pl.a.id + o.pl.sa, o.pl.b.id + o.pl.sb].forEach(function (k) {
+        (used[k] = used[k] || {})[o.col] = 1;
+      });
+    });
+    function lane(key, col) {
+      var cs = COLORS.filter(function (c) { return used[key][c]; });
+      return { k: cs.indexOf(col), n: cs.length };
+    }
+
+    /* 이미 깐 선과 색이 다르면 한 점도 겹치면 안 된다.
+       같은 색이면 겹쳐도 방향이 같으니 그냥 둔다. */
+    var placed = [];
+    function segsOf(pts) {
+      var out = [];
+      for (var i = 1; i < pts.length; i++) out.push([pts[i - 1], pts[i]]);
+      return out;
+    }
+    function clashes(pts, col) {
+      var mine = segsOf(pts);
+      for (var i = 0; i < mine.length; i++) {
+        for (var j = 0; j < placed.length; j++) {
+          if (placed[j].col === col) continue;
+          var a = mine[i], b = placed[j].seg;
+          var ah = Math.abs(a[0][1] - a[1][1]) < 0.01, bh = Math.abs(b[0][1] - b[1][1]) < 0.01;
+          if (ah !== bh) continue;
+          var ax = ah ? 1 : 0;                          // 같은 축에서 같은 좌표에 놓였나
+          if (Math.abs(a[0][ax] - b[0][ax]) > 1.5) continue;
+          var al = Math.min(a[0][1 - ax], a[1][1 - ax]), ar = Math.max(a[0][1 - ax], a[1][1 - ax]);
+          var bl = Math.min(b[0][1 - ax], b[1][1 - ax]), br = Math.max(b[0][1 - ax], b[1][1 - ax]);
+          if (al < br - 1 && ar > bl + 1) return true;
+        }
+      }
+      return false;
+    }
+
+    var JITTER = [0, 10, -10, 20, -20, 30, -30];
+    inc.forEach(function (o) {
+      var a = o.pl.a, b = o.pl.b, sa = o.pl.sa, sb = o.pl.sb;
+      var la = lane(a.id + sa, o.col), lb = lane(b.id + sb, o.col);
+      var p1 = anc(a, sa, la.k, la.n), p2 = anc(b, sb, lb.k, lb.n);
+      var horiz = (sa === "l" || sa === "r"), off = (la.k - (la.n - 1) / 2) * 11;
+
+      // 어긋냄(j)을 조금씩 주며 후보를 만든다. 색이 다른 선과 겹치면 다음 후보로 넘어간다.
+      function candidates(j) {
+        var out = [], mid, v;
+        if (horiz && (sb === "l" || sb === "r")) {       // 옆면끼리 — 높이를 맞추면 직선
+          mid = overlapMid(a.y, a.y + NH, b.y, b.y + NH);
+          if (mid !== null) {
+            v = mid + off + j;
+            if (v > Math.max(a.y, b.y) + 4 && v < Math.min(a.y, b.y) + NH - 4) {
+              out.push([[sa === "r" ? a.x + NW : a.x, v], [sb === "r" ? b.x + NW : b.x, v]]);
+            }
+          }
+        } else if (!horiz && (sb === "t" || sb === "b")) {
+          mid = overlapMid(a.x, a.x + NW, b.x, b.x + NW);
+          if (mid !== null) {
+            v = mid + off + j;
+            if (v > Math.max(a.x, b.x) + 4 && v < Math.min(a.x, b.x) + NW - 4) {
+              out.push([[v, sa === "b" ? a.y + NH : a.y], [v, sb === "b" ? b.y + NH : b.y]]);
+            }
+          }
+        }
+        var s1 = stub(p1, sa, STUB + j), s2 = stub(p2, sb, STUB + Math.abs(j));
+        out.push([p1, s1, [s2[0], s1[1]], s2, p2], [p1, s1, [s1[0], s2[1]], s2, p2]);
+        if (horiz) out.push([p1, [s2[0], p1[1]], s2, p2]);
+        else out.push([p1, [p1[0], s2[1]], s2, p2]);
+        return out;
+      }
+
+      var fallback = null;
+      for (var t = 0; t < JITTER.length; t++) {
+        var cands = candidates(JITTER[t]);
+        for (var i = 0; i < cands.length; i++) {
+          if (hits(cands[i], boxes)) continue;
+          if (fallback === null) fallback = cands[i];    // 박스는 피했으니 최후의 보루로 둔다
+          if (clashes(cands[i], o.col)) continue;
+          o.free[n.id] = poly(cands[i]);
+          segsOf(cands[i]).forEach(function (sg) { placed.push({ seg: sg, col: o.col }); });
+          return;
+        }
+      }
+      var pick = fallback || pointsOf(o.dGrid);
+      o.free[n.id] = fallback ? poly(fallback) : o.dGrid;
+      segsOf(pick).forEach(function (sg) { placed.push({ seg: sg, col: o.col }); });
+    });
+  });
+  }
+
+  var nodeEls = {};
+  NODES.forEach(function (n) {
+    var g = el("g", { class: "sysbtn" + (n.id === "di" ? " isdi" : ""), tabindex: "0",
+      role: "button", "aria-label": n.name });
+    var box = el("rect", { class: "sysbox", x: n.x, y: n.y, width: NW, height: NH, rx: 3 });
+    var label = el("text", { class: "sysname", x: n.x + NW / 2, y: n.y + NH / 2 + 1,
+      "text-anchor": "middle", "dominant-baseline": "middle" }, n.name);
+    g.appendChild(box); g.appendChild(label);
+    gNode.appendChild(g);
+    nodeEls[n.id] = { g: g, box: box, label: label, node: n };
+    g.addEventListener("click", function () { if (!dragged) select(sel === n.id ? null : n.id); });
+    g.addEventListener("pointerdown", function (ev) { startDrag(n, ev); });
+    // 마우스만 올려도 미리 보여 준다. 고른 게 있으면 그쪽이 우선이다.
+    g.addEventListener("mouseenter", function () { if (!sel) { hov = n.id; render(); } });
+    g.addEventListener("mouseleave", function () { if (hov === n.id) { hov = null; render(); } });
+    g.addEventListener("keydown", function (ev) {
+      if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); select(sel === n.id ? null : n.id); }
+    });
+  });
+
+  var sel = null, hov = null;
+  var chipAll = document.getElementById("chip-all");
+  var detail = document.getElementById("detail");
+
+  function render() {
+    var view = sel || hov;                              // 고른 것 > 마우스 올린 것 > 전체
+    edgeEls.forEach(function (o) {
+      var e = o.e, cls = "edge", marker = e.di ? "m-di" : "m-idle";
+      if (e.back) cls += " cyc";
+      if (!view) { cls += e.di ? " dieidle" : " idle"; }
+      else if (e.s === view || e.t === view) {
+        if (e.back) { cls += " cycsel"; marker = "m-cyc"; }
+        else if (e.s === view) { cls += " uses"; marker = "m-uses"; }
+        else { cls += " usedby"; marker = "m-usedby"; }
+      } else { cls += " hide"; }
+      o.p.setAttribute("class", cls);
+      o.p.setAttribute("d", view && (e.s === view || e.t === view) ? o.free[view] : o.dGrid);
+      o.p.setAttribute("marker-end", "url(#" + marker + ")");
+    });
+    NODES.forEach(function (n) {
+      var g = nodeEls[n.id].g;
+      var isUses = view && outs[view].some(function (e) { return e.t === n.id; });
+      var isUsed = view && ins[view].some(function (e) { return e.s === n.id; });
+      g.classList.toggle("sel", view === n.id);
+      g.classList.toggle("uses", !!isUses && view !== n.id);
+      g.classList.toggle("usedby", !!isUsed && view !== n.id && !isUses);
+      g.classList.toggle("faint", !!view && view !== n.id && !isUses && !isUsed);
+    });
+    chipAll.setAttribute("aria-pressed", String(!sel));
+    detailRender();
+  }
+
+  function list(items, dir) {
+    if (!items.length) return '<p class="none">없음</p>';
+    return '<ul class="deps">' + items.map(function (e) {
+      var other = byId[dir === "out" ? e.t : e.s];
+      var flags = "";
+      if (e.back) flags += '<span class="flag">서로 씀</span>';
+      if (e.cls) flags += '<span class="flag">클래스 직접 참조</span>';
+      return "<li><div class=\"row1\"><span class=\"to\">" + other.name.replace("System", "") +
+        "</span><span class=\"via\">" + e.v + "</span>" + flags + "</div>" +
+        '<div class="types">' + e.k + "</div></li>";
+    }).join("") + "</ul>";
+  }
+
+  function detailRender() {
+    if (!sel) {
+      var real = EDGES.filter(function (e) { return !e.di; });
+      var cyc = real.filter(function (e) { return e.back; });
+      var cls = real.filter(function (e) { return e.cls; });
+      detail.innerHTML = "<h2>시스템 " + NODES.length + "개 · 연결 " + real.length + "개</h2>" +
+        '<p class="none">네모를 누르면 그 시스템의 화살표만 남는다. DISystem 화살표는 옅게 깔아 뒀다.</p>' +
+        '<div class="grouphead"><span class="dot" style="background:var(--cycle)"></span>서로를 필요로 하는 짝 (' + cyc.length + ")</div>" +
+        '<ul class="deps">' + cyc.map(function (e) {
+          return "<li><div class=\"row1\"><span class=\"to\">" + byId[e.s].name.replace("System", "") + " ↔ " +
+            byId[e.t].name.replace("System", "") + '</span><span class="via">둘 중 하나만 떼어낼 수 없다</span></div></li>';
+        }).join("") + "</ul>" +
+        '<div class="grouphead"><span class="dot" style="background:var(--cycle)"></span>인터페이스 없이 클래스를 직접 잡은 곳 (' + cls.length + ")</div>" +
+        '<ul class="deps">' + cls.map(function (e) {
+          return "<li><div class=\"row1\"><span class=\"to\">" + byId[e.s].name.replace("System", "") + " → " +
+            byId[e.t].name.replace("System", "") + "</span></div><div class=\"types\">" + e.k + "</div></li>";
+        }).join("") + "</ul>";
+      return;
+    }
+    var n = byId[sel], short = n.name.replace("System", "");
+    detail.innerHTML = "<h2>" + n.name + "</h2>" +
+      '<div class="grouphead"><span class="dot" style="background:var(--uses)"></span>' + short +
+      "가 쓰는 시스템 · 무엇으로 받는가 (" + outs[sel].length + ")</div>" + list(outs[sel], "out") +
+      '<div class="grouphead"><span class="dot" style="background:var(--usedby)"></span>' + short +
+      "를 쓰는 시스템 · 무엇으로 내주는가 (" + ins[sel].length + ")</div>" + list(ins[sel], "in");
+  }
+
+  // 도형을 현재 행·열 자리로 옮기고, 경로를 다시 깔고, 다시 그린다.
+  function relayout() {
+    applyXY();
+    svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+    NODES.forEach(function (n) {
+      var o = nodeEls[n.id];
+      o.box.setAttribute("x", n.x); o.box.setAttribute("y", n.y);
+      o.label.setAttribute("x", n.x + NW / 2); o.label.setAttribute("y", n.y + NH / 2 + 1);
+    });
+    buildRoutes();
+    render();
+  }
+
+  /* 박스는 끌어서 옮길 수 있다. 놓으면 가장 가까운 칸으로 붙고,
+     이미 누가 있으면 서로 자리를 바꾼다. 선은 규칙이 정하므로 직접 끌 수 없다. */
+  var drag = null, dragged = false;
+  function svgXY(ev) {
+    var r = svg.getBoundingClientRect();
+    return { x: (ev.clientX - r.left) * W / r.width, y: (ev.clientY - r.top) * H / r.height };
+  }
+  function startDrag(n, ev) {
+    if (ev.button !== 0) return;
+    var q = svgXY(ev);
+    drag = { n: n, ox: q.x - n.x, oy: q.y - n.y };
+    dragged = false;
+    nodeEls[n.id].g.setPointerCapture(ev.pointerId);
+    ev.preventDefault();
+  }
+  function moveDrag(ev) {
+    if (!drag) return;
+    var q = svgXY(ev), n = drag.n;
+    var dx = q.x - drag.ox - n.x, dy = q.y - drag.oy - n.y;
+    if (Math.abs(dx) + Math.abs(dy) > 3) dragged = true;
+    nodeEls[n.id].g.setAttribute("transform", "translate(" + dx + " " + dy + ")");
+  }
+  function endDrag(ev) {
+    if (!drag) return;
+    var q = svgXY(ev), n = drag.n;
+    var bx = q.x - drag.ox, by = q.y - drag.oy;      // 놓은 자리의 박스 왼쪽 위 모서리
+    nodeEls[n.id].g.removeAttribute("transform");
+    drag = null;
+    if (!dragged) return;
+    var col = Math.max(0, Math.min(USEDC - 1, Math.round((bx - PADL) / COLW)));
+    var row = Math.max(0, Math.min(USEDR - 1, Math.round((by - PADT) / STEPH)));
+    var taken = occ[row + "," + col];
+    if (taken && taken !== n) { taken.row = n.row; taken.col = n.col; }
+    n.row = row; n.col = col;
+    buildOcc();
+    saveLayout();
+    relayout();
+    setTimeout(function () { dragged = false; }, 0);
+  }
+  svg.addEventListener("pointermove", moveDrag);
+  svg.addEventListener("pointerup", endDrag);
+  svg.addEventListener("pointercancel", endDrag);
+
+  document.getElementById("chip-auto").addEventListener("click", function () {
+    autoPlace(); saveLayout(); relayout();
+  });
+  document.getElementById("chip-reset").addEventListener("click", function () {
+    try { localStorage.removeItem(STORE); } catch (err) { /* 무시 */ }
+    autoPlace(); relayout();
+  });
+
+  function select(id) { sel = id; render(); }
+  chipAll.addEventListener("click", function () { select(null); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") select(null); });
+
+  if (!loadLayout()) autoPlace();
+  relayout();
+  select("player");
+})();
+</script>
