@@ -66,7 +66,8 @@ namespace Refactoring
             }
         }
 
-        // 구독 해제를 간단히 하려고 IDisposable을 돌려준다.
+        // 등록과 동시에 해제 경로를 제공하여, 등록한 쪽이 해제 메서드를 들고 있지 않아도 된다.
+        // 대원TODO: 별로 구현 이유가 맘에 와닿지 않음
         public IDisposable Register(StateEventCategory category, Action<IStartData> open, Action<CloseEventType> close = null)
         {
             StateEvent eventSwitch = new StateEvent { Open = open, Close = close };
@@ -79,20 +80,6 @@ namespace Refactoring
             list.Add(eventSwitch);
 
             return new DisposeAction(() => list.Remove(eventSwitch)); 
-        }
-
-        private class DisposeAction : IDisposable
-        {
-            private Action _dispose;
-
-            public DisposeAction(Action dispose) => _dispose = dispose;
-
-            public void Dispose()
-            {
-                // 등록 해제 대리자를 실행해 더 이상 알림을 받지 않는다.
-                _dispose?.Invoke();
-                _dispose = null;
-            }
         }
     }
 }

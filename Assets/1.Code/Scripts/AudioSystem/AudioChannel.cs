@@ -38,21 +38,5 @@ namespace Refactoring
                 _onStop -= onStop;
             });
         }
-
-        private class DisposeAction : IDisposable
-        {
-            private Action _dispose;
-
-            public DisposeAction(Action dispose)
-            {
-                _dispose = dispose;
-            }
-
-            public void Dispose()
-            {
-                _dispose?.Invoke();
-                _dispose = null;
-            }
-        }
     }
 }
