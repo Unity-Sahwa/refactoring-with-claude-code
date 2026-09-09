@@ -38,7 +38,16 @@ description: 변경사항을 분석해 커밋안을 제시하고, 승인 절차�
 
 ## 5. 승인 후 — 바로 커밋·푸시
 1. 승인 전에는 스테이징하지 않는다. 이 시점에 해당 커밋의 파일만 `git add` 하고, 곧바로 commit까지 진행한다. 인덱스를 만들어두고 멈추면 사용자가 중간에 세션을 끊었을 때 의도치 않은 스테이징이 남는다. 그 이슈의 첫 커밋이면 Project Status를 `In Progress`로 바꾼다.
-2. `git commit` → `git push`
+2. 커밋과 푸쉬는 **Bash 툴으로 아래 형태만** 쓴다. PowerShell here-string(`@'...'@`)을 쓰면 메시지 앞뒤에 `@`가 들어간다.
+
+   ```
+   git commit -F - <<'EOF'
+   <제목>
+
+   <본문>
+   EOF
+   git push
+   ```
 3. `Closes #N`이 붙은 이슈가 실제로 닫혔는지 확인한다. develop 등 default 브랜치가 아닌 곳에 push했으면 `Closes`는 자동 발동하지 않는다 — 이슈 자체는 열린 채로 두고, 그 이슈의 마지막 커밋이면 Project Status만 `Done`으로 바꾼다(`gh project item-edit`). 실제 close는 default 브랜치 머지 때 일어난다.
 4. push까지 끝나면 그때 다음 묶음을 4번부터 다시 시작한다.
 
