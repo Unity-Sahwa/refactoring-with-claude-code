@@ -1,5 +1,6 @@
 ﻿namespace Refactoring
 {
+    //대원TODO: 다음 프로젝트에서는 Enum에 index를 카테고리별로 매겨야할 듯. 아니면 Enum 밀리는 문제를 다르게 해결하던가
     public enum SoundType
     {
         None = 0,

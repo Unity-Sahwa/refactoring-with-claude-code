@@ -7,6 +7,7 @@ namespace Refactoring
 {
     // 책임: AudioChannel의 재생/정지 요청을 받아 실제로 소리를 낸다. (무엇을 언제 트는지는 요청하는 쪽 담당)
     // 흐름: 요청 → 카탈로그에서 정의 조회 → 창구(AudioSource) 풀에서 꺼내 재생 → 정지 요청 시 그 id 창구를 멈추고 반환
+    //대원TODO: 거의 플레이어 효과음 재생하는 용도임. 배경음이나 다른 용도의 효과음은 각자가 재생함. 다음 프로젝트에서는 한곳에서 재생하도록 관리하기. 그러면 기믹이나 여러 음악 어떻게 재생되는지 모아서 기록할 필요가 있음.
     public class AudioPlayer : MonoBehaviour
     {
         [Preserve, Inject] private AudioChannel _audioChannel;
@@ -27,6 +28,8 @@ namespace Refactoring
             }
         }
 
+        //대원TODO: 이벤트 함수들 순서가 어떻게 되지? Awake이전부터 자세히 알아보자. 이제 익숙해져서 괜찮을 듯. OnEnable 타이밍 까먹음
+        //대원TODO: 등록을 Awake()에서 하는 곳도 있고 OnEnable()에서 하는 곳도 있음. 통일되는지 확인하고, 통일안되면 왜 그타이밍에 해야하는지 알아보자.
         private void OnEnable()
         {
             _audioEventDisposable = _audioChannel.Register(HandlePlay, HandleStop);
@@ -39,6 +42,9 @@ namespace Refactoring
 
         private void Update()
         {
+            //for문 역순으로 한 것은 _actives 요소가 중간에 삭제되어도 반납검사가 생략되지 않도록 하기 위함
+            //대원TODO: 매 프레임 for문은 에바인가?? 활성화/비활성화 방식? / 시작과 동시에 타이머? / LateUpdate, Update, FixedUpdate 전문으로 하는 업데이터 클래스를 하나둘까?
+            //대원TODO: 이렇게 하면만 만약 _actives 요소가 하나 사라진다면, 똑같은 요소를 한번더 시행하는 것이 되는거 아닌가
             for (int i = _actives.Count - 1; i >= 0; i--)
             {
                 AudioSource source = _actives[i].Source;
@@ -46,6 +52,7 @@ namespace Refactoring
                 // 따라가던 대상이 파괴되면 소스도 같이 사라진다. 풀에 되돌리지 않고 버린다.
                 if (source == null)
                 {
+                    //대원TODO: 여기다가 i 순서 바꾸고 for문을 정방향으로 하는게 가독성 높지 않을까?
                     _actives.RemoveAt(i);
                     continue;
                 }
@@ -118,6 +125,7 @@ namespace Refactoring
             }
         }
 
+        //대원TODO: AI는 왜 static을 좋아하는가
         private static void ApplyEntry(AudioSource source, AudioCatalogEntry entry)
         {
             source.clip = PickClip(entry.Clips);
@@ -129,6 +137,7 @@ namespace Refactoring
             source.loop = entry.Loop;
         }
 
+        //대원TODO: ApplyEntry에 넣고 지우기
         private static AudioClip PickClip(AudioClip[] clips)
         {
             return clips[UnityEngine.Random.Range(0, clips.Length)];
