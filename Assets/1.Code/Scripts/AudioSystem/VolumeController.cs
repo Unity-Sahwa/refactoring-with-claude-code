@@ -17,14 +17,13 @@ namespace Refactoring
         // 설정창이 바꾼 소리 크기를 여기서 읽어서 믹서에 넣는다. 설정 쪽은 믹서를 모른다.
         [Preserve, Inject] private ISoundSettings _soundSettings;
 
-        private void Start()
+        private void Awake()
         {
             if (_soundSettings == null)
             {
                 return;
             }
 
-            //주입이 Awake에서 일어나기 때문에 Start에서 구독
             _soundSettings.OnChanged += ApplySettings;
             ApplySettings();
         }
