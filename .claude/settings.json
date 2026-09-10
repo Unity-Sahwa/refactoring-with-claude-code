@@ -1,38 +1,53 @@
 {
   "hooks": {
-    "Stop": [
+    "PreToolUse": [
       {
-        "matcher": "", 
+        "matcher": "*",
         "hooks": [
           {
-            "type": "command", 
-            "command": "powershell -c \"Add-Type -AssemblyName presentationCore; \\$mp = New-Object System.Windows.Media.MediaPlayer; \\$mp.Open([uri]'C:\\Windows\\Media\\notification_dogsound_claude.mp3'); \\$mp.Play(); Start-Sleep 2\""
+            "type": "command",
+            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File .claude/hooks/self-turn-guard.ps1"
           }
         ]
       }
-    ], 
-    "PostToolUse": [
+    ],
+    "Stop": [
       {
-        "matcher": "Edit|Write", 
+        "matcher": "",
         "hooks": [
           {
-            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File .claude/hooks/rule-change-log.ps1", 
+            "type": "command",
+            "command": "powershell -c \"Add-Type -AssemblyName presentationCore; \\$mp = New-Object System.Windows.Media.MediaPlayer; \\$mp.Open([uri]'C:\\Windows\\Media\\notification_dogsound_claude.mp3'); \\$mp.Play(); Start-Sleep 2\""
+          },
+          {
+            "type": "command",
+            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File .claude/hooks/self-turn-guard.ps1"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File .claude/hooks/rule-change-log.ps1",
             "type": "command"
           }
         ]
       }
     ]
-  }, 
-  "spinnerTipsEnabled": false, 
+  },
+  "spinnerTipsEnabled": false,
   "enabledPlugins": {
     "ponytail@ponytail": true
-  }, 
+  },
   "permissions": {
-    "grep": "ask", 
-    "read": "ask", 
-    "glob": "ask", 
-    "write": "ask", 
-    "edit": "ask", 
+    "grep": "ask",
+    "read": "ask",
+    "glob": "ask",
+    "write": "ask",
+    "edit": "ask",
     "bash": "ask"
   }
 }
