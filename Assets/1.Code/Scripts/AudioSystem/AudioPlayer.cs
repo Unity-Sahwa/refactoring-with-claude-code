@@ -128,19 +128,13 @@ namespace Refactoring
         //대원TODO: AI는 왜 static을 좋아하는가
         private static void ApplyEntry(AudioSource source, AudioCatalogEntry entry)
         {
-            source.clip = PickClip(entry.Clips);
+            source.clip = entry.Clips[UnityEngine.Random.Range(0, entry.Clips.Length)];
             source.volume = entry.Volume;
             source.pitch = entry.Pitch;
             source.spatialBlend = entry.SpatialBlend;
             source.minDistance = entry.MinDistance;
             source.maxDistance = entry.MaxDistance;
             source.loop = entry.Loop;
-        }
-
-        //대원TODO: ApplyEntry에 넣고 지우기
-        private static AudioClip PickClip(AudioClip[] clips)
-        {
-            return clips[UnityEngine.Random.Range(0, clips.Length)];
         }
 
         private AudioSource RentVoice()
