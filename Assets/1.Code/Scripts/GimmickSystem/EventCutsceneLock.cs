@@ -11,8 +11,7 @@ namespace Refactoring
         [SerializeField]
         private bool _isLock = true;
 
-        [Preserve, Inject(true)]
-        private IGameStateController _gameState;
+        [Preserve, Inject(true)] private IGameStateController _gameState;
 
         public override void Execute()
         {
