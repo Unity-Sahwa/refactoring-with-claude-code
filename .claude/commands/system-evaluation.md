@@ -29,6 +29,9 @@ description: 클래스가 시스템 설계에 맞게 구현되었는지 평가�
 | 외부 시스템의 class, enum, struct, abstract을 직접 참조했는가? | 참조 안했다. | 참조 했다. |
 | 참조한 인터페이스의 반환타입·매개변수가 외부 시스템의 class/enum/struct/abstract인가?" | 아니다 | 맞다 |
 
+> 예외: DISystem의 `[Inject]`, `[Inject(true)]` 어트리뷰트 참조는 PASS로 본다.
+> 단, 어트리뷰트로 주입받는 필드의 타입은 예외 없이 그대로 검사한다.
+
 
 ### 1-2. 시스템 내부 기능 간의 연결
 | 질문 | PASS | FAIL |
