@@ -2,7 +2,7 @@
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $OutputEncoding = [System.Text.Encoding]::UTF8
 # 모델이 자기 응답 뒤에 오지 않은 사용자 발화(줄 첫머리 user)를 이어 쓴 경우를 잡는다.
-# Stop:        누출분을 잘라낸 응답을 다시 보여주고 로그에 남긴다. 종결 표식 [끝] 누락은 경고만 한다.
+# Stop:        누출분을 잘라낸 응답을 다시 보여주고 로그에 남긴다. 종결 표식 [끝] 누락 시 다시 쓰게 막는다.
 # PreToolUse:  직전 응답에 누출이 있으면 도구 실행을 막는다.
 $raw = [Console]::In.ReadToEnd()
 try { $payload = $raw | ConvertFrom-Json } catch { exit 0 }
@@ -27,7 +27,7 @@ $leak = [regex]::Match($text, '(?m)^[ \t]*user')
 
 if (-not $leak.Success) {
     if ($event -eq 'Stop' -and $text.TrimEnd() -notmatch '\[끝\]$') {
-        @{ systemMessage = "종결 표식 [끝]이 없음." } | ConvertTo-Json -Compress
+        @{ decision = 'block'; reason = '종결 표식 [끝]이 없음. 마지막 줄에 [끝]을 붙여 다시 써라.' } | ConvertTo-Json -Compress
     }
     exit 0
 }
