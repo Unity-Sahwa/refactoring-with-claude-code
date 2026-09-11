@@ -23,7 +23,7 @@ namespace Refactoring
         [SerializeField]
         private float _delay;
 
-        [Preserve, Inject(true)] private SaveSlotManager _slots;
+        [Preserve, Inject(true)] private SaveSlotManager _slots; //대원TODO: 인터페이스로 받아라
         [Preserve, Inject(true)] private IHealthInfo _health;
         [Preserve, Inject(true)] private ICurrentCharacterProvider _character;
 

@@ -11,7 +11,7 @@ namespace Refactoring
     {
         [Preserve, Inject] private IPlayerStateEventSubscriber _eventSubscriber;
         [Preserve, Inject] private ICurrentCharacterProvider _currentCharacterProvider;
-        [Preserve, Inject] private HitChannel _hitChannel;
+        [Preserve, Inject] private HitChannel _hitChannel; //대원TODO: 인터페이스로 받아라
 
         private int _targetMask;
         private readonly List<ActiveHitbox> _actives = new();

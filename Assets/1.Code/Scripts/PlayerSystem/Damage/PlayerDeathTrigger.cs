@@ -9,7 +9,7 @@ namespace Refactoring
     // 책임: 플레이어 사망 신호를 받아 EventData 목록을 각자 지연시간만큼 기다렸다 실행한다. (EnterTrigger와 같은 구조)
     public class PlayerDeathTrigger : MonoBehaviour
     {
-        [Preserve, Inject(true)] private List<PlayerDamageReceiver> _receivers;
+        [Preserve, Inject(true)] private List<PlayerDamageReceiver> _receivers; //대원TODO: 인터페이스로 받아라
 
         [SerializeField] private List<EventData> _deathEvents;
         [Tooltip("각 이벤트를 실행하기 전 기다릴 시간(초). 모자라면 0으로 채운다")]

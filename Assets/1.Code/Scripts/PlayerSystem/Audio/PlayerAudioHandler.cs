@@ -10,9 +10,9 @@ namespace Refactoring
     {
         [Preserve, Inject] private IPlayerStateEventSubscriber _eventSubscriber;
         // 소리 재생·정지를 요청하기 위함
-        [Preserve, Inject] private AudioChannel _audioChannel;
+        [Preserve, Inject] private AudioChannel _audioChannel; //대원TODO: 인터페이스로 받아라
         // 타격 이벤트를 받기 위함
-        [Preserve, Inject] private HitChannel _hitChannel;
+        [Preserve, Inject] private HitChannel _hitChannel; //대원TODO: 인터페이스로 받아라
 
         private readonly List<IPlayerAudio> _started = new();
         private IDisposable _audioEventDisposable;

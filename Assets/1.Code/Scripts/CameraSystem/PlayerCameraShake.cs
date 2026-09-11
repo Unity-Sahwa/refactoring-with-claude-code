@@ -18,7 +18,7 @@ namespace Refactoring
 
         [Preserve, Inject] private CinemachineImpulseSource _impulseSource;
         [Preserve, Inject(true)] private PlayerCameraShakeData _shakeData;
-        [Preserve, Inject(true)] private HitChannel _hitChannel;
+        [Preserve, Inject(true)] private HitChannel _hitChannel; //대원TODO: 인터페이스로 받도록 하는게 맞지 않을까?
         [Preserve, Inject(true)] private IStateTriggerSubscriber _triggerSubscriber;
         [Preserve, Inject(true)] private ICurrentStateProvider _currentStateProvider;
 

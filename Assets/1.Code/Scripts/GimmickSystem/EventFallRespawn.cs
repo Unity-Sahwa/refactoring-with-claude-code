@@ -9,8 +9,8 @@ namespace Refactoring
     public class EventFallRespawn : EventData
     {
         [Preserve, Inject(true)] private IHealthInfo _health;
-        [Preserve, Inject(true)] private SaveSlotManager _slots;
-        [Preserve, Inject(true)] private SlotLoadRunner _runner;
+        [Preserve, Inject(true)] private SaveSlotManager _slots; //대원TODO: 인터페이스로 받아라
+        [Preserve, Inject(true)] private SlotLoadRunner _runner; //대원TODO: 인터페이스로 받아라
 
         public override void Execute()
         {

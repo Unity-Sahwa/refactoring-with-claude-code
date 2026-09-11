@@ -12,7 +12,7 @@ namespace Refactoring
         [Preserve, Inject(true)] private ICurrentCharacterProvider _character;
         [Preserve, Inject(true)] private ICharacterSwappable _swapper;
         [Preserve, Inject(true)] private IHealthModifier _health;
-        [Preserve, Inject(true)] private PlayerPartner _partner;
+        [Preserve, Inject(true)] private PlayerPartner _partner; //대원TODO: 인터페이스로 받아라
 
         // 씬을 그냥 넘어온 경우, EventSceneLoad가 넘겨둔 체력과 캐릭터만 이어받는다. 자리는 새 씬 것을 그대로 쓴다.
         //

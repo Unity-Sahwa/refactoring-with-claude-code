@@ -11,7 +11,7 @@ namespace Refactoring
         [SerializeField] private float _horizontal;    // 좌우 각도
         [SerializeField] private float _vertical;      // 상하 각도
 
-        [Preserve, Inject(true)] private List<CameraRole> _roles;
+        [Preserve, Inject(true)] private List<CameraRole> _roles;  //대원TODO: 인터페이스로 받아야할까?
 
         public override void Execute()
         {

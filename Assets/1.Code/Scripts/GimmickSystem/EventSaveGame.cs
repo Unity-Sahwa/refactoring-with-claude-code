@@ -19,7 +19,7 @@ namespace Refactoring
         // 체크하면 플레이어를 기다리지 않고 씬이 시작할 때 바로 저장한다.
 
         [Preserve, Inject(true)] private IHealthInfo _health;
-        [Preserve, Inject(true)] private SaveSlotManager _slots;
+        [Preserve, Inject(true)] private SaveSlotManager _slots; //대원TODO: 인터페이스로 받아라
         [Preserve, Inject(true)] private ICurrentCharacterProvider _character;
 
 

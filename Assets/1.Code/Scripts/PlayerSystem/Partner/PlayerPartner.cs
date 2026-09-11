@@ -11,8 +11,8 @@ namespace Refactoring
         [Preserve, Inject] private ICurrentCharacterProvider _characterProvider;
 
         [Preserve, Inject] private ICharacterSwapNotifier _swapNotifier;
-
-        [Preserve, Inject] private AudioChannel _audioChannel;
+         
+        [Preserve, Inject] private AudioChannel _audioChannel; //대원TODO: 인터페이스로 받아라
 
         [Tooltip("부딪힐 때 켤 이펙트. 파트너 자식으로 미리 배치하고 꺼둔다")]
         [SerializeField] private GameObject _swapToHumanEffect;
