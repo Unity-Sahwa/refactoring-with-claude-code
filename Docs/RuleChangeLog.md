@@ -5,6 +5,7 @@ CLAUDE.md, `.claude/` 아래 커맨드·설정·훅이 바뀔 때마다 한 행�
 
 | 날짜 | 파일 | 무엇을 | 왜 |
 |---|---|---|---|
+| 2026-09-14 | .claude/commands/system-evaluation.md | 1-1에 enum·순수 데이터 타입(필드만 있고 동작 없는 struct/class)을 검사에서 제외하는 예외 추가 | CameraSystem 평가 중 InputActionType·GameStateType·StateEventCategory·CloseEventType처럼 같은 패턴의 FAIL이 반복됨. 사용자가 매번 좁은 인터페이스로 감싸는 대신 예외로 두자고 함 |
 | 2026-09-14 | .claude/git/work_issuetemplate.md | 연관 항목 아래 `## 태그` 섹션 추가 | 커밋·이슈를 사람이 아니라 AI가 검색하기 쉽게, Docs/Tags.md 기반 해시태그를 이슈 본문에 남기자고 함. 주석은 다른 섹션과 톤을 맞춰 짧게 지시만 하게 줄임 |
 | 2026-09-14 | .claude/git/bug_issuetemplate.md | 연관 항목 아래 `## 태그` 섹션 추가 | 커밋·이슈를 사람이 아니라 AI가 검색하기 쉽게, Docs/Tags.md 기반 해시태그를 이슈 본문에 남기자고 함. 주석은 다른 섹션과 톤을 맞춰 짧게 지시만 하게 줄임 |
 | 2026-09-14 | .claude/commands/git-issue.md | 초안 제시 형식에 `태그:` 줄 추가, 본문 절차에 태그 채우는 6번 단계 추가, 금지 목록에 Docs/Tags.md 미등록 태그 사용 추가 | 커밋·이슈를 사람이 아니라 AI가 검색하기 쉽게, Docs/Tags.md 기반 해시태그를 이슈 본문에 남기자고 함 |
