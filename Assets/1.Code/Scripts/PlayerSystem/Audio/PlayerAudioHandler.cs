@@ -12,7 +12,7 @@ namespace Refactoring
         // 소리 재생·정지를 요청하기 위함
         [Preserve, Inject] private IAudioRaiser _audioChannel;
         // 타격 이벤트를 받기 위함
-        [Preserve, Inject] private HitChannel _hitChannel; //대원TODO: 인터페이스로 받아라
+        [Preserve, Inject] private IHitEventSubscriber _hitChannel;
 
         private readonly List<IPlayerAudio> _started = new();
         private IDisposable _audioEventDisposable;

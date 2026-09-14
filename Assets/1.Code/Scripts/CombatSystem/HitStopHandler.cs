@@ -10,7 +10,7 @@ namespace Refactoring
     // 흐름: 타격 신호 수신 → 양쪽 Animator 속도 0 → 정해진 시간 뒤 원래 속도 복구
     public class HitStopHandler : MonoBehaviour
     {
-        [Preserve, Inject] private HitChannel _hitChannel;
+        [Preserve, Inject] private IHitEventSubscriber _hitChannel;
 
         [Tooltip("때린 쪽 정지 시간 (초)")]
         [SerializeField] private float _attackerFreeze = 0.08f;

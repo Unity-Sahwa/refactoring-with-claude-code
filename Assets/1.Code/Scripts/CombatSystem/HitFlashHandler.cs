@@ -14,7 +14,7 @@ namespace Refactoring
         private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
         private static readonly int EmissionColorId = Shader.PropertyToID("_EmissionColor");
 
-        [Preserve, Inject] private HitChannel _hitChannel;
+        [Preserve, Inject] private IHitEventSubscriber _hitChannel;
 
         [Tooltip("점멸할 때 덮어씌우는 색")]
         [SerializeField] private Color _flashColor = Color.red;

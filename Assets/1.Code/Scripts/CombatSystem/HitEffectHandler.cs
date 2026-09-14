@@ -10,7 +10,7 @@ namespace Refactoring
     // 흐름: 타격 신호 수신 → 풀에서 이펙트 꺼내 위치 지정 → 활성화 → duration 뒤 풀로 반납
     public class HitEffectHandler : MonoBehaviour
     {
-        [Preserve, Inject] private HitChannel _hitChannel;
+        [Preserve, Inject] private IHitEventSubscriber _hitChannel;
 
         [Tooltip("타격 지점에 켤 이펙트 프리팹")]
         [SerializeField] private GameObject _hitEffectPrefab;
