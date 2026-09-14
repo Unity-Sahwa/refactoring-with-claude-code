@@ -5,6 +5,13 @@ CLAUDE.md, `.claude/` 아래 커맨드·설정·훅이 바뀔 때마다 한 행�
 
 | 날짜 | 파일 | 무엇을 | 왜 |
 |---|---|---|---|
+| 2026-09-14 | .claude/commands/git-issue.md | 본문 절차의 태그 채우기 6번 단계, 초안 형식의 `태그:` 줄, 금지 목록의 Docs/Tags.md 미등록 태그 사용 항목 제거 | 사용자가 git-issue에는 태그를 달지 말자고 함 |
+| 2026-09-14 | .claude/git/work_issuetemplate.md | `## 태그` 섹션 제거 | 사용자가 git-issue에는 태그를 달지 말자고 함 |
+| 2026-09-14 | .claude/git/bug_issuetemplate.md | `## 태그` 섹션 제거 | 사용자가 git-issue에는 태그를 달지 말자고 함 |
+| 2026-09-14 | .claude/commands/git-commit.md | 3-1 태그 판정을 "AI가 골라서 확정"에서 "후보를 뽑아 커밋안에 적고 사용자가 확인"으로 변경 | 시스템·커맨드/스킬·개념·상태 4개 범주 중 일부를 커밋마다 빠뜨림 |
+| 2026-09-14 | .claude/commands/git-commit.md | 5절에 `git add` 전 인덱스 상태 확인, 목록에 없는 파일은 `git restore --staged`로 내리기, 커밋을 pathspec으로 파일 못박기, 커밋 후 `git show` 파일 목록과 커밋안 대조 단계 추가. 금지 목록에 관련 항목 2개 추가 | AudioPlayer.cs 커밋 때 이미 스테이징돼 있던 무관한 DISystem 폴더 재배치 변경이 같은 커밋에 같이 들어감 |
+| 2026-09-14 | .claude/commands/code-evaluation.md | 1-3 첫 질문을 "`[Inject]` 필드 타입" 한정에서 "필드·매개변수·반환 타입" 전체로 확장. 순수 데이터 클래스(필드를 그대로 반환하는 프로퍼티만 있고 로직 없음)·enum·struct는 검사 대상에서 제외 | SOLID DIP는 `[Inject]` 필드에 국한된 원칙이 아니라 모든 자리의 구체 의존에 적용됨. enum·구현체를 여러 개 만들 수 없는 순수 데이터는 추상화할 대상이 없음 |
+| 2026-09-14 | .claude/commands/code-evaluation.md | 0절 절차에 "FAIL 나온 클래스는 재평가로 FAIL이 없어질 때까지 다음 클래스로 못 넘어간다" 규칙 추가 | AudioPlayer.cs FAIL을 처리 안 하고 다음 클래스로 넘어가려 함 |
 | 2026-09-14 | .claude/commands/system-evaluation.md | 1-1에 enum·순수 데이터 타입(필드만 있고 동작 없는 struct/class)을 검사에서 제외하는 예외 추가 | CameraSystem 평가 중 InputActionType·GameStateType·StateEventCategory·CloseEventType처럼 같은 패턴의 FAIL이 반복됨. 사용자가 매번 좁은 인터페이스로 감싸는 대신 예외로 두자고 함 |
 | 2026-09-14 | .claude/git/work_issuetemplate.md | 연관 항목 아래 `## 태그` 섹션 추가 | 커밋·이슈를 사람이 아니라 AI가 검색하기 쉽게, Docs/Tags.md 기반 해시태그를 이슈 본문에 남기자고 함. 주석은 다른 섹션과 톤을 맞춰 짧게 지시만 하게 줄임 |
 | 2026-09-14 | .claude/git/bug_issuetemplate.md | 연관 항목 아래 `## 태그` 섹션 추가 | 커밋·이슈를 사람이 아니라 AI가 검색하기 쉽게, Docs/Tags.md 기반 해시태그를 이슈 본문에 남기자고 함. 주석은 다른 섹션과 톤을 맞춰 짧게 지시만 하게 줄임 |
