@@ -6,7 +6,7 @@ using UnityEngine.Scripting;
 namespace Refactoring
 {
     // 책임: 현재 캐릭터를 부드럽게 따라다니고, 스왑 시 캐릭터에게 부딪혀 이펙트와 소리를 낸다.
-    public class PlayerPartner : MonoBehaviour
+    public class PlayerPartner : MonoBehaviour, ICollideSoundSkippable
     {
         [Preserve, Inject] private ICurrentCharacterProvider _characterProvider;
 
