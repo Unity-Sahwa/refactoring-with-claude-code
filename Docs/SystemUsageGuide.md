@@ -26,6 +26,21 @@
 ---
 
 ## DISystem
+- 씬과 SO에 흩어진 의존성을 어트리뷰트 하나로 찾아 필드에 꽂아줌
+
+### 이 시스템을 활용하는 방법 (개발자용)
+
+| 클래스 | 받아쓰는 방법 | 제공 기능 |
+|---|---|---|
+| `InjectAttribute` | 필드에 `[Preserve, Inject]` 또는 `[Preserve, Inject(true)]` 사용 | 없음 |
+| `IDataProvider` | `IDataProvider` 구현 후 `ProvideData()` 오버라이드 | 씬 객체가 아닌 SO를 DI 대상으로 등록시킴 |
+
+### 이 시스템을 활용하는 방법 (비개발자용)
+
+| 클래스 | 만드는 법 | 배치 위치 | 채울 값 |
+|---|---|---|---|
+| `AttributeInjector` | Static 프리팹에 이미 배치됨 | 씬에 Static 프리팹 하나 | Project Settings > Script Execution Order에 -100 지정 |
+| `DataContainer` | 빈 오브젝트에 컴포넌트 추가 | 씬에 하나 | `_groups`에 그룹 이름(Name)과 SO 목록(Assets) 입력 |
 
 ---
 
