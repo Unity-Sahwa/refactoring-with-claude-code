@@ -12,9 +12,6 @@ namespace Refactoring
         public bool HasPosition;
         public Vector3 Position;
 
-        //대원TODO: 아무도 안쓰니까 삭제 필요
-        public Transform Follow; 
-
         public static AudioPlayRequest Create(SoundType id)
         {
             return new AudioPlayRequest { Id = id };
@@ -23,12 +20,6 @@ namespace Refactoring
         public static AudioPlayRequest CreateAt(SoundType id, Vector3 position)
         {
             return new AudioPlayRequest { Id = id, Position = position, HasPosition = true };
-        }
-
-        //대원TODO: 아무도 안쓰니까 삭제 필요
-        public static AudioPlayRequest CreateFollowing(SoundType id, Transform follow)
-        {
-            return new AudioPlayRequest { Id = id, Follow = follow };
         }
     }
 }

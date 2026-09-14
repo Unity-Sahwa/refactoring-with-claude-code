@@ -109,14 +109,7 @@ namespace Refactoring
         private void PlaceVoice(AudioSource audioSource, AudioPlayRequest request)
         {
             Transform voiceTransform = audioSource.transform;
-
-            if (request.Follow != null)
-            {
-                voiceTransform.SetParent(request.Follow, false);
-                voiceTransform.localPosition = Vector3.zero;
-                return;
-            }
-
+            
             voiceTransform.SetParent(transform, false);
 
             if (request.HasPosition)
