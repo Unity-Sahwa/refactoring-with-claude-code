@@ -6,13 +6,16 @@ namespace Refactoring
 {
     // 책임: 게임 모드 스택을 보유하고 현재 모드를 알린다.
     // 흐름: Push 요청 → 우선순위 비교 → 통과하면 스택에 얹고 OnChanged 발행 (GamePlay는 바닥 고정)
-    public class GameStateManager : MonoBehaviour, IGameStateProvider, IGameStateController
+    public class GameStateManager : MonoBehaviour, IGameStateProvider, IGameStateController, ICutsceneStateProvider
     {
         // 바닥에 항상 게임플레이가 존재
         private readonly Stack<GameStateType> _stack = new(new[] { GameStateType.GamePlay });
 
         public GameStateType Current => _stack.Peek();
         public event Action<GameStateType> OnChanged;
+
+        public bool IsCutscene => Current == GameStateType.Cutscene;
+        public event Action OnCutsceneChanged;
 
         // 게임 상태를 교체하여, 불필요한 입력이 들어가는 걸 방지함.
         public void Push(GameStateType state)
@@ -25,7 +28,7 @@ namespace Refactoring
             }
 
             _stack.Push(state);
-            OnChanged?.Invoke(Current);
+            RaiseChanged();
         }
 
         // 다른 상태가 빠지는 것을 방지하기 위해 매개변수 추가
@@ -39,7 +42,13 @@ namespace Refactoring
             }
 
             _stack.Pop();
+            RaiseChanged();
+        }
+
+        private void RaiseChanged()
+        {
             OnChanged?.Invoke(Current);
+            OnCutsceneChanged?.Invoke();
         }
 
         // 메뉴 > 컷씬 > 게임 플레이 순으로 우선순위를 나눔

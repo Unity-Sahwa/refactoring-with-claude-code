@@ -18,7 +18,7 @@ namespace Refactoring
         private const string PointerDeltaPath = "<Pointer>/delta";
 
         [Preserve, Inject(true)] private IMouseSettings _mouseSettings;
-        [Preserve, Inject(true)] private IGameStateProvider _gameState;
+        [Preserve, Inject(true)] private ICutsceneStateProvider _cutsceneState;
 
         private CinemachineInputAxisController _controller;
 
@@ -44,10 +44,10 @@ namespace Refactoring
                 ApplySettings();
             }
 
-            if (_gameState != null)
+            if (_cutsceneState != null)
             {
-                _gameState.OnChanged += HandleStateChanged;
-                HandleStateChanged(_gameState.Current);
+                _cutsceneState.OnCutsceneChanged += HandleCutsceneChanged;
+                HandleCutsceneChanged();
             }
         }
 
@@ -58,9 +58,9 @@ namespace Refactoring
                 _mouseSettings.OnChanged -= ApplySettings;
             }
 
-            if (_gameState != null)
+            if (_cutsceneState != null)
             {
-                _gameState.OnChanged -= HandleStateChanged;
+                _cutsceneState.OnCutsceneChanged -= HandleCutsceneChanged;
             }
         }
 
@@ -74,9 +74,9 @@ namespace Refactoring
         }
 
         // 컷씬 중엔 카메라 회전 입력을 꺼서 시점을 고정한다.
-        private void HandleStateChanged(GameStateType state)
+        private void HandleCutsceneChanged()
         {
-            _controller.enabled = state != GameStateType.Cutscene;
+            _controller.enabled = !_cutsceneState.IsCutscene;
         }
 
         private void ApplySettings()
