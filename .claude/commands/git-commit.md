@@ -37,19 +37,24 @@ description: 변경사항을 분석해 커밋안을 제시하고, 승인 절차�
 ```
 
 ## 5. 승인 후 — 바로 커밋·푸시
-1. 승인 전에는 스테이징하지 않는다. 이 시점에 해당 커밋의 파일만 `git add` 하고, 곧바로 commit까지 진행한다. 인덱스를 만들어두고 멈추면 사용자가 중간에 세션을 끊었을 때 의도치 않은 스테이징이 남는다. 그 이슈의 첫 커밋이면 Project Status를 `In Progress`로 바꾼다.
-2. 커밋과 푸쉬는 **Bash 툴으로 아래 형태만** 쓴다. PowerShell here-string(`@'...'@`)을 쓰면 메시지 앞뒤에 `@`가 들어간다.
+1. 승인 전에는 `git add`를 하지 않는다. 승인은 매번 그 직전 상태 기준이다 — 이전에 승인받은 커밋이라도 push 전까지는 인덱스에 그대로 두지 않는다(4번 참고).
+2. `git add` 직전에 `git status --porcelain`으로 인덱스를 확인한다. 앞자리 글자(스테이징 상태)가 공백이 아닌 파일, 즉 이미 스테이징된 파일이 있으면 전부 이번 커밋안의 파일 목록과 대조한다.
+   - 전부 이번 목록에 있는 파일이면 그대로 진행한다.
+   - 목록에 없는 파일이 하나라도 있으면 **그 파일들을 먼저 `git restore --staged`로 내려놓는다.** 누가 언제 올렸는지 알 수 없는 채로 같은 커밋에 묶으면 안 된다. 내려놓고도 사용자가 직접 올린 것인지 의심되면 진행 전에 물어본다.
+3. 이번 커밋 파일만 `git add`하고, **커밋은 파일 목록을 pathspec으로 못박아** 곧바로 진행한다 — `git add`와 `git commit` 사이에 다른 작업을 끼우지 않는다. 그 이슈의 첫 커밋이면 Project Status를 `In Progress`로 바꾼다.
+4. 커밋과 푸쉬는 **Bash 툴으로 아래 형태만** 쓴다. PowerShell here-string(`@'...'@`)을 쓰면 메시지 앞뒤에 `@`가 들어간다. `-- <경로...>`에는 4번 커밋안에 적은 파일을 전부, 그것만 적는다 — 인덱스에 다른 게 섞여 있어도 이 커밋에는 안 들어가고 스테이징된 채로 남는다.
 
    ```
-   git commit -F - <<'EOF'
+   git commit -F - -- <경로1> <경로2> ... <<'EOF'
    <제목>
 
    <본문>
    EOF
-   git push
+   git show --stat --name-only HEAD
    ```
-3. `Closes #N`이 붙은 이슈가 실제로 닫혔는지 확인한다. develop 등 default 브랜치가 아닌 곳에 push했으면 `Closes`는 자동 발동하지 않는다 — 이슈 자체는 열린 채로 두고, 그 이슈의 마지막 커밋이면 Project Status만 `Done`으로 바꾼다(`gh project item-edit`). 실제 close는 default 브랜치 머지 때 일어난다.
-4. push까지 끝나면 그때 다음 묶음을 4번부터 다시 시작한다.
+5. 방금 커밋의 파일 목록(`git show` 결과)이 4번 커밋안의 목록과 정확히 같은지 대조한다. 하나라도 다르면 **push하지 않고 멈춘다** — `git revert --no-edit HEAD`로 그 커밋만 되돌리고 원인을 보고한다. 같으면 `git push`한다.
+6. `Closes #N`이 붙은 이슈가 실제로 닫혔는지 확인한다. develop 등 default 브랜치가 아닌 곳에 push했으면 `Closes`는 자동 발동하지 않는다 — 이슈 자체는 열린 채로 두고, 그 이슈의 마지막 커밋이면 Project Status만 `Done`으로 바꾼다(`gh project item-edit`). 실제 close는 default 브랜치 머지 때 일어난다.
+7. push까지 끝나면 그때 다음 묶음을 4번부터 다시 시작한다.
 
 ## 메시지 규칙
 
@@ -91,5 +96,7 @@ Closes #98
 ## 금지
 - 승인 없는 commit / push
 - 승인 없는 `git add` (상태 확인은 `git status`·`git diff`로만 한다)
+- `git add` 전에 인덱스에 이미 올라간 다른 파일이 있는지 확인 안 하고 바로 add/commit 진행
+- pathspec 없이 `git commit`(인덱스 전체를 커밋함) — 이번 커밋안 파일만 `-- <경로...>`로 못박는다
 - 이슈·마일스톤 생성 (그건 `/git-issue`의 일이다)
 - `--no-verify`, `--force`, `git reset --hard`
