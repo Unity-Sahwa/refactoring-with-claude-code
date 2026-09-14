@@ -8,7 +8,7 @@ namespace Refactoring
     // 책임: 씬에 있는 버튼 전부에 같은 클릭 소리를 달아준다. (씬에 하나만 놓는다. 둘이면 소리가 두 번 붙는다)
     public class ButtonClickSound : MonoBehaviour
     {
-        [Preserve, Inject] private AudioChannel _audioChannel;
+        [Preserve, Inject] private IAudioRaiser _audioChannel;
 
         // 주입기가 씬의 MonoBehaviour를 전부 등록해서, 버튼도 이렇게 한꺼번에 받을 수 있다(꺼져 있는 것 포함).
         [Preserve, Inject] private List<Button> _buttons;

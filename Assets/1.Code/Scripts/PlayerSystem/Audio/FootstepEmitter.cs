@@ -20,7 +20,7 @@ namespace Refactoring
     [RequireComponent(typeof(Animator))]
     public class FootstepEmitter : MonoBehaviour
     {
-        [Preserve, Inject] private AudioChannel _channel; //대원TODO: 인터페이스로 받아라
+        [Preserve, Inject] private IAudioRaiser _channel;
         // 이동 방향은 Animator 파라미터를 훔쳐보지 않고 값으로 받는다.
         [Preserve, Inject] private IMoveDirectionProvider _moveDirectionProvider;
         [SerializeField] private SoundType _footstepId;

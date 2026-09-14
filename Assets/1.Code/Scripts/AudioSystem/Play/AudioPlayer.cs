@@ -10,8 +10,8 @@ namespace Refactoring
     //대원TODO: 거의 플레이어 효과음 재생하는 용도임. 배경음이나 다른 용도의 효과음은 각자가 재생함. 다음 프로젝트에서는 한곳에서 재생하도록 관리하기. 그러면 기믹이나 여러 음악 어떻게 재생되는지 모아서 기록할 필요가 있음.
     public class AudioPlayer : MonoBehaviour
     {
-        [Preserve, Inject] private AudioChannel _audioChannel;
-        [Preserve, Inject] private AudioCatalog _audioCatalog;
+        [Preserve, Inject] private IAudioSubscriber _audioChannel;
+        [Preserve, Inject] private IAudioCatalog _audioCatalog;
         [Preserve, Inject] private AudioPlayerData _audioPlayerData;
 
         private readonly List<AudioSource> _pool = new();

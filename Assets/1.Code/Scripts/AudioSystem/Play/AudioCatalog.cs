@@ -6,7 +6,7 @@ namespace Refactoring
 {
     // 책임: 오디오 클립과 수치값을 한곳에 모아 id로 찾아준다.
     [CreateAssetMenu(menuName = "Refactoring/Audio/AudioCatalog")]
-    public class AudioCatalog : ScriptableObject
+    public class AudioCatalog : ScriptableObject, IAudioCatalog
     {
         [SerializeField] private AudioCatalogEntry[] _entries;
 

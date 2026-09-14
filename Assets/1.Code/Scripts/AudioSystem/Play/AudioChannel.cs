@@ -5,7 +5,7 @@ namespace Refactoring
 {
     // 책임: 오디오 재생/정지 요청을 나르는 통로. (실제 재생은 AudioPlayer 담당)
     [CreateAssetMenu(menuName = "Refactoring/Audio/AudioChannel")]
-    public class AudioChannel : ScriptableObject
+    public class AudioChannel : ScriptableObject, IAudioRaiser, IAudioSubscriber
     {
         private Action<AudioPlayRequest> _onPlay;
         private Action<SoundType> _onStop;
