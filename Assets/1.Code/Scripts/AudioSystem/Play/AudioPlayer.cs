@@ -12,7 +12,7 @@ namespace Refactoring
     {
         [Preserve, Inject] private AudioChannel _audioChannel;
         [Preserve, Inject] private AudioCatalog _audioCatalog;
-        private const int _initialVoices = 8;
+        [Preserve, Inject] private AudioPlayerData _audioPlayerData;
 
         private readonly List<AudioSource> _pool = new();
 
@@ -22,7 +22,7 @@ namespace Refactoring
 
         private void Awake()
         {
-            for (int i = 0; i < _initialVoices; i++)
+            for (int i = 0; i < _audioPlayerData.InitialVoices; i++)
             {
                 _pool.Add(CreateVoice());
             }
