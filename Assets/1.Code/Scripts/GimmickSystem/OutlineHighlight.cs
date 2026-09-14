@@ -5,7 +5,7 @@ namespace Refactoring
 {
     // 락온 대상, 수정(BrokenObject) 등 강조가 필요한 오브젝트에 붙여서 실루엣 아웃라인을 켜고 끈다.
     // 원본 렌더링은 그대로 두고, 각 렌더러의 머티리얼 배열 끝에 아웃라인 머티리얼을 얹었다 뺐다 한다.
-    public class OutlineHighlight : MonoBehaviour
+    public class OutlineHighlight : MonoBehaviour, IHighlightable
     {
         [SerializeField] private Material _outlineMaterial;
 

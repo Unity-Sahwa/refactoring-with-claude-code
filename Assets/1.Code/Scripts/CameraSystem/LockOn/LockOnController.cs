@@ -12,7 +12,7 @@ namespace Refactoring
         [Tooltip("이 거리보다 멀어지면 락온이 풀린다 (m)")]
         [SerializeField] private float _releaseDistance = 20f;
 
-        [Preserve, Inject] private IInputPressedProvider _inputPressedProvider;
+        [Preserve, Inject] private ILockOnInputProvider _lockOnInputProvider;
         [Preserve, Inject] private ILockOnTargetDetector _lockOnTargetDetector;
         [Preserve, Inject] private ICurrentCharacterProvider _currentCharacterProvider;
 
@@ -28,9 +28,9 @@ namespace Refactoring
 
         private void Awake()
         {
-            if (_inputPressedProvider != null)
+            if (_lockOnInputProvider != null)
             {
-                _inputPressedProvider.OnInputPressed += HandleInputPressed;
+                _lockOnInputProvider.OnLockOnPressed += HandleInputPressed;
             }
         }
 
@@ -66,20 +66,15 @@ namespace Refactoring
 
         private void OnDestroy()
         {
-            if (_inputPressedProvider != null)
+            if (_lockOnInputProvider != null)
             {
-                _inputPressedProvider.OnInputPressed -= HandleInputPressed;
+                _lockOnInputProvider.OnLockOnPressed -= HandleInputPressed;
             }
         }
 
         // 켜져 있으면 끄고, 꺼져 있으면 지금 조준 가능한 적이 있을 때만 켠다.
-        private void HandleInputPressed(InputActionType type)
+        private void HandleInputPressed()
         {
-            if (type != InputActionType.LockOn)
-            {
-                return;
-            }
-
             if (IsLockOn)
             {
                 Release();
@@ -114,7 +109,7 @@ namespace Refactoring
                 return;
             }
 
-            target.GetComponentInParent<OutlineHighlight>()?.SetOutline(isOn);
+            target.GetComponentInParent<IHighlightable>()?.SetOutline(isOn);
         }
 
         // 기믹이 부서지거나 적이 죽으면 콜라이더가 꺼지고 레이어가 Default로 돌아간다.
