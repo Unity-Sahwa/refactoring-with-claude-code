@@ -54,8 +54,8 @@
 
 | 클래스 | 받아쓰는 방법 | 제공 기능 |
 |---|---|---|
-| `AudioChannel` | `[Preserve, Inject] private AudioChannel _audioChannel;` | `RaisePlay(AudioPlayRequest)` 소리 재생, `RaiseStop(SoundType)` 소리 정지 |
-| `AudioPlayRequest` | 정적 함수로 생성 | `Create(id)` 2D 재생, `CreateAt(id, 위치)` 3D 재생, `CreateFollowing(id, Transform)` 대상 추종 재생 |
+| `IAudioRaiser` | `[Preserve, Inject] private IAudioRaiser _audioChannel;` | `RaisePlay(AudioPlayRequest)` 소리 재생, `RaiseStop(SoundType)` 소리 정지 |
+| `AudioPlayRequest` | 정적 함수로 생성 | `Create(id)` 2D 재생, `CreateAt(id, 위치)` 3D 재생 |
 | `SoundType` | enum 직접 사용 | 소리 이름표. 새 소리는 여기에 값을 추가함 |
 | `ISoundSettings` | `[Preserve, Inject] private ISoundSettings _soundSettings;` | `GetVolume(category)` 볼륨 읽기, `SetVolume(category, 값)` 볼륨 쓰기, `OnChanged` 변경 알림 |
 | `VolumeCategory` | enum 직접 사용 | 볼륨 묶음 이름표 (Master, Bgm, Sfx, Enemy, Player, Environment, Ui) |
