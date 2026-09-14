@@ -50,6 +50,7 @@
 | `AudioCatalog` | 프로젝트 창 우클릭 → Create → Refactoring/Audio/AudioCatalog | 씬의 `DataContainer` 그룹에 등록 | `Entries` 목록에 소리 항목 추가 |
 | `AudioCatalogEntry` | `AudioCatalog`의 `Entries`에서 + 버튼 | `AudioCatalog` 안 | Id(SoundType 선택), Clips(여러 개면 무작위), Volume(0~1), Pitch, SpatialBlend(0=2D, 1=3D), MinDistance, MaxDistance, Loop, Output(믹서 그룹) |
 | `AudioPlayer` | 빈 오브젝트에 컴포넌트 추가 | 씬에 하나 | 없음 |
+| `AudioPlayerData` | 프로젝트 창 우클릭 → Create → Refactoring/Audio/AudioPlayerData | 씬의 `DataContainer` 그룹에 등록 | `InitialVoices`(처음 만들어 둘 재생용 AudioSource 개수, 기본 8) |
 | `VolumeController` | 빈 오브젝트에 컴포넌트 추가 | 씬에 하나 | `Mixer`에 오디오 믹서 연결. 믹서에서 `VolumeCategory` 이름과 같은 파라미터(MasterVolume 등 7개)를 노출해야 함 |
 
 ---
