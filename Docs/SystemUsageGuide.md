@@ -74,7 +74,39 @@
 ---
 
 ## CameraSystem
+- 확정: 2026-09-14
+- 캐릭터 추적 카메라 전환·락온·시점 조작과 셰이크·줌·투과 연출을 맡는 시스템
 
+### 이 시스템을 활용하는 방법 (개발자용)
+
+| 클래스/인터페이스 | 받아쓰는 방법 | 제공 기능 |
+|---|---|---|
+| `ILockOnState` | `[Inject] private ILockOnState _lockOn;` | `IsLockOn`(bool) 조회, `OnLockOnChanged` 구독 |
+| `ILockOnTarget` | `[Inject] private ILockOnTarget _lockOnTarget;` | `LockedTarget`(Collider) 조회 |
+| `ILockOnTargetDetector` | `[Inject] private ILockOnTargetDetector _detector;` | `Candidates`(IReadOnlyList\<Collider\>) 조회 |
+| `LockOnController` | 인터페이스 2개(위)로만 받을 것. 구체 클래스 직접 참조는 비권장(현재 UISystem의 LockOnMarker가 이렇게 쓰고 있음 — `Docs/Retrospective.md` 3-3 기록된 문제) | 없음 |
+| `IMouseSettings` | `[Inject(true)] private IMouseSettings _mouseSettings;` | `SpeedX`/`SpeedY` get·set, `OnChanged` 구독 |
+| `IPointerLookControl` | `[Inject(true)] private IPointerLookControl _pointerLook;` | `SetPointerLookEnabled(bool)` |
+| `CameraShakeDataEntry` | PlayerSystem `StateData`에 `CameraShakeDataEntry[]` 필드로 선언 | 상태 진입 시 `IStartData`·`IPlayerCameraShake`로 셰이크 값 전달 |
+| `CameraZoomDataEntry` | PlayerSystem `StateData`에 `CameraZoomDataEntry[]` 필드로 선언 | 상태 진입 시 `IPlayerCameraZoom`으로 줌 값 전달 |
+
+### 이 시스템을 활용하는 방법 (비개발자용)
+
+| 클래스 | 만드는 법 | 배치 위치 | 채울 수치 |
+|---|---|---|---|
+| `CameraRole` | 컴포넌트 추가(CinemachineCamera 필수) | 각 카메라 오브젝트 | `Kind`(Default/LockOn) |
+| `CameraSwitcher` | 컴포넌트 추가 | 카메라 매니저 오브젝트 | 없음(씬의 CameraRole 자동 수집) |
+| `LockOnController` | 컴포넌트 추가 | 락온 담당 오브젝트 | `ReleaseDistance` |
+| `LockOnTargetDetector` | 컴포넌트 추가 | 락온 담당 오브젝트 | `DetectRange`, `TargetMask`, `ObstacleMask`, `IsDebugDraw` |
+| `MouseSpeedApplier` | 컴포넌트 추가(CinemachineInputAxisController 필수) | 플레이어 카메라 프리팹 | 없음 |
+| `PlayerCameraLockHandler` | 컴포넌트 추가(CinemachineInputAxisController 필수) | 플레이어 카메라 프리팹 | 없음 |
+| `SeeThroughWall` | 컴포넌트 추가 | 카메라 오브젝트 | `HoleSize`, `Opacity`, `EdgeSoftness`, `OccluderMask` |
+| `CameraShakeDataEntry` | PlayerSystem 상태 데이터 에셋의 CameraShake 목록에 항목 추가 | 상태 정의 에셋(PlayerSystem) | `Name`, `StartProgress`, `Shake`(ImpulseShape·AmplitudeGain·FrequencyGain·Duration·Velocity) |
+| `PlayerCameraShake` | 컴포넌트 추가(CinemachineImpulseSource 필수) | 플레이어 오브젝트 | `MaxSameStateStack`, `AmplitudeGainPerStack` |
+| `PlayerCameraShakeData` | 메뉴 `Data/PlayerCameraShakeData`로 SO 생성. DataContainer 등록 필요 | 데이터 폴더 | `ShakeList`(State별 ShakeData) |
+| `PlayerCameraShakeHandler` | 컴포넌트 추가(CinemachineImpulseSource 필수) | 스킬 연출용 카메라 오브젝트 | 없음 |
+| `CameraZoomDataEntry` | PlayerSystem 상태 데이터 에셋의 CameraZoom 목록에 항목 추가 | 상태 정의 에셋(PlayerSystem) | `Name`, `StartProgress`, `DistanceScale`, `ZoomOutTime`, `ZoomHoldTime`, `ZoomInTime` |
+| `PlayerCameraZoomHandler` | 컴포넌트 추가 | 스킬 연출용 카메라 오브젝트 | 없음 |
 
 ---
 
