@@ -111,7 +111,20 @@
 ---
 
 ## CombatSystem
+- 확정: 2026-09-15
+- 피해 적용 계약(IDamageable)과 피해 데이터(DamageInfo, InkColorType)를 시스템 간에 공유함
 
+### 이 시스템을 활용하는 방법 (개발자용)
+
+| 클래스 | 받아쓰는 방법 | 제공 기능 |
+|---|---|---|
+| `IDamageable` | 피해 받을 대상 컴포넌트에 구현 | `ApplyDamage(DamageInfo)`로 피해 통보 받음 |
+| `DamageInfo` | `ApplyDamage` 호출 시 값 채워 넘김 | `Damager`/`Amount`/`HitPoint`/`Color`/`InkStack` 필드 전달 |
+| `InkColorType` | `DamageInfo.Color`에 값 넣음 | 없음 |
+
+### 이 시스템을 활용하는 방법 (비개발자용)
+
+에디터 작업이 필요한 클래스 없음.
 
 ---
 
