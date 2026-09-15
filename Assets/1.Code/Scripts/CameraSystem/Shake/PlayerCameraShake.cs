@@ -32,23 +32,52 @@ namespace Refactoring
                 throw new InvalidOperationException($"{nameof(PlayerCameraShake)}: 필수 의존 주입 실패");
             }
 
-            if (_hitChannel != null)
+            SubscribeHitChannel();
+            SubscribeTrigger();
+            SubscribeStateProvider();
+        }
+
+        private void SubscribeHitChannel()
+        {
+            if (_hitChannel == null)
             {
-                _hitEventDisposable = _hitChannel.Register(HandleHit);
+                Debug.LogWarning($"{name}: {nameof(IHitEventSubscriber)}가 없어 타격 셰이크를 건너뜀.");
+                return;
             }
 
-            _triggerSubscriber?.SubscribeTrigger(HandleTrigger);
+            _hitEventDisposable = _hitChannel.Register(HandleHit);
+        }
 
-            if (_currentStateProvider != null)
+        private void SubscribeTrigger()
+        {
+            if (_triggerSubscriber == null)
             {
-                _currentStateProvider.StateChanged += HandleStateChanged;
+                Debug.LogWarning($"{name}: {nameof(IStateTriggerSubscriber)}가 없어 피격 셰이크를 건너뜀.");
+                return;
             }
+
+            _triggerSubscriber.SubscribeTrigger(HandleTrigger);
+        }
+
+        private void SubscribeStateProvider()
+        {
+            if (_currentStateProvider == null)
+            {
+                Debug.LogWarning($"{name}: {nameof(ICurrentStateProvider)}가 없어 상태별 중첩 리셋을 건너뜀.");
+                return;
+            }
+
+            _currentStateProvider.StateChanged += HandleStateChanged;
         }
 
         private void OnDestroy()
         {
             _hitEventDisposable?.Dispose();
-            _triggerSubscriber?.UnsubscribeTrigger(HandleTrigger);
+
+            if (_triggerSubscriber != null)
+            {
+                _triggerSubscriber.UnsubscribeTrigger(HandleTrigger);
+            }
 
             if (_currentStateProvider != null)
             {
