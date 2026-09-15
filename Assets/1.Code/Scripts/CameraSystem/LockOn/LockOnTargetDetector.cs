@@ -1,7 +1,7 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Scripting;
-using UnityEngine.Serialization;
 
 namespace Refactoring
 {
@@ -18,9 +18,6 @@ namespace Refactoring
         [Tooltip("시야를 막는 벽 레이어")]
         [SerializeField] private LayerMask _obstacleMask;
 
-        [Tooltip("탐지 반경과 후보를 Gizmos로 표시")]
-        [SerializeField] private bool _isDebugDraw;
-
         [Preserve, Inject] private ICurrentCharacterProvider _character;
 
         // 매 프레임 새로 할당하지 않도록 전부 재사용한다.
@@ -32,86 +29,72 @@ namespace Refactoring
 
         public IReadOnlyList<Collider> Candidates => _candidates;
 
+        private void Awake()
+        {
+            if (_character == null)
+            {
+                throw new InvalidOperationException($"{nameof(LockOnTargetDetector)}: 필수 의존 주입 실패");
+            }
+        }
+
         private void Update()
         {
             _candidates.Clear();
 
-            Transform characterTransform = _character?.GetCurrentComponent<Transform>();
-            if (characterTransform == null)
+            if (!TryGetContext(out Transform characterTransform, out Camera mainCamera))
             {
                 return;
             }
+
+            CollectCandidates(characterTransform, mainCamera);
+        }
+
+        private bool TryGetContext(out Transform characterTransform, out Camera mainCamera)
+        {
+            characterTransform = _character.GetCurrentComponent<Transform>();
 
             if (_mainCamera == null)
             {
                 _mainCamera = Camera.main;
             }
+            mainCamera = _mainCamera;
 
-            if (_mainCamera == null)
-            {
-                return;
-            }
+            return characterTransform != null && mainCamera != null;
+        }
 
+        private void CollectCandidates(Transform characterTransform, Camera mainCamera)
+        {
             Vector3 playerPosition = characterTransform.position;
-            Vector3 cameraPosition = _mainCamera.transform.position;
-            Vector3 cameraForward = _mainCamera.transform.forward;
 
             // 화면 안 판정에 쓸 6면을 이번 프레임 카메라로 갱신한다.
-            GeometryUtility.CalculateFrustumPlanes(_mainCamera, _frustum);
+            GeometryUtility.CalculateFrustumPlanes(mainCamera, _frustum);
 
             int count = Physics.OverlapSphereNonAlloc(playerPosition, _detectRange, _hits, _targetMask);
 
             for (int i = 0; i < count; i++)
             {
                 Collider collider = _hits[i];
-
-                // 화면 안에 보이는 적만.
-                if (!GeometryUtility.TestPlanesAABB(_frustum, collider.bounds))
+                if (IsVisibleCandidate(collider, playerPosition, mainCamera))
                 {
-                    continue;
+                    _candidates.Add(collider);
                 }
-
-                // 플레이어 기준, 카메라가 바라보는 방향에 있는 적만.
-                if (Vector3.Dot(collider.bounds.center - playerPosition, cameraForward) <= 0f)
-                {
-                    continue;
-                }
-
-                // 카메라와 적 사이가 벽에 막히면 제외.
-                if (Physics.Linecast(cameraPosition, collider.bounds.center, _obstacleMask))
-                {
-                    continue;
-                }
-
-                _candidates.Add(collider);
             }
         }
 
-        private void OnDrawGizmos()
+        // 화면 안에 보이고, 카메라가 바라보는 방향에 있고, 벽에 막히지 않은 적만 후보로 인정한다.
+        private bool IsVisibleCandidate(Collider collider, Vector3 playerPosition, Camera mainCamera)
         {
-            if (!_isDebugDraw)
+            if (!GeometryUtility.TestPlanesAABB(_frustum, collider.bounds))
             {
-                return;
+                return false;
             }
 
-            Transform characterTransform = _character?.GetCurrentComponent<Transform>();
-            if (characterTransform == null)
+            if (Vector3.Dot(collider.bounds.center - playerPosition, mainCamera.transform.forward) <= 0f)
             {
-                return;
+                return false;
             }
 
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(characterTransform.position, _detectRange);
-
-            Gizmos.color = Color.red;
-            for (int i = 0; i < _candidates.Count; i++)
-            {
-                Collider collider = _candidates[i];
-                if (collider != null)
-                {
-                    Gizmos.DrawWireSphere(collider.bounds.center, 0.5f);
-                }
-            }
+            return !Physics.Linecast(mainCamera.transform.position, collider.bounds.center, _obstacleMask);
         }
     }
 }
