@@ -44,7 +44,11 @@ namespace Refactoring
                 return;
             }
 
-            ShakeData shake = shakeData.Shake;
+            FireImpulse(shakeData.Shake);
+        }
+
+        private void FireImpulse(ShakeData shake)
+        {
             _impulseSource.ImpulseDefinition.ImpulseShape = shake.ImpulseShape;
             _impulseSource.ImpulseDefinition.ImpulseDuration = shake.Duration;
             _impulseSource.ImpulseDefinition.AmplitudeGain = shake.AmplitudeGain;
