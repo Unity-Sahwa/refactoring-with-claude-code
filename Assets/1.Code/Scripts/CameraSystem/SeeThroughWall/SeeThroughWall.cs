@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Scripting;
 
@@ -37,13 +38,18 @@ namespace Refactoring
 
         private void Awake()
         {
+            if (_currentCharacter == null)
+            {
+                throw new InvalidOperationException($"{nameof(SeeThroughWall)}: 필수 의존 주입 실패");
+            }
+
             _camera = Camera.main;
         }
 
         // 시네머신이 LateUpdate에서 카메라를 옮기므로, 그 뒤 위치로 계산한다.
         private void LateUpdate()
         {
-            Transform characterTransform = _currentCharacter?.GetCurrentComponent<Transform>();
+            Transform characterTransform = _currentCharacter.GetCurrentComponent<Transform>();
 
             if (characterTransform == null || _camera == null)
             {
