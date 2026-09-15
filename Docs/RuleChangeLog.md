@@ -5,6 +5,8 @@ CLAUDE.md, `.claude/` 아래 커맨드·설정·훅이 바뀔 때마다 한 행�
 
 | 날짜 | 파일 | 무엇을 | 왜 |
 |---|---|---|---|
+| 2026-09-15 | .claude/commands/code-evaluation.md | 판정표 아래에 system-evaluation.md와 동일한 FAIL 순번(n/총개수)·파일명·줄·문제 표 형식 추가 | 사용자가 code-evaluation에도 같은 형식을 적용해달라고 요청함 |
+| 2026-09-15 | .claude/commands/system-evaluation.md | 1-4에 FAIL 하나씩 순번(n/총개수)과 파일명·줄·문제 표로 제시하는 형식 추가 | 사용자가 한 번에 하나씩 봐야 집중된다고 요청함. 파일명은 확장자 빼고, 줄 번호는 정확한 위치를 표시하라고 지시함 |
 | 2026-09-14 | .claude/commands/code-evaluation.md | 1-3 첫 질문의 예외 범위에 "유니티 공식 에셋(Cinemachine 등 Unity Technologies 배포 패키지) 제공 타입" 추가 | CameraRole.cs 평가 중 CinemachineCamera 구체 타입 노출이 FAIL로 잡힘. 사용자가 유니티 공식 에셋도 예외 처리하자고 함 |
 | 2026-09-14 | .claude/commands/code-evaluation.md | 1-1 첫 질문에 "게임 엔진·언어 기본 제공 타입, 유니티 공식 에셋 제공 타입 대상은 제외" 예외 추가 | CameraRole.cs:15 GetComponent<CinemachineCamera>() 호출이 FAIL로 잡힘. 1-1은 타입이 아니라 주입 방향을 보는 축이라 1-3과 같은 근거는 아니라고 AI가 이의 제기함. 사용자가 그래도 예외 처리하자고 지시함 |
 | 2026-09-14 | .claude/commands/code-evaluation.md | 1-4 첫 질문에 "인스펙터에서 리스트 항목을 구분하는 라벨용 `[SerializeField] string` 필드는 제외" 예외 추가 | CameraShakeDataEntry.cs:10 `_name` 필드가 코드에서 안 읽혀 FAIL로 잡힘. 사용자가 SO 리스트 항목을 인스펙터에서 구분하는 용도라고 설명함 |
