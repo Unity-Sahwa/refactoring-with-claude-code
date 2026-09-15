@@ -137,7 +137,24 @@
 ---
 
 ## LanguageSystem
+- 확정: 2026-09-15
+- 게임 UI 문구를 언어별로 번역·표시하고, 언어 전환 기능을 제공하는 시스템
 
+### 이 시스템을 활용하는 방법 (개발자용)
+
+| 클래스/인터페이스 | 받아쓰는 방법 | 제공 기능 |
+|---|---|---|
+| `ILanguageSettings` | `[Preserve, Inject(true)] private ILanguageSettings _language;` | `Current` get·set, `GetText(key)`, `GetFont()`, `OnChanged` 구독 |
+| `ITextTableData` | `[Preserve, Inject] private ITextTableData _table;` | `GetText(key, language)`, `GetFont(language)` |
+| `LanguageType` | enum 직접 사용 | 지원 언어 이름표(Korean, English) |
+
+### 이 시스템을 활용하는 방법 (비개발자용)
+
+| 클래스 | 만드는 법 | 배치 위치 | 채울 값 |
+|---|---|---|---|
+| `LanguageButton` | 컴포넌트 추가(Button 필수) | 언어 선택 버튼 오브젝트 | `_target`(이 버튼이 맡을 언어) |
+| `LocalizedText` | 컴포넌트 추가(TextMeshProUGUI 필수) | 번역이 필요한 글자 오브젝트 | `_key`(표의 번역 키, 드롭다운 선택) |
+| `TextTableData` | 프로젝트 창 우클릭 → Create → Refactoring/TextTableData | `Assets/5.Data/Language/` | `_entries`(키별 한국어·영어 문장), `_koreanFont`, `_englishFont`. `DataContainer` 등록 필요 |
 
 ---
 
