@@ -18,7 +18,14 @@ namespace Refactoring
         private void Awake()
         {
             _controller = GetComponent<CinemachineInputAxisController>();
-            _eventDisposable = _eventSubscriber?.Register(StateEventCategory.CameraLock, HandleLock, HandleUnlock);
+
+            if (_eventSubscriber == null)
+            {
+                Debug.LogWarning($"{name}: {nameof(IPlayerStateEventSubscriber)}가 없어 카메라 잠금 구독을 건너뜀.");
+                return;
+            }
+
+            _eventDisposable = _eventSubscriber.Register(StateEventCategory.CameraLock, HandleLock, HandleUnlock);
         }
 
         private void OnDestroy()
