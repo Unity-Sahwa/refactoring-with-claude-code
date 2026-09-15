@@ -139,7 +139,29 @@
 ---
 
 ## SaveSystem
+- 확정: 2026-09-15
+- 게임 진행 상황과 사용자 설정(입력·사운드)을 파일로 저장하고 불러옴
 
+### 이 시스템을 활용하는 방법 (개발자용)
+
+| 클래스 | 받아쓰는 방법 | 제공 기능 |
+|---|---|---|
+| `ISaveService`(`SaveManager`가 구현) | `[Preserve, Inject(true)] private ISaveService _saveService;` | `Save`/`Load<T>()`(슬롯 없는 버전), `Save`/`Load`/`Delete`/`Exists<T>(slot)`(슬롯 버전) |
+| `ISaveSlots`(`SlotLoadRunner`가 구현) | `[Preserve, Inject(true)] private ISaveSlots _saveSlots;` | `GetSlots()` 슬롯 목록, `LoadSlot(index)` 그 칸으로 게임 시작 |
+| `SaveSlotManager` | `[Preserve, Inject(true)] private SaveSlotManager _slots;` — 구체 클래스 직접 참조라 GimmickSystem 3곳에 인터페이스화 TODO 남아있음 | `GetSlots`, `Save`, `TakeSlot`, `GetCurrentData`, `OverwriteCurrent`, `DeleteAll` |
+| `GameStateSaver` | `FindFirstObjectByType<GameStateSaver>()`으로 찾음(SlotLoadRunner 내부용) | `Restore(GameSaveData)` 저장값대로 캐릭터·자리·체력·오브젝트 상태 복원 |
+| `ISaveData`(`GameSaveData`/`InputData`/`SoundData`가 구현) | `ISaveService`의 `T`로 사용 | 없음(데이터만 담음) |
+
+### 이 시스템을 활용하는 방법 (비개발자용)
+
+| 클래스 | 만드는 법 | 배치 위치 | 채울 값 |
+|---|---|---|---|
+| `SaveManager` | 빈 오브젝트에 컴포넌트 추가 | 씬에 하나 | 없음 |
+| `SaveSlotManager` | 빈 오브젝트에 컴포넌트 추가 | 씬에 하나 | `_slotCount`(세이브 슬롯 개수, 기본 4) |
+| `SlotLoadRunner` | 빈 오브젝트에 컴포넌트 추가 | 씬에 하나 | 없음 |
+| `GameStateSaver` | 빈 오브젝트에 컴포넌트 추가 | 씬마다 하나 | 없음 |
+
+SO 에셋·DataContainer 등록은 없음.
 
 ---
 
