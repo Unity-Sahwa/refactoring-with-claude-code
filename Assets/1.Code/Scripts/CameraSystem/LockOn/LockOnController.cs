@@ -28,10 +28,12 @@ namespace Refactoring
 
         private void Awake()
         {
-            if (_lockOnInputProvider != null)
+            if (_lockOnInputProvider == null || _lockOnTargetDetector == null || _currentCharacterProvider == null)
             {
-                _lockOnInputProvider.OnLockOnPressed += HandleInputPressed;
+                throw new InvalidOperationException($"{nameof(LockOnController)}: 필수 의존 주입 실패");
             }
+
+            _lockOnInputProvider.OnLockOnPressed += HandleInputPressed;
         }
 
         private void Update()
@@ -41,20 +43,9 @@ namespace Refactoring
                 return;
             }
 
-            // 고정된 적이 사라졌거나 죽었으면: 새 후보가 있으면 갈아타고, 없으면 해제한다.
             if (LockedTarget == null || IsDead(LockedTarget))
             {
-                Collider next = PickBest();
-                if (next == null)
-                {
-                    Release();
-                    return;
-                }
-
-                SetHighlight(LockedTarget, false);
-                LockedTarget = next;
-                SetHighlight(LockedTarget, true);
-                OnLockOnChanged?.Invoke();
+                ReplaceOrRelease();
                 return;
             }
 
@@ -64,12 +55,25 @@ namespace Refactoring
             }
         }
 
+        // 고정된 적이 사라졌거나 죽었을 때: 새 후보가 있으면 갈아타고, 없으면 해제한다.
+        private void ReplaceOrRelease()
+        {
+            Collider next = PickBest();
+            if (next == null)
+            {
+                Release();
+                return;
+            }
+
+            SetHighlight(LockedTarget, false);
+            LockedTarget = next;
+            SetHighlight(LockedTarget, true);
+            OnLockOnChanged?.Invoke();
+        }
+
         private void OnDestroy()
         {
-            if (_lockOnInputProvider != null)
-            {
-                _lockOnInputProvider.OnLockOnPressed -= HandleInputPressed;
-            }
+            _lockOnInputProvider.OnLockOnPressed -= HandleInputPressed;
         }
 
         // 켜져 있으면 끄고, 꺼져 있으면 지금 조준 가능한 적이 있을 때만 켠다.
@@ -87,6 +91,11 @@ namespace Refactoring
                 return;
             }
 
+            Lock(target);
+        }
+
+        private void Lock(Collider target)
+        {
             LockedTarget = target;
             IsLockOn = true;
             SetHighlight(LockedTarget, true);
@@ -122,52 +131,68 @@ namespace Refactoring
         // 후보 중 화면 중앙에 가장 가까운 하나. 없으면 null.
         private Collider PickBest()
         {
-            IReadOnlyList<Collider> candidates = _lockOnTargetDetector?.Candidates;
-            if (candidates == null || candidates.Count == 0)
+            IReadOnlyList<Collider> candidates = _lockOnTargetDetector.Candidates;
+            if (candidates.Count == 0 || !TryCacheMainCamera())
             {
                 return null;
             }
 
-            if (_mainCamera == null)
-            {
-                _mainCamera = Camera.main;
-            }
+            return FindClosestToCenter(candidates);
+        }
 
-            if (_mainCamera == null)
-            {
-                return null;
-            }
-
+        private Collider FindClosestToCenter(IReadOnlyList<Collider> candidates)
+        {
             Collider best = null;
             float bestScore = Mathf.Infinity;
             for (int i = 0; i < candidates.Count; i++)
             {
-                Collider collider = candidates[i];
-                if (collider == null)
-                {
-                    continue;
-                }
-
-                Vector3 viewportPoint = _mainCamera.WorldToViewportPoint(collider.bounds.center);
-                float offsetX = viewportPoint.x - 0.5f;
-                float offsetY = viewportPoint.y - 0.5f;
-
-                // 크기 비교만 하므로 제곱근을 생략한다.
-                float score = offsetX * offsetX + offsetY * offsetY;
-                if (score < bestScore)
-                {
-                    bestScore = score;
-                    best = collider;
-                }
+                best = UpdateBest(best, ref bestScore, candidates[i]);
             }
 
             return best;
         }
 
+        // candidate가 지금까지의 best보다 화면 중앙에 가까우면 candidate를 새 best로 돌려준다.
+        private Collider UpdateBest(Collider best, ref float bestScore, Collider candidate)
+        {
+            if (candidate == null)
+            {
+                return best;
+            }
+
+            float score = GetScreenCenterScore(candidate);
+            if (score >= bestScore)
+            {
+                return best;
+            }
+
+            bestScore = score;
+            return candidate;
+        }
+
+        private bool TryCacheMainCamera()
+        {
+            if (_mainCamera == null)
+            {
+                _mainCamera = Camera.main;
+            }
+
+            return _mainCamera != null;
+        }
+
+        // 화면 중앙에서 얼마나 벗어났는지. 크기 비교만 하므로 제곱근은 생략한다.
+        private float GetScreenCenterScore(Collider collider)
+        {
+            Vector3 viewportPoint = _mainCamera.WorldToViewportPoint(collider.bounds.center);
+            float offsetX = viewportPoint.x - 0.5f;
+            float offsetY = viewportPoint.y - 0.5f;
+            return offsetX * offsetX + offsetY * offsetY;
+        }
+
         // 높이 차이로 락온이 풀리지 않도록 y를 뺀 수평 거리만 잰다.
         private float GetPlayerDistance(Collider collider)
         {
-            Transform characterTransform = _currentCharacterProvider?.GetCurrentComponent<Transform>();
+            Transform characterTransform = _currentCharacterProvider.GetCurrentComponent<Transform>();
             if (characterTransform == null)
             {
                 return Mathf.Infinity;
