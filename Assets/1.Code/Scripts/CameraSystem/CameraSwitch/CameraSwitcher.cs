@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Unity.Cinemachine;
 using UnityEngine;
@@ -25,26 +26,21 @@ namespace Refactoring
 
         private void Awake()
         {
-            if (_roles != null)
+            if (_roles == null || _swapNotifier == null || _currentCharacter == null || _lockOn == null)
             {
-                foreach (CameraRole role in _roles)
+                throw new InvalidOperationException($"{nameof(CameraSwitcher)}: 필수 의존 주입 실패");
+            }
+
+            foreach (CameraRole role in _roles)
+            {
+                if (role != null && role.Camera != null)
                 {
-                    if (role != null && role.Camera != null)
-                    {
-                        _cameras[role.Kind] = role.Camera;
-                    }
+                    _cameras[role.Kind] = role.Camera;
                 }
             }
 
-            if (_swapNotifier != null)
-            {
-                _swapNotifier.OnCharacterSwapped += HandleChanged;
-            }
-
-            if (_lockOn != null)
-            {
-                _lockOn.OnLockOnChanged += HandleChanged;
-            }
+            _swapNotifier.OnCharacterSwapped += HandleChanged;
+            _lockOn.OnLockOnChanged += HandleChanged;
         }
 
         private void Start()
@@ -54,15 +50,8 @@ namespace Refactoring
 
         private void OnDestroy()
         {
-            if (_swapNotifier != null)
-            {
-                _swapNotifier.OnCharacterSwapped -= HandleChanged;
-            }
-
-            if (_lockOn != null)
-            {
-                _lockOn.OnLockOnChanged -= HandleChanged;
-            }
+            _swapNotifier.OnCharacterSwapped -= HandleChanged;
+            _lockOn.OnLockOnChanged -= HandleChanged;
         }
 
         private void HandleChanged()
@@ -72,7 +61,7 @@ namespace Refactoring
 
         private void Refresh()
         {
-            bool isLockOn = _lockOn != null && _lockOn.IsLockOn && _cameras.ContainsKey(CameraKind.LockOn);
+            bool isLockOn = _lockOn.IsLockOn && _cameras.ContainsKey(CameraKind.LockOn);
             CameraKind chosen = isLockOn ? CameraKind.LockOn : CameraKind.Default;
 
             foreach (KeyValuePair<CameraKind, CinemachineCamera> entry in _cameras)
@@ -83,7 +72,7 @@ namespace Refactoring
             _cameras.TryGetValue(chosen, out CinemachineCamera activeCamera);
             ActiveCamera = activeCamera;
 
-            Transform characterTransform = _currentCharacter?.GetCurrentComponent<Transform>();
+            Transform characterTransform = _currentCharacter.GetCurrentComponent<Transform>();
             if (characterTransform ==  null)
             {
                 return;
