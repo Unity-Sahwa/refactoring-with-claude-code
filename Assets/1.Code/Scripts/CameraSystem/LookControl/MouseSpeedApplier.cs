@@ -38,17 +38,32 @@ namespace Refactoring
             _baseGainX = GetGain(AxisX);
             _baseGainY = GetGain(AxisY);
 
-            if (_mouseSettings != null)
+            SubscribeMouseSettings();
+            SubscribeCutsceneState();
+        }
+
+        private void SubscribeMouseSettings()
+        {
+            if (_mouseSettings == null)
             {
-                _mouseSettings.OnChanged += ApplySettings;
-                ApplySettings();
+                Debug.LogWarning($"{name}: {nameof(IMouseSettings)}가 없어 마우스 감도 적용을 건너뜀.");
+                return;
             }
 
-            if (_cutsceneState != null)
+            _mouseSettings.OnChanged += ApplySettings;
+            ApplySettings();
+        }
+
+        private void SubscribeCutsceneState()
+        {
+            if (_cutsceneState == null)
             {
-                _cutsceneState.OnCutsceneChanged += HandleCutsceneChanged;
-                HandleCutsceneChanged();
+                Debug.LogWarning($"{name}: {nameof(ICutsceneStateProvider)}가 없어 컷씬 회전 차단을 건너뜀.");
+                return;
             }
+
+            _cutsceneState.OnCutsceneChanged += HandleCutsceneChanged;
+            HandleCutsceneChanged();
         }
 
         private void OnDestroy()
