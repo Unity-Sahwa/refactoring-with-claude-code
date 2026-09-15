@@ -9,6 +9,7 @@ CLAUDE.md, `.claude/` 아래 커맨드·설정·훅이 바뀔 때마다 한 행�
 | 2026-09-14 | .claude/commands/code-evaluation.md | 1-1 첫 질문에 "게임 엔진·언어 기본 제공 타입, 유니티 공식 에셋 제공 타입 대상은 제외" 예외 추가 | CameraRole.cs:15 GetComponent<CinemachineCamera>() 호출이 FAIL로 잡힘. 1-1은 타입이 아니라 주입 방향을 보는 축이라 1-3과 같은 근거는 아니라고 AI가 이의 제기함. 사용자가 그래도 예외 처리하자고 지시함 |
 | 2026-09-14 | .claude/commands/code-evaluation.md | 1-4 첫 질문에 "인스펙터에서 리스트 항목을 구분하는 라벨용 `[SerializeField] string` 필드는 제외" 예외 추가 | CameraShakeDataEntry.cs:10 `_name` 필드가 코드에서 안 읽혀 FAIL로 잡힘. 사용자가 SO 리스트 항목을 인스펙터에서 구분하는 용도라고 설명함 |
 | 2026-09-14 | .claude/commands/code-evaluation.md | 1-1 둘째 질문에 "게임 엔진·언어 기본 제공 타입, 유니티 공식 에셋 제공 타입의 공개 API 접근은 제외" 예외 추가 | CameraSwitcher.cs:80,95,96 `entry.Value.Priority.Value`,`entry.Value.Target.TrackingTarget` 체이닝이 FAIL로 잡힘. 사용자가 시네머신 내부 구조는 우리가 못 건드리는 외부 API라서 그렇게 접근하게 만들어진 거라고 함 |
+| 2026-09-15 | .claude/commands/code-evaluation.md | 1-3 필수 의존 방어 코드 질문의 좋음/나쁨 기준을 "null이면 메시지와 함께 예외를 던져 즉시 멈춤 / 로그만 찍고 실행이 계속되는 경우 포함"으로 구체화 | Evidence_DI.md:48은 필수 의존 없으면 LogError라 적혀있고 HitStopHandler.cs:27-31은 LogError 뒤 return으로 멈추는데, InputHub.cs:32-35는 throw로 멈춤. 셋이 형식이 달라 판정 기준이 불명확했음. 사용자가 에러 메시지를 던지고 멈추는 방식으로 통일하자고 함 |
 | 2026-09-14 | .claude/commands/git-issue.md | 본문 절차의 태그 채우기 6번 단계, 초안 형식의 `태그:` 줄, 금지 목록의 Docs/Tags.md 미등록 태그 사용 항목 제거 | 사용자가 git-issue에는 태그를 달지 말자고 함 |
 | 2026-09-14 | .claude/git/work_issuetemplate.md | `## 태그` 섹션 제거 | 사용자가 git-issue에는 태그를 달지 말자고 함 |
 | 2026-09-14 | .claude/git/bug_issuetemplate.md | `## 태그` 섹션 제거 | 사용자가 git-issue에는 태그를 달지 말자고 함 |
