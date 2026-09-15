@@ -61,6 +61,12 @@ namespace Refactoring
 
         private void Refresh()
         {
+            UpdatePriority();
+            UpdateTarget();
+        }
+
+        private void UpdatePriority()
+        {
             bool isLockOn = _lockOn.IsLockOn && _cameras.ContainsKey(CameraKind.LockOn);
             CameraKind chosen = isLockOn ? CameraKind.LockOn : CameraKind.Default;
 
@@ -71,9 +77,12 @@ namespace Refactoring
 
             _cameras.TryGetValue(chosen, out CinemachineCamera activeCamera);
             ActiveCamera = activeCamera;
+        }
 
+        private void UpdateTarget()
+        {
             Transform characterTransform = _currentCharacter.GetCurrentComponent<Transform>();
-            if (characterTransform ==  null)
+            if (characterTransform == null)
             {
                 return;
             }
