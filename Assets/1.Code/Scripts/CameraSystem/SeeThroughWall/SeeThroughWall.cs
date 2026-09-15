@@ -49,20 +49,10 @@ namespace Refactoring
         // 시네머신이 LateUpdate에서 카메라를 옮기므로, 그 뒤 위치로 계산한다.
         private void LateUpdate()
         {
-            Transform characterTransform = _currentCharacter.GetCurrentComponent<Transform>();
-
-            if (characterTransform == null || _camera == null)
+            if (!TryGetBodyCenter(out Vector3 bodyCenter))
             {
                 return;
             }
-
-            if (characterTransform != _cachedCharacterTransform)
-            {
-                _cachedCharacterTransform = characterTransform;
-                _controller = _currentCharacter.GetCurrentComponent<CharacterController>();
-            }
-
-            Vector3 bodyCenter = GetBodyCenter(characterTransform);
 
             // 카메라와 몸 중앙 사이에 실제로 가리는 오브젝트가 있을 때만 구멍을 뚫는다.
             if (!IsOccluded(bodyCenter))
@@ -71,8 +61,32 @@ namespace Refactoring
                 return;
             }
 
-            // z에 카메라~플레이어 거리가 들어가므로, 그보다 가까운 픽셀만 셰이더가 깎는다.
-            // 전역 값은 1비트뿐이라 레이캐스트로 판정하면 화면 안 모든 대상이 같이 뚫린다.
+            ApplyShaderValues(bodyCenter);
+        }
+
+        private bool TryGetBodyCenter(out Vector3 bodyCenter)
+        {
+            bodyCenter = default;
+            Transform characterTransform = _currentCharacter.GetCurrentComponent<Transform>();
+            if (characterTransform == null || _camera == null)
+            {
+                return false;
+            }
+
+            if (characterTransform != _cachedCharacterTransform)
+            {
+                _cachedCharacterTransform = characterTransform;
+                _controller = _currentCharacter.GetCurrentComponent<CharacterController>();
+            }
+
+            bodyCenter = GetBodyCenter(characterTransform);
+            return true;
+        }
+
+        // z에 카메라~플레이어 거리가 들어가므로, 그보다 가까운 픽셀만 셰이더가 깎는다.
+        // 전역 값은 1비트뿐이라 레이캐스트로 판정하면 화면 안 모든 대상이 같이 뚫린다.
+        private void ApplyShaderValues(Vector3 bodyCenter)
+        {
             Vector3 view = _camera.WorldToViewportPoint(bodyCenter);
 
             Shader.SetGlobalFloat(SizeId, _holeSize);
