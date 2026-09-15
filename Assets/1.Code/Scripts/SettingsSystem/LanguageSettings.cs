@@ -7,7 +7,7 @@ namespace Refactoring
     public class LanguageSettings : SettingsHolder<LanguageSettingsData>, ILanguageSettings
     {
         // 표는 DataContainer에 등록해두고 주입으로 받는다. 씬마다 손으로 꽂으면 빠뜨린 씬이 생긴다.
-        [Preserve, Inject] private TextTableData _table;
+        [Preserve, Inject] private ITextTableData _table;
 
         public LanguageType Current
         {

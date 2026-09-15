@@ -8,7 +8,7 @@ namespace Refactoring
     // 번역 표. 키 하나에 한국어·영어 문장을 나란히 적어둔다.
     // 언어별 폰트도 여기 둔다. 글자마다 폰트를 꽂으면 배선이 너무 많아진다.
     [CreateAssetMenu(fileName = "TextTableData", menuName = "Refactoring/TextTableData")]
-    public class TextTableData : ScriptableObject
+    public class TextTableData : ScriptableObject, ITextTableData
     {
         [SerializeField]
         private List<Entry> _entries = new List<Entry>();

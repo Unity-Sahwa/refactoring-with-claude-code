@@ -10,9 +10,7 @@ namespace Refactoring
     public class LanguageButton : MonoBehaviour
     {
         // 이 버튼이 맡은 언어.
-        [SerializeField]
-        private LanguageType _target;
-
+        [SerializeField] private LanguageType _target;
         [Preserve, Inject(true)] private ILanguageSettings _language;
 
         private void Awake()
