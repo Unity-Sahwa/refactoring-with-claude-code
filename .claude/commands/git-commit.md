@@ -39,8 +39,6 @@ description: 변경사항을 분석해 커밋안을 제시하고, 승인 절차�
   <경로1>
   <경로2>
   ...
-이슈: #98 (닫음 → Done | 안 닫음 → Refs)
-태그: #disystem #system-evaluation
 메시지:
   <아래 메시지 규칙대로>
 ```
