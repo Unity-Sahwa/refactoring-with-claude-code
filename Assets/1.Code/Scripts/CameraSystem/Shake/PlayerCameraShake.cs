@@ -27,6 +27,11 @@ namespace Refactoring
 
         private void Awake()
         {
+            if (_impulseSource == null)
+            {
+                throw new InvalidOperationException($"{nameof(PlayerCameraShake)}: 필수 의존 주입 실패");
+            }
+
             if (_hitChannel != null)
             {
                 _hitEventDisposable = _hitChannel.Register(HandleHit);
@@ -74,7 +79,7 @@ namespace Refactoring
 
         private void Shake(PlayerStateType state)
         {
-            if (_impulseSource == null || _shakeData == null)
+            if (_shakeData == null)
             {
                 return;
             }
