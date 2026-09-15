@@ -53,12 +53,8 @@ description: GitHub Issue를 라벨·마일스톤과 함께 작성해 등록한�
 - **마일스톤**: 마감일이 정해진 게 있을 때만 붙인다. 열린 마일스톤이 없고 사용자가 기한을 주지 않으면 **붙이지 않는다.**
 - **Start date**: 이슈를 만드는 날.
 - **Target date**: 언제까지 끝낼지 사용자와 정한다. 실제 종료일이 아니라 **목표일**이다. 실제 종료일은 Projects의 `Closed`가 자동으로 기록한다.
-- **본문**: 아래 절차대로 작성한다.
-   1. type 라벨로 파일 경로를 정한다 — `type:bug`면 `.claude/git/bug_issuetemplate.md`, 그 외 전부 `.claude/git/work_issuetemplate.md`.
-   2. 정해진 파일을 Read로 직접 연다. 내용을 기억이나 추정으로 재현하지 않는다.
-   3. 읽은 파일의 섹션 구조·순서를 그대로 유지하며 각 섹션을 채운다.
-   4. 적을 내용이 없는 섹션은 통째로 지운다 — 빈 껍데기를 남기지 않는다.
-   5. HTML 주석(`<!-- -->`)은 안내문이므로 등록 전에 지운다.
+- **본문**: 생성 시점에는 쓰지 않는다. 이슈를 만들 때는 실제로 한 일이 아직 없기 때문이다.
+  본문은 이슈를 닫을 때(6번) 그동안의 커밋을 근거로 채운다.
 
 ### 3. 초안 제시 → 승인
 **한 번에 한 이슈만 제시한다.** 만들 이슈가 여러 개여도 첫 이슈만 보여주고 등록이 끝난 뒤 다음으로 넘어간다. 전체 개수만 한 줄로 알린다.
@@ -69,14 +65,13 @@ description: GitHub Issue를 라벨·마일스톤과 함께 작성해 등록한�
 라벨: type:refactor, sys:Input
 기간: 2026-09-03 ~ 2026-09-05
 마일스톤: 없음 | <이름> (마감 2026-09-30)
-본문:
-  <템플릿 채운 내용>
+본문: 없음 (닫을 때 채움)
 ```
 
 ### 4. 승인 후 등록
 1. 마일스톤이 신규면 마감일과 함께 만든다.
    `gh api repos/:owner/:repo/milestones -f title="..." -f due_on="2026-09-30T00:00:00Z"`
-2. `gh issue create --title ... --body-file <임시파일> --label "type:x" --label "sys:y" --assignee Eoodyd [--milestone "..."]`
+2. `gh issue create --title ... --body "" --label "type:x" --label "sys:y" --assignee Eoodyd [--milestone "..."]`
 3. 프로젝트 보드에 올린다.
    `gh project item-add 3 --owner Unity-Sahwa --url <이슈 URL>` → 출력된 item id 사용
 4. 날짜를 넣는다. (프로젝트 id `PVT_kwDOC7Pf_s4BUD6o`)
@@ -84,7 +79,16 @@ description: GitHub Issue를 라벨·마일스톤과 함께 작성해 등록한�
    Target date: 같은 명령에 `--field-id PVTF_lADOC7Pf_s4BUD6ozhBOm_o`
 5. 이슈 번호와 URL을 알린다.
 
+### 6. 종료 시 본문 작성 (`/git-commit`에서 이슈를 닫을 때 호출)
+1. `git log --all --grep "Refs #<N>" --oneline`으로 그 이슈에 달린 커밋을 전부 모은다.
+2. type 라벨로 파일 경로를 정한다 — `type:bug`면 `.claude/git/bug_issuetemplate.md`, 그 외 전부 `.claude/git/work_issuetemplate.md`. Read로 직접 연다.
+3. 읽은 파일의 섹션 구조·순서를 유지하며, 모은 커밋들의 제목·본문을 근거로 각 섹션을 채운다. 커밋에 없는 내용은 추정해서 넣지 않는다.
+4. 적을 내용이 없는 섹션은 통째로 지운다. HTML 주석은 등록 전에 지운다.
+5. 채운 본문을 사용자에게 보여주고 승인받는다.
+6. 승인 후 `gh issue edit <N> --body-file <임시파일>`로 본문을 갱신한다.
+
 ## 금지
 - 승인 없는 이슈·마일스톤·라벨 생성
 - 마감일 없는 마일스톤 생성
 - 중복 이슈 생성 (기존 이슈 수정으로 되면 그렇게 한다)
+- 승인 없는 이슈 본문 수정
