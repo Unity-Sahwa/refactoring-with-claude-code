@@ -16,7 +16,13 @@ namespace Refactoring
 
         private void Awake()
         {
-            _eventDisposable = _eventSubscriber?.Register(StateEventCategory.CameraShake, HandleShake);
+            if (_eventSubscriber == null)
+            {
+                Debug.LogWarning($"{name}: {nameof(IPlayerStateEventSubscriber)}가 없어 스킬 셰이크 구독을 건너뜀.");
+                return;
+            }
+
+            _eventDisposable = _eventSubscriber.Register(StateEventCategory.CameraShake, HandleShake);
         }
 
         private void OnDestroy()
@@ -34,6 +40,7 @@ namespace Refactoring
 
             if (_impulseSource == null)
             {
+                Debug.LogWarning($"{name}: {nameof(CinemachineImpulseSource)}가 없어 스킬 셰이크를 건너뜀.");
                 return;
             }
 
