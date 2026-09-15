@@ -108,25 +108,35 @@ namespace Refactoring
 
         private void Shake(PlayerStateType state)
         {
-            if (_shakeData == null)
+            if (_shakeData == null || !_shakeData.TryGetShake(state, out ShakeData shake))
             {
                 return;
             }
 
-            if (!_shakeData.TryGetShake(state, out ShakeData shake))
+            if (!TryGetAmplitudeGain(shake, out float amplitudeGain))
             {
                 return;
             }
 
-            // 같은 상태에서 연속으로 들어온 타격은 카운트만 쌓고, 최대치를 넘으면 더 흔들지 않는다.
+            FireImpulse(shake, amplitudeGain);
+        }
+
+        // 같은 상태에서 연속으로 들어온 타격은 카운트만 쌓고, 최대치를 넘으면 더 흔들지 않는다.
+        private bool TryGetAmplitudeGain(ShakeData shake, out float amplitudeGain)
+        {
             _sameStateStack++;
             if (_sameStateStack > _maxSameStateStack)
             {
-                return;
+                amplitudeGain = 0f;
+                return false;
             }
 
-            float amplitudeGain = shake.AmplitudeGain + _amplitudeGainPerStack * (_sameStateStack - 1);
+            amplitudeGain = shake.AmplitudeGain + _amplitudeGainPerStack * (_sameStateStack - 1);
+            return true;
+        }
 
+        private void FireImpulse(ShakeData shake, float amplitudeGain)
+        {
             _impulseSource.ImpulseDefinition.ImpulseShape = shake.ImpulseShape;
             _impulseSource.ImpulseDefinition.ImpulseDuration = shake.Duration;
             _impulseSource.ImpulseDefinition.AmplitudeGain = amplitudeGain;
