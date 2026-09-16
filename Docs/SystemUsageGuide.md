@@ -159,7 +159,21 @@
 ---
 
 ## PlatformSystem
+- 확정: 2026-09-15
+- 빌드된 플랫폼(모바일/PC)에 맞춰 오브젝트 켜짐, FPS, 해상도, 카메라 포인터 조작을 자동 전환한다.
 
+### 이 시스템을 활용하는 방법 (개발자용)
+
+| 클래스 | 받아쓰는 방법 | 제공 기능 |
+|---|---|---|
+| `PlatformObject` | `[Inject(true)] List<PlatformObject>`로 받음 | 없음 (플래그 데이터 전달용) |
+
+### 이 시스템을 활용하는 방법 (비개발자용)
+
+| 클래스 | 만드는 법 | 배치 위치 | 채울 값 |
+|---|---|---|---|
+| `PlatformObject` | 컴포넌트 추가 | 플랫폼별로 켜고 끌 오브젝트 | `Is Mobile Only` 체크(모바일 전용)/해제(PC 전용) |
+| `PlatformController` | 컴포넌트 추가 | 씬에 하나 | `Mobile Target FPS`, `Window Target FPS`, `Mobile Pixel Budget` |
 
 ---
 
