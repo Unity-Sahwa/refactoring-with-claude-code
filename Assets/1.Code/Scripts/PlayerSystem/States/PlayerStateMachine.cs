@@ -16,15 +16,15 @@ namespace Refactoring
 
         private readonly Dictionary<PlayerStateType, StateRunner> _states = new Dictionary<PlayerStateType, StateRunner>();
         private readonly Dictionary<PlayerStateType, float> _lastEnterTime = new Dictionary<PlayerStateType, float>();
-        private PlayerCharacter _character;
+        private ICharacterComponentSource _character;
         public StateRunner CurrentState { get; private set; }
 
         private void Awake()
         {
-            _character = GetComponent<PlayerCharacter>();
+            _character = GetComponent<ICharacterComponentSource>();
             if (_character == null)
             {
-                Debug.LogError($"[StateMachine] {name}에 PlayerCharacter가 없습니다.");
+                Debug.LogError($"[StateMachine] {name}에 ICharacterComponentSource가 없습니다.");
                 return;
             }
 

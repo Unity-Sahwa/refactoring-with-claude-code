@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Refactoring
 {
     // 책임: 캐릭터 자신의 종류를 알리고, 자기 컴포넌트를 찾아 캐시해 돌려준다.
-    public class PlayerCharacter : MonoBehaviour
+    public class PlayerCharacter : MonoBehaviour, ICharacterComponentSource
     {
         [SerializeField] private PlayerCharacterType type;
 

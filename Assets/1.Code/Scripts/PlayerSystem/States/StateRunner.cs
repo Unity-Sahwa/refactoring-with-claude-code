@@ -18,7 +18,7 @@ namespace Refactoring
         public bool IsLooping { get; private set; }
         public bool IsAnimationFinished => _tracker.IsFinished;
         public float Cooldown => _data.Cooldown;
-        public void Initialize(PlayerCharacter character, IPlayerStateEventRaiser raiser, StateData data)
+        public void Initialize(ICharacterComponentSource character, IPlayerStateEventRaiser raiser, StateData data)
         {
             StateKey = data.StateType;
             _raiser = raiser;
