@@ -31,6 +31,11 @@ namespace Refactoring
 
         private void Awake()
         {
+            if (_currentCharacterProvider == null || _hitChannel == null)
+            {
+                throw new InvalidOperationException($"{nameof(PlayerHitboxHandler)}: 필수 의존 주입 실패");
+            }
+
             _hitboxEventDisposable = _eventSubscriber.Register(StateEventCategory.Hitbox, HandleHitbox, HandleReset);
             _targetMask = LayerMask.GetMask("Enemy", "Gimmick");
             if (_targetMask == 0)
@@ -75,7 +80,7 @@ namespace Refactoring
 
         private Transform GetAttacker()
         {
-            return _currentCharacterProvider?.GetCurrentComponent<Transform>();
+            return _currentCharacterProvider.GetCurrentComponent<Transform>();
         }
 
         private void HandleReset(CloseEventType reason)
@@ -179,11 +184,6 @@ namespace Refactoring
         // 타격 성공 사실만 발행한다. 소리·히트스탑 등은 구독자가 알아서 처리한다.
         private void RaiseHitReport(ActiveHitbox active, Component target, DamageInfo info)
         {
-            if (_hitChannel == null)
-            {
-                return;
-            }
-
             _hitChannel.Raise(new HitReport
             {
                 Attacker = active.Attach.gameObject,
