@@ -59,72 +59,114 @@ namespace Refactoring
                 return;
             }
 
-            // 연속 피격이면 이전 점멸을 끊고 다시 시작한다.
+            StopExistingFlash(target);
+            _running[target] = StartCoroutine(CoFlash(target, renderers));
+        }
+
+        // 연속 피격이면 이전 점멸을 끊고 다시 시작한다.
+        private void StopExistingFlash(GameObject target)
+        {
             if (_running.TryGetValue(target, out Coroutine running))
             {
                 StopCoroutine(running);
             }
-
-            _running[target] = StartCoroutine(CoFlash(target, renderers));
         }
 
         private IEnumerator CoFlash(GameObject target, Renderer[] renderers)
         {
-            // 렌더러마다 원래색이 다를 수 있어 각자 기억
-            Color[] original = new Color[renderers.Length];
-            Color[] originalEmission = new Color[renderers.Length];
+            CaptureOriginalColors(renderers, out Color[] original, out Color[] originalEmission);
+            PaintColors flashColors = new PaintColors(_flashColor, null, null);
+            PaintColors originalColors = new PaintColors(default, original, originalEmission);
+
+            float half = _duration / (_blinkCount * 2);
+            for (int i = 0; i < _blinkCount; i++)
+            {
+                Paint(renderers, flashColors);
+                yield return new WaitForSeconds(half);
+
+                Paint(renderers, originalColors);
+                yield return new WaitForSeconds(half);
+            }
+
+            // 마지막에 한 번 더 덮어 원래색을 확실히 되돌린다.
+            Paint(renderers, originalColors);
+            _running.Remove(target);
+        }
+
+        // 렌더러마다 원래색이 다를 수 있어 각자 기억
+        private void CaptureOriginalColors(Renderer[] renderers, out Color[] original, out Color[] originalEmission)
+        {
+            original = new Color[renderers.Length];
+            originalEmission = new Color[renderers.Length];
             for (int i = 0; i < renderers.Length; i++)
             {
                 original[i] = HasColor(renderers[i]) ? renderers[i].sharedMaterial.GetColor(BaseColorId) : Color.white;
                 originalEmission[i] = HasEmission(renderers[i]) ? renderers[i].sharedMaterial.GetColor(EmissionColorId) : Color.black;
             }
-
-            float half = _duration / (_blinkCount * 2);
-            for (int i = 0; i < _blinkCount; i++)
-            {
-                Paint(renderers, _flashColor, null, null);
-                yield return new WaitForSeconds(half);
-
-                Paint(renderers, default, original, originalEmission);
-                yield return new WaitForSeconds(half);
-            }
-
-            // 마지막에 한 번 더 덮어 원래색을 확실히 되돌린다.
-            Paint(renderers, default, original, originalEmission);
-            _running.Remove(target);
         }
 
-        // original이 있으면 렌더러별 그 색으로, 없으면 flat 색으로 덮는다(기존 MPB 값 보존).
-        private void Paint(Renderer[] renderers, Color flat, Color[] original, Color[] originalEmission)
+        // 페인트에 쓸 색 묶음. original이 있으면 렌더러별 그 색으로, 없으면 flat 색으로 덮는다.
+        private readonly struct PaintColors
+        {
+            public readonly Color Flat;
+            public readonly Color[] Original;
+            public readonly Color[] OriginalEmission;
+
+            public PaintColors(Color flat, Color[] original, Color[] originalEmission)
+            {
+                Flat = flat;
+                Original = original;
+                OriginalEmission = originalEmission;
+            }
+        }
+
+        private void Paint(Renderer[] renderers, PaintColors colors)
         {
             for (int i = 0; i < renderers.Length; i++)
             {
-                if (renderers[i] == null)
-                {
-                    continue;
-                }
-
-                bool hasColor = HasColor(renderers[i]);
-                bool hasEmission = HasEmission(renderers[i]);
-                if (!hasColor && !hasEmission)
-                {
-                    continue;
-                }
-
-                renderers[i].GetPropertyBlock(_mpb);
-                if (hasColor)
-                {
-                    _mpb.SetColor(BaseColorId, original != null ? original[i] : flat);
-                }
-
-                // ponytail: _EMISSION 키워드가 꺼진 머티리얼은 MPB로 못 켜서 무시됨. 필요하면 머티리얼에서 Emission 체크.
-                if (hasEmission)
-                {
-                    _mpb.SetColor(EmissionColorId, originalEmission != null ? originalEmission[i] : flat * _emissionIntensity);
-                }
-
-                renderers[i].SetPropertyBlock(_mpb);
+                PaintRenderer(renderers[i], colors, i);
             }
+        }
+
+        private void PaintRenderer(Renderer renderer, PaintColors colors, int index)
+        {
+            if (renderer == null)
+            {
+                return;
+            }
+
+            bool hasColor = HasColor(renderer);
+            bool hasEmission = HasEmission(renderer);
+            if (!hasColor && !hasEmission)
+            {
+                return;
+            }
+
+            renderer.GetPropertyBlock(_mpb);
+            ApplyColor(hasColor, colors, index);
+            ApplyEmission(hasEmission, colors, index);
+            renderer.SetPropertyBlock(_mpb);
+        }
+
+        private void ApplyColor(bool hasColor, PaintColors colors, int index)
+        {
+            if (!hasColor)
+            {
+                return;
+            }
+
+            _mpb.SetColor(BaseColorId, colors.Original != null ? colors.Original[index] : colors.Flat);
+        }
+
+        // ponytail: _EMISSION 키워드가 꺼진 머티리얼은 MPB로 못 켜서 무시됨. 필요하면 머티리얼에서 Emission 체크.
+        private void ApplyEmission(bool hasEmission, PaintColors colors, int index)
+        {
+            if (!hasEmission)
+            {
+                return;
+            }
+
+            _mpb.SetColor(EmissionColorId, colors.OriginalEmission != null ? colors.OriginalEmission[index] : colors.Flat * _emissionIntensity);
         }
 
         private bool HasColor(Renderer renderer)
