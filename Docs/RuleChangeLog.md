@@ -5,6 +5,7 @@ CLAUDE.md, `.claude/` 아래 커맨드·설정·훅이 바뀔 때마다 한 행�
 
 | 날짜 | 파일 | 무엇을 | 왜 |
 |---|---|---|---|
+| 2026-09-16 | .claude/commands/git-commit.md | 2절 변경사항 분류에 LSP 활용·검증 문구 추가(묶을 때 LSP 활용 가능, 묶은 뒤 연관 없는 파일 빼고 연관된 빠진 파일 추가) | 사용자가 논리 단위 분류는 에이전트가 하고 LSP는 그 연관성을 한번 더 검증·보완하는 용도로 쓰라고 요청함 |
 | 2026-09-16 | .claude/commands/system-evaluation.md | 0-0-1 절차 추가(참조·의존·흐름·연결 확인은 LSP 사용, 코드 밖 참조는 Grep 병행), 2절 활용 표시의 "외부 시스템 참조" 항목에 "(LSP findReferences 기준)" 명시 | 사용자가 커맨드의 grep 기반 참조 확인을 LSP로 바꾸라고 요청함 |
 | 2026-09-16 | .claude/commands/code-evaluation.md | 0절 절차 추가(참조·의존·흐름·연결 확인은 LSP 사용, 코드 밖 참조는 Grep 병행), 1-4 항목의 "호출처 검색"·"검색하면"을 "LSP로 찾은 호출처"·"LSP로 찾아지나"로 수정 | 사용자가 커맨드의 grep 기반 참조 확인을 LSP로 바꾸라고 요청함 |
 | 2026-09-16 | .claude/settings.json | env에 ENABLE_LSP_TOOL=1 추가, enabledPlugins에 csharp-lsp@claude-plugins-official 추가 | 사용자가 C# LSP를 클로드 코드에 붙여 참조·정의 이동을 테스트해보자고 요청함 |
