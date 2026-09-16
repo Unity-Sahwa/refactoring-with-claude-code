@@ -129,6 +129,19 @@
 ---
 
 ## GameStateSystem
+- 확정: 2026-09-16
+- 게임 모드(GamePlay/Cutscene/Menu)를 스택으로 관리하고, 모드 변경을 다른 시스템에 알린다.
+
+### 이 시스템을 활용하는 방법 (개발자용)
+
+| 클래스/인터페이스 | 받아쓰는 방법 | 제공 기능 |
+|---|---|---|
+| `IGameStateProvider` | `[Preserve, Inject] private IGameStateProvider _gameState;` | `Current` 조회, `OnChanged` 이벤트 구독 |
+| `GameStateType`(enum) | 매개변수·반환값으로 그대로 사용 | GamePlay/Cutscene/Menu 값 비교 |
+
+### 이 시스템을 활용하는 방법 (비개발자용)
+
+에디터 작업이 필요한 클래스 없음. `CursorController`, `GamePauseController`, `GameStateManager`는 씬에 미리 배치되어 있어 추가 작업 불필요.
 
 ---
 
