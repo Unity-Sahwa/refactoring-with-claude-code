@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Scripting;
 
@@ -10,18 +11,20 @@ namespace Refactoring
 
         private void Start()
         {
-            if (_gameState != null)
+            if ((_gameState as UnityEngine.Object) == null)
             {
-                _gameState.OnChanged += HandleStateChanged;
+                throw new InvalidOperationException($"{nameof(CursorController)}: {nameof(_gameState)} 주입되지 않음");
             }
 
+            _gameState.OnChanged += HandleStateChanged;
+
             // OnChanged는 변경 시에만 오므로, 시작 시 현재 모드 기준으로 한 번 맞춘다.
-            Apply(_gameState != null ? _gameState.Current : GameStateType.GamePlay);
+            Apply(_gameState.Current);
         }
 
         private void OnDestroy()
         {
-            if (_gameState != null)
+            if ((_gameState as UnityEngine.Object) != null)
             {
                 _gameState.OnChanged -= HandleStateChanged;
             }
