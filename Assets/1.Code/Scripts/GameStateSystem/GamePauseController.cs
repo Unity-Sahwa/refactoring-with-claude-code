@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Scripting;
 
@@ -10,15 +11,17 @@ namespace Refactoring
 
         private void Awake()
         {
-            if (_gameState != null)
+            if ((_gameState as UnityEngine.Object) == null)
             {
-                _gameState.OnChanged += HandleStateChanged;
+                throw new InvalidOperationException($"{nameof(GamePauseController)}: {nameof(_gameState)} 주입되지 않음");
             }
+
+            _gameState.OnChanged += HandleStateChanged;
         }
 
         private void OnDestroy()
         {
-            if (_gameState != null)
+            if ((_gameState as UnityEngine.Object) != null)
             {
                 _gameState.OnChanged -= HandleStateChanged;
             }
