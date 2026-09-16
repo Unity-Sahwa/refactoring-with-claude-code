@@ -5,6 +5,9 @@ CLAUDE.md, `.claude/` 아래 커맨드·설정·훅이 바뀔 때마다 한 행�
 
 | 날짜 | 파일 | 무엇을 | 왜 |
 |---|---|---|---|
+| 2026-09-16 | .claude/commands/system-evaluation.md | 0-0-1 절차 추가(참조·의존·흐름·연결 확인은 LSP 사용, 코드 밖 참조는 Grep 병행), 2절 활용 표시의 "외부 시스템 참조" 항목에 "(LSP findReferences 기준)" 명시 | 사용자가 커맨드의 grep 기반 참조 확인을 LSP로 바꾸라고 요청함 |
+| 2026-09-16 | .claude/commands/code-evaluation.md | 0절 절차 추가(참조·의존·흐름·연결 확인은 LSP 사용, 코드 밖 참조는 Grep 병행), 1-4 항목의 "호출처 검색"·"검색하면"을 "LSP로 찾은 호출처"·"LSP로 찾아지나"로 수정 | 사용자가 커맨드의 grep 기반 참조 확인을 LSP로 바꾸라고 요청함 |
+| 2026-09-16 | .claude/settings.json | env에 ENABLE_LSP_TOOL=1 추가, enabledPlugins에 csharp-lsp@claude-plugins-official 추가 | 사용자가 C# LSP를 클로드 코드에 붙여 참조·정의 이동을 테스트해보자고 요청함 |
 | 2026-09-15 | .claude/commands/code-evaluation.md | 판정표 아래에 system-evaluation.md와 동일한 FAIL 순번(n/총개수)·파일명·줄·문제 표 형식 추가 | 사용자가 code-evaluation에도 같은 형식을 적용해달라고 요청함 |
 | 2026-09-15 | .claude/commands/system-evaluation.md | 1-4에 FAIL 하나씩 순번(n/총개수)과 파일명·줄·문제 표로 제시하는 형식 추가 | 사용자가 한 번에 하나씩 봐야 집중된다고 요청함. 파일명은 확장자 빼고, 줄 번호는 정확한 위치를 표시하라고 지시함 |
 | 2026-09-14 | .claude/commands/code-evaluation.md | 1-3 첫 질문의 예외 범위에 "유니티 공식 에셋(Cinemachine 등 Unity Technologies 배포 패키지) 제공 타입" 추가 | CameraRole.cs 평가 중 CinemachineCamera 구체 타입 노출이 FAIL로 잡힘. 사용자가 유니티 공식 에셋도 예외 처리하자고 함 |
