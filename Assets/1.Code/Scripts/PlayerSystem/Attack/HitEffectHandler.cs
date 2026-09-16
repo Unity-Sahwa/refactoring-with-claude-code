@@ -24,6 +24,11 @@ namespace Refactoring
 
         private void Awake()
         {
+            if (_hitChannel == null)
+            {
+                throw new InvalidOperationException($"{nameof(HitEffectHandler)}: 필수 의존 주입 실패");
+            }
+
             _pool = new ObjectPool<GameObject>(CreateEffect, actionOnRelease: HideEffect, defaultCapacity: 8);
             _wait = new WaitForSeconds(_duration);
         }
