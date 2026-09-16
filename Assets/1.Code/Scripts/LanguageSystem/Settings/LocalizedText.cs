@@ -22,7 +22,7 @@ namespace Refactoring
         private void OnEnable()
         {
             // 꺼져 있는 동안 언어가 바뀌었을 수 있어서, 켜질 때도 한 번 갱신한다.
-            if (_language != null)
+            if ((_language as Object) != null)
             {
                 _language.OnChanged += HandleLanguageChanged;
             }
@@ -38,7 +38,7 @@ namespace Refactoring
 
         private void OnDisable()
         {
-            if (_language != null)
+            if ((_language as Object) != null)
             {
                 _language.OnChanged -= HandleLanguageChanged;
             }
@@ -51,7 +51,7 @@ namespace Refactoring
 
         private void Refresh()
         {
-            if (_language == null || _text == null)
+            if ((_language as Object) == null || _text == null)
             {
                 return;
             }

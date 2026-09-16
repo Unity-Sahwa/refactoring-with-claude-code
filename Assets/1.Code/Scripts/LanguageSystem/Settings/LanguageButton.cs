@@ -20,7 +20,7 @@ namespace Refactoring
 
         private void HandleClicked()
         {
-            if (_language == null)
+            if ((_language as Object) == null)
             {
                 return;
             }
