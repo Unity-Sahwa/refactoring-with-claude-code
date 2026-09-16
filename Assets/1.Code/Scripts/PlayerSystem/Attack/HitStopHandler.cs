@@ -21,6 +21,8 @@ namespace Refactoring
         // 얼린 애니메이터 → 얼리기 직전 속도
         private readonly Dictionary<Animator, float> _frozen = new();
         private IDisposable _hitDisposable;
+        private WaitForSeconds _attackerWait;
+        private WaitForSeconds _targetWait;
 
         private void Awake()
         {
@@ -29,6 +31,8 @@ namespace Refactoring
                 throw new InvalidOperationException($"{nameof(HitStopHandler)}: 필수 의존 주입 실패");
             }
 
+            _attackerWait = new WaitForSeconds(_attackerFreeze);
+            _targetWait = new WaitForSeconds(_targetFreeze);
             _hitDisposable = _hitChannel.Register(HandleHit);
         }
 
@@ -53,11 +57,11 @@ namespace Refactoring
 
         private void HandleHit(HitReport report)
         {
-            Freeze(report.Attacker, _attackerFreeze);
-            Freeze(report.Target, _targetFreeze);
+            Freeze(report.Attacker, _attackerWait);
+            Freeze(report.Target, _targetWait);
         }
 
-        private void Freeze(GameObject go, float duration)
+        private void Freeze(GameObject go, WaitForSeconds wait)
         {
             if (go == null)
             {
@@ -74,12 +78,12 @@ namespace Refactoring
 
             _frozen[anim] = anim.speed;
             anim.speed = 0f;
-            StartCoroutine(CoUnfreeze(anim, duration));
+            StartCoroutine(CoUnfreeze(anim, wait));
         }
 
-        private IEnumerator CoUnfreeze(Animator anim, float duration)
+        private IEnumerator CoUnfreeze(Animator anim, WaitForSeconds wait)
         {
-            yield return new WaitForSeconds(duration);
+            yield return wait;
 
             if (!_frozen.Remove(anim, out float prev))
             {
