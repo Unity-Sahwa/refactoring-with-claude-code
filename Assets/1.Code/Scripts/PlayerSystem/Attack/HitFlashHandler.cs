@@ -36,6 +36,11 @@ namespace Refactoring
 
         private void Awake()
         {
+            if (_hitChannel == null)
+            {
+                throw new InvalidOperationException($"{nameof(HitFlashHandler)}: 필수 의존 주입 실패");
+            }
+
             _mpb = new MaterialPropertyBlock();
             _hitDisposable = _hitChannel.Register(HandleHit);
         }
