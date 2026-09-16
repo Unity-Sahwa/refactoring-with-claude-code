@@ -33,6 +33,7 @@ namespace Refactoring
         // MaterialPropertyBlock은 유니티 객체라 필드 초기화가 아니라 Awake에서 생성한다.
         private MaterialPropertyBlock _mpb;
         private IDisposable _hitDisposable;
+        private WaitForSeconds _halfWait;
 
         private void Awake()
         {
@@ -42,6 +43,7 @@ namespace Refactoring
             }
 
             _mpb = new MaterialPropertyBlock();
+            _halfWait = new WaitForSeconds(_duration / (_blinkCount * 2));
             _hitDisposable = _hitChannel.Register(HandleHit);
         }
 
@@ -83,14 +85,13 @@ namespace Refactoring
             PaintColors flashColors = new PaintColors(_flashColor, null, null);
             PaintColors originalColors = new PaintColors(default, original, originalEmission);
 
-            float half = _duration / (_blinkCount * 2);
             for (int i = 0; i < _blinkCount; i++)
             {
                 Paint(renderers, flashColors);
-                yield return new WaitForSeconds(half);
+                yield return _halfWait;
 
                 Paint(renderers, originalColors);
-                yield return new WaitForSeconds(half);
+                yield return _halfWait;
             }
 
             // 마지막에 한 번 더 덮어 원래색을 확실히 되돌린다.
