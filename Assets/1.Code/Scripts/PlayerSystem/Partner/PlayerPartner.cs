@@ -41,7 +41,7 @@ namespace Refactoring
 
         // public인 이유: 다른 시스템(GameStateSaver)이 스왑 직전에 켜야 하는 값이라서.
         // 불러오기·낙하 복귀로 캐릭터를 되돌릴 때는 스왑 소리를 내지 않는다.
-        public bool SkipNextCollideSound;
+        public bool SkipNextCollideSound { get; set; }
 
         private float[] _maskBaseHeights;
         private Vector3 _velocity;
