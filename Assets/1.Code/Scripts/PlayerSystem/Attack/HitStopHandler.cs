@@ -26,8 +26,7 @@ namespace Refactoring
         {
             if (_hitChannel == null)
             {
-                Debug.LogError($"{name}: HitChannel 주입이 안 돼 히트스탑이 동작하지 않음.", this);
-                return;
+                throw new InvalidOperationException($"{nameof(HitStopHandler)}: 필수 의존 주입 실패");
             }
 
             _hitDisposable = _hitChannel.Register(HandleHit);
