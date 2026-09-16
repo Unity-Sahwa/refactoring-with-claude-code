@@ -41,13 +41,12 @@ namespace Refactoring
 
         private void HandleHitbox(IStartData data)
         {
-            if (data is not IPlayerHitbox hitbox)
+            if (!TryGetHitbox(data, out IPlayerHitbox hitbox))
             {
-                Debug.LogError($"[PlayerHitboxHandler] IPlayerHitbox가 필요한데 {data?.GetType().Name ?? "null"}을 받음");
                 return;
             }
 
-            Transform attacker = _currentCharacterProvider?.GetCurrentComponent<Transform>();
+            Transform attacker = GetAttacker();
             if (attacker == null)
             {
                 return;
@@ -59,6 +58,24 @@ namespace Refactoring
                 Attach = attacker,
                 EndTime = Time.time + hitbox.Duration
             });
+        }
+
+        private bool TryGetHitbox(IStartData data, out IPlayerHitbox hitbox)
+        {
+            if (data is IPlayerHitbox result)
+            {
+                hitbox = result;
+                return true;
+            }
+
+            Debug.LogError($"[PlayerHitboxHandler] IPlayerHitbox가 필요한데 {data?.GetType().Name ?? "null"}을 받음");
+            hitbox = null;
+            return false;
+        }
+
+        private Transform GetAttacker()
+        {
+            return _currentCharacterProvider?.GetCurrentComponent<Transform>();
         }
 
         private void HandleReset(CloseEventType reason)
@@ -80,15 +97,20 @@ namespace Refactoring
                     continue;
                 }
 
-                // 캐릭터 정면 기준 히트박스의 월드 좌표
-                Vector3 position = active.Attach.TransformPoint(active.Data.Position);
-                Quaternion rotation = active.Attach.rotation * Quaternion.Euler(active.Data.Rotation);
+                ProcessActive(active);
+            }
+        }
 
-                int count = Overlap(active.Data, position, rotation);
-                for (int j = 0; j < count; j++)
-                {
-                    TryHit(active, _buffer[j], position);
-                }
+        // 캐릭터 정면 기준 히트박스의 월드 좌표로 겹침 검사하고 맞은 대상을 처리한다.
+        private void ProcessActive(ActiveHitbox active)
+        {
+            Vector3 position = active.Attach.TransformPoint(active.Data.Position);
+            Quaternion rotation = active.Attach.rotation * Quaternion.Euler(active.Data.Rotation);
+
+            int count = Overlap(active.Data, position, rotation);
+            for (int j = 0; j < count; j++)
+            {
+                TryHit(active, _buffer[j], position);
             }
         }
 
@@ -136,8 +158,15 @@ namespace Refactoring
                 return;
             }
 
+            DamageInfo info = BuildDamageInfo(active, hitCollider, center);
+            target.ApplyDamage(info);
+            RaiseHitReport(active, component, info);
+        }
+
+        private DamageInfo BuildDamageInfo(ActiveHitbox active, Collider hitCollider, Vector3 center)
+        {
             CombatInfo combat = active.Data.Combat;
-            DamageInfo info = new DamageInfo
+            return new DamageInfo
             {
                 Damager = active.Attach.gameObject,
                 Amount = combat.Damage,
@@ -145,20 +174,23 @@ namespace Refactoring
                 Color = combat.Color,
                 InkStack = combat.InkStack
             };
+        }
 
-            target.ApplyDamage(info);
-
-            // 타격 성공 사실만 발행한다. 소리·히트스탑 등은 구독자가 알아서 처리한다.
-            if (_hitChannel != null)
+        // 타격 성공 사실만 발행한다. 소리·히트스탑 등은 구독자가 알아서 처리한다.
+        private void RaiseHitReport(ActiveHitbox active, Component target, DamageInfo info)
+        {
+            if (_hitChannel == null)
             {
-                _hitChannel.Raise(new HitReport
-                {
-                    Attacker = active.Attach.gameObject,
-                    Target = component.gameObject,
-                    Point = info.HitPoint,
-                    Sound = combat.HitSound
-                });
+                return;
             }
+
+            _hitChannel.Raise(new HitReport
+            {
+                Attacker = active.Attach.gameObject,
+                Target = target.gameObject,
+                Point = info.HitPoint,
+                Sound = active.Data.Combat.HitSound
+            });
         }
 
         private void OnDestroy()
@@ -167,33 +199,5 @@ namespace Refactoring
             _actives.Clear();
         }
 
-        private void OnDrawGizmos()
-        {
-            Gizmos.color = Color.blue;
-            foreach (var active in _actives)
-            {
-                Vector3 position = active.Attach.TransformPoint(active.Data.Position);
-                Quaternion rotation = active.Attach.rotation * Quaternion.Euler(active.Data.Rotation);
-                Vector3 size = active.Data.ShapeScale;
-
-                switch (active.Data.Shape)
-                {
-                    case HitboxShape.Sphere:
-                        Gizmos.DrawWireSphere(position, size.x * 0.5f);
-                        break;
-                    case HitboxShape.Capsule:
-                        GetCapsuleEnds(size, position, rotation, out Vector3 topPoint, out Vector3 bottomPoint, out float radius);
-                        Gizmos.DrawWireSphere(topPoint, radius);
-                        Gizmos.DrawWireSphere(bottomPoint, radius);
-                        break;
-                    default:
-                        Gizmos.matrix = Matrix4x4.TRS(position, rotation, Vector3.one);
-                        Gizmos.DrawWireCube(Vector3.zero, size);
-                        Gizmos.matrix = Matrix4x4.identity;
-                        break;
-                }
-            }
-            Gizmos.matrix = Matrix4x4.identity;
-        }
     }
 }
