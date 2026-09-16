@@ -164,7 +164,38 @@
 ---
 
 ## PlayerSystem
+- 확정: 2026-09-16
+- 플레이어 상태 전환·상태별 이벤트 발행·현재 상태 공유를 담당함
 
+### 이 시스템을 활용하는 방법 (개발자용)
+
+| 클래스 | 받아쓰는 방법 | 제공 기능 |
+|---|---|---|
+| `IStateTriggerRaiser`(`PlayerStateTriggerChannel`이 구현) | `[Preserve, Inject] private IStateTriggerRaiser _raiser;` | `RaiseTrigger(StateTriggerType)`로 상태 전환 요청 |
+| `IStateTriggerSubscriber`(`PlayerStateTriggerChannel`이 구현) | `[Preserve, Inject] private IStateTriggerSubscriber _sub;` | `SubscribeTrigger`/`UnsubscribeTrigger`로 전환 트리거 구독 |
+| `IPlayerStateEventRaiser`(`PlayerStateEventChannel`이 구현) | `[Preserve, Inject] private IPlayerStateEventRaiser _raiser;` | `Raise`/`RaiseEnd`/`RaiseReset`로 상태 구간 이벤트 발행 |
+| `IPlayerStateEventSubscriber`(`PlayerStateEventChannel`이 구현) | `[Preserve, Inject] private IPlayerStateEventSubscriber _sub;` | `Register(StateEventCategory, open, close)`로 구간 시작·종료 구독, `IDisposable` 반환 |
+| `ICurrentStateProvider`(`PlayerCurrentStateChannel`이 구현) | `[Preserve, Inject(true)] private ICurrentStateProvider _provider;` | `CurrentState` 조회, `StateChanged` 이벤트 |
+| `ICurrentStateWriter`(`PlayerCurrentStateChannel`이 구현) | `[Preserve, Inject(true)] private ICurrentStateWriter _writer;` | `SetCurrentState(PlayerStateType)`(PlayerStateMachine 전용) |
+| `StateEventCategory`(enum) | `Register`/`Raise` 호출 시 카테고리 지정 | 없음 |
+| `IStartData` | 구간 데이터 클래스가 구현, `Register`의 open 콜백 매개변수로 받음 | `StartProgress` 조회 |
+| `IMotionControl` | 구간 데이터 클래스가 선택적으로 구현 | `Duration`, `UntilEnd` 조회 |
+| `StateTriggerType`(enum) | `RaiseTrigger`/`SubscribeTrigger` 인자 | 없음 |
+| `PlayerStateType`(enum) | `ICurrentStateProvider.CurrentState` 값 | 없음 |
+| `CloseEventType`(enum) | `Register`의 close 콜백 인자(End/Reset 구분) | 없음 |
+
+### 이 시스템을 활용하는 방법 (비개발자용)
+
+| 클래스 | 만드는 법 | 배치 위치 | 채울 값 |
+|---|---|---|---|
+| `PlayerStateTriggerChannel` | Assets 우클릭 > Create > EventChannel/PlayerStateTriggerChannel | `5.Data/Player/Event` | 없음 |
+| `PlayerStateEventChannel` | Assets 우클릭 > Create > EventChannel/PlayerStateEventChannel | `5.Data/Player/Event` | 없음 |
+| `PlayerCurrentStateChannel` | Assets 우클릭 > Create > EventChannel/PlayerCurrentStateChannel | `5.Data/Player/Event` | 없음 |
+| `StateData` | Assets 우클릭 > Create > Data/StateData | `5.Data/Player/State` 이하(캐릭터별 폴더) | `_stateType`, `_isLooping`, `_cooldown`, 구간 배열(`_inputBlock` 등), 이벤트 배열(`_effect` 등) |
+| `PlayerStateMachine` | 캐릭터 프리팹에 컴포넌트 추가 | `ICharacterComponentSource` 있는 오브젝트 | `_stateDataList`에 이 캐릭터가 쓸 `StateData` 전부 등록, 3개 채널 DI로 주입 |
+| `PlayerStateInputGate` | 캐릭터 프리팹에 컴포넌트 추가 | `PlayerStateMachine`과 같은 오브젝트 | 없음(전부 DI 주입) |
+
+`StateData`는 `IDataProvider`로 DI에 등록되므로 DataContainer 등록도 필요함.
 
 ---
 
