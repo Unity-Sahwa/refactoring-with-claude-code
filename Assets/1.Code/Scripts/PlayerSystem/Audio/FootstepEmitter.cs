@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.Scripting;
-using UnityEngine.Serialization;
 
 namespace Refactoring
 {
