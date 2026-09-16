@@ -15,9 +15,9 @@ namespace Refactoring
         private readonly Collider[] _overlapHits = new Collider[32];
         private Camera _camera;
 
-        private readonly List<Enemy> _scanEnemies = new(32);
-        private readonly List<CaliSystem> _scanCalis = new(32);
-        private readonly List<Enemy> _executeTargets = new(32);
+        private readonly List<IFinishable> _scanEnemies = new(32);
+        private readonly List<IPaintOverState> _scanCalis = new(32);
+        private readonly List<IFinishable> _executeTargets = new(32);
         private int _scanHighestFullCap;
         private bool _scanHasFull;
 
@@ -28,13 +28,13 @@ namespace Refactoring
             return _scanHasFull && HasExecuteTargetOnScreen();
         }
 
-        public IReadOnlyList<Enemy> GatherStunTargets()
+        public IReadOnlyList<IFinishable> GatherStunTargets()
         {
             ScanTargets();
             return _scanEnemies;
         }
 
-        public IReadOnlyList<Enemy> GatherExecuteTargets()
+        public IReadOnlyList<IFinishable> GatherExecuteTargets()
         {
             ScanTargets();
             return _executeTargets;
@@ -59,12 +59,12 @@ namespace Refactoring
 
             for (int i = 0; i < hitCount; i++)
             {
-                if (!_overlapHits[i].TryGetComponent(out Enemy enemy) || enemy.isDead)
+                if (!_overlapHits[i].TryGetComponent(out IFinishable enemy) || enemy.IsDead)
                 {
                     continue;
                 }
 
-                _overlapHits[i].TryGetComponent(out CaliSystem cali);
+                _overlapHits[i].TryGetComponent(out IPaintOverState cali);
                 _scanEnemies.Add(enemy);
                 _scanCalis.Add(cali);
 
@@ -82,7 +82,7 @@ namespace Refactoring
 
             for (int i = 0; i < _scanEnemies.Count; i++)
             {
-                CaliSystem cali = _scanCalis[i];
+                IPaintOverState cali = _scanCalis[i];
 
                 // 처형 대상은 최고 한계치보다 낮은 한계치를 가진 대상이다.
                 if (cali != null && cali.MaxPaintOver <= _scanHighestFullCap)
@@ -106,7 +106,7 @@ namespace Refactoring
 
             for (int i = 0; i < _executeTargets.Count; i++)
             {
-                Vector3 viewportPoint = _camera.WorldToViewportPoint(_executeTargets[i].transform.position);
+                Vector3 viewportPoint = _camera.WorldToViewportPoint(_executeTargets[i].Position);
                 if (viewportPoint.z > 0f && viewportPoint.x >= 0f && viewportPoint.x <= 1f && viewportPoint.y >= 0f && viewportPoint.y <= 1f)
                 {
                     return true;

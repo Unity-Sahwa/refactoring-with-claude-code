@@ -49,7 +49,7 @@ namespace Refactoring
         // 현재 범위 내 스턴 대상 전부를 모션 정지.
         private void Stun()
         {
-            IReadOnlyList<Enemy> targets = _finishTargetProvider?.GatherStunTargets();
+            IReadOnlyList<IFinishable> targets = _finishTargetProvider?.GatherStunTargets();
             if (targets == null)
             {
                 return;
@@ -57,8 +57,8 @@ namespace Refactoring
 
             for (int i = 0; i < targets.Count; i++)
             {
-                Enemy enemy = targets[i];
-                if (enemy != null && !enemy.isDead)
+                IFinishable enemy = targets[i];
+                if (enemy != null && !enemy.IsDead)
                 {
                     enemy.MotionStop(_stunTime);
                 }
@@ -68,7 +68,7 @@ namespace Refactoring
         // 현재 범위 내 대상 전부를 처형.
         private void Execute()
         {
-            IReadOnlyList<Enemy> targets = _finishTargetProvider?.GatherExecuteTargets();
+            IReadOnlyList<IFinishable> targets = _finishTargetProvider?.GatherExecuteTargets();
             if (targets == null)
             {
                 return;
@@ -76,8 +76,8 @@ namespace Refactoring
 
             for (int i = 0; i < targets.Count; i++)
             {
-                Enemy enemy = targets[i];
-                if (enemy != null && !enemy.isDead)
+                IFinishable enemy = targets[i];
+                if (enemy != null && !enemy.IsDead)
                 {
                     enemy.Execution();
                 }

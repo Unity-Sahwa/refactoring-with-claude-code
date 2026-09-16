@@ -7,8 +7,11 @@ using UnityEngine.UI;
 
 namespace Refactoring
 {
-    public class Enemy : MonoBehaviour, IDamageable
+    public class Enemy : MonoBehaviour, IDamageable, IFinishable
     {
+        public bool IsDead => isDead;
+        public Vector3 Position => transform.position;
+
         protected enum eState
         {
             A,

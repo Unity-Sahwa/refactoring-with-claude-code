@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Refactoring
 {
-    public class CaliSystem : MonoBehaviour
+    public class CaliSystem : MonoBehaviour, IPaintOverState
     {
         [SerializeField] private int maxPaintOver = 3;
         public int MaxPaintOver => maxPaintOver;

@@ -6,9 +6,9 @@ namespace Refactoring
     public interface IFinishTargetProvider
     {
         // 지금 범위 내 스턴 대상
-        IReadOnlyList<Enemy> GatherStunTargets();
+        IReadOnlyList<IFinishable> GatherStunTargets();
 
         // 지금 범위 내 처형 대상
-        IReadOnlyList<Enemy> GatherExecuteTargets();
+        IReadOnlyList<IFinishable> GatherExecuteTargets();
     }
 }
