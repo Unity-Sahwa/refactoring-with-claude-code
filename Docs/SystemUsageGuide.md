@@ -146,6 +146,31 @@
 ---
 
 ## InputSystem
+- 확정: 2026-09-17
+- 액션 에셋에서 입력을 받아 현재 게임 모드에 맞는 처리기로 나눠 전달하는 시스템
+
+### 이 시스템을 활용하는 방법 (개발자용)
+
+| 클래스/인터페이스 | 받아쓰는 방법 | 제공 기능 |
+|---|---|---|
+| `IDomainInputHandler` | 새 게임 모드 처리기 만들 때 구현 | `Context`, `OnPressed`, `OnMove` |
+| `ICutsceneInputProvider` | `[Inject]`로 주입받아 구독 | `OnCutscenePressed` 이벤트 |
+| `IInputMoveProvider` | `[Inject]`로 주입받아 구독 | `OnVector2Input` 이벤트 |
+| `IInputPressedProvider` | `[Inject]`로 주입받아 구독 | `OnInputPressed` 이벤트 |
+| `ILockOnInputProvider` | `[Inject]`로 주입받아 구독 | `OnLockOnPressed` 이벤트 |
+| `IMenuInputProvider` | `[Inject]`로 주입받아 구독 | `OnMenuPressed` 이벤트 |
+| `IInputKeySettings` | `[Inject(true)]`로 주입받음 | `Bindings` 조회·설정, `OnChanged` 구독 |
+| `InputActionType`(enum) | enum 직접 사용 | 액션 종류 나열, 새 액션 추가 시 여기에도 추가 |
+
+### 이 시스템을 활용하는 방법 (비개발자용)
+
+| 클래스 | 만드는 법 | 배치 위치 | 채울 값 |
+|---|---|---|---|
+| `InputHub` | 컴포넌트 추가 | 씬에 하나(현재 Static.prefab) | `InputActionAsset` 연결 |
+| `CutsceneInputHandler` | 컴포넌트 추가 | `InputHub`와 같은 오브젝트(Static.prefab) | 없음 |
+| `GameplayInputHandler` | 컴포넌트 추가 | `InputHub`와 같은 오브젝트(Static.prefab) | 없음 |
+| `MenuInputHandler` | 컴포넌트 추가 | `InputHub`와 같은 오브젝트(Static.prefab) | 없음 |
+| `MobileInputButton` | 컴포넌트 추가(`OnScreenButton` 필수) | 모바일 HUD 버튼 오브젝트(InputMobileHUD, InteractionButton) | `_actionType`(연결할 액션 선택) |
 
 ---
 
