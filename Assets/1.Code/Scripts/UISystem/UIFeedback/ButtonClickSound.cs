@@ -7,7 +7,7 @@ using UnityEngine.UI;
 namespace Refactoring
 {
     // 책임: 씬에 있는 버튼 전부에 같은 클릭 소리를 달아준다. (씬에 하나만 놓는다. 둘이면 소리가 두 번 붙는다)
-    public class ButtonClickSound : MonoBehaviour
+    public class ButtonClickSound : MonoBehaviour, IButtonClickSound
     {
         [Preserve, Inject] private IAudioRaiser _audioChannel;
 

@@ -20,7 +20,7 @@ namespace Refactoring
         [Preserve, Inject(true)] private ILanguageSettings _language;
 
         // 슬롯 버튼은 창을 열 때 찍어내서 ButtonClickSound의 목록에 안 들어간다. 만들 때 직접 달아준다.
-        [Preserve, Inject(true)] private ButtonClickSound _clickSound;
+        [Preserve, Inject(true)] private IButtonClickSound _clickSound;
 
         // 방금 고른 슬롯 번호. 불러오기 확인창이 이 값을 보고 불러온다.
         public int SelectedIndex { get; private set; }
@@ -59,7 +59,7 @@ namespace Refactoring
 
             if (_clickSound == null)
             {
-                Debug.LogWarning($"{name}: {nameof(ButtonClickSound)}가 없어 슬롯 클릭 소리를 건너뜀.");
+                Debug.LogWarning($"{name}: {nameof(IButtonClickSound)}가 없어 슬롯 클릭 소리를 건너뜀.");
             }
 
             foreach (SaveSlotInfo slot in _saveSlots.GetSlots())
@@ -73,7 +73,7 @@ namespace Refactoring
             GameObject spawnedObject = Instantiate(_slotButtonPrefab, _slotParent);
 
             // 글자를 어느 자리에 넣을지는 버튼 프리팹이 스스로 안다. 여기선 내용만 넘긴다.
-            SaveSlotButtonView view = spawnedObject.GetComponent<SaveSlotButtonView>();
+            ISaveSlotButtonView view = spawnedObject.GetComponent<ISaveSlotButtonView>();
 
             if (view != null)
             {
