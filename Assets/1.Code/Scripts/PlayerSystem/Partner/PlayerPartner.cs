@@ -49,16 +49,18 @@ namespace Refactoring
 
         private void Awake()
         {
+            if ((_characterProvider as UnityEngine.Object) == null || (_swapNotifier as UnityEngine.Object) == null || (_audioChannel as UnityEngine.Object) == null)
+            {
+                throw new InvalidOperationException($"{nameof(PlayerPartner)}: 필수 의존 주입 실패");
+            }
+
             _maskBaseHeights = new float[_masks.Length];
             for (int i = 0; i < _masks.Length; i++)
             {
                 _maskBaseHeights[i] = _masks[i].localPosition.y;
             }
 
-            if (_swapNotifier != null)
-            {
-                _swapNotifier.OnCharacterSwapped += HandleCharacterSwapped;
-            }
+            _swapNotifier.OnCharacterSwapped += HandleCharacterSwapped;
         }
 
         private void Start()
@@ -93,7 +95,7 @@ namespace Refactoring
 
         private void OnDestroy()
         {
-            if (_swapNotifier != null)
+            if ((_swapNotifier as UnityEngine.Object) != null)
             {
                 _swapNotifier.OnCharacterSwapped -= HandleCharacterSwapped;
             }
@@ -122,25 +124,43 @@ namespace Refactoring
             }
 
             Vector3 targetPosition = characterTransform.TransformPoint(_followOffset);
-
-            if (Vector3.Distance(transform.position, targetPosition) > _warpDistance)
+            if (TryWarpIfTooFar(targetPosition))
             {
-                transform.position = targetPosition;
-                _velocity = Vector3.zero;
                 return;
             }
 
             transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref _velocity, _followSmoothTime);
         }
 
+        private bool TryWarpIfTooFar(Vector3 targetPosition)
+        {
+            if (Vector3.Distance(transform.position, targetPosition) <= _warpDistance)
+            {
+                return false;
+            }
+
+            transform.position = targetPosition;
+            _velocity = Vector3.zero;
+            return true;
+        }
+
         private Transform GetCharacterTransform()
         {
-            return _characterProvider?.GetCurrentComponent<Transform>();
+            if ((_characterProvider as UnityEngine.Object) == null)
+            {
+                return null;
+            }
+            return _characterProvider.GetCurrentComponent<Transform>();
         }
 
         private void HandleCharacterSwapped()
         {
-            PlayerCharacterType? characterType = _characterProvider?.CurrentType;
+            if ((_characterProvider as UnityEngine.Object) == null)
+            {
+                return;
+            }
+
+            PlayerCharacterType? characterType = _characterProvider.CurrentType;
             if (characterType == null)
             {
                 return;
@@ -173,40 +193,46 @@ namespace Refactoring
                 yield break;
             }
 
-            Vector3 hitPosition = characterTransform.TransformPoint(_collideOffset);
+            yield return MoveToCharacterUntilHit(characterTransform);
 
-            // 캐릭터가 움직이거나 돌아도 따라붙도록 매 프레임 목표를 다시 잡는다.
+            PlayCollideSound();
+            SetEffectActive(effect, true);
+            yield return new WaitForSeconds(_effectTime);
+            SetEffectActive(effect, false);
+
+            _velocity = Vector3.zero;
+            _collideRoutine = null;
+        }
+
+        // 캐릭터가 움직이거나 돌아도 따라붙도록 매 프레임 목표를 다시 잡는다.
+        private IEnumerator MoveToCharacterUntilHit(Transform characterTransform)
+        {
+            Vector3 hitPosition = characterTransform.TransformPoint(_collideOffset);
             while (Vector3.Distance(transform.position, hitPosition) > 0.1f)
             {
                 hitPosition = characterTransform.TransformPoint(_collideOffset);
                 transform.position = Vector3.MoveTowards(transform.position, hitPosition, _collideSpeed * Time.deltaTime);
                 yield return null;
             }
+        }
 
+        private void PlayCollideSound()
+        {
             if (SkipNextCollideSound)
             {
                 SkipNextCollideSound = false;
+                return;
             }
-            else
-            {
-                // 부딪힐 때 낼 소리. 세 경우 모두 같다
-                _audioChannel.RaisePlay(AudioPlayRequest.CreateAt(SoundType.PlayerPartner, transform.position));
-            }
+            // 부딪힐 때 낼 소리. 세 경우 모두 같다
+            _audioChannel.RaisePlay(AudioPlayRequest.CreateAt(SoundType.PlayerPartner, transform.position));
+        }
 
+        private static void SetEffectActive(GameObject effect, bool active)
+        {
             if (effect != null)
             {
-                effect.SetActive(true);
+                effect.SetActive(active);
             }
-
-            yield return new WaitForSeconds(_effectTime);
-
-            if (effect != null)
-            {
-                effect.SetActive(false);
-            }
-
-            _velocity = Vector3.zero;
-            _collideRoutine = null;
         }
     }
 }
