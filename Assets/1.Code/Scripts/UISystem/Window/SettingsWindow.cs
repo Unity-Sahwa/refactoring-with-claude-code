@@ -24,6 +24,7 @@ namespace Refactoring
 
             if (_holders == null)
             {
+                Debug.LogWarning($"{name}: {nameof(ISettingsHolder)}가 없어 설정 저장을 건너뜀.");
                 return;
             }
 

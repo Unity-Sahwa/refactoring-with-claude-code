@@ -23,10 +23,17 @@ namespace Refactoring
         {
             if (_slotList == null)
             {
+                Debug.LogWarning($"{name}: {nameof(ISlotSelection)}이 없어 불러오기를 건너뜀.");
                 return;
             }
 
-            _saveSlots?.LoadSlot(_slotList.SelectedIndex);
+            if (_saveSlots == null)
+            {
+                Debug.LogWarning($"{name}: {nameof(ISaveSlots)}가 없어 불러오기를 건너뜀.");
+                return;
+            }
+
+            _saveSlots.LoadSlot(_slotList.SelectedIndex);
         }
     }
 }

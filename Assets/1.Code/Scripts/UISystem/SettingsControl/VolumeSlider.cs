@@ -24,6 +24,7 @@ namespace Refactoring
         {
             if (_soundSettings == null)
             {
+                Debug.LogWarning($"{name}: {nameof(ISoundSettings)}가 없어 음량 표시를 건너뜀.");
                 return;
             }
 
@@ -32,7 +33,13 @@ namespace Refactoring
 
         private void HandleValueChanged(float value)
         {
-            _soundSettings?.SetVolume(_volumeType, value);
+            if (_soundSettings == null)
+            {
+                Debug.LogWarning($"{name}: {nameof(ISoundSettings)}가 없어 음량 적용을 건너뜀.");
+                return;
+            }
+
+            _soundSettings.SetVolume(_volumeType, value);
         }
     }
 }

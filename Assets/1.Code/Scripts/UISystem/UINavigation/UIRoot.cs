@@ -38,15 +38,32 @@ namespace Refactoring
             {
                 _gameplayInput.OnInputPressed += HandleGameplayPressed;
             }
+            else
+            {
+                Debug.LogWarning($"{name}: {nameof(IInputPressedProvider)}가 없어 게임플레이 중 메뉴 열기를 건너뜀.");
+            }
 
             if (_menuInput != null)
             {
                 _menuInput.OnMenuPressed += HandleMenuPressed;
             }
+            else
+            {
+                Debug.LogWarning($"{name}: {nameof(IMenuInputProvider)}가 없어 메뉴 닫기 입력을 건너뜀.");
+            }
 
             if (_cutsceneInput != null)
             {
                 _cutsceneInput.OnCutscenePressed += HandleGameplayPressed;
+            }
+            else
+            {
+                Debug.LogWarning($"{name}: {nameof(ICutsceneInputProvider)}가 없어 컷씬 중 메뉴 열기를 건너뜀.");
+            }
+
+            if (_gameState == null)
+            {
+                Debug.LogWarning($"{name}: {nameof(IGameStateController)}가 없어 게임 모드 전환을 건너뜀.");
             }
         }
 

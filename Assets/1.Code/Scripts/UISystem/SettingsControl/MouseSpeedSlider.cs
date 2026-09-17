@@ -28,6 +28,7 @@ namespace Refactoring
         {
             if (_mouseSettings == null)
             {
+                Debug.LogWarning($"{name}: {nameof(IMouseSettings)}가 없어 마우스 감도 표시를 건너뜀.");
                 return;
             }
 
@@ -41,6 +42,7 @@ namespace Refactoring
         {
             if (_mouseSettings == null)
             {
+                Debug.LogWarning($"{name}: {nameof(IMouseSettings)}가 없어 마우스 감도 적용을 건너뜀.");
                 return;
             }
 

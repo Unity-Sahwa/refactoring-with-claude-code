@@ -44,7 +44,18 @@ namespace Refactoring
 
             if (_saveSlots == null)
             {
+                Debug.LogWarning($"{name}: {nameof(ISaveSlots)}가 없어 슬롯 목록 표시를 건너뜀.");
                 return;
+            }
+
+            if (_language == null)
+            {
+                Debug.LogWarning($"{name}: {nameof(ILanguageSettings)}가 없어 슬롯 이름 번역을 건너뜀.");
+            }
+
+            if (_clickSound == null)
+            {
+                Debug.LogWarning($"{name}: {nameof(ButtonClickSound)}가 없어 슬롯 클릭 소리를 건너뜀.");
             }
 
             foreach (SaveSlotInfo slot in _saveSlots.GetSlots())
@@ -64,8 +75,9 @@ namespace Refactoring
             {
                 // 저장할 때 적어둔 값이 곧 번역 표의 키다. 그대로 넣으면 지금 언어의 지역 이름이 나온다.
                 string zoneName = _language != null ? _language.GetText(slot.SavePointKey) : slot.SavePointKey;
+                TMPro.TMP_FontAsset font = _language != null ? _language.GetFont() : null;
 
-                view.Fill(zoneName, slot.SavedTime, slot.IsEmpty, _language?.GetFont());
+                view.Fill(zoneName, slot.SavedTime, slot.IsEmpty, font);
             }
 
             // 버튼마다 자기 슬롯 번호를 기억해뒀다가, 눌리면 그 번호를 선택해두고 확인창을 띄운다.
@@ -73,7 +85,11 @@ namespace Refactoring
             Button button = spawnedObject.GetComponent<Button>();
 
             button.onClick.AddListener(() => HandleSlotClicked(index));
-            button.onClick.AddListener(() => _clickSound?.PlayClick());
+
+            if (_clickSound != null)
+            {
+                button.onClick.AddListener(_clickSound.PlayClick);
+            }
         }
 
         private void HandleSlotClicked(int index)

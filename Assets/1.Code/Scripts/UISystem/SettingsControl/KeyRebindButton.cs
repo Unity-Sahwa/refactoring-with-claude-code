@@ -45,6 +45,12 @@ namespace Refactoring
 
         private void HandleClicked()
         {
+            if (_actionAsset == null)
+            {
+                Debug.LogWarning($"{name}: {nameof(InputActionAsset)}가 없어 키 변경을 건너뜀.");
+                return;
+            }
+
             InputAction action = _actionAsset.FindAction(_actionType.ToString());
 
             if (action == null)
@@ -81,12 +87,22 @@ namespace Refactoring
                 // 바뀐 키 전체를 글자 하나로 만들어 조작키 주인에게 맡긴다.
                 _keySettings.Bindings = _actionAsset.SaveBindingOverridesAsJson();
             }
+            else
+            {
+                Debug.LogWarning($"{name}: {nameof(IInputKeySettings)}가 없어 바뀐 키 저장을 건너뜀.");
+            }
 
             ShowCurrentKey();
         }
 
         private void ShowCurrentKey()
         {
+            if (_actionAsset == null)
+            {
+                Debug.LogWarning($"{name}: {nameof(InputActionAsset)}가 없어 키 표시를 건너뜀.");
+                return;
+            }
+
             InputAction action = _actionAsset.FindAction(_actionType.ToString());
 
             if (action == null || _label == null)
