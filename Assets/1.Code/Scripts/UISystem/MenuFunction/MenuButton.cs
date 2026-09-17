@@ -18,12 +18,12 @@ namespace Refactoring
         // _action이 OpenWindow일 때만 사용하는 열 대상
         [SerializeField] private WindowType _targetWindow;
 
-        private UIRoot _root;
+        private IUIRoot _root;
 
         private void Awake()
         {
             // UI는 캔버스 트리라, 위로 거슬러 올라가 총괄(UIRoot)을 찾는다. 슬롯 연결 없음.
-            _root = GetComponentInParent<UIRoot>(true);
+            _root = GetComponentInParent<IUIRoot>(true);
             GetComponent<Button>().onClick.AddListener(HandleClicked);
         }
 

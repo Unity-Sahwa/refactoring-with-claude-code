@@ -6,7 +6,7 @@ namespace Refactoring
 {
     // 책임: 저장된 슬롯 목록을 보여주는 창. 슬롯 개수가 정해져 있지 않아서 열 때마다 버튼을 찍어낸다.
     // 흐름: 창 열림 → 기존 버튼 지우기 → 슬롯 수만큼 버튼 생성 → 누르면 확인창 열기
-    public class SlotListWindow : UIWindow
+    public class SlotListWindow : UIWindow, ISlotSelection
     {
         [SerializeField] private GameObject _slotButtonPrefab;
 
@@ -19,14 +19,14 @@ namespace Refactoring
         // 슬롯 버튼은 창을 열 때 찍어내서 ButtonClickSound의 목록에 안 들어간다. 만들 때 직접 달아준다.
         [Preserve, Inject(true)] private ButtonClickSound _clickSound;
 
-        private UIRoot _root;
+        private IUIRoot _root;
 
         // 방금 고른 슬롯 번호. 불러오기 확인창이 이 값을 보고 불러온다.
         public int SelectedIndex { get; private set; }
 
         private void Awake()
         {
-            _root = GetComponentInParent<UIRoot>(true);
+            _root = GetComponentInParent<IUIRoot>(true);
         }
 
         // 자동저장으로 목록이 바뀌어도 다시 열면 최신이라 변경 이벤트를 안 듣는다.

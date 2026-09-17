@@ -6,7 +6,7 @@ namespace Refactoring
 {
     // 책임: 메뉴 UI 총괄(프런트 데스크). 자식 창들을 이름표로 관리하고, 열기/닫기와 게임 모드 전환을 조율한다.
     // 흐름: 자식 창 등록 → 입력 받으면 게임 모드 전환 → 창 열기/닫기
-    public class UIRoot : MonoBehaviour
+    public class UIRoot : MonoBehaviour, IUIRoot
     {
         // 처음 여는 기본 창. 인게임 씬=Pause, 메인메뉴 씬=MainMenu로 인스펙터에서 지정.
         [SerializeField] private WindowType _entryWindow;

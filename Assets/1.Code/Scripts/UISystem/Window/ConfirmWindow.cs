@@ -9,12 +9,12 @@ namespace Refactoring
     {
         [SerializeField] private Button _yesButton;
 
-        protected UIRoot Root { get; private set; }
+        protected IUIRoot Root { get; private set; }
 
         // 자식 창에서 Awake를 다시 만들면 여기 Awake가 안 불려 예 버튼이 죽는다.
         private void Awake()
         {
-            Root = GetComponentInParent<UIRoot>(true);
+            Root = GetComponentInParent<IUIRoot>(true);
             _yesButton.onClick.AddListener(HandleYesClicked);
         }
 
