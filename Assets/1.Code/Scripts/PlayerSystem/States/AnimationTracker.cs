@@ -34,37 +34,49 @@ namespace Refactoring
 
             if (_animator.IsInTransition(0))
             {
-                AnimatorStateInfo nextInfo = _animator.GetNextAnimatorStateInfo(0);
-
-                // 현재 애니에서 다음 애니로 전환됨 → 종료
-                if (nextInfo.shortNameHash != _animationHash)
-                {
-                    if (_hasStarted)
-                    {
-                        IsFinished = true;
-                    }
-                    return;
-                }
-
-                // 이전 애니에서 현재 애니로 전환되는 중
-                Progress = Mathf.Clamp01(nextInfo.normalizedTime);
+                UpdateDuringTransition();
             }
             else
             {
-                AnimatorStateInfo info = _animator.GetCurrentAnimatorStateInfo(0);
+                UpdateSteadyState();
+            }
+        }
 
-                // 이전 애니가 남아있거나 머신을 거치지 않고 다른 애니가 재생된 경우 → 종료
-                if (info.shortNameHash != _animationHash)
-                {
-                    if (_hasStarted)
-                    {
-                        IsFinished = true;
-                    }
-                    return;
-                }
+        private void UpdateDuringTransition()
+        {
+            AnimatorStateInfo nextInfo = _animator.GetNextAnimatorStateInfo(0);
 
-                _hasStarted = true;
-                Progress = Mathf.Clamp01(info.normalizedTime);
+            // 현재 애니에서 다음 애니로 전환됨 → 종료
+            if (nextInfo.shortNameHash != _animationHash)
+            {
+                FinishIfStarted();
+                return;
+            }
+
+            // 이전 애니에서 현재 애니로 전환되는 중
+            Progress = Mathf.Clamp01(nextInfo.normalizedTime);
+        }
+
+        private void UpdateSteadyState()
+        {
+            AnimatorStateInfo info = _animator.GetCurrentAnimatorStateInfo(0);
+
+            // 이전 애니가 남아있거나 머신을 거치지 않고 다른 애니가 재생된 경우 → 종료
+            if (info.shortNameHash != _animationHash)
+            {
+                FinishIfStarted();
+                return;
+            }
+
+            _hasStarted = true;
+            Progress = Mathf.Clamp01(info.normalizedTime);
+        }
+
+        private void FinishIfStarted()
+        {
+            if (_hasStarted)
+            {
+                IsFinished = true;
             }
         }
     }
