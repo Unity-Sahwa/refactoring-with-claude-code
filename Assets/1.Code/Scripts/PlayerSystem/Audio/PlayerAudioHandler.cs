@@ -20,6 +20,11 @@ namespace Refactoring
 
         private void Awake()
         {
+            if (_eventSubscriber == null || _audioChannel == null || _hitChannel == null)
+            {
+                throw new InvalidOperationException($"{nameof(PlayerAudioHandler)}: 필수 의존 주입 실패");
+            }
+
             _audioEventDisposable = _eventSubscriber.Register(StateEventCategory.Audio, HandlePlay, HandleReset);
             _hitDisposable = _hitChannel.Register(HandleHit);
         }

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Scripting;
 
@@ -38,13 +39,11 @@ namespace Refactoring
             WalkType.FrontLeft,  // 315° (-1, +1) 앞왼
         };
 
-        // 매 호출마다 조용히 참지 않고, 시작할 때 한 번 알리고 꺼진다.
         private void Awake()
         {
             if (_channel == null || _moveDirectionProvider == null)
             {
-                Debug.LogError($"[{nameof(FootstepEmitter)}] AudioChannel 또는 IMoveDirectionProvider가 없어 발소리를 끈다.", this);
-                enabled = false;
+                throw new InvalidOperationException($"{nameof(FootstepEmitter)}: 필수 의존 주입 실패");
             }
         }
 
