@@ -24,11 +24,20 @@ namespace Refactoring
 
         private void Awake()
         {
-            if (_inputPressedProvider != null)
+            if ((_inputPressedProvider as UnityEngine.Object) == null)
+            {
+                Debug.LogWarning($"{name}: {nameof(IInputPressedProvider)}가 없어 입력 수신을 건너뜀.");
+            }
+            else
             {
                 _inputPressedProvider.OnInputPressed += OnPressed;
             }
-            if (_playerStateEventSubscriber != null)
+
+            if ((_playerStateEventSubscriber as UnityEngine.Object) == null)
+            {
+                Debug.LogWarning($"{name}: {nameof(IPlayerStateEventSubscriber)}가 없어 입력 차단·버퍼 구독을 건너뜀.");
+            }
+            else
             {
                 _blockEventDisposable = _playerStateEventSubscriber.Register(StateEventCategory.InputBlock, HandleBlockOn, HandleBlockClose);
                 _bufferEventDisposable = _playerStateEventSubscriber.Register(StateEventCategory.InputBuffer, HandleBufferOn, HandleBufferClose);
@@ -37,7 +46,7 @@ namespace Refactoring
 
         private void OnDestroy()
         {
-            if (_inputPressedProvider != null)
+            if ((_inputPressedProvider as UnityEngine.Object) != null)
             {
                 _inputPressedProvider.OnInputPressed -= OnPressed;
             }
@@ -79,18 +88,12 @@ namespace Refactoring
         // 입력을 상태전환 트리거로 바꿔 머신에 쏜다. 즉시 발사·버퍼 발사 둘 다 여기를 거친다.
         private void SendInput(InputActionType action)
         {
-            // NormalAttack3에서 기본공격 입력 → 스왑 후 특수 스킬(상태 의존 해석) 진행.
-            // 현재 상태는 채널이 아니라 공유 SO(ICurrentStateProvider)에서 입력 시점에 조회한다.
-            if (action == InputActionType.NormalAttack
-                && _currentStateProvider != null && _currentStateProvider.CurrentState == PlayerStateType.NormalAttack3)
+            if (TrySpecialAttackSwap(action))
             {
-                _characterSwitcher?.SwapPlayerCharacter();
-                _stateTriggerRaiser?.RaiseTrigger(StateTriggerType.SpecialAttack);
                 return;
             }
 
-            // 처형 입력은 처형 가능한 대상이 있을 때만 상태로 보낸다(없으면 무시).
-            if (action == InputActionType.FinishAttack && (_finishChecker == null || !_finishChecker.CanFinish()))
+            if (action == InputActionType.FinishAttack && !CanFinish())
             {
                 return;
             }
@@ -98,8 +101,59 @@ namespace Refactoring
             StateTriggerType? trigger = ToTrigger(action);
             if (trigger.HasValue)
             {
-                _stateTriggerRaiser?.RaiseTrigger(trigger.Value);
+                RaiseTrigger(trigger.Value);
             }
+        }
+
+        // NormalAttack3에서 기본공격 입력 → 스왑 후 특수 스킬(상태 의존 해석) 진행.
+        private bool TrySpecialAttackSwap(InputActionType action)
+        {
+            if (action != InputActionType.NormalAttack || !IsInNormalAttack3())
+            {
+                return false;
+            }
+
+            if ((_characterSwitcher as UnityEngine.Object) == null)
+            {
+                Debug.LogWarning($"{name}: {nameof(ICharacterSwappable)}가 없어 캐릭터 스왑을 건너뜀.");
+                return true;
+            }
+
+            _characterSwitcher.SwapPlayerCharacter();
+            RaiseTrigger(StateTriggerType.SpecialAttack);
+            return true;
+        }
+
+        // 현재 상태는 채널이 아니라 공유 SO(ICurrentStateProvider)에서 입력 시점에 조회한다.
+        private bool IsInNormalAttack3()
+        {
+            if ((_currentStateProvider as UnityEngine.Object) == null)
+            {
+                Debug.LogWarning($"{name}: {nameof(ICurrentStateProvider)}가 없어 콤보 스왑 판정을 건너뜀.");
+                return false;
+            }
+            return _currentStateProvider.CurrentState == PlayerStateType.NormalAttack3;
+        }
+
+        // 처형 입력은 처형 가능한 대상이 있을 때만 상태로 보낸다(없으면 무시).
+        private bool CanFinish()
+        {
+            if ((_finishChecker as UnityEngine.Object) == null)
+            {
+                Debug.LogWarning($"{name}: {nameof(IFinishChecker)}가 없어 처형 판정을 건너뜀.");
+                return false;
+            }
+            return _finishChecker.CanFinish();
+        }
+
+        private void RaiseTrigger(StateTriggerType trigger)
+        {
+            if ((_stateTriggerRaiser as UnityEngine.Object) == null)
+            {
+                Debug.LogWarning($"{name}: {nameof(IStateTriggerRaiser)}가 없어 상태 전환 트리거를 건너뜀.");
+                return;
+            }
+            _stateTriggerRaiser.RaiseTrigger(trigger);
         }
 
         // 입력 액션 → 상태전환 트리거. 매핑 없는 입력(LockOn 등)은 null. Dash는 락온 여부로 변형.
@@ -110,9 +164,20 @@ namespace Refactoring
                 InputActionType.NormalAttack  => StateTriggerType.Attack,
                 InputActionType.SpecialAttack => StateTriggerType.SpecialAttack,
                 InputActionType.FinishAttack  => StateTriggerType.FinishAttack,
-                InputActionType.Dash          => _lockOnState != null && _lockOnState.IsLockOn ? StateTriggerType.LockOnDash : StateTriggerType.Dash,
+                InputActionType.Dash          => ResolveDashTrigger(),
                 _ => null,
             };
+        }
+
+        // 락온 정보가 없으면 판정 없이 기본 대시로 처리한다.
+        private StateTriggerType ResolveDashTrigger()
+        {
+            if ((_lockOnState as UnityEngine.Object) == null)
+            {
+                Debug.LogWarning($"{name}: {nameof(ILockOnState)}가 없어 락온 대시 판정을 건너뜀.");
+                return StateTriggerType.Dash;
+            }
+            return _lockOnState.IsLockOn ? StateTriggerType.LockOnDash : StateTriggerType.Dash;
         }
 
         private void HandleBlockOn(IStartData data) => _inputBlock = true;
