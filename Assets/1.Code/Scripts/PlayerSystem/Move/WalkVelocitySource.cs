@@ -18,7 +18,7 @@ namespace Refactoring
             _triggerRaiser = triggerRaiser;
             _moveSpeed = moveSpeed;
 
-            if (_subscriber != null)
+            if ((_subscriber as UnityEngine.Object) != null)
             {
                 _moveEventDisposable = _subscriber.Register(StateEventCategory.MoveControl, HandleMoveOn, HandleMoveClose);
             }
@@ -36,7 +36,10 @@ namespace Refactoring
                 return Vector3.zero;
             }
             // 실제 이동이 일어났으니 Locomotion 전환을 요청한다(이미 Locomotion이면 머신이 무시).
-            _triggerRaiser?.RaiseTrigger(StateTriggerType.Move);
+            if ((_triggerRaiser as UnityEngine.Object) != null)
+            {
+                _triggerRaiser.RaiseTrigger(StateTriggerType.Move);
+            }
             return frame.MoveDirection * _moveSpeed;
         }
 

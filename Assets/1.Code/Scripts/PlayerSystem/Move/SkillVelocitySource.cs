@@ -36,7 +36,7 @@ namespace Refactoring
         {
             _subscriber = subscriber;
 
-            if (_subscriber != null)
+            if ((_subscriber as UnityEngine.Object) != null)
             {
                 _skillMoveEventDisposable = _subscriber.Register(StateEventCategory.SkillMove, HandleSkillMove, HandleReset);
             }
@@ -54,15 +54,7 @@ namespace Refactoring
                 _skillStartY = frame.CharacterTransform.position.y;
             }
 
-            // 역순 순회로 만료된 이동을 제거(삭제해도 남은 인덱스에 영향 없음).
-            for (int i = _actives.Count - 1; i >= 0; i--)
-            {
-                _actives[i].Elapsed += frame.DeltaTime;
-                if (_actives[i].Elapsed >= _actives[i].Duration)
-                {
-                    _actives.RemoveAt(i);
-                }
-            }
+            RemoveExpiredActives(in frame);
 
             if (_actives.Count == 0)
             {
@@ -71,10 +63,29 @@ namespace Refactoring
                 return Vector3.zero;
             }
 
-            // localVelocity를 캐릭터가 바라보는 방향으로 돌려서 모두 더한다.
-            // 동시에 위로 향하는 조각이 있는지 본다(합산 y로 보면 하강 조각과 상쇄돼 놓친다).
+            Vector3 worldVelocity = SumActiveVelocities(in frame, out bool hasRise);
+            return ClampAgainstEnemy(in frame, worldVelocity, hasRise);
+        }
+
+        // 역순 순회로 만료된 이동을 제거(삭제해도 남은 인덱스에 영향 없음).
+        private void RemoveExpiredActives(in MoveParams frame)
+        {
+            for (int i = _actives.Count - 1; i >= 0; i--)
+            {
+                _actives[i].Elapsed += frame.DeltaTime;
+                if (_actives[i].Elapsed >= _actives[i].Duration)
+                {
+                    _actives.RemoveAt(i);
+                }
+            }
+        }
+
+        // localVelocity를 캐릭터가 바라보는 방향으로 돌려서 모두 더한다.
+        // 동시에 위로 향하는 조각이 있는지 본다(합산 y로 보면 하강 조각과 상쇄돼 놓친다).
+        private Vector3 SumActiveVelocities(in MoveParams frame, out bool hasRise)
+        {
             Vector3 worldVelocity = Vector3.zero;
-            bool hasRise = false;
+            hasRise = false;
             for (int i = 0; i < _actives.Count; i++)
             {
                 worldVelocity += frame.CharacterTransform.rotation * _actives[i].LocalVelocity;
@@ -83,10 +94,14 @@ namespace Refactoring
                     hasRise = true;
                 }
             }
+            return worldVelocity;
+        }
 
-            // 상승 조각이 살아있는 동안 + 시작 높이보다 떠 있는 동안 검사한다.
-            // (상승이 끝나고 앞으로만 가는 구간에서 적 머리 위를 지나치는 걸 막으려면 후자가 필요하다)
-            // 앞으로 나아갈 때만 검사한다(백덤블링처럼 뒤로 가는 이동은 앞쪽 박스에 걸릴 이유가 없다).
+        // 상승 조각이 살아있는 동안 + 시작 높이보다 떠 있는 동안 검사한다.
+        // (상승이 끝나고 앞으로만 가는 구간에서 적 머리 위를 지나치는 걸 막으려면 후자가 필요하다)
+        // 앞으로 나아갈 때만 검사한다(백덤블링처럼 뒤로 가는 이동은 앞쪽 박스에 걸릴 이유가 없다).
+        private Vector3 ClampAgainstEnemy(in MoveParams frame, Vector3 worldVelocity, bool hasRise)
+        {
             bool movingForward = (Quaternion.Inverse(frame.CharacterTransform.rotation) * worldVelocity).z > 0f;
             bool airborne = frame.CharacterTransform.position.y > _skillStartY + AirborneEpsilon;
             if (movingForward && (hasRise || airborne) && OverlapEnemyInFront(frame, _skillStartY))
