@@ -6,5 +6,8 @@ namespace Refactoring
     public interface ILockOnTarget
     {
         Collider LockedTarget { get; }
+
+        // 지금 조준 중인 적. 락온 전이면 후보, 락온 중이면 고정된 적.
+        Collider AimTarget { get; }
     }
 }

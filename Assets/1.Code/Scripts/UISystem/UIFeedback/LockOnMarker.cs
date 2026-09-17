@@ -14,7 +14,8 @@ namespace Refactoring
         [Tooltip("락온 전(후보일 때) 투명도")]
         [SerializeField, Range(0f, 1f)] private float _aimAlpha = 0.4f;
 
-        [Preserve, Inject] private LockOnController _lockOn;
+        [Preserve, Inject] private ILockOnTarget _lockOnTarget;
+        [Preserve, Inject] private ILockOnState _lockOnState;
 
         private RectTransform _rect;
         private CanvasGroup _canvasGroup;
@@ -22,7 +23,7 @@ namespace Refactoring
 
         private void Awake()
         {
-            if (_lockOn == null)
+            if (_lockOnTarget == null || _lockOnState == null)
             {
                 throw new InvalidOperationException($"{nameof(LockOnMarker)}: 필수 의존 주입 실패");
             }
@@ -34,7 +35,7 @@ namespace Refactoring
 
         private void LateUpdate()
         {
-            Collider target = _lockOn.AimTarget;
+            Collider target = _lockOnTarget.AimTarget;
             if (target == null)
             {
                 _canvasGroup.alpha = 0f;
@@ -64,7 +65,7 @@ namespace Refactoring
             }
 
             _rect.position = screenPoint;
-            _canvasGroup.alpha = _lockOn.IsLockOn ? 1f : _aimAlpha;
+            _canvasGroup.alpha = _lockOnState.IsLockOn ? 1f : _aimAlpha;
         }
     }
 }
