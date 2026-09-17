@@ -259,3 +259,34 @@ SO 에셋·DataContainer 등록은 없음.
 ---
 
 ## UISystem
+- 확정: 2026-09-17
+- 창 열기/닫기, 설정값 입력, 저장 슬롯 목록, HUD, 클릭 피드백 등 화면 UI 전반을 담당한다.
+
+### 이 시스템을 활용하는 방법 (개발자용)
+
+| 클래스 | 받아쓰는 방법 | 제공 기능 |
+|---|---|---|
+| `ISaveSlots` | 구현 클래스를 만들어 DataContainer에 등록하면 `SlotListWindow`·`LoadSlotButton`이 자동 주입받음 | 없음 |
+
+### 이 시스템을 활용하는 방법 (비개발자용)
+
+| 클래스 | 만드는 법 | 배치 위치 | 채울 값 |
+|---|---|---|---|
+| `UIRoot` | 빈 오브젝트에 컴포넌트 추가 | 메뉴 캔버스 최상위 | `Entry Window` |
+| `UIWindow` | 오브젝트에 컴포넌트 추가 | `UIRoot` 자식(창 하나당 1개) | `Id` |
+| `SlotListWindow` | 오브젝트에 컴포넌트 추가 | `UIRoot` 자식 창 | `Slot Button Prefab`, `Slot Parent` |
+| `MenuButton` | 버튼에 컴포넌트 추가 | 메뉴 버튼 오브젝트 | `Action`, `Target Window` |
+| `LoadSlotButton` | 버튼에 컴포넌트 추가 | 불러오기 확인창의 "예" 버튼 | 없음 |
+| `SaveSlotButtonView` | 버튼 프리팹에 컴포넌트 추가 | 슬롯 목록 버튼 프리팹 | `Area`, `Date`, `No Data` |
+| `KeyRebindButton` | 버튼에 컴포넌트 추가 | 조작키 설정 버튼 | `Action Type`, `Move Part` |
+| `MouseSpeedSlider` | 슬라이더에 컴포넌트 추가 | 마우스감도 슬라이더 | `Is Vertical`, `Slider Value Text` |
+| `VolumeSlider` | 슬라이더에 컴포넌트 추가 | 음량 슬라이더 | `Volume Type` |
+| `HealthHUD` | 오브젝트에 컴포넌트 추가 | HUD 캔버스 | `Hp Icons`, `Text` |
+| `CharacterButtonGraphic` | 버튼에 컴포넌트 추가 | 캐릭터 전환 버튼 | `Button`, `Human Image`, `Animal Image` |
+| `QuitGameButton` | 버튼에 컴포넌트 추가 | 종료 확인창의 "예" 버튼 | 없음 |
+| `ScrollCredit` | 스크롤뷰에 컴포넌트 추가 | 크레딧 창 | `Scroll Speed` |
+| `ButtonClickSound` | 오브젝트에 컴포넌트 추가 | 씬에 1개만 | 없음 |
+| `NoClickSound` | 버튼에 컴포넌트 추가 | 클릭음 빼고 싶은 버튼 | 없음 |
+| `LockOnMarker` | 오브젝트에 컴포넌트 추가 | 락온 마커 UI | `Height Offset`, `Aim Alpha` |
+| `UIFader` | 오브젝트에 컴포넌트 추가 | 서서히 켜졌다 꺼질 UI | `Fade Time`, `Min Hold Time` |
+| `UIShake` | 오브젝트에 컴포넌트 추가 | 흔들릴 UI | `Shake Time`, `Power` |
