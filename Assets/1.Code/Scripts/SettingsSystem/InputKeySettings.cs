@@ -2,12 +2,6 @@ using System;
 
 namespace Refactoring
 {
-    public interface IInputKeySettings
-    {
-        event Action OnChanged;
-        string Bindings { get; set; }
-    }
-
     [Serializable] public class InputKeySettingsData : ISaveData
     {
         public const string FileName = "InputKeySettingsData";
