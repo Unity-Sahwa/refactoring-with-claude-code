@@ -22,18 +22,41 @@ namespace Refactoring
         // 구독한 액션과 그 종류. 콜백에서 어떤 입력인지 되찾고, 해제할 때 순회 대상이 된다.
         private readonly Dictionary<InputAction, InputActionType> _subscribed = new();
 
-        private void OnEnable() => _actionAsset?.Enable();
-        private void OnDisable() => _actionAsset?.Disable();
-        
-        
+        private void OnEnable()
+        {
+            if (_actionAsset == null)
+            {
+                return;
+            }
+
+            _actionAsset.Enable();
+        }
+
+        private void OnDisable()
+        {
+            if (_actionAsset == null)
+            {
+                return;
+            }
+
+            _actionAsset.Disable();
+        }
+
         private void Awake()
         {
             // 현재 모드를 모르면 입력을 어디로도 보낼 수 없다. 조용히 죽지 말고 즉시 멈춰 드러낸다.
-            if (_gameStateProvider == null)
+            if ((_gameStateProvider as UnityEngine.Object) == null)
             {
                 throw new InvalidOperationException($"{nameof(InputHub)}: {nameof(IGameStateProvider)} 주입 실패");
             }
 
+            // 처리기 목록이 없으면 아무 모드도 입력을 못 받는다. 조용히 죽지 말고 즉시 멈춰 드러낸다.
+            if (_handlers == null)
+            {
+                throw new InvalidOperationException($"{nameof(InputHub)}: {nameof(IDomainInputHandler)} 목록 주입 실패");
+            }
+
+            WarnMissingOptionalDependencies();
             LoadChangedKeys();
             BuildContextMap();
             SubscribeActions();
@@ -41,9 +64,23 @@ namespace Refactoring
             _gameStateProvider.OnChanged += HandleStateChanged;
         }
 
+        // 선택 의존은 없어도 죽지 않지만, 그 기능이 조용히 빠지면 원인을 못 찾는다.
+        private void WarnMissingOptionalDependencies()
+        {
+            if (_actionAsset == null)
+            {
+                Debug.LogWarning($"{nameof(InputHub)}: {nameof(InputActionAsset)}이 없어 입력을 못 받는다");
+            }
+
+            if ((_keySettings as UnityEngine.Object) == null)
+            {
+                Debug.LogWarning($"{nameof(InputHub)}: {nameof(IInputKeySettings)}이 없어 바뀐 키를 못 불러온다");
+            }
+        }
+
         private void OnDestroy()
         {
-            if (_gameStateProvider != null)
+            if ((_gameStateProvider as UnityEngine.Object) != null)
             {
                 _gameStateProvider.OnChanged -= HandleStateChanged;
             }
@@ -64,14 +101,18 @@ namespace Refactoring
         // 설정에서 바꿔둔 조작키를 액션 에셋에 덮어씌운다. 바꾼 적 없으면 그냥 기본값.
         private void LoadChangedKeys()
         {
-            string bindings = _keySettings?.Bindings;
+            if ((_keySettings as UnityEngine.Object) == null || _actionAsset == null)
+            {
+                return;
+            }
 
+            string bindings = _keySettings.Bindings;
             if (string.IsNullOrEmpty(bindings))
             {
                 return;
             }
 
-            _actionAsset?.LoadBindingOverridesFromJson(bindings);
+            _actionAsset.LoadBindingOverridesFromJson(bindings);
         }
 
         private void BuildContextMap()
@@ -91,27 +132,37 @@ namespace Refactoring
 
         private void SubscribeActions()
         {
+            if (_actionAsset == null)
+            {
+                return;
+            }
+
             foreach (InputActionType actionType in _allActions)
             {
-                InputAction action = _actionAsset?.FindAction(actionType.ToString());
-                if (action == null)
-                {
-                    // enum에만 있고 액션 에셋에 없는 경우. 그 입력은 영원히 안 들어온다.
-                    Debug.LogWarning($"{nameof(InputHub)}: 액션 에셋에 {actionType} 이(가) 없다");
-                    continue;
-                }
+                SubscribeAction(actionType);
+            }
+        }
 
-                _subscribed[action] = actionType;
+        private void SubscribeAction(InputActionType actionType)
+        {
+            InputAction action = _actionAsset.FindAction(actionType.ToString());
+            if (action == null)
+            {
+                // enum에만 있고 액션 에셋에 없는 경우. 그 입력은 영원히 안 들어온다.
+                Debug.LogWarning($"{nameof(InputHub)}: 액션 에셋에 {actionType} 이(가) 없다");
+                return;
+            }
 
-                if (actionType == InputActionType.Movement)
-                {
-                    action.performed += HandleMovePerformed;
-                    action.canceled += HandleMoveCanceled;
-                }
-                else
-                {
-                    action.performed += HandlePressPerformed;
-                }
+            _subscribed[action] = actionType;
+
+            if (actionType == InputActionType.Movement)
+            {
+                action.performed += HandleMovePerformed;
+                action.canceled += HandleMoveCanceled;
+            }
+            else
+            {
+                action.performed += HandlePressPerformed;
             }
         }
 
