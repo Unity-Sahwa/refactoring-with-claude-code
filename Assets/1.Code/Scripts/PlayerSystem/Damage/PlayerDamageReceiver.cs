@@ -27,8 +27,9 @@ namespace Refactoring
         {
             gameObject.layer = LayerMask.NameToLayer("Player");
 
-            if (_eventSubscriber == null)
+            if ((_eventSubscriber as UnityEngine.Object) == null)
             {
+                Debug.LogWarning($"{name}: {nameof(IPlayerStateEventSubscriber)}가 없어 무적·슈퍼아머 구독을 건너뜀.");
                 return;
             }
 
@@ -51,36 +52,60 @@ namespace Refactoring
                 return;
             }
 
-            // 슈퍼아머 등 Hit 상태로 안 넘어가는 경우, 지속 피격(TriggerStay)에 매 프레임 데미지가 쌓이는 것 방지
-            if (Time.time - _lastDamageTime < _damageCooldown)
+            if (!TryConsumeCooldown())
             {
                 return;
             }
-            _lastDamageTime = Time.time;
 
-            //체력 클래스가 없어도 리액션은 볼 수 있어야 함.
-            float remaining = 100;
-            if (_health != null)
+            float remaining = ApplyHealthDecrease(info.Amount);
+            RaiseDamageReaction(remaining, info.Damager);
+        }
+
+        // 슈퍼아머 등 Hit 상태로 안 넘어가는 경우, 지속 피격(TriggerStay)에 매 프레임 데미지가 쌓이는 것 방지
+        private bool TryConsumeCooldown()
+        {
+            if (Time.time - _lastDamageTime < _damageCooldown)
             {
-                remaining = _health.Decrease(info.Amount);
+                return false;
             }
 
-            if (_triggerRaiser != null)
+            _lastDamageTime = Time.time;
+            return true;
+        }
+
+        // 체력 클래스가 없어도 리액션은 볼 수 있어야 함.
+        private float ApplyHealthDecrease(float amount)
+        {
+            if ((_health as UnityEngine.Object) == null)
             {
-                if (remaining <= 0f)
-                {
-                    _dead = true;
-                    _triggerRaiser?.RaiseTrigger(StateTriggerType.Died);
-                    OnPlayerDied?.Invoke();
-                }
-                else if (!_superArmor)
-                {
-                    // 넉백은 Damaged 상태의 로컬 이동(뒤로)이라 캐릭터가 보는 방향이 곧 넉백 방향이다.
-                    // 피격 순간 공격자 쪽을 보게 돌려서 결과적으로 "공격자 반대"로 밀리게 만든다.
-                    // ponytail: 회전으로 방향을 대신함. 회전 없이 밀어야 하면 넉백 전용 IVelocitySource가 필요.
-                    LookAtDamager(info.Damager);
-                    _triggerRaiser?.RaiseTrigger(StateTriggerType.Damaged);
-                }
+                Debug.LogWarning($"{name}: {nameof(IHealthModifier)}가 없어 체력 감소를 건너뜀.");
+                return 100f;
+            }
+
+            return _health.Decrease(amount);
+        }
+
+        private void RaiseDamageReaction(float remaining, GameObject damager)
+        {
+            if ((_triggerRaiser as UnityEngine.Object) == null)
+            {
+                Debug.LogWarning($"{name}: {nameof(IStateTriggerRaiser)}가 없어 피격 반응을 건너뜀.");
+                return;
+            }
+
+            if (remaining <= 0f)
+            {
+                _dead = true;
+                _triggerRaiser.RaiseTrigger(StateTriggerType.Died);
+                OnPlayerDied?.Invoke();
+            }
+            else if (!_superArmor)
+            {
+                // 넉백은 Damaged 상태의 로컬 이동(뒤로)이라 캐릭터가 보는 방향이 곧 넉백 방향이다.
+                // 피격 순간 공격자 쪽을 보게 돌려서 결과적으로 "공격자 반대"로 밀리게 만든다.
+                // ponytail: 회전으로 방향을 대신함. 회전 없이 밀어야 하면 넉백 전용 IVelocitySource가 필요.
+                LookAtDamager(damager);
+                _triggerRaiser.RaiseTrigger(StateTriggerType.Damaged);
             }
         }
 
