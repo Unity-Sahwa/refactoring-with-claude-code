@@ -23,20 +23,30 @@ namespace Refactoring
 
         private void Awake()
         {
+            if (_characters == null)
+            {
+                throw new InvalidOperationException($"{nameof(PlayerCharacterSwitcher)}: 필수 의존 주입 실패");
+            }
+
+            _currentCharacter = FindInitialCharacter();
+            ActivateOnlyCurrent();
+        }
+
+        private PlayerCharacter FindInitialCharacter()
+        {
             foreach (var character in _characters)
             {
                 if (character.Type == PlayerCharacterType.HumanCharacter)
                 {
-                    _currentCharacter = character;
-                    break;
+                    return character;
                 }
             }
 
-            if (_currentCharacter == null && _characters.Count > 0)
-            {
-                _currentCharacter = _characters[0];
-            }
+            return _characters.Count > 0 ? _characters[0] : null;
+        }
 
+        private void ActivateOnlyCurrent()
+        {
             foreach (var character in _characters)
             {
                 character.gameObject.SetActive(character == _currentCharacter);
@@ -45,31 +55,43 @@ namespace Refactoring
 
         public void SwapPlayerCharacter()
         {
-            PlayerCharacter nextCharacter = null;
-
-            foreach (var character in _characters)
-            {
-                if (character.Type != _currentCharacter.Type)
-                {
-                    nextCharacter = character;
-                    break;
-                }
-            }
-
+            PlayerCharacter nextCharacter = FindNextCharacter();
             if (nextCharacter == null)
             {
                 Debug.LogWarning("SwapPlayerCharacter: 다음캐릭터가 존재하지 않습니다.");
                 return;
             }
 
+            MoveToCurrentTransform(nextCharacter);
+            SwitchActiveCharacter(nextCharacter);
+
+            OnCharacterSwapped?.Invoke();
+        }
+
+        private PlayerCharacter FindNextCharacter()
+        {
+            foreach (var character in _characters)
+            {
+                if (character.Type != _currentCharacter.Type)
+                {
+                    return character;
+                }
+            }
+
+            return null;
+        }
+
+        private void MoveToCurrentTransform(PlayerCharacter nextCharacter)
+        {
             nextCharacter.transform.position = _currentCharacter.transform.position;
             nextCharacter.transform.rotation = _currentCharacter.transform.rotation;
-            
+        }
+
+        private void SwitchActiveCharacter(PlayerCharacter nextCharacter)
+        {
             _currentCharacter.gameObject.SetActive(false);
             nextCharacter.gameObject.SetActive(true);
             _currentCharacter = nextCharacter;
-
-            OnCharacterSwapped?.Invoke();
         }
     }
 }
