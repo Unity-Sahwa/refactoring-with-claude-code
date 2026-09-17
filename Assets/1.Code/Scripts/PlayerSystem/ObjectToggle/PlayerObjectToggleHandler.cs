@@ -15,6 +15,11 @@ namespace Refactoring
 
         private void Awake()
         {
+            if ((_eventSubscriber as UnityEngine.Object) == null || _toggleTargets == null)
+            {
+                throw new InvalidOperationException($"{nameof(PlayerObjectToggleHandler)}: 필수 의존 주입 실패");
+            }
+
             _toggleEventDisposable = _eventSubscriber.Register(StateEventCategory.ObjectToggle, HandleToggle);
 
             foreach (var target in _toggleTargets)
