@@ -53,8 +53,12 @@ namespace Refactoring
             }
 
             _label.text = "...";
+            StartRebind(action);
+        }
 
-            // 바꾸는 동안은 액션을 꺼둬야 한다. 안 그러면 새로 누른 키가 게임 동작으로도 먹힌다.
+        // 바꾸는 동안은 액션을 꺼둬야 한다. 안 그러면 새로 누른 키가 게임 동작으로도 먹힌다.
+        private void StartRebind(InputAction action)
+        {
             action.Disable();
 
             // 좌클릭만 막는다. 좌클릭이 배정되면 버튼 누르기랑 겹쳐서 설정을 빠져나올 수 없다.
