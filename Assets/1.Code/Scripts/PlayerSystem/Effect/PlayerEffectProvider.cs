@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Scripting;
@@ -18,6 +19,11 @@ namespace Refactoring
 
         private void Awake()
         {
+            if (_catalog == null)
+            {
+                throw new InvalidOperationException($"{nameof(PlayerEffectProvider)}: 필수 의존 주입 실패");
+            }
+
             BuildPools();
         }
 
@@ -25,28 +31,39 @@ namespace Refactoring
         {
             foreach (var entry in _catalog.Entries)
             {
-                if (entry == null || entry.Id == EffectId.None || entry.Prefab == null)
-                {
-                    continue;
-                }
-                // 같은 id 중복 방지
-                if (_available.ContainsKey(entry.Id))
+                if (!IsPoolableEntry(entry))
                 {
                     continue;
                 }
 
-                var queue = new Queue<GameObject>();
-                int count = Mathf.Max(1, entry.PoolSize);
-                for (int i = 0; i < count; i++)
-                {
-                    var instance = Instantiate(entry.Prefab, transform);
-                    instance.SetActive(false);
-                    queue.Enqueue(instance);
-                    _keyOfInstance[instance] = entry.Id;
-                    _preloadTargets.Add(instance);
-                }
-                _available[entry.Id] = queue;
+                BuildPool(entry);
             }
+        }
+
+        private bool IsPoolableEntry(EffectCatalogEntry entry)
+        {
+            if (entry == null || entry.Id == EffectId.None || entry.Prefab == null)
+            {
+                return false;
+            }
+
+            // 같은 id 중복 방지
+            return !_available.ContainsKey(entry.Id);
+        }
+
+        private void BuildPool(EffectCatalogEntry entry)
+        {
+            var queue = new Queue<GameObject>();
+            int count = Mathf.Max(1, entry.PoolSize);
+            for (int i = 0; i < count; i++)
+            {
+                GameObject instance = Instantiate(entry.Prefab, transform);
+                instance.SetActive(false);
+                queue.Enqueue(instance);
+                _keyOfInstance[instance] = entry.Id;
+                _preloadTargets.Add(instance);
+            }
+            _available[entry.Id] = queue;
         }
 
         public GameObject Rent(EffectId id)

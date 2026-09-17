@@ -25,6 +25,11 @@ namespace Refactoring
 
         private void Awake()
         {
+            if (_eventSubscriber == null || _provider == null || _effectAttachPoints == null)
+            {
+                throw new InvalidOperationException($"{nameof(PlayerEffectHandler)}: 필수 의존 주입 실패");
+            }
+
             _effectEventDisposable = _eventSubscriber.Register(StateEventCategory.Effect, HandleEffect, HandleReset);
 
             foreach (var obj in _effectAttachPoints)
@@ -41,36 +46,48 @@ namespace Refactoring
                 return;
             }
 
-            var instance = _provider.Rent(effect.EffectId);
+            GameObject instance = RentAttachedEffect(effect);
             if (instance == null)
             {
                 return;
             }
 
-            if (!_attachPoints.TryGetValue(effect.AttachKey, out var parent))
+            StartActiveEffect(instance, effect);
+        }
+
+        private GameObject RentAttachedEffect(IPlayerEffect effect)
+        {
+            GameObject instance = _provider.Rent(effect.EffectId);
+            if (instance == null)
+            {
+                return null;
+            }
+
+            if (!_attachPoints.TryGetValue(effect.AttachKey, out Transform parent))
             {
                 _provider.Return(instance);
-                return;
+                return null;
             }
 
-            Transform effectTransform = instance.transform;
-            effectTransform.SetParent(parent, false);
-            effectTransform.localPosition = effect.Position;
-            effectTransform.localRotation = Quaternion.Euler(effect.Rotation);
-            if (effect.Scale == Vector3.zero)
-            {
-                effectTransform.localScale = Vector3.one;
-            }
-            else
-            {
-                effectTransform.localScale = effect.Scale;
-            }
+            instance.transform.SetParent(parent, false);
+            return instance;
+        }
 
+        private void StartActiveEffect(GameObject instance, IPlayerEffect effect)
+        {
+            ApplyTransform(instance.transform, effect);
             instance.SetActive(true);
 
             var active = new ActiveEffect { Instance = instance, UntilFinish = effect.UntilFinish };
             active.Routine = StartCoroutine(CoRunEffect(active, effect));
             _actives.Add(active);
+        }
+
+        private void ApplyTransform(Transform effectTransform, IPlayerEffect effect)
+        {
+            effectTransform.localPosition = effect.Position;
+            effectTransform.localRotation = Quaternion.Euler(effect.Rotation);
+            effectTransform.localScale = effect.Scale == Vector3.zero ? Vector3.one : effect.Scale;
         }
 
         private IEnumerator CoRunEffect(ActiveEffect active, IPlayerEffect effect)
@@ -96,20 +113,24 @@ namespace Refactoring
         {
             for (int i = _actives.Count - 1; i >= 0; i--)
             {
-                var active = _actives[i];
-                if (active.UntilFinish)
-                {
-                    active.Instance.transform.SetParent(null, true);
-                    continue;
-                }
-
-                if (active.Routine != null)
-                {
-                    StopCoroutine(active.Routine);
-                }
-                active.Instance.SetActive(false);
-                FinishEffect(active);
+                ResolveActiveOnReset(_actives[i]);
             }
+        }
+
+        private void ResolveActiveOnReset(ActiveEffect active)
+        {
+            if (active.UntilFinish)
+            {
+                active.Instance.transform.SetParent(null, true);
+                return;
+            }
+
+            if (active.Routine != null)
+            {
+                StopCoroutine(active.Routine);
+            }
+            active.Instance.SetActive(false);
+            FinishEffect(active);
         }
 
         private void FinishEffect(ActiveEffect active)
