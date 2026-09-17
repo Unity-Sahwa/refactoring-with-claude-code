@@ -19,6 +19,11 @@ namespace Refactoring
         private void Awake()
         {
             _onScreenButton = GetComponent<OnScreenButton>();
+
+            if (_actionAsset == null)
+            {
+                Debug.LogWarning($"{nameof(MobileInputButton)}: {nameof(InputActionAsset)}이 없어 바인딩 경로를 못 맞춘다");
+            }
         }
 
         private void OnEnable()
@@ -53,7 +58,12 @@ namespace Refactoring
 
         private void SyncPath()
         {
-            InputAction action = _actionAsset?.FindAction(_actionType.ToString());
+            if (_actionAsset == null)
+            {
+                return;
+            }
+
+            InputAction action = _actionAsset.FindAction(_actionType.ToString());
             if (action == null || action.bindings.Count == 0)
             {
                 return;
