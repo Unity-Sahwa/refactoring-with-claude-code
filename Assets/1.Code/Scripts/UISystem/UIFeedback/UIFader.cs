@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Scripting;
 
@@ -23,6 +24,16 @@ namespace Refactoring
 
         private void Awake()
         {
+            if (_stateProvider == null)
+            {
+                throw new InvalidOperationException($"{nameof(UIFader)}: 필수 의존 주입 실패");
+            }
+
+            if (_targetDetector == null)
+            {
+                throw new InvalidOperationException($"{nameof(UIFader)}: 필수 의존 주입 실패");
+            }
+
             _canvasGroup = GetComponent<CanvasGroup>();
             _canvasGroup.alpha = 0f;
         }
@@ -48,12 +59,12 @@ namespace Refactoring
         // 이동(Locomotion) 말고 다른 상태이거나, 화면에 적이 한 마리라도 잡히면 보여준다.
         private bool IsShowing()
         {
-            if (_stateProvider != null && _stateProvider.CurrentState != PlayerStateType.Locomotion)
+            if (_stateProvider.CurrentState != PlayerStateType.Locomotion)
             {
                 return true;
             }
 
-            return _targetDetector != null && _targetDetector.Candidates.Count > 0;
+            return _targetDetector.Candidates.Count > 0;
         }
     }
 }

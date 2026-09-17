@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Scripting;
 
@@ -22,17 +23,17 @@ namespace Refactoring
 
         private void Awake()
         {
+            if (_health == null)
+            {
+                throw new InvalidOperationException($"{nameof(UIShake)}: 필수 의존 주입 실패");
+            }
+
             _rect = GetComponent<RectTransform>();
             _startPosition = _rect.anchoredPosition;
         }
 
         private void Start()
         {
-            if (_health == null)
-            {
-                return;
-            }
-
             _lastHealth = _health.Current;
             _health.OnChanged += HandleHealthChanged;
         }
@@ -53,15 +54,12 @@ namespace Refactoring
 
             // 남은 시간이 줄면 흔들림 폭도 같이 줄어서 자연스럽게 잦아든다.
             float power = _power * (_timeLeft / _shakeTime);
-            _rect.anchoredPosition = _startPosition + Random.insideUnitCircle * power;
+            _rect.anchoredPosition = _startPosition + UnityEngine.Random.insideUnitCircle * power;
         }
 
         private void OnDestroy()
         {
-            if (_health != null)
-            {
-                _health.OnChanged -= HandleHealthChanged;
-            }
+            _health.OnChanged -= HandleHealthChanged;
         }
 
         // 회복일 때는 흔들면 안 되므로 줄었을 때만 시작한다.

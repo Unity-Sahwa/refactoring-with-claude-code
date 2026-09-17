@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Scripting;
 using UnityEngine.UI;
@@ -15,6 +16,19 @@ namespace Refactoring
 
         [Preserve, Inject] private ICurrentCharacterProvider _characterProvider;
         [Preserve, Inject] private ICharacterSwapNotifier _swapNotifier;
+
+        private void Awake()
+        {
+            if (_characterProvider == null)
+            {
+                throw new InvalidOperationException($"{nameof(CharacterButtonGraphic)}: 필수 의존 주입 실패");
+            }
+
+            if (_swapNotifier == null)
+            {
+                throw new InvalidOperationException($"{nameof(CharacterButtonGraphic)}: 필수 의존 주입 실패");
+            }
+        }
 
         private void Start()
         {

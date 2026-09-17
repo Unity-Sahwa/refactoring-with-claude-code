@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Scripting;
@@ -12,6 +13,14 @@ namespace Refactoring
 
         // 주입기가 씬의 MonoBehaviour를 전부 등록해서, 버튼도 이렇게 한꺼번에 받을 수 있다(꺼져 있는 것 포함).
         [Preserve, Inject] private List<Button> _buttons;
+
+        private void Awake()
+        {
+            if (_audioChannel == null)
+            {
+                throw new InvalidOperationException($"{nameof(ButtonClickSound)}: 필수 의존 주입 실패");
+            }
+        }
 
         // Awake가 아니라 Start인 이유: 주입이 Awake에 일어나서, Awake에 읽으면 아직 비어 있다.
         private void Start()

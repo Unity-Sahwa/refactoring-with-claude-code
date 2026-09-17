@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Scripting;
@@ -15,24 +16,24 @@ namespace Refactoring
         [Tooltip("\"20/20\" 형태로 찍히는 텍스트")]
         [SerializeField] private TMP_Text _text;
 
-        // Awake가 아니라 Start인 이유: Health.Awake에서 발동한 OnChanged를 놓치므로 여기서 현재값으로 한 번 맞춘다.
-        private void Start()
+        private void Awake()
         {
             if (_health == null)
             {
-                return;
+                throw new InvalidOperationException($"{nameof(HealthHUD)}: 필수 의존 주입 실패");
             }
+        }
 
+        // Awake가 아니라 Start인 이유: Health.Awake에서 발동한 OnChanged를 놓치므로 여기서 현재값으로 한 번 맞춘다.
+        private void Start()
+        {
             _health.OnChanged += Refresh;
             Refresh(_health.Current);
         }
 
         private void OnDestroy()
         {
-            if (_health != null)
-            {
-                _health.OnChanged -= Refresh;
-            }
+            _health.OnChanged -= Refresh;
         }
 
         private void Refresh(float current)

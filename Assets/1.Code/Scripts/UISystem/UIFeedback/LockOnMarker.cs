@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Scripting;
 
@@ -21,6 +22,11 @@ namespace Refactoring
 
         private void Awake()
         {
+            if (_lockOn == null)
+            {
+                throw new InvalidOperationException($"{nameof(LockOnMarker)}: 필수 의존 주입 실패");
+            }
+
             _rect = GetComponent<RectTransform>();
             _canvasGroup = GetComponent<CanvasGroup>();
             _canvasGroup.alpha = 0f;
@@ -28,7 +34,7 @@ namespace Refactoring
 
         private void LateUpdate()
         {
-            Collider target = _lockOn?.AimTarget;
+            Collider target = _lockOn.AimTarget;
             if (target == null)
             {
                 _canvasGroup.alpha = 0f;
