@@ -72,7 +72,11 @@ namespace Refactoring
             // 메인메뉴 씬은 게임플레이가 없으니, z를 기다리지 않고 시작 시 바로 메뉴를 연다.
             if (IsMainMenuScene)
             {
-                _gameState?.Push(GameStateType.Menu);
+                if (_gameState != null)
+                {
+                    _gameState.Push(GameStateType.Menu);
+                }
+
                 OpenWindow(_entryWindow);
             }
         }
@@ -112,7 +116,11 @@ namespace Refactoring
                 return;
             }
 
-            _gameState?.Push(GameStateType.Menu);
+            if (_gameState != null)
+            {
+                _gameState.Push(GameStateType.Menu);
+            }
+
             OpenWindow(_entryWindow);
         }
 
@@ -146,9 +154,9 @@ namespace Refactoring
             _navigator.CloseTop();
 
             // 인게임에서 열린 창이 다 사라지면 게임으로 복귀(메인메뉴 씬은 복귀 대상이 없음).
-            if (!IsMainMenuScene && !_navigator.HasOpenWindow)
+            if (!IsMainMenuScene && !_navigator.HasOpenWindow && _gameState != null)
             {
-                _gameState?.Pop(GameStateType.Menu);
+                _gameState.Pop(GameStateType.Menu);
             }
         }
     }
