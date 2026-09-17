@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using UnityEngine.Scripting;
 using UnityEngine.UI;
 
 namespace Refactoring
@@ -18,12 +20,15 @@ namespace Refactoring
         // _action이 OpenWindow일 때만 사용하는 열 대상
         [SerializeField] private WindowType _targetWindow;
 
-        private IUIRoot _root;
+        [Preserve, Inject] private IUIRoot _root;
 
         private void Awake()
         {
-            // UI는 캔버스 트리라, 위로 거슬러 올라가 총괄(UIRoot)을 찾는다. 슬롯 연결 없음.
-            _root = GetComponentInParent<IUIRoot>(true);
+            if (_root == null)
+            {
+                throw new InvalidOperationException($"{nameof(MenuButton)}: 필수 의존 주입 실패");
+            }
+
             GetComponent<Button>().onClick.AddListener(HandleClicked);
         }
 

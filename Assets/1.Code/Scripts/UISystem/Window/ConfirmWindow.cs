@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using UnityEngine.Scripting;
 using UnityEngine.UI;
 
 namespace Refactoring
@@ -9,12 +11,18 @@ namespace Refactoring
     {
         [SerializeField] private Button _yesButton;
 
-        protected IUIRoot Root { get; private set; }
+        [Preserve, Inject] private IUIRoot _root;
+
+        protected IUIRoot Root => _root;
 
         // 자식 창에서 Awake를 다시 만들면 여기 Awake가 안 불려 예 버튼이 죽는다.
         private void Awake()
         {
-            Root = GetComponentInParent<IUIRoot>(true);
+            if (_root == null)
+            {
+                throw new InvalidOperationException($"{nameof(ConfirmWindow)}: 필수 의존 주입 실패");
+            }
+
             _yesButton.onClick.AddListener(HandleYesClicked);
         }
 

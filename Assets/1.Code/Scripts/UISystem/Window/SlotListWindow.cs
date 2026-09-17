@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Scripting;
 using UnityEngine.UI;
@@ -13,20 +14,23 @@ namespace Refactoring
         // 찍어낸 버튼이 들어갈 부모(세로 목록 오브젝트).
         [SerializeField] private Transform _slotParent;
 
+        [Preserve, Inject] private IUIRoot _root;
+
         [Preserve, Inject(true)] private ISaveSlots _saveSlots;
         [Preserve, Inject(true)] private ILanguageSettings _language;
 
         // 슬롯 버튼은 창을 열 때 찍어내서 ButtonClickSound의 목록에 안 들어간다. 만들 때 직접 달아준다.
         [Preserve, Inject(true)] private ButtonClickSound _clickSound;
 
-        private IUIRoot _root;
-
         // 방금 고른 슬롯 번호. 불러오기 확인창이 이 값을 보고 불러온다.
         public int SelectedIndex { get; private set; }
 
         private void Awake()
         {
-            _root = GetComponentInParent<IUIRoot>(true);
+            if (_root == null)
+            {
+                throw new InvalidOperationException($"{nameof(SlotListWindow)}: 필수 의존 주입 실패");
+            }
         }
 
         // 자동저장으로 목록이 바뀌어도 다시 열면 최신이라 변경 이벤트를 안 듣는다.
