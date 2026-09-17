@@ -23,8 +23,13 @@ namespace Refactoring
 
         private void Awake()
         {
+            if (_playerStateEventSubscriber == null || _finishTargetProvider == null)
+            {
+                throw new InvalidOperationException($"{nameof(FinishExecutor)}: 필수 의존 주입 실패");
+            }
+
             // 처형은 정리가 필요 없는 순수 원샷이라 close 없이 등록한다.
-            _finishEventDisposable = _playerStateEventSubscriber?.Register(StateEventCategory.Finish, HandleFinish);
+            _finishEventDisposable = _playerStateEventSubscriber.Register(StateEventCategory.Finish, HandleFinish);
         }
 
         private void OnDestroy()
@@ -49,7 +54,7 @@ namespace Refactoring
         // 현재 범위 내 스턴 대상 전부를 모션 정지.
         private void Stun()
         {
-            IReadOnlyList<IFinishable> targets = _finishTargetProvider?.GatherStunTargets();
+            IReadOnlyList<IFinishable> targets = _finishTargetProvider.GatherStunTargets();
             if (targets == null)
             {
                 return;
@@ -68,7 +73,7 @@ namespace Refactoring
         // 현재 범위 내 대상 전부를 처형.
         private void Execute()
         {
-            IReadOnlyList<IFinishable> targets = _finishTargetProvider?.GatherExecuteTargets();
+            IReadOnlyList<IFinishable> targets = _finishTargetProvider.GatherExecuteTargets();
             if (targets == null)
             {
                 return;
@@ -89,10 +94,17 @@ namespace Refactoring
         // 처형 성공 1회당 소량 회복.
         private void Heal(float amount)
         {
-            if (_healthInfo == null || _healthModifier == null || amount <= 0f)
+            if (amount <= 0f)
             {
                 return;
             }
+
+            if (_healthInfo == null || _healthModifier == null)
+            {
+                Debug.LogWarning($"{name}: {nameof(IHealthInfo)}/{nameof(IHealthModifier)}가 없어 처형 회복을 건너뜀.");
+                return;
+            }
+
             _healthModifier.SetCurrent(_healthInfo.Current + amount);
         }
     }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Scripting;
@@ -21,6 +22,14 @@ namespace Refactoring
         private int _scanHighestFullCap;
         private bool _scanHasFull;
 
+        private void Awake()
+        {
+            if (_currentCharacterProvider == null)
+            {
+                throw new InvalidOperationException($"{nameof(FinishTargetScanner)}: 필수 의존 주입 실패");
+            }
+        }
+
         // 덧칠 스택이 가득 찬 대상이 화면 안에 있어야 처형 가능하다.
         public bool CanFinish()
         {
@@ -42,19 +51,29 @@ namespace Refactoring
 
         private void ScanTargets()
         {
-            _scanEnemies.Clear();
-            _scanCalis.Clear();
-            _executeTargets.Clear();
-            _scanHighestFullCap = 0;
-            _scanHasFull = false;
+            ResetScanState();
 
-            Transform characterTransform = _currentCharacterProvider?.GetCurrentComponent<Transform>();
+            Transform characterTransform = _currentCharacterProvider.GetCurrentComponent<Transform>();
             if (characterTransform == null)
             {
                 return;
             }
 
-            Vector3 center = characterTransform.position;
+            CollectNearbyEnemies(characterTransform.position);
+            CollectExecuteTargets();
+        }
+
+        private void ResetScanState()
+        {
+            _scanEnemies.Clear();
+            _scanCalis.Clear();
+            _executeTargets.Clear();
+            _scanHighestFullCap = 0;
+            _scanHasFull = false;
+        }
+
+        private void CollectNearbyEnemies(Vector3 center)
+        {
             int hitCount = Physics.OverlapSphereNonAlloc(center, _radius, _overlapHits, _enemyMask);
 
             for (int i = 0; i < hitCount; i++)
@@ -67,19 +86,28 @@ namespace Refactoring
                 _overlapHits[i].TryGetComponent(out IPaintOverState cali);
                 _scanEnemies.Add(enemy);
                 _scanCalis.Add(cali);
+                TrackFullCap(cali);
+            }
+        }
 
-                if (cali != null && cali.IsPaintOverMax())
-                {
-                    _scanHasFull = true;
-
-                    // 풀스택 대상 중 최고 한계치를 기준으로 처형 대상을 고른다.
-                    if (_scanHighestFullCap < cali.MaxPaintOver)
-                    {
-                        _scanHighestFullCap = cali.MaxPaintOver;
-                    }
-                }
+        private void TrackFullCap(IPaintOverState cali)
+        {
+            if (cali == null || !cali.IsPaintOverMax())
+            {
+                return;
             }
 
+            _scanHasFull = true;
+
+            // 풀스택 대상 중 최고 한계치를 기준으로 처형 대상을 고른다.
+            if (_scanHighestFullCap < cali.MaxPaintOver)
+            {
+                _scanHighestFullCap = cali.MaxPaintOver;
+            }
+        }
+
+        private void CollectExecuteTargets()
+        {
             for (int i = 0; i < _scanEnemies.Count; i++)
             {
                 IPaintOverState cali = _scanCalis[i];
@@ -95,24 +123,34 @@ namespace Refactoring
         // 처형 대상 중 하나라도 화면 안에 있나.
         private bool HasExecuteTargetOnScreen()
         {
-            if (_camera == null)
-            {
-                _camera = Camera.main;
-            }
-            if (_camera == null)
+            if (!TryGetMainCamera())
             {
                 return false;
             }
 
             for (int i = 0; i < _executeTargets.Count; i++)
             {
-                Vector3 viewportPoint = _camera.WorldToViewportPoint(_executeTargets[i].Position);
-                if (viewportPoint.z > 0f && viewportPoint.x >= 0f && viewportPoint.x <= 1f && viewportPoint.y >= 0f && viewportPoint.y <= 1f)
+                if (IsInViewport(_executeTargets[i].Position))
                 {
                     return true;
                 }
             }
             return false;
+        }
+
+        private bool TryGetMainCamera()
+        {
+            if (_camera == null)
+            {
+                _camera = Camera.main;
+            }
+            return _camera != null;
+        }
+
+        private bool IsInViewport(Vector3 worldPosition)
+        {
+            Vector3 viewportPoint = _camera.WorldToViewportPoint(worldPosition);
+            return viewportPoint.z > 0f && viewportPoint.x >= 0f && viewportPoint.x <= 1f && viewportPoint.y >= 0f && viewportPoint.y <= 1f;
         }
     }
 }
