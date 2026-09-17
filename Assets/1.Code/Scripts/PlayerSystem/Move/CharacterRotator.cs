@@ -37,28 +37,32 @@ namespace Refactoring
                 return;
             }
 
-            Vector3 lookDir;
-            Collider locked = _lockOnTarget?.LockedTarget;
-            if (locked != null)
+            if (!TryGetLookDirection(in frame, out Vector3 lookDir))
             {
-                // 락온: 이동 중이어도 고정된 적을 바라봄(스트레이프·백스텝).
-                lookDir = locked.transform.position - frame.CharacterTransform.position;
-                lookDir.y = 0f;
-                // 적과 겹칠 때 방어
-                if (lookDir == Vector3.zero)
-                {
-                    return;
-                }
-            }
-            else
-            {
-                // 비락온: 이동 방향을 바라봄.
-                lookDir = frame.MoveDirection;
+                return;
             }
 
             Quaternion target = Quaternion.LookRotation(lookDir);
             frame.CharacterTransform.rotation =
                 Quaternion.Slerp(frame.CharacterTransform.rotation, target, frame.DeltaTime * _rotateRate);
+        }
+
+        private bool TryGetLookDirection(in MoveParams frame, out Vector3 lookDir)
+        {
+            bool hasLockOnTarget = (_lockOnTarget as UnityEngine.Object) != null;
+            Collider locked = hasLockOnTarget ? _lockOnTarget.LockedTarget : null;
+            if (locked == null)
+            {
+                // 비락온: 이동 방향을 바라봄.
+                lookDir = frame.MoveDirection;
+                return true;
+            }
+
+            // 락온: 이동 중이어도 고정된 적을 바라봄(스트레이프·백스텝).
+            lookDir = locked.transform.position - frame.CharacterTransform.position;
+            lookDir.y = 0f;
+            // 적과 겹칠 때 방어
+            return lookDir != Vector3.zero;
         }
 
         public void Dispose()

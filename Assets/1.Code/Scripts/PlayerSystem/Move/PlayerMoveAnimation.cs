@@ -21,7 +21,7 @@ namespace Refactoring
 
         private readonly int _moveXHash = Animator.StringToHash("MoveX");
         private readonly int _moveYHash = Animator.StringToHash("MoveY");
-        private float _dampTime = 0.1f;
+        private const float DampTime = 0.1f;
 
         // 애니 파라미터에 넣는 것과 같은 값을 밖에도 값으로 내준다. 이동 갱신이 꺼져 있으면 방향 없음.
         public Vector2 MoveDirection
@@ -32,7 +32,7 @@ namespace Refactoring
                 {
                     return Vector2.zero;
                 }
-                if (_lockOnState != null && _lockOnState.IsLockOn)
+                if ((_lockOnState as UnityEngine.Object) != null && _lockOnState.IsLockOn)
                 {
                     return _playerMoveVector;
                 }
@@ -43,11 +43,19 @@ namespace Refactoring
 
         void Awake()
         {
+            if ((_inputEventProvider as UnityEngine.Object) == null)
+            {
+                throw new InvalidOperationException($"{nameof(PlayerMoveAnimation)}: 필수 의존 주입 실패");
+            }
             _inputEventProvider.OnVector2Input += OnMove;
 
-            if (_eventSubscriber != null)
+            if ((_eventSubscriber as UnityEngine.Object) != null)
             {
                 _moveEventDisposable = _eventSubscriber.Register(StateEventCategory.MoveControl, HandleOn, HandleClose);
+            }
+            else
+            {
+                Debug.LogWarning($"{nameof(PlayerMoveAnimation)}: {nameof(_eventSubscriber)}가 없어 이동 파라미터 갱신이 빠집니다.");
             }
         }
         void Update()
@@ -61,7 +69,7 @@ namespace Refactoring
         }
         private void OnDestroy()
         {
-            if (_inputEventProvider != null)
+            if ((_inputEventProvider as UnityEngine.Object) != null)
             {
                 _inputEventProvider.OnVector2Input -= OnMove;
             }
@@ -85,7 +93,8 @@ namespace Refactoring
         }
         private void SetAnimator()
         {
-            _animator = _currentCharacterProvider?.GetCurrentComponent<Animator>();
+            bool hasCharacterProvider = (_currentCharacterProvider as UnityEngine.Object) != null;
+            _animator = hasCharacterProvider ? _currentCharacterProvider.GetCurrentComponent<Animator>() : null;
             if (_animator == null)
             {
                 Debug.LogError($"[{nameof(PlayerMoveAnimation)}] 현재 캐릭터의 Animator를 찾지 못해 이동 애니메이션이 갱신되지 않는다.", this);
@@ -93,17 +102,17 @@ namespace Refactoring
         }
         private void SetParameter()
         {
-            if (_lockOnState != null && _lockOnState.IsLockOn)
+            if ((_lockOnState as UnityEngine.Object) != null && _lockOnState.IsLockOn)
             {
                 // 락온: 타깃 기준 전후좌우 방향 블렌드(MoveX·MoveY 둘 다 사용)
-                _animator.SetFloat(_moveXHash, _playerMoveVector.x, _dampTime, Time.deltaTime);
-                _animator.SetFloat(_moveYHash, _playerMoveVector.y, _dampTime, Time.deltaTime);
+                _animator.SetFloat(_moveXHash, _playerMoveVector.x, DampTime, Time.deltaTime);
+                _animator.SetFloat(_moveYHash, _playerMoveVector.y, DampTime, Time.deltaTime);
             }
             else
             {
                 // 비락온: 진행 속력만(MoveY), MoveX는 0
-                _animator.SetFloat(_moveXHash, 0f, _dampTime, Time.deltaTime);
-                _animator.SetFloat(_moveYHash, _playerMoveVector.magnitude, _dampTime, Time.deltaTime);
+                _animator.SetFloat(_moveXHash, 0f, DampTime, Time.deltaTime);
+                _animator.SetFloat(_moveYHash, _playerMoveVector.magnitude, DampTime, Time.deltaTime);
             }
         }
     }

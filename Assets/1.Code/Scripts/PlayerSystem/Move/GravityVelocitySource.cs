@@ -22,9 +22,20 @@ namespace Refactoring
         public Vector3 Evaluate(in MoveParams frame)
         {
             // 각도만으로 가파른 경사 판정(isGrounded 제외 → 벽 옆구리에 닿아 isGrounded가 false여도 미끄러짐 유지).
-            float groundAngle = Vector3.Angle(frame.GroundNormal, Vector3.up);
-            bool onSteepSlope = groundAngle > frame.Controller.slopeLimit;
+            bool onSteepSlope = Vector3.Angle(frame.GroundNormal, Vector3.up) > frame.Controller.slopeLimit;
 
+            AccumulateVerticalSpeed(in frame, onSteepSlope);
+
+            if (onSteepSlope)
+            {
+                // 가파른 경사: 쌓인 중력 속도를 경사면을 따라 흐르게 투영 → 면을 타고 미끄러져 내려간다.
+                return Vector3.ProjectOnPlane(new Vector3(0f, _verticalSpeed, 0f), frame.GroundNormal);
+            }
+            return new Vector3(0f, _verticalSpeed, 0f);
+        }
+
+        private void AccumulateVerticalSpeed(in MoveParams frame, bool onSteepSlope)
+        {
             // 중력은 항상 아래로 쌓는다.
             _verticalSpeed += _gravity * frame.DeltaTime;
             _verticalSpeed = Mathf.Max(_verticalSpeed, _maxFallSpeed);
@@ -34,13 +45,6 @@ namespace Refactoring
             {
                 _verticalSpeed = _groundedStick;
             }
-
-            if (onSteepSlope)
-            {
-                // 가파른 경사: 쌓인 중력 속도를 경사면을 따라 흐르게 투영 → 면을 타고 미끄러져 내려간다.
-                return Vector3.ProjectOnPlane(new Vector3(0f, _verticalSpeed, 0f), frame.GroundNormal);
-            }
-            return new Vector3(0f, _verticalSpeed, 0f);
         }
 
         // 캐릭터가 바뀌면 누적된 낙하속도를 초기화(이전 캐릭터의 낙하가 새 캐릭터로 이월되지 않게).

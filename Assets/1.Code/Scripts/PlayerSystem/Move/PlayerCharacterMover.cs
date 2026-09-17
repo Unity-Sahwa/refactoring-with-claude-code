@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Scripting;
@@ -46,13 +47,26 @@ namespace Refactoring
 
         private void Awake()
         {
-            if (_inputEventProvider != null)
+            if (_characterProvider == null)
+            {
+                throw new InvalidOperationException($"{nameof(PlayerCharacterMover)}: 필수 의존 주입 실패");
+            }
+
+            if ((_inputEventProvider as UnityEngine.Object) != null)
             {
                 _inputEventProvider.OnVector2Input += OnMove;
             }
-            if (_swapNotifier != null)
+            else
+            {
+                Debug.LogWarning($"{nameof(PlayerCharacterMover)}: {nameof(_inputEventProvider)}가 없어 입력 이동·회전이 빠집니다.");
+            }
+            if ((_swapNotifier as UnityEngine.Object) != null)
             {
                 _swapNotifier.OnCharacterSwapped += SetupCurrentCharacter;
+            }
+            else
+            {
+                Debug.LogWarning($"{nameof(PlayerCharacterMover)}: {nameof(_swapNotifier)}가 없어 스왑 재획득 통지가 빠집니다.");
             }
             _camera = Camera.main != null ? Camera.main.transform : null;
 
@@ -69,11 +83,11 @@ namespace Refactoring
 
         private void OnDestroy()
         {
-            if (_inputEventProvider != null)
+            if ((_inputEventProvider as UnityEngine.Object) != null)
             {
                 _inputEventProvider.OnVector2Input -= OnMove;
             }
-            if (_swapNotifier != null)
+            if ((_swapNotifier as UnityEngine.Object) != null)
             {
                 _swapNotifier.OnCharacterSwapped -= SetupCurrentCharacter;
             }
@@ -87,16 +101,7 @@ namespace Refactoring
 
         private void Update()
         {
-            if (_controller == null || _characterTransform == null)
-            {
-                return;
-            }
-
-            // 히트스탑(HitStopHandler가 anim.speed=0으로 애니만 정지) 동안에는 이동 계산을 통째로 건너뛴다.
-            // 안 그러면 애니는 멈춘 채 SkillVelocitySource의 elapsed만 흘러서, 스탑이 끝났을 땐 스킬 이동 구간이
-            // 이미 소진돼 있다(= 스킬무브가 짧게 끊기거나 아예 안 나가는 증상).
-            // ponytail: 스탑 동안 중력/걷기도 같이 멈춘다. 히트스탑은 곧 시간 정지라 의도된 동작.
-            if (_animator != null && _animator.speed == 0f)
+            if (_controller == null || _characterTransform == null || IsHitStopped())
             {
                 return;
             }
@@ -106,6 +111,17 @@ namespace Refactoring
             Vector3 groundNormal = _groundProbe != null ? _groundProbe.GroundNormal : Vector3.up;
             MoveParams frame = new MoveParams(Time.deltaTime, _characterTransform, _controller, groundNormal, _moveDirection);
 
+            MoveByFrame(in frame);
+        }
+
+        // 히트스탑(HitStopHandler가 anim.speed=0으로 애니만 정지) 동안에는 이동 계산을 통째로 건너뛴다.
+        // 안 그러면 애니는 멈춘 채 SkillVelocitySource의 elapsed만 흘러서, 스탑이 끝났을 땐 스킬 이동 구간이
+        // 이미 소진돼 있다(= 스킬무브가 짧게 끊기거나 아예 안 나가는 증상).
+        // ponytail: 스탑 동안 중력/걷기도 같이 멈춘다. 히트스탑은 곧 시간 정지라 의도된 동작.
+        private bool IsHitStopped() => _animator != null && _animator.speed == 0f;
+
+        private void MoveByFrame(in MoveParams frame)
+        {
             Vector3 velocity = Vector3.zero;
             for (int i = 0; i < _velocitySources.Count; i++)
             {
