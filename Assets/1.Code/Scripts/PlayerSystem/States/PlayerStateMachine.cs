@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -21,6 +22,15 @@ namespace Refactoring
 
         private void Awake()
         {
+            if ((_raiser as UnityEngine.Object) == null)
+            {
+                throw new InvalidOperationException($"{nameof(PlayerStateMachine)}: {nameof(IPlayerStateEventRaiser)} 필수 의존 주입 실패");
+            }
+            if ((_triggerSubscriber as UnityEngine.Object) == null)
+            {
+                throw new InvalidOperationException($"{nameof(PlayerStateMachine)}: {nameof(IStateTriggerSubscriber)} 필수 의존 주입 실패");
+            }
+
             _character = GetComponent<ICharacterComponentSource>();
             if (_character == null)
             {
@@ -33,17 +43,28 @@ namespace Refactoring
 
         private void OnEnable()
         {
-            _triggerSubscriber?.SubscribeTrigger(OnTrigger);
+            _triggerSubscriber.SubscribeTrigger(OnTrigger);
             // 스왑으로 다시 활성화될 때도 "현재 활성 상태"가 공유 SO에 최신으로 반영되게 한 번 기록한다.
             if (CurrentState != null)
             {
-                _currentStateWriter?.SetCurrentState(CurrentState.StateKey);
+                SetCurrentStateOnWriter(CurrentState.StateKey);
             }
         }
 
         private void OnDisable()
         {
-            _triggerSubscriber?.UnsubscribeTrigger(OnTrigger);
+            _triggerSubscriber.UnsubscribeTrigger(OnTrigger);
+        }
+
+        // 선택 의존: 없으면 경고만 남기고 현재 상태 기록 기능만 건너뜀.
+        private void SetCurrentStateOnWriter(PlayerStateType state)
+        {
+            if ((_currentStateWriter as UnityEngine.Object) == null)
+            {
+                Debug.LogWarning($"{name}: {nameof(ICurrentStateWriter)}가 없어 현재 상태 기록을 건너뜀.");
+                return;
+            }
+            _currentStateWriter.SetCurrentState(state);
         }
 
         // 채널로 들어온 외부 트리거를 상태 전환으로 넘긴다.
@@ -126,9 +147,8 @@ namespace Refactoring
 
         private void TransitionTo(PlayerStateType next)
         {
-            if (CurrentState != null && CurrentState.StateKey == next)
+            if (IsReenteringSameState(next))
             {
-                // 같은 상태로의 재진입은 무시(루프 유지·연타로 같은 상태 재시작 방지)
                 return;
             }
             if (!_states.TryGetValue(next, out StateRunner nextState))
@@ -136,9 +156,7 @@ namespace Refactoring
                 Debug.LogWarning($"[StateMachine] 등록되지 않은 상태로 전환 시도: {next}");
                 return;
             }
-
-            // 상태별 쿨타임: 마지막으로 이 상태에 들어간 뒤 설정된 시간이 안 지났으면 전환 무시 (스킬 연타 방지)
-            if (_lastEnterTime.TryGetValue(next, out float lastTime) && Time.time - lastTime < nextState.Cooldown)
+            if (IsOnCooldown(next, nextState))
             {
                 return;
             }
@@ -146,8 +164,20 @@ namespace Refactoring
             CurrentState?.Exit();
             CurrentState = nextState;
             _lastEnterTime[next] = Time.time;
-            _currentStateWriter?.SetCurrentState(next);
+            SetCurrentStateOnWriter(next);
             CurrentState.Enter();
+        }
+
+        // 같은 상태로의 재진입은 무시(루프 유지·연타로 같은 상태 재시작 방지)
+        private bool IsReenteringSameState(PlayerStateType next)
+        {
+            return CurrentState != null && CurrentState.StateKey == next;
+        }
+
+        // 상태별 쿨타임: 마지막으로 이 상태에 들어간 뒤 설정된 시간이 안 지났으면 전환 무시 (스킬 연타 방지)
+        private bool IsOnCooldown(PlayerStateType next, StateRunner nextState)
+        {
+            return _lastEnterTime.TryGetValue(next, out float lastTime) && Time.time - lastTime < nextState.Cooldown;
         }
 
         public List<ScriptableObject> ProvideData()
