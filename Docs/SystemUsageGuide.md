@@ -279,7 +279,25 @@ SO 에셋·DataContainer 등록은 없음.
 ---
 
 ## SettingsSystem
+- 확정: 2026-09-18
+- 조작키·언어·마우스감도·소리 설정값을 저장·불러오고, 설정창이 닫힐 때 한 번에 저장을 시키는 시스템
 
+### 이 시스템을 활용하는 방법 (개발자용)
+
+| 클래스 | 받아쓰는 방법 | 제공 기능 |
+|---|---|---|
+| `SettingsHolder<TData>` | 새 설정값 클래스를 만들 때 상속(TData는 `ISaveData` 구현) | `Data` 조회, `NotifyChanged()`로 변경 알림, `Save()` |
+| `ISettingsHolder` | `SettingsHolder<TData>`가 이미 구현함(직접 구현 불필요) | `Save()` |
+
+### 이 시스템을 활용하는 방법 (비개발자용)
+
+| 클래스 | 만드는 법 | 배치 위치 | 채울 값 |
+|---|---|---|---|
+| `InputKeySettings` | 컴포넌트 추가 | 씬에 하나(Static.prefab) | 없음 |
+| `LanguageSettings` | 컴포넌트 추가 | 씬에 하나(Static.prefab) | 없음 |
+| `MouseSettings` | 컴포넌트 추가 | 씬에 하나(Static.prefab) | 없음 |
+| `SoundSettings` | 컴포넌트 추가 | 씬에 하나(Static.prefab) | 없음 |
+| `SettingsSaver` | 컴포넌트 추가 | 설정창 오브젝트(Window_Setting.prefab) | 없음 |
 
 ---
 
