@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Refactoring
 {
@@ -79,7 +78,7 @@ namespace Refactoring
 
             var result = new Dictionary<StateEventCategory, T[]>();
 
-            foreach (var (category, array) in _dataMap)
+            foreach ((StateEventCategory category, Array array) in _dataMap)
             {
                 if (array == null || array.Length == 0)
                 {
