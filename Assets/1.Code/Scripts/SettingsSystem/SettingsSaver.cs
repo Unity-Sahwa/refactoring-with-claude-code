@@ -13,6 +13,7 @@ namespace Refactoring
         {
             if (_holders == null)
             {
+                Debug.LogWarning($"{nameof(SettingsSaver)}: {nameof(ISettingsHolder)} 목록이 없어 설정 저장을 건너뜀");
                 return;
             }
 

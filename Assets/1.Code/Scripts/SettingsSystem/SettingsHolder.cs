@@ -14,6 +14,15 @@ namespace Refactoring
 
         private TData _data;
 
+        private void Awake()
+        {
+            // 저장 서비스가 없으면 불러오기·저장 둘 다 못 한다. 조용히 죽지 말고 즉시 멈춰 드러낸다.
+            if ((_saveService as UnityEngine.Object) == null)
+            {
+                throw new InvalidOperationException($"{GetType().Name}: {nameof(ISaveService)} 주입 실패");
+            }
+        }
+
         // 처음 값을 물어볼 때 파일에서 한 번만 읽는다.
         // 미리 읽어두면 누가 먼저 깨어나느냐에 따라 빈 값을 읽는 사고가 난다.
         protected TData Data

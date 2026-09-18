@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine.Scripting;
 
@@ -8,6 +9,15 @@ namespace Refactoring
     {
         // 표는 DataContainer에 등록해두고 주입으로 받는다. 씬마다 손으로 꽂으면 빠뜨린 씬이 생긴다.
         [Preserve, Inject] private ITextTableData _table;
+
+        private void Awake()
+        {
+            // 표가 없으면 번역·폰트 둘 다 못 준다. 조용히 죽지 말고 즉시 멈춰 드러낸다.
+            if ((_table as UnityEngine.Object) == null)
+            {
+                throw new InvalidOperationException($"{nameof(LanguageSettings)}: {nameof(ITextTableData)} 주입 실패");
+            }
+        }
 
         public LanguageType Current
         {
@@ -24,14 +34,8 @@ namespace Refactoring
             }
         }
 
-        public string GetText(string key)
-        {
-            return _table == null ? key : _table.GetText(key, Current);
-        }
+        public string GetText(string key) => _table.GetText(key, Current);
 
-        public TMP_FontAsset GetFont()
-        {
-            return _table == null ? null : _table.GetFont(Current);
-        }
+        public TMP_FontAsset GetFont() => _table.GetFont(Current);
     }
 }
