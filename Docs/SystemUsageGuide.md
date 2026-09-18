@@ -84,7 +84,7 @@
 | `ILockOnState` | `[Inject] private ILockOnState _lockOn;` | `IsLockOn`(bool) 조회, `OnLockOnChanged` 구독 |
 | `ILockOnTarget` | `[Inject] private ILockOnTarget _lockOnTarget;` | `LockedTarget`(Collider) 조회 |
 | `ILockOnTargetDetector` | `[Inject] private ILockOnTargetDetector _detector;` | `Candidates`(IReadOnlyList\<Collider\>) 조회 |
-| `LockOnController` | 인터페이스 2개(위)로만 받을 것. 구체 클래스 직접 참조는 비권장(현재 UISystem의 LockOnMarker가 이렇게 쓰고 있음 — `Docs/Retrospective.md` 3-3 기록된 문제) | 없음 |
+| `LockOnController` | 인터페이스 2개(위)로만 받을 것. 구체 클래스 직접 참조는 비권장 | 없음 |
 | `IMouseSettings` | `[Inject(true)] private IMouseSettings _mouseSettings;` | `SpeedX`/`SpeedY` get·set, `OnChanged` 구독 |
 | `IPointerLookControl` | `[Inject(true)] private IPointerLookControl _pointerLook;` | `SetPointerLookEnabled(bool)` |
 | `CameraShakeDataEntry` | PlayerSystem `StateData`에 `CameraShakeDataEntry[]` 필드로 선언 | 상태 진입 시 `IStartData`·`IPlayerCameraShake`로 셰이크 값 전달 |
@@ -137,6 +137,8 @@
 | 클래스/인터페이스 | 받아쓰는 방법 | 제공 기능 |
 |---|---|---|
 | `IGameStateProvider` | `[Preserve, Inject] private IGameStateProvider _gameState;` | `Current` 조회, `OnChanged` 이벤트 구독 |
+| `ICutsceneStateProvider`(`GameStateManager`가 구현) | `[Preserve, Inject(true)] private ICutsceneStateProvider _cutsceneState;` | `IsCutscene` 조회, `OnCutsceneChanged` 이벤트 구독 |
+| `IGameStateController`(`GameStateManager`가 구현) | `[Preserve, Inject] private IGameStateController _controller;` | `Push(GameStateType)`로 모드 얹기, `Pop(GameStateType)`로 내리기 |
 | `GameStateType`(enum) | 매개변수·반환값으로 그대로 사용 | GamePlay/Cutscene/Menu 값 비교 |
 
 ### 이 시스템을 활용하는 방법 (비개발자용)
@@ -235,19 +237,37 @@
 | `StateTriggerType`(enum) | `RaiseTrigger`/`SubscribeTrigger` 인자 | 없음 |
 | `PlayerStateType`(enum) | `ICurrentStateProvider.CurrentState` 값 | 없음 |
 | `CloseEventType`(enum) | `Register`의 close 콜백 인자(End/Reset 구분) | 없음 |
+| `ICurrentCharacterProvider`(`PlayerCharacterSwitcher`가 구현) | `[Preserve, Inject] private ICurrentCharacterProvider _provider;` | `CurrentType` 조회, `GetCurrentComponent<T>()`로 지금 캐릭터의 컴포넌트 조회 |
+| `ICharacterComponentSource`(`PlayerCharacter`가 구현) | `PlayerCharacter`가 자기 자신에서 구현, `ICurrentCharacterProvider` 경유로 간접 사용 | `GetCharacterComponent<T>()`로 자기 컴포넌트 조회 |
+| `ICharacterSwappable`(`PlayerCharacterSwitcher`가 구현) | `[Preserve, Inject] private ICharacterSwappable _swap;` | `SwapPlayerCharacter()`로 캐릭터 교체 요청 |
+| `ICharacterSwapNotifier`(`PlayerCharacterSwitcher`가 구현) | `[Preserve, Inject] private ICharacterSwapNotifier _notifier;` | `OnCharacterSwapped` 이벤트 구독 |
+| `IHealthInfo`(`PlayerHealth`가 구현) | `[Preserve, Inject(true)] private IHealthInfo _health;` | `Current`/`Max` 조회, `OnChanged` 이벤트 구독 |
+| `IHealthModifier`(`PlayerHealth`가 구현) | `[Preserve, Inject(true)] private IHealthModifier _health;` | `Decrease(amount)`로 체력 감소, `SetCurrent(value)`로 값 지정 |
+| `IPlayerDamageable`(`PlayerDamageReceiver`가 구현) | `[Preserve, Inject(true)]`로 받아 `ApplyDamage(DamageInfo)` 호출 | 씬에 유일한 플레이어 대상으로 피해 전달 |
+| `IHitEventRaiser`(`HitChannel`이 구현) | `[Preserve, Inject] private IHitEventRaiser _hitChannel;` | `Raise(HitReport)`로 타격 성공 발행 |
+| `IHitEventSubscriber`(`HitChannel`이 구현) | `[Preserve, Inject(true)] private IHitEventSubscriber _hitChannel;` | `Register(Action<HitReport>)`로 타격 성공 구독, `IDisposable` 반환 |
+| `IFinishChecker`(`FinishTargetScanner`가 구현) | `[Preserve, Inject(true)] private IFinishChecker _checker;` | `CanFinish()`로 처형 가능 여부 판정 |
+| `IFinishTargetProvider`(`FinishTargetScanner`가 구현) | `[Preserve, Inject] private IFinishTargetProvider _provider;` | `GatherStunTargets()`/`GatherExecuteTargets()`로 대상 목록 조회 |
 
 ### 이 시스템을 활용하는 방법 (비개발자용)
 
 | 클래스 | 만드는 법 | 배치 위치 | 채울 값 |
 |---|---|---|---|
-| `PlayerStateTriggerChannel` | Assets 우클릭 > Create > EventChannel/PlayerStateTriggerChannel | `5.Data/Player/Event` | 없음 |
-| `PlayerStateEventChannel` | Assets 우클릭 > Create > EventChannel/PlayerStateEventChannel | `5.Data/Player/Event` | 없음 |
-| `PlayerCurrentStateChannel` | Assets 우클릭 > Create > EventChannel/PlayerCurrentStateChannel | `5.Data/Player/Event` | 없음 |
+| `PlayerStateTriggerChannel` | Assets 우클릭 > Create > EventChannel/PlayerStateTriggerChannel | `5.Data/Player/Event` | 없음. `DataContainer` 그룹에 등록 필요 |
+| `PlayerStateEventChannel` | Assets 우클릭 > Create > EventChannel/PlayerStateEventChannel | `5.Data/Player/Event` | 없음. `DataContainer` 그룹에 등록 필요 |
+| `PlayerCurrentStateChannel` | Assets 우클릭 > Create > EventChannel/PlayerCurrentStateChannel | `5.Data/Player/Event` | 없음. `DataContainer` 그룹에 등록 필요 |
 | `StateData` | Assets 우클릭 > Create > Data/StateData | `5.Data/Player/State` 이하(캐릭터별 폴더) | `_stateType`, `_isLooping`, `_cooldown`, 구간 배열(`_inputBlock` 등), 이벤트 배열(`_effect` 등) |
 | `PlayerStateMachine` | 캐릭터 프리팹에 컴포넌트 추가 | `ICharacterComponentSource` 있는 오브젝트 | `_stateDataList`에 이 캐릭터가 쓸 `StateData` 전부 등록, 3개 채널 DI로 주입 |
 | `PlayerStateInputGate` | 캐릭터 프리팹에 컴포넌트 추가 | `PlayerStateMachine`과 같은 오브젝트 | 없음(전부 DI 주입) |
+| `PlayerCharacter` | 캐릭터 프리팹에 컴포넌트 추가 | 캐릭터 오브젝트 | `type`(PlayerCharacterType) |
+| `PlayerCharacterSwitcher` | 빈 오브젝트에 컴포넌트 추가 | 씬에 하나 | 없음(전부 DI 주입) |
+| `PlayerHealth` | 캐릭터 프리팹에 컴포넌트 추가 | `PlayerCharacter`와 같은 오브젝트 | `_maxHealth`(시작 최대 체력) |
+| `PlayerDamageReceiver` | 캐릭터 프리팹에 컴포넌트 추가(CharacterController 필수) | `PlayerCharacter`와 같은 오브젝트 | `_damageCooldown`(피격 후 추가 피격 무시 시간) |
+| `HitChannel` | Assets 우클릭 > Create > EventChannel/HitChannel | `5.Data/Player/Event` | 없음. `DataContainer` 그룹에 등록 필요 |
+| `FinishExecutor` | 캐릭터 프리팹에 컴포넌트 추가(FinishTargetScanner 필수) | `FinishTargetScanner`와 같은 오브젝트 | `_stunTime`, `_executeHeal` |
+| `FinishTargetScanner` | 캐릭터 프리팹에 컴포넌트 추가 | `PlayerCharacter`와 같은 오브젝트 | `_radius`, `_enemyMask` |
 
-`StateData`는 `IDataProvider`로 DI에 등록되므로 DataContainer 등록도 필요함.
+`StateData`는 `PlayerStateMachine`이 `IDataProvider`를 구현해 `_stateDataList`로 DI에 등록하므로 DataContainer 등록은 불필요함.
 
 ---
 
