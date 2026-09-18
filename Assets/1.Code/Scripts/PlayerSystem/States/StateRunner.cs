@@ -39,7 +39,7 @@ namespace Refactoring
             _exited = false;
             _readIndex = 0;
             _tracker.Begin();
-            _animator.CrossFade(StateKey.ToString(), 0.1f, 0, 0f);
+            _animator.CrossFade(_animationHash, 0.1f, 0, 0f);
             RaiseEvent(0f);
         }
         public void Update()
